@@ -1,0 +1,96 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>團隊架構圖</title>
+<style>
+:root{--bg:#0d1117;--surface:#161b22;--border:#30363d;--text:#e6edf3;--muted:#8b949e;--accent:#58a6ff;--green:#3fb950;--yellow:#d29922;--purple:#a371f7;--red:#f85149}
+*{margin:0;padding:0;box-sizing:border-box}
+body{background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;min-height:100vh;padding:40px 20px}
+h1{text-align:center;font-size:24px;margin-bottom:40px;color:var(--accent)}
+.org{display:flex;flex-direction:column;align-items:center;gap:30px}
+.level{display:flex;justify-content:center;gap:24px;flex-wrap:wrap}
+.node{background:var(--surface);border:2px solid var(--border);border-radius:12px;padding:16px 24px;text-align:center;min-width:160px;position:relative;transition:transform .2s,border-color .2s}
+.node:hover{transform:translateY(-3px);border-color:var(--accent)}
+.node .icon{font-size:28px;margin-bottom:6px}
+.node .name{font-size:15px;font-weight:600;margin-bottom:4px}
+.node .role{font-size:12px;color:var(--muted)}
+.node .model{font-size:11px;color:var(--accent);margin-top:4px}
+.node.boss{border-color:var(--yellow);background:linear-gradient(135deg,#161b22,#1c2128)}
+.node.boss .name{color:var(--yellow)}
+.node.secretary{border-color:var(--accent)}
+.node.dev{border-color:var(--green)}
+.node.info{border-color:var(--purple)}
+.node.advisor{border-color:#f0883e}
+.node.qa{border-color:var(--red)}
+.connector{width:2px;height:30px;background:var(--border);margin:0 auto}
+.h-line{display:flex;align-items:center;justify-content:center;position:relative}
+.h-line::before{content:'';position:absolute;top:0;left:15%;right:15%;height:2px;background:var(--border)}
+.branch{display:flex;justify-content:center;gap:24px;flex-wrap:wrap;position:relative}
+.branch .node::before{content:'';position:absolute;top:-16px;left:50%;width:2px;height:16px;background:var(--border)}
+.legend{margin-top:50px;text-align:center;color:var(--muted);font-size:13px;line-height:2}
+.channels{margin-top:40px;display:flex;justify-content:center;gap:16px;flex-wrap:wrap}
+.ch{background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:10px 16px;font-size:13px}
+.ch span{color:var(--accent)}
+</style>
+</head>
+<body>
+<h1>📋 AI 助理團隊架構圖</h1>
+<div class="org">
+<div class="level">
+<div class="node boss">
+<div class="icon">👑</div>
+<div class="name">老爺</div>
+<div class="role">決策者 · 指揮官</div>
+</div>
+</div>
+<div class="connector"></div>
+<div class="level">
+<div class="node secretary">
+<div class="icon">🤖</div>
+<div class="name">秘書 (general)</div>
+<div class="role">協調中心 · 任務分派 · 回報彙整</div>
+<div class="model">kiro-cli · opus-4.6</div>
+</div>
+</div>
+<div class="connector"></div>
+<div class="branch">
+<div class="node dev">
+<div class="icon">💻</div>
+<div class="name">FZG</div>
+<div class="role">專案追蹤器開發<br>外包同步</div>
+<div class="model">kiro-cli · opus-4.6</div>
+</div>
+<div class="node info">
+<div class="icon">📊</div>
+<div class="name">info</div>
+<div class="role">每日資訊更新<br>儀表板開發<br>台股操盤日報</div>
+<div class="model">kiro-cli · opus-4.6</div>
+</div>
+<div class="node advisor">
+<div class="icon">💰</div>
+<div class="name">advisor</div>
+<div class="role">投資分析<br>市場趨勢<br>資產配置建議</div>
+<div class="model">kiro-cli · opus-4.6</div>
+</div>
+<div class="node qa">
+<div class="icon">🧪</div>
+<div class="name">QA</div>
+<div class="role">功能測試<br>Bug 驗證</div>
+<div class="model">kiro-cli</div>
+</div>
+</div>
+</div>
+<div class="channels">
+<div class="ch">📋 <span>FZG 專案追蹤器</span></div>
+<div class="ch">📊 <span>每日資訊儀表板</span></div>
+<div class="ch">💰 <span>投資理財</span></div>
+<div class="ch">🧪 <span>QA</span></div>
+</div>
+<div class="legend">
+通訊方式：Telegram 群組 Topics · 各 Agent 常駐對應頻道<br>
+工作流程：老爺下指令 → 秘書分派 → Agent 執行 → 秘書回報
+</div>
+</body>
+</html>
