@@ -3,5 +3,6 @@
   {"title":"FZG 系統架構","desc":"FZG 專案追蹤器的前端、後端、資料層、自動化流程","icon":"📐","path":"fzg-architecture.html","date":"2026-05-18"},
   {"title":"FZG 規範與要求","desc":"技術架構、設計規範、同步規則、功能規範、工作流程","icon":"📏","path":"fzg-specs.html","date":"2026-05-18"},
   {"title":"台股分析圖表","desc":"大盤、情緒、巴菲特指數、類股、國際市場、追蹤個股、操盤建議","icon":"📈","path":"stock-analysis.html","date":"2026-05-18"},
-  {"title":"投資策略文件","desc":"資產配置、標的定位、進出場策略、風險管理、操作計畫","icon":"📋","path":"investment-strategy.html","date":"2026-05-18"}
+  {"title":"投資策略文件","desc":"資產配置、標的定位、進出場策略、風險管理、操作計畫","icon":"📋","path":"investment-strategy.html","date":"2026-05-18"},
+  {"title":"300萬投資策略","desc":"新手起步方案：300萬分批進場、標的推薦、風險管理、預期成果","icon":"💰","path":"300w-investment-strategy.html","date":"2026-05-18"}
 ]
