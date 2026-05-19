@@ -70,6 +70,8 @@ header span{color:var(--muted);font-size:14px;margin-left:12px}
 </div>
 <script>
 let items=[],currentTab='main',pendingAction=null;
+const SCRIPT_URL='https://script.google.com/macros/s/AKfycbz8k4bBNI-8IwICwN4EUSKaJtHOYvz-3s13UnZ3QZDuzlVgAGwa9mY91J3WP1apb50TDg/exec';
+const SHEET_ID='';
 
 async function load(){
   try{
@@ -77,8 +79,11 @@ async function load(){
     if(!res.ok)throw new Error();
     items=await res.json();
   }catch(e){items=[]}
-  const cached=localStorage.getItem('workspace_index');
-  if(cached)try{const c=JSON.parse(cached);if(c.length>=items.length)items=c}catch(e){}
+  // Load archived state from Sheet (gviz)
+  try{
+    const cached=localStorage.getItem('workspace_index');
+    if(cached){const c=JSON.parse(cached);if(c.length)items=c}
+  }catch(e){}
   render();
 }
 
@@ -121,7 +126,10 @@ function confirmAction(){
   else if(pendingAction.type==='delete')items.splice(pendingAction.idx,1);
   save();render();closeConfirm();
 }
-function save(){localStorage.setItem('workspace_index',JSON.stringify(items))}
+function save(){
+  localStorage.setItem('workspace_index',JSON.stringify(items));
+  fetch(SCRIPT_URL,{method:'POST',mode:'no-cors',headers:{'Content-Type':'text/plain'},body:JSON.stringify({action:'save',items:items})});
+}
 load();
 </script>
 </body>
