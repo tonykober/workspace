@@ -8,10 +8,10 @@
 :root{--bg:#0d1117;--surface:#161b22;--border:#30363d;--text:#e6edf3;--muted:#8b949e;--accent:#58a6ff;--red:#f85149;--yellow:#d29922;--green:#3fb950}
 *{margin:0;padding:0;box-sizing:border-box}
 body{background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;min-height:100vh}
-header{padding:20px 24px;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:12px}
+header{padding:20px 24px;border-bottom:1px solid var(--border);display:flex;align-items:center}
 header h1{font-size:20px;font-weight:600}
-header span{color:var(--muted);font-size:14px}
-.tabs{display:flex;gap:4px;padding:16px 24px 0;border-bottom:1px solid var(--border)}
+header span{color:var(--muted);font-size:14px;margin-left:12px}
+.tabs{display:flex;gap:4px;margin-left:auto}
 .tab{padding:8px 16px;cursor:pointer;color:var(--muted);font-size:14px;border-bottom:2px solid transparent;transition:all .2s}
 .tab:hover{color:var(--text)}
 .tab.active{color:var(--accent);border-bottom-color:var(--accent)}
@@ -44,11 +44,11 @@ header span{color:var(--muted);font-size:14px}
 <header>
 <h1>📐 秘書工作台</h1>
 <span>圖解 · 文件 · 畫布</span>
-</header>
 <div class="tabs">
 <div class="tab active" onclick="switchTab('main')">📄 主頁</div>
 <div class="tab" onclick="switchTab('archive')">📦 封存 (<span id="archCount">0</span>)</div>
 </div>
+</header>
 <div class="container">
 <div id="mainPage">
 <div class="grid" id="mainGrid"></div>
