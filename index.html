@@ -5,7 +5,7 @@
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>秘書工作台</title>
 <style>
-:root{--bg:#0d1117;--surface:#161b22;--border:#30363d;--text:#e6edf3;--muted:#8b949e;--accent:#58a6ff}
+:root{--bg:#0d1117;--surface:#161b22;--border:#30363d;--text:#e6edf3;--muted:#8b949e;--accent:#58a6ff;--red:#f85149;--yellow:#d29922}
 *{margin:0;padding:0;box-sizing:border-box}
 body{background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;min-height:100vh}
 header{padding:20px 24px;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:12px}
@@ -13,14 +13,38 @@ header h1{font-size:20px;font-weight:600}
 header span{color:var(--muted);font-size:14px}
 .container{max-width:1200px;margin:0 auto;padding:24px}
 .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:16px}
-.card{background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:16px;cursor:pointer;transition:border-color .2s}
+.card{background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:16px;position:relative;transition:border-color .2s}
 .card:hover{border-color:var(--accent)}
 .card h3{font-size:16px;margin-bottom:8px;display:flex;align-items:center;gap:8px}
+.card h3 a{color:var(--text);text-decoration:none}
+.card h3 a:hover{color:var(--accent)}
 .card p{color:var(--muted);font-size:14px;line-height:1.5}
-.card .count{color:var(--accent);font-size:13px;margin-top:8px}
+.card .date{color:var(--accent);font-size:13px;margin-top:8px}
+.card .actions{position:absolute;top:8px;right:8px;display:flex;gap:4px;opacity:0;transition:opacity .2s}
+.card:hover .actions{opacity:1}
+.actions btn{background:none;border:1px solid var(--border);border-radius:4px;padding:4px 8px;cursor:pointer;font-size:12px;color:var(--muted);transition:all .2s}
+.actions .btn-archive{color:var(--yellow);border-color:var(--yellow)}
+.actions .btn-archive:hover{background:rgba(210,153,34,0.15)}
+.actions .btn-delete{color:var(--red);border-color:var(--red)}
+.actions .btn-delete:hover{background:rgba(248,81,73,0.15)}
 .empty{text-align:center;color:var(--muted);padding:60px 20px}
 .empty p{margin-top:8px;font-size:14px}
-a{color:var(--accent);text-decoration:none}
+.archive-section{margin-top:40px;border-top:1px solid var(--border);padding-top:20px}
+.archive-toggle{cursor:pointer;color:var(--muted);font-size:14px;display:flex;align-items:center;gap:6px}
+.archive-toggle:hover{color:var(--text)}
+.archive-grid{display:none;margin-top:16px}
+.archive-grid.open{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:16px}
+.archive-grid .card{opacity:0.7;border-style:dashed}
+.archive-grid .card:hover{opacity:1}
+.actions .btn-restore{color:var(--accent);border-color:var(--accent)}
+.actions .btn-restore:hover{background:rgba(88,166,255,0.15)}
+.confirm-overlay{position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,0.7);display:flex;align-items:center;justify-content:center;z-index:999;display:none}
+.confirm-box{background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:24px;max-width:360px;text-align:center}
+.confirm-box p{margin-bottom:16px;color:var(--text)}
+.confirm-box .btns{display:flex;gap:10px;justify-content:center}
+.confirm-box button{padding:8px 20px;border-radius:6px;border:none;cursor:pointer;font-size:14px}
+.confirm-box .btn-yes{background:var(--red);color:#fff}
+.confirm-box .btn-no{background:var(--border);color:var(--text)}
 </style>
 </head>
 <body>
@@ -34,25 +58,105 @@ a{color:var(--accent);text-decoration:none}
 <p>🎨 尚無內容</p>
 <p>老爺下指令後，作品會出現在這裡</p>
 </div>
+<div class="archive-section" id="archiveSection" style="display:none">
+<div class="archive-toggle" onclick="toggleArchive()"><span id="archTog">▶</span> 📦 已封存 (<span id="archCount">0</span>)</div>
+<div class="archive-grid" id="archiveGrid"></div>
+</div>
+</div>
+<div class="confirm-overlay" id="confirmOverlay">
+<div class="confirm-box">
+<p id="confirmMsg">確定要刪除嗎？此操作無法恢復。</p>
+<div class="btns">
+<button class="btn-yes" onclick="confirmAction()">確定</button>
+<button class="btn-no" onclick="closeConfirm()">取消</button>
+</div>
+</div>
 </div>
 <script>
+let items=[];
+let pendingAction=null;
+
 async function load(){
   try{
-    const res=await fetch('data/index.json');
+    const res=await fetch('data/index.json?t='+Date.now());
     if(!res.ok)throw new Error();
-    const items=await res.json();
-    if(!items.length){document.getElementById('empty').style.display='block';return}
-    const grid=document.getElementById('items');
-    grid.innerHTML=items.map(item=>`
-      <a href="${item.path}" class="card">
-        <h3>${item.icon||'📄'} ${item.title}</h3>
-        <p>${item.desc||''}</p>
-        <div class="count">${item.date||''}</div>
-      </a>
-    `).join('');
+    items=await res.json();
+    render();
   }catch(e){document.getElementById('empty').style.display='block'}
 }
+
+function render(){
+  const active=items.filter(i=>!i.archived);
+  const archived=items.filter(i=>i.archived);
+  const grid=document.getElementById('items');
+  if(!active.length){
+    grid.innerHTML='';
+    document.getElementById('empty').style.display='block';
+  }else{
+    document.getElementById('empty').style.display='none';
+    grid.innerHTML=active.map((item,i)=>{
+      const idx=items.indexOf(item);
+      return `<div class="card"><div class="actions"><button class="btn-archive" onclick="archiveItem(${idx})">📦</button><button class="btn-delete" onclick="deleteItem(${idx})">🗑️</button></div><h3><a href="${item.path}">${item.icon||'📄'} ${item.title}</a></h3><p>${item.desc||''}</p><div class="date">${item.date||''}</div></div>`;
+    }).join('');
+  }
+  if(archived.length){
+    document.getElementById('archiveSection').style.display='block';
+    document.getElementById('archCount').textContent=archived.length;
+    document.getElementById('archiveGrid').innerHTML=archived.map((item,i)=>{
+      const idx=items.indexOf(item);
+      return `<div class="card"><div class="actions" style="opacity:1"><button class="btn-restore" onclick="restoreItem(${idx})">🔄</button><button class="btn-delete" onclick="deleteItem(${idx})">🗑️</button></div><h3><a href="${item.path}">${item.icon||'📄'} ${item.title}</a></h3><p>${item.desc||''}</p><div class="date">${item.date||''}</div></div>`;
+    }).join('');
+  }else{
+    document.getElementById('archiveSection').style.display='none';
+  }
+}
+
+function toggleArchive(){
+  const g=document.getElementById('archiveGrid');
+  const t=document.getElementById('archTog');
+  g.classList.toggle('open');
+  t.textContent=g.classList.contains('open')?'▼':'▶';
+}
+
+function archiveItem(idx){
+  pendingAction={type:'archive',idx};
+  document.getElementById('confirmMsg').textContent=`確定要封存「${items[idx].title}」嗎？`;
+  document.getElementById('confirmOverlay').style.display='flex';
+}
+
+function deleteItem(idx){
+  pendingAction={type:'delete',idx};
+  document.getElementById('confirmMsg').textContent=`確定要永久刪除「${items[idx].title}」嗎？此操作無法恢復。`;
+  document.getElementById('confirmOverlay').style.display='flex';
+}
+
+function restoreItem(idx){
+  items[idx].archived=false;
+  save();render();
+}
+
+function confirmAction(){
+  if(!pendingAction)return;
+  if(pendingAction.type==='archive'){items[pendingAction.idx].archived=true}
+  else if(pendingAction.type==='delete'){items.splice(pendingAction.idx,1)}
+  save();render();closeConfirm();
+}
+
+function closeConfirm(){
+  document.getElementById('confirmOverlay').style.display='none';
+  pendingAction=null;
+}
+
+async function save(){
+  // Save to localStorage as backup
+  localStorage.setItem('workspace_index',JSON.stringify(items));
+  // Note: actual persistence requires git push (handled by secretary)
+}
+
 load();
+// Load from localStorage if available (for immediate UI updates)
+const cached=localStorage.getItem('workspace_index');
+if(cached){try{items=JSON.parse(cached);render()}catch(e){}}
 </script>
 </body>
 </html>
