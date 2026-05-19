@@ -116,7 +116,8 @@ function cardHtml(item,idx,page){
   const btns=page==='main'
     ?`<button onclick="archiveItem(${idx})" title="封存">📦</button><button onclick="deleteItem(${idx})" title="刪除">🗑️</button>`
     :`<button onclick="restoreItem(${idx})" title="恢復">🔄</button><button onclick="deleteItem(${idx})" title="永久刪除">🗑️</button>`;
-  return `<div class="card"><div class="card-header"><h3><a href="${link}">${item.icon||'📄'} ${item.title}</a></h3><div class="actions">${btns}</div></div><p>${item.desc||''}</p><div class="date">${item.date||''}</div></div>`;
+  const dateStr=item.date?(item.date.includes('T')?'最後修改：'+item.date.replace('T',' '):'最後修改：'+item.date):'';
+  return `<div class="card"><div class="card-header"><h3><a href="${link}">${item.icon||'📄'} ${item.title}</a></h3><div class="actions">${btns}</div></div><p>${item.desc||''}</p><div class="date">${dateStr}</div></div>`;
 }
 
 function archiveItem(idx){pendingAction={type:'archive',idx};showConfirm(`確定要封存「${items[idx].title}」嗎？`)}
