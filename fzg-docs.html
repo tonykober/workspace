@@ -1,0 +1,331 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>FZG 專案追蹤器 — 系統架構與規範</title>
+<style>
+:root{--bg:#0d1117;--surface:#161b22;--border:#30363d;--text:#e6edf3;--muted:#8b949e;--accent:#58a6ff;--green:#3fb950;--yellow:#d29922;--purple:#a371f7;--orange:#f0883e;--red:#f85149}
+*{margin:0;padding:0;box-sizing:border-box}
+body{background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;padding:30px 20px;line-height:1.7}
+h1{text-align:center;font-size:22px;margin-bottom:8px;color:var(--accent)}
+.subtitle{text-align:center;color:var(--muted);font-size:14px;margin-bottom:20px}
+.tabs{display:flex;justify-content:center;gap:4px;margin-bottom:30px;border-bottom:1px solid var(--border);padding-bottom:0}
+.tab{padding:10px 20px;cursor:pointer;color:var(--muted);font-size:14px;border-bottom:2px solid transparent;transition:all .2s}
+.tab:hover{color:var(--text)}
+.tab.active{color:var(--accent);border-bottom-color:var(--accent)}
+.page{display:none;max-width:1100px;margin:0 auto}
+.page.active{display:block}
+/* Architecture styles */
+.arch{display:flex;flex-direction:column;gap:24px}
+.row{display:flex;justify-content:center;gap:20px;flex-wrap:wrap;align-items:stretch}
+.box{background:var(--surface);border:2px solid var(--border);border-radius:10px;padding:16px;min-width:200px;max-width:320px;flex:1}
+.box h3{font-size:14px;font-weight:600;margin-bottom:8px;display:flex;align-items:center;gap:6px}
+.box ul{list-style:none;font-size:12px;color:var(--muted);line-height:1.8}
+.box ul li::before{content:'•';color:var(--accent);margin-right:6px}
+.box.frontend{border-color:var(--green)}.box.frontend h3{color:var(--green)}
+.box.backend{border-color:var(--purple)}.box.backend h3{color:var(--purple)}
+.box.data{border-color:var(--yellow)}.box.data h3{color:var(--yellow)}
+.box.auto{border-color:var(--orange)}.box.auto h3{color:var(--orange)}
+.box.source{border-color:var(--red)}.box.source h3{color:var(--red)}
+.arrow{text-align:center;color:var(--border);font-size:20px;padding:4px 0}
+.arrow span{color:var(--muted);font-size:11px;margin:0 8px}
+.section-label{text-align:center;color:var(--muted);font-size:12px;text-transform:uppercase;letter-spacing:2px;margin-bottom:8px}
+.url{font-size:11px;color:var(--accent);word-break:break-all;margin-top:8px;opacity:0.8}
+.flow{margin-top:40px;background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:20px}
+.flow h3{font-size:14px;margin-bottom:12px;color:var(--accent)}
+.flow-row{display:flex;align-items:center;gap:8px;flex-wrap:wrap;margin-bottom:10px;font-size:13px}
+.flow-row .step{background:var(--bg);border:1px solid var(--border);border-radius:6px;padding:4px 10px;white-space:nowrap}
+.flow-row .arr{color:var(--muted)}
+.flow-label{color:var(--muted);font-size:12px;margin-bottom:4px}
+/* Specs styles */
+h2{font-size:1.3rem;color:var(--purple);margin:2rem 0 1rem;border-left:4px solid var(--purple);padding-left:12px}
+h3{font-size:1rem;margin:1.2rem 0 0.6rem}
+p{color:var(--muted);margin-bottom:0.8rem}
+.card{background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:1.2rem;margin:1rem 0}
+table{width:100%;border-collapse:collapse;font-size:0.85rem;margin:0.8rem 0}
+th,td{padding:8px 10px;text-align:left;border-bottom:1px solid var(--border)}
+th{background:var(--surface);color:var(--accent);font-weight:600}
+ul,ol{margin:0.5rem 0 1rem 1.5rem;color:var(--muted)}
+li{margin-bottom:0.4rem}
+code{background:var(--surface);padding:2px 6px;border-radius:4px;font-size:0.85rem;color:var(--green)}
+.section{margin-bottom:2.5rem}
+</style>
+</head>
+<body>
+<h1>📋 FZG 專案追蹤器</h1>
+<p class="subtitle">系統架構與規範文件</p>
+<div class="tabs">
+<div class="tab active" onclick="switchPage('arch')">🏗️ 系統架構</div>
+<div class="tab" onclick="switchPage('specs')">📏 規範與要求</div>
+</div>
+
+<div class="page active" id="page-arch">
+<div class="arch">
+<div class="section-label">👤 使用者層</div>
+<div class="row">
+<div class="box frontend">
+<h3>🌐 前端（GitHub Pages）</h3>
+<ul>
+<li>靜態 HTML/CSS/JS 單頁應用</li>
+<li>看板視圖（三欄：待辦/進行中/已完成）</li>
+<li>時間軸視圖（甘特圖）</li>
+<li>報告視圖</li>
+<li>外包看板（三區分組）</li>
+<li>密碼解鎖機制</li>
+<li>拖曳排序、收合狀態</li>
+<li>RWD 響應式（手機/桌面）</li>
+</ul>
+<div class="url">https://tonykober.github.io/FZG_tracker/</div>
+</div>
+</div>
+<div class="arrow">▼<span>gviz JSON 讀取</span>▼<span>Apps Script POST 寫入</span>▼</div>
+<div class="section-label">⚙️ 後端層</div>
+<div class="row">
+<div class="box backend">
+<h3>📝 Main Apps Script</h3>
+<ul>
+<li>doPost：新增/編輯/刪除任務</li>
+<li>saveNote：儲存收合狀態、排序、群組名稱</li>
+<li>批次操作</li>
+</ul>
+<div class="url">AKfycbyNevW7oTS...Ort_4</div>
+</div>
+<div class="box backend">
+<h3>📦 Outsource Apps Script</h3>
+<ul>
+<li>add：逐筆新增外包任務</li>
+<li>clear：清除當月資料</li>
+<li>saveZone：儲存分區設定</li>
+</ul>
+<div class="url">AKfycbyuqw9ZXR...k2_I</div>
+</div>
+</div>
+<div class="arrow">▼<span>讀寫</span>▼</div>
+<div class="section-label">💾 資料層</div>
+<div class="row">
+<div class="box data">
+<h3>📊 Main Google Sheet</h3>
+<ul>
+<li>A名稱 B負責人 C狀態 D進度</li>
+<li>E開始日 F截止日 G備註 H優先級</li>
+<li>I標籤 J父任務 K工時 L評論 M排序 N收合</li>
+<li>notes 分頁：收合/排序/群組名稱</li>
+</ul>
+<div class="url">Sheet ID: 142VCJ65s...PCF2s</div>
+</div>
+<div class="box data">
+<h3>📦 Outsource Google Sheet</h3>
+<ul>
+<li>負責人、工作項目、狀態</li>
+<li>開始日、截止日、備註、工時</li>
+<li>zones 分頁：分區設定</li>
+<li>按月分頁（2026/05）</li>
+</ul>
+<div class="url">Sheet ID: 11cuSAO3M...rp2s</div>
+</div>
+</div>
+<div class="arrow">▲<span>每日同步</span>▲</div>
+<div class="section-label">🔄 自動化層</div>
+<div class="row">
+<div class="box auto">
+<h3>⏰ 每日外包同步（09:05）</h3>
+<ul>
+<li>FZG agent 執行 sync_outsource.ps1</li>
+<li>優先讀取本機 Excel（SharePoint 同步）</li>
+<li>Fallback：Google Sheet gviz</li>
+<li>逐筆 add（300ms 間隔）</li>
+<li>完成後 gviz 驗證筆數</li>
+</ul>
+</div>
+<div class="box source">
+<h3>📁 資料來源</h3>
+<ul>
+<li>本機 Excel（SharePoint 同步）</li>
+<li>F:\...\唯晶_桑比槍台_美術_工作日報.xlsx</li>
+<li>分頁格式：YYYYMM（如 202605）</li>
+<li>唯晶日報 Google Sheet（fallback）</li>
+</ul>
+<div class="url">Sheet ID: 1gppJhZkx...cog</div>
+</div>
+</div>
+</div>
+<div class="flow">
+<h3>📐 資料流程</h3>
+<div class="flow-label">內部任務：</div>
+<div class="flow-row"><span class="step">使用者操作</span><span class="arr">→</span><span class="step">Apps Script POST</span><span class="arr">→</span><span class="step">Main Sheet 寫入</span><span class="arr">→</span><span class="step">gviz 讀取渲染</span></div>
+<div class="flow-label">外包同步：</div>
+<div class="flow-row"><span class="step">唯晶日報 Excel</span><span class="arr">→</span><span class="step">SharePoint 同步到本機</span><span class="arr">→</span><span class="step">FZG agent 解析</span><span class="arr">→</span><span class="step">Apps Script 逐筆寫入</span><span class="arr">→</span><span class="step">Outsource Sheet</span></div>
+<div class="flow-label">設定同步：</div>
+<div class="flow-row"><span class="step">操作（拖曳/收合）</span><span class="arr">→</span><span class="step">localStorage + Apps Script</span><span class="arr">→</span><span class="step">Sheet notes 分頁</span><span class="arr">→</span><span class="step">其他裝置載入時讀取</span></div>
+</div>
+</div>
+
+<div class="page" id="page-specs">
+<div class="section">
+<h2>🏗️ 技術架構</h2>
+<div class="card">
+<table>
+<tr><th>項目</th><th>內容</th></tr>
+<tr><td>前端</td><td>GitHub Pages 靜態網頁（HTML/CSS/JS 單頁應用）</td></tr>
+<tr><td>後端</td><td>Google Apps Script（REST API）</td></tr>
+<tr><td>資料庫</td><td>Google Sheets（Sheet as DB）</td></tr>
+<tr><td>URL</td><td><code>https://tonykober.github.io/FZG_tracker/</code></td></tr>
+<tr><td>Repo</td><td><code>tonykober/FZG_tracker</code></td></tr>
+<tr><td>密碼</td><td><code>fzg</code></td></tr>
+</table>
+</div>
+<div class="card">
+<h3>Google Sheets</h3>
+<table>
+<tr><th>用途</th><th>Sheet ID</th></tr>
+<tr><td>主 Sheet（內部任務）</td><td><code>142VCJ65sgkzmELIy6ImUFD8z2RXQRwVs-YvkWnPCF2s</code></td></tr>
+<tr><td>外包 Sheet</td><td><code>11cuSAO3MZfUmau1pd603685i18d0SlQKN-h--jUrp2s</code></td></tr>
+<tr><td>唯晶日報（來源）</td><td><code>1gppJhZkxQYGNNM1-hk3v12Hp-qzV8VnJdCLCNrf-cog</code></td></tr>
+</table>
+<h3>主 Sheet 欄位</h3>
+<p>A名稱 B負責人 C狀態 D進度 E開始日 F截止日 G備註 H優先級 I標籤 J父任務 K工時 L評論 M排序 N收合</p>
+</div>
+</div>
+<div class="section">
+<h2>📐 頁面設計規範</h2>
+<div class="card">
+<h3>電腦版字體大小（base 16px）</h3>
+<table>
+<tr><th>區域</th><th>元素</th><th>大小</th></tr>
+<tr><td>Header</td><td>標題 h1</td><td>36px</td></tr>
+<tr><td>Header</td><td>內部/外包按鈕</td><td>18px</td></tr>
+<tr><td>Header</td><td>月份</td><td>16px</td></tr>
+<tr><td>第二列</td><td>統計數字</td><td>24px</td></tr>
+<tr><td>第二列</td><td>統計標籤</td><td>12px</td></tr>
+<tr><td>第二列</td><td>看板/時間軸/報告</td><td>16px</td></tr>
+<tr><td>第二列</td><td>搜尋框/新增/標籤篩選</td><td>14px</td></tr>
+<tr><td>看板</td><td>狀態欄標題</td><td>16px</td></tr>
+<tr><td>看板</td><td>負責人</td><td>15px</td></tr>
+<tr><td>看板</td><td>主任務名稱</td><td>14px</td></tr>
+<tr><td>看板</td><td>標籤</td><td>12px</td></tr>
+<tr><td>看板</td><td>子任務</td><td>0.875rem (14px)</td></tr>
+<tr><td>時間軸</td><td>日期</td><td>12px</td></tr>
+<tr><td>時間軸</td><td>任務名稱</td><td>14px</td></tr>
+<tr><td>時間軸</td><td>負責人</td><td>16px</td></tr>
+</table>
+<h3>手機版</h3>
+<p>所有文字至少 1em（排除時間軸用 1rem）、時間軸 min-width: 1000px</p>
+</div>
+</div>
+<div class="section">
+<h2>🔄 外包資料同步規則</h2>
+<div class="card">
+<h3>排程</h3>
+<p>每日 09:05（台北時間），由 FZG agent 執行</p>
+<h3>資料來源（優先順序）</h3>
+<ol>
+<li><strong>本機 Excel</strong>（SharePoint 同步）：<code>F:\International Games System\研一外包_唯晶科技 - 桑比槍台\唯晶_桑比槍台_美術_工作日報.xlsx</code>，分頁格式 <code>YYYYMM</code></li>
+<li><strong>Google Sheet</strong>（fallback）：唯晶日報 Sheet，分頁格式 <code>2026/05</code></li>
+<li>兩者都失敗 → 通知老爺</li>
+</ol>
+<h3>解析規則</h3>
+<ul>
+<li><code>NAME：xxx</code> → 提取負責人</li>
+<li>數字開頭行（<code>1. xxx</code>）→ 提取工作項目</li>
+<li>含「請假」→ 建立一筆 task="請假", status="已完成"</li>
+<li>過濾任務名稱 ≤ 2 字元的項目</li>
+<li>Pipeline 結果用 <code>@(...)</code> 強制轉陣列</li>
+</ul>
+<h3>寫入方式</h3>
+<ul>
+<li>先 clear 當月分頁</li>
+<li>逐筆 add（每筆間隔 300ms，每 10 筆 sleep 1s）</li>
+<li>完成後 gviz 驗證筆數</li>
+<li>不使用 batch（已確認無效）</li>
+</ul>
+</div>
+</div>
+<div class="section">
+<h2>⚙️ 功能規範</h2>
+<div class="card">
+<h3>看板功能</h3>
+<ul>
+<li>三欄佈局：待辦 / 進行中 / 已完成</li>
+<li>負責人分組（可拖曳排序、收合/展開）</li>
+<li>任務卡：拖曳換欄、編輯、刪除、+子任務</li>
+<li>空欄自動收合，拖曳時自動展開</li>
+<li>待修正欄：無負責人的任務獨立顯示在待辦欄上方</li>
+<li>日期預設藍色，快到期/逾期變色（黃→橙→紅）</li>
+<li>不同月份拖曳操作不互相干擾</li>
+</ul>
+<h3>新增任務</h3>
+<ul>
+<li>必填欄位：任務名稱、負責人（label 後加紅色「(必填)」）</li>
+<li>未填送出 → 紅框標示，填寫後消除</li>
+<li>取消時重置所有欄位狀態</li>
+</ul>
+<h3>待修正欄</h3>
+<ul>
+<li>獨立欄區塊，在待辦欄上方</li>
+<li>紅色邊框，可收合/展開</li>
+<li>任務卡含 ✏️ 編輯 + 🗑️ 刪除按鈕</li>
+<li>刪除立即生效（fire-and-forget）</li>
+<li>無問題任務時不顯示</li>
+<li>時間軸不顯示這些任務</li>
+</ul>
+<h3>外包看板</h3>
+<ul>
+<li>三區分組（一區/二區/三區）</li>
+<li>群組排序（▲▼），交換時兩個群組都閃爍</li>
+<li>同步按鈕：逐筆 add + 進度條顯示</li>
+<li>顏色說明與搜尋框同列</li>
+</ul>
+<h3>跨平台同步</h3>
+<ul>
+<li>所有操作即時寫入 Sheet（需解鎖狀態）</li>
+<li>收合狀態、排序、群組名稱 → Sheet notes 分頁</li>
+<li>載入時從 Sheet 讀取覆蓋 localStorage</li>
+<li>點擊標題 → confirm → 清除快取 → spinner → 重新載入</li>
+</ul>
+</div>
+</div>
+<div class="section">
+<h2>📏 工作流程規範</h2>
+<div class="card">
+<h3>先確認再實作</h3>
+<ol>
+<li>收到老爺需求</li>
+<li>整理需求與執行計畫</li>
+<li>在頻道回覆確認</li>
+<li>老爺確認後才開始實作</li>
+</ol>
+<h3>溝通規則</h3>
+<ul>
+<li>老爺在哪個頻道發話，回覆就在同一頻道</li>
+<li>稱呼用戶為「老爺」</li>
+<li>使用中文</li>
+<li>FZG 相關在 FZG 頻道（topic 2080）回覆</li>
+</ul>
+</div>
+</div>
+<div class="section">
+<h2>⚠️ 已知限制與注意事項</h2>
+<div class="card">
+<ul>
+<li>Apps Script 的 <code>batch</code> action 無效，必須用逐筆 <code>add</code></li>
+<li>PowerShell 的 <code>ConvertTo-Json</code> 必須加 <code>-Depth 5</code> + <code>UTF8.GetBytes</code>，不加 <code>-Compress</code></li>
+<li>PowerShell pipeline 單一結果會變 String，需用 <code>@(...)</code> 強制轉陣列</li>
+<li><code>no-cors</code> fetch 回傳 opaque response，不能 await 判斷成功</li>
+<li>gviz 讀取有快取延遲，驗證時可能需等幾秒</li>
+</ul>
+</div>
+</div>
+</div>
+
+<script>
+function switchPage(id){
+  document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));
+  document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));
+  document.getElementById('page-'+id).classList.add('active');
+  event.target.classList.add('active');
+}
+</script>
+<script src="nav.js"></script>
+</body>
+</html>
