@@ -42,7 +42,7 @@ header span{color:var(--muted);font-size:14px;margin-left:12px}
 </head>
 <body>
 <header>
-<h1>📐 秘書工作台</h1>
+<h1 style="cursor:pointer" onclick="if(confirm('確定清除快取並重新載入？')){localStorage.removeItem('workspace_index');location.reload()}" title="點擊清除快取並重新載入">📐 秘書工作台</h1>
 <span>圖解 · 文件 · 畫布</span>
 <div class="tabs">
 <div class="tab active" onclick="switchTab('main')">📄 主頁</div>
