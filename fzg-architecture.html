@@ -1,9 +1,9 @@
-<!DOCTYPE html>
+﻿<!DOCTYPE html>
 <html lang="zh-TW">
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>FZG 專案追蹤器 — 系統架構</title>
+<title>FZG 撠?餈質馱????蝟餌絞?嗆?</title>
 <style>
 :root{--bg:#0d1117;--surface:#161b22;--border:#30363d;--text:#e6edf3;--muted:#8b949e;--accent:#58a6ff;--green:#3fb950;--yellow:#d29922;--purple:#a371f7;--orange:#f0883e;--red:#f85149}
 *{margin:0;padding:0;box-sizing:border-box}
@@ -15,7 +15,7 @@ h1{text-align:center;font-size:22px;margin-bottom:8px;color:var(--accent)}
 .box{background:var(--surface);border:2px solid var(--border);border-radius:10px;padding:16px;min-width:200px;max-width:320px;flex:1}
 .box h3{font-size:14px;font-weight:600;margin-bottom:8px;display:flex;align-items:center;gap:6px}
 .box ul{list-style:none;font-size:12px;color:var(--muted);line-height:1.8}
-.box ul li::before{content:'•';color:var(--accent);margin-right:6px}
+.box ul li::before{content:'??;color:var(--accent);margin-right:6px}
 .box.frontend{border-color:var(--green)}
 .box.frontend h3{color:var(--green)}
 .box.backend{border-color:var(--purple)}
@@ -39,100 +39,100 @@ h1{text-align:center;font-size:22px;margin-bottom:8px;color:var(--accent)}
 </style>
 </head>
 <body>
-<h1>📋 FZG 專案追蹤器 — 系統架構</h1>
+<h1>?? FZG 撠?餈質馱????蝟餌絞?嗆?</h1>
 <p class="subtitle">GitHub Pages + Google Sheets + Apps Script</p>
 
 <div class="arch">
 
-<div class="section-label">👤 使用者層</div>
+<div class="section-label">? 雿輻?惜</div>
 <div class="row">
 <div class="box frontend">
-<h3>🌐 前端（GitHub Pages）</h3>
+<h3>?? ?垢嚗itHub Pages嚗?/h3>
 <ul>
-<li>靜態 HTML/CSS/JS 單頁應用</li>
-<li>看板視圖（三欄：待辦/進行中/已完成）</li>
-<li>時間軸視圖（甘特圖）</li>
-<li>報告視圖</li>
-<li>外包看板（三區分組）</li>
-<li>密碼解鎖機制</li>
-<li>拖曳排序、收合狀態</li>
-<li>RWD 響應式（手機/桌面）</li>
+<li>?? HTML/CSS/JS ?桅??</li>
+<li>?閬?嚗?甈?敺齒/?脰?銝?撌脣???</li>
+<li>??頠貉??????</li>
+<li>?勗?閬?</li>
+<li>憭??嚗????嚗?/li>
+<li>撖Ⅳ閫??璈</li>
+<li>????????/li>
+<li>RWD ?踵?撘???/獢嚗?/li>
 </ul>
 <div class="url">https://tonykober.github.io/FZG_tracker/</div>
 </div>
 </div>
 
-<div class="arrow">▼<span>gviz JSON 讀取</span>▼<span>Apps Script POST 寫入</span>▼</div>
+<div class="arrow">??span>gviz JSON 霈??/span>??span>Apps Script POST 撖怠</span>??/div>
 
-<div class="section-label">⚙️ 後端層</div>
+<div class="section-label">?? 敺垢撅?/div>
 <div class="row">
 <div class="box backend">
-<h3>📝 Main Apps Script</h3>
+<h3>?? Main Apps Script</h3>
 <ul>
-<li>doPost：新增/編輯/刪除任務</li>
-<li>saveNote：儲存收合狀態、排序、群組名稱</li>
-<li>批次操作</li>
+<li>doPost嚗憓?蝺刻摩/?芷隞餃?</li>
+<li>saveNote嚗摮????摨黎蝯?蝔?/li>
+<li>?寞活??</li>
 </ul>
 <div class="url">AKfycbyNevW7oTS...Ort_4</div>
 </div>
 <div class="box backend">
-<h3>📦 Outsource Apps Script</h3>
+<h3>? Outsource Apps Script</h3>
 <ul>
-<li>add：逐筆新增外包任務</li>
-<li>clear：清除當月資料</li>
-<li>saveZone：儲存分區設定</li>
+<li>add嚗??啣?憭?隞餃?</li>
+<li>clear嚗??斤????/li>
+<li>saveZone嚗摮??閮剖?</li>
 </ul>
 <div class="url">AKfycbyuqw9ZXR...k2_I</div>
 </div>
 </div>
 
-<div class="arrow">▼<span>讀寫</span>▼</div>
+<div class="arrow">??span>霈撖?/span>??/div>
 
-<div class="section-label">💾 資料層</div>
+<div class="section-label">? 鞈?撅?/div>
 <div class="row">
 <div class="box data">
-<h3>📊 Main Google Sheet</h3>
+<h3>?? Main Google Sheet</h3>
 <ul>
-<li>A名稱 B負責人 C狀態 D進度</li>
-<li>E開始日 F截止日 G備註 H優先級</li>
-<li>I標籤 J父任務 K工時 L評論 M排序 N收合</li>
-<li>notes 分頁：收合/排序/群組名稱</li>
+<li>A?迂 B鞎痊鈭?C???D?脣漲</li>
+<li>E????F?芣迫??G?酉 H?芸?蝝?/li>
+<li>I璅惜 J?嗡遙??K撌交? L閰? M?? N?嗅?</li>
+<li>notes ??嚗????/蝢斤??迂</li>
 </ul>
 <div class="url">Sheet ID: 142VCJ65s...PCF2s</div>
 </div>
 <div class="box data">
-<h3>📦 Outsource Google Sheet</h3>
+<h3>? Outsource Google Sheet</h3>
 <ul>
-<li>負責人、工作項目、狀態</li>
-<li>開始日、截止日、備註、工時</li>
-<li>zones 分頁：分區設定</li>
-<li>按月分頁（2026/05）</li>
+<li>鞎痊鈭箝極雿??柴???/li>
+<li>???乓甇Ｘ??閮颯極??/li>
+<li>zones ??嚗??閮剖?</li>
+<li>????嚗?026/05嚗?/li>
 </ul>
 <div class="url">Sheet ID: 11cuSAO3M...rp2s</div>
 </div>
 </div>
 
-<div class="arrow">▲<span>每日同步</span>▲</div>
+<div class="arrow">??span>瘥?郊</span>??/div>
 
-<div class="section-label">🔄 自動化層</div>
+<div class="section-label">?? ?芸??惜</div>
 <div class="row">
 <div class="box auto">
-<h3>⏰ 每日外包同步（09:05）</h3>
+<h3>??瘥憭??郊嚗?9:05嚗?/h3>
 <ul>
-<li>FZG agent 執行 sync_outsource.ps1</li>
-<li>優先讀取本機 Excel（SharePoint 同步）</li>
-<li>Fallback：Google Sheet gviz</li>
-<li>逐筆 add（300ms 間隔）</li>
-<li>完成後 gviz 驗證筆數</li>
+<li>FZG agent ?瑁? sync_outsource.ps1</li>
+<li>?芸?霈?璈?Excel嚗harePoint ?郊嚗?/li>
+<li>Fallback嚗oogle Sheet gviz</li>
+<li>?? add嚗?00ms ??嚗?/li>
+<li>摰?敺?gviz 撽?蝑</li>
 </ul>
 </div>
 <div class="box source">
-<h3>📁 資料來源</h3>
+<h3>?? 鞈?靘?</h3>
 <ul>
-<li>本機 Excel（SharePoint 同步）</li>
-<li>F:\...\唯晶_桑比槍台_美術_工作日報.xlsx</li>
-<li>分頁格式：YYYYMM（如 202605）</li>
-<li>唯晶日報 Google Sheet（fallback）</li>
+<li>?祆? Excel嚗harePoint ?郊嚗?/li>
+<li>F:\...\?舀_獢?瑽_蝢?_撌乩??亙.xlsx</li>
+<li>???澆?嚗YYYMM嚗? 202605嚗?/li>
+<li>?舀?亙 Google Sheet嚗allback嚗?/li>
 </ul>
 <div class="url">Sheet ID: 1gppJhZkx...cog</div>
 </div>
@@ -141,30 +141,31 @@ h1{text-align:center;font-size:22px;margin-bottom:8px;color:var(--accent)}
 </div>
 
 <div class="flow">
-<h3>📐 資料流程</h3>
-<div class="flow-label">內部任務：</div>
+<h3>?? 鞈?瘚?</h3>
+<div class="flow-label">?折隞餃?嚗?/div>
 <div class="flow-row">
-<span class="step">使用者操作</span><span class="arr">→</span>
-<span class="step">Apps Script POST</span><span class="arr">→</span>
-<span class="step">Main Sheet 寫入</span><span class="arr">→</span>
-<span class="step">gviz 讀取渲染</span>
+<span class="step">雿輻??雿?/span><span class="arr">??/span>
+<span class="step">Apps Script POST</span><span class="arr">??/span>
+<span class="step">Main Sheet 撖怠</span><span class="arr">??/span>
+<span class="step">gviz 霈?葡??/span>
 </div>
-<div class="flow-label">外包同步：</div>
+<div class="flow-label">憭??郊嚗?/div>
 <div class="flow-row">
-<span class="step">唯晶日報 Excel</span><span class="arr">→</span>
-<span class="step">SharePoint 同步到本機</span><span class="arr">→</span>
-<span class="step">FZG agent 解析</span><span class="arr">→</span>
-<span class="step">Apps Script 逐筆寫入</span><span class="arr">→</span>
+<span class="step">?舀?亙 Excel</span><span class="arr">??/span>
+<span class="step">SharePoint ?郊?唳璈?/span><span class="arr">??/span>
+<span class="step">FZG agent 閫??</span><span class="arr">??/span>
+<span class="step">Apps Script ??撖怠</span><span class="arr">??/span>
 <span class="step">Outsource Sheet</span>
 </div>
-<div class="flow-label">設定同步：</div>
+<div class="flow-label">閮剖??郊嚗?/div>
 <div class="flow-row">
-<span class="step">操作（拖曳/收合）</span><span class="arr">→</span>
-<span class="step">localStorage + Apps Script</span><span class="arr">→</span>
-<span class="step">Sheet notes 分頁</span><span class="arr">→</span>
-<span class="step">其他裝置載入時讀取</span>
+<span class="step">??嚗????嗅?嚗?/span><span class="arr">??/span>
+<span class="step">localStorage + Apps Script</span><span class="arr">??/span>
+<span class="step">Sheet notes ??</span><span class="arr">??/span>
+<span class="step">?嗡?鋆蔭頛????/span>
 </div>
 </div>
 
-</body>
+<script src="nav.js"></script></body>
 </html>
+

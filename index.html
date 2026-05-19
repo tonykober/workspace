@@ -5,46 +5,39 @@
 <meta name="viewport" content="width=device-width,initial-scale=1">
 <title>秘書工作台</title>
 <style>
-:root{--bg:#0d1117;--surface:#161b22;--border:#30363d;--text:#e6edf3;--muted:#8b949e;--accent:#58a6ff;--red:#f85149;--yellow:#d29922}
+:root{--bg:#0d1117;--surface:#161b22;--border:#30363d;--text:#e6edf3;--muted:#8b949e;--accent:#58a6ff;--red:#f85149;--yellow:#d29922;--green:#3fb950}
 *{margin:0;padding:0;box-sizing:border-box}
 body{background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;min-height:100vh}
 header{padding:20px 24px;border-bottom:1px solid var(--border);display:flex;align-items:center;gap:12px}
 header h1{font-size:20px;font-weight:600}
 header span{color:var(--muted);font-size:14px}
+.tabs{display:flex;gap:4px;padding:16px 24px 0;border-bottom:1px solid var(--border)}
+.tab{padding:8px 16px;cursor:pointer;color:var(--muted);font-size:14px;border-bottom:2px solid transparent;transition:all .2s}
+.tab:hover{color:var(--text)}
+.tab.active{color:var(--accent);border-bottom-color:var(--accent)}
 .container{max-width:1200px;margin:0 auto;padding:24px}
 .grid{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:16px}
 .card{background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:16px;position:relative;transition:border-color .2s}
 .card:hover{border-color:var(--accent)}
-.card h3{font-size:16px;margin-bottom:8px;display:flex;align-items:center;gap:8px}
+.card-header{display:flex;justify-content:space-between;align-items:flex-start}
+.card h3{font-size:16px;margin-bottom:8px;display:flex;align-items:center;gap:8px;flex:1}
 .card h3 a{color:var(--text);text-decoration:none}
 .card h3 a:hover{color:var(--accent)}
 .card p{color:var(--muted);font-size:14px;line-height:1.5}
 .card .date{color:var(--accent);font-size:13px;margin-top:8px}
-.card .actions{position:absolute;top:8px;right:8px;display:flex;gap:4px;opacity:0;transition:opacity .2s}
-.card:hover .actions{opacity:1}
-.actions btn{background:none;border:1px solid var(--border);border-radius:4px;padding:4px 8px;cursor:pointer;font-size:12px;color:var(--muted);transition:all .2s}
-.actions .btn-archive{color:var(--yellow);border-color:var(--yellow)}
-.actions .btn-archive:hover{background:rgba(210,153,34,0.15)}
-.actions .btn-delete{color:var(--red);border-color:var(--red)}
-.actions .btn-delete:hover{background:rgba(248,81,73,0.15)}
+.card .actions{display:flex;gap:8px;flex-shrink:0}
+.actions button{background:none;border:none;cursor:pointer;font-size:16px;padding:2px;opacity:0.6;transition:opacity .2s}
+.actions button:hover{opacity:1}
 .empty{text-align:center;color:var(--muted);padding:60px 20px}
 .empty p{margin-top:8px;font-size:14px}
-.archive-section{margin-top:40px;border-top:1px solid var(--border);padding-top:20px}
-.archive-toggle{cursor:pointer;color:var(--muted);font-size:14px;display:flex;align-items:center;gap:6px}
-.archive-toggle:hover{color:var(--text)}
-.archive-grid{display:none;margin-top:16px}
-.archive-grid.open{display:grid;grid-template-columns:repeat(auto-fill,minmax(300px,1fr));gap:16px}
-.archive-grid .card{opacity:0.7;border-style:dashed}
-.archive-grid .card:hover{opacity:1}
-.actions .btn-restore{color:var(--accent);border-color:var(--accent)}
-.actions .btn-restore:hover{background:rgba(88,166,255,0.15)}
-.confirm-overlay{position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,0.7);display:flex;align-items:center;justify-content:center;z-index:999;display:none}
+.confirm-overlay{position:fixed;top:0;left:0;right:0;bottom:0;background:rgba(0,0,0,0.7);display:none;align-items:center;justify-content:center;z-index:999}
 .confirm-box{background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:24px;max-width:360px;text-align:center}
 .confirm-box p{margin-bottom:16px;color:var(--text)}
 .confirm-box .btns{display:flex;gap:10px;justify-content:center}
 .confirm-box button{padding:8px 20px;border-radius:6px;border:none;cursor:pointer;font-size:14px}
 .confirm-box .btn-yes{background:var(--red);color:#fff}
 .confirm-box .btn-no{background:var(--border);color:var(--text)}
+.page-hidden{display:none}
 </style>
 </head>
 <body>
@@ -52,20 +45,23 @@ header span{color:var(--muted);font-size:14px}
 <h1>📐 秘書工作台</h1>
 <span>圖解 · 文件 · 畫布</span>
 </header>
-<div class="container">
-<div class="grid" id="items"></div>
-<div class="empty" id="empty" style="display:none">
-<p>🎨 尚無內容</p>
-<p>老爺下指令後，作品會出現在這裡</p>
+<div class="tabs">
+<div class="tab active" onclick="switchTab('main')">📄 主頁</div>
+<div class="tab" onclick="switchTab('archive')">📦 封存 (<span id="archCount">0</span>)</div>
 </div>
-<div class="archive-section" id="archiveSection" style="display:none">
-<div class="archive-toggle" onclick="toggleArchive()"><span id="archTog">▶</span> 📦 已封存 (<span id="archCount">0</span>)</div>
-<div class="archive-grid" id="archiveGrid"></div>
+<div class="container">
+<div id="mainPage">
+<div class="grid" id="mainGrid"></div>
+<div class="empty" id="mainEmpty" style="display:none"><p>🎨 尚無內容</p><p>老爺下指令後，作品會出現在這裡</p></div>
+</div>
+<div id="archivePage" class="page-hidden">
+<div class="grid" id="archiveGrid"></div>
+<div class="empty" id="archiveEmpty" style="display:none"><p>📦 沒有封存的項目</p></div>
 </div>
 </div>
 <div class="confirm-overlay" id="confirmOverlay">
 <div class="confirm-box">
-<p id="confirmMsg">確定要刪除嗎？此操作無法恢復。</p>
+<p id="confirmMsg"></p>
 <div class="btns">
 <button class="btn-yes" onclick="confirmAction()">確定</button>
 <button class="btn-no" onclick="closeConfirm()">取消</button>
@@ -73,90 +69,60 @@ header span{color:var(--muted);font-size:14px}
 </div>
 </div>
 <script>
-let items=[];
-let pendingAction=null;
+let items=[],currentTab='main',pendingAction=null;
 
 async function load(){
   try{
     const res=await fetch('data/index.json?t='+Date.now());
     if(!res.ok)throw new Error();
     items=await res.json();
-    render();
-  }catch(e){document.getElementById('empty').style.display='block'}
+  }catch(e){items=[]}
+  const cached=localStorage.getItem('workspace_index');
+  if(cached)try{const c=JSON.parse(cached);if(c.length>=items.length)items=c}catch(e){}
+  render();
+}
+
+function switchTab(tab){
+  currentTab=tab;
+  document.querySelectorAll('.tab').forEach((t,i)=>t.classList.toggle('active',i===(tab==='main'?0:1)));
+  document.getElementById('mainPage').classList.toggle('page-hidden',tab!=='main');
+  document.getElementById('archivePage').classList.toggle('page-hidden',tab!=='archive');
 }
 
 function render(){
   const active=items.filter(i=>!i.archived);
   const archived=items.filter(i=>i.archived);
-  const grid=document.getElementById('items');
-  if(!active.length){
-    grid.innerHTML='';
-    document.getElementById('empty').style.display='block';
-  }else{
-    document.getElementById('empty').style.display='none';
-    grid.innerHTML=active.map((item,i)=>{
-      const idx=items.indexOf(item);
-      return `<div class="card"><div class="actions"><button class="btn-archive" onclick="archiveItem(${idx})">📦</button><button class="btn-delete" onclick="deleteItem(${idx})">🗑️</button></div><h3><a href="${item.path}">${item.icon||'📄'} ${item.title}</a></h3><p>${item.desc||''}</p><div class="date">${item.date||''}</div></div>`;
-    }).join('');
-  }
-  if(archived.length){
-    document.getElementById('archiveSection').style.display='block';
-    document.getElementById('archCount').textContent=archived.length;
-    document.getElementById('archiveGrid').innerHTML=archived.map((item,i)=>{
-      const idx=items.indexOf(item);
-      return `<div class="card"><div class="actions" style="opacity:1"><button class="btn-restore" onclick="restoreItem(${idx})">🔄</button><button class="btn-delete" onclick="deleteItem(${idx})">🗑️</button></div><h3><a href="${item.path}">${item.icon||'📄'} ${item.title}</a></h3><p>${item.desc||''}</p><div class="date">${item.date||''}</div></div>`;
-    }).join('');
-  }else{
-    document.getElementById('archiveSection').style.display='none';
-  }
+  document.getElementById('archCount').textContent=archived.length;
+  // Main
+  const mg=document.getElementById('mainGrid');
+  if(!active.length){mg.innerHTML='';document.getElementById('mainEmpty').style.display='block'}
+  else{document.getElementById('mainEmpty').style.display='none';mg.innerHTML=active.map(item=>{const idx=items.indexOf(item);return cardHtml(item,idx,'main')}).join('')}
+  // Archive
+  const ag=document.getElementById('archiveGrid');
+  if(!archived.length){ag.innerHTML='';document.getElementById('archiveEmpty').style.display='block'}
+  else{document.getElementById('archiveEmpty').style.display='none';ag.innerHTML=archived.map(item=>{const idx=items.indexOf(item);return cardHtml(item,idx,'archive')}).join('')}
 }
 
-function toggleArchive(){
-  const g=document.getElementById('archiveGrid');
-  const t=document.getElementById('archTog');
-  g.classList.toggle('open');
-  t.textContent=g.classList.contains('open')?'▼':'▶';
+function cardHtml(item,idx,page){
+  const btns=page==='main'
+    ?`<button onclick="archiveItem(${idx})" title="封存">📦</button><button onclick="deleteItem(${idx})" title="刪除">🗑️</button>`
+    :`<button onclick="restoreItem(${idx})" title="恢復">🔄</button><button onclick="deleteItem(${idx})" title="永久刪除">🗑️</button>`;
+  return `<div class="card"><div class="card-header"><h3><a href="${item.path}">${item.icon||'📄'} ${item.title}</a></h3><div class="actions">${btns}</div></div><p>${item.desc||''}</p><div class="date">${item.date||''}</div></div>`;
 }
 
-function archiveItem(idx){
-  pendingAction={type:'archive',idx};
-  document.getElementById('confirmMsg').textContent=`確定要封存「${items[idx].title}」嗎？`;
-  document.getElementById('confirmOverlay').style.display='flex';
-}
-
-function deleteItem(idx){
-  pendingAction={type:'delete',idx};
-  document.getElementById('confirmMsg').textContent=`確定要永久刪除「${items[idx].title}」嗎？此操作無法恢復。`;
-  document.getElementById('confirmOverlay').style.display='flex';
-}
-
-function restoreItem(idx){
-  items[idx].archived=false;
-  save();render();
-}
-
+function archiveItem(idx){pendingAction={type:'archive',idx};showConfirm(`確定要封存「${items[idx].title}」嗎？`)}
+function deleteItem(idx){pendingAction={type:'delete',idx};showConfirm(`確定要永久刪除「${items[idx].title}」嗎？此操作無法恢復。`)}
+function restoreItem(idx){items[idx].archived=false;save();render()}
+function showConfirm(msg){document.getElementById('confirmMsg').textContent=msg;document.getElementById('confirmOverlay').style.display='flex'}
+function closeConfirm(){document.getElementById('confirmOverlay').style.display='none';pendingAction=null}
 function confirmAction(){
   if(!pendingAction)return;
-  if(pendingAction.type==='archive'){items[pendingAction.idx].archived=true}
-  else if(pendingAction.type==='delete'){items.splice(pendingAction.idx,1)}
+  if(pendingAction.type==='archive')items[pendingAction.idx].archived=true;
+  else if(pendingAction.type==='delete')items.splice(pendingAction.idx,1);
   save();render();closeConfirm();
 }
-
-function closeConfirm(){
-  document.getElementById('confirmOverlay').style.display='none';
-  pendingAction=null;
-}
-
-async function save(){
-  // Save to localStorage as backup
-  localStorage.setItem('workspace_index',JSON.stringify(items));
-  // Note: actual persistence requires git push (handled by secretary)
-}
-
+function save(){localStorage.setItem('workspace_index',JSON.stringify(items))}
 load();
-// Load from localStorage if available (for immediate UI updates)
-const cached=localStorage.getItem('workspace_index');
-if(cached){try{items=JSON.parse(cached);render()}catch(e){}}
 </script>
 </body>
 </html>
