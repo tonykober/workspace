@@ -3,7 +3,7 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<title>FZG 撠?餈質馱????閬???瘙?/title>
+<title>FZG 專案追蹤器 — 規範與要求</title>
 <style>
 :root{--bg:#0d1117;--surface:#161b22;--border:#30363d;--text:#e6edf3;--muted:#8b949e;--accent:#58a6ff;--green:#3fb950;--yellow:#d29922;--purple:#a371f7;--orange:#f0883e;--red:#f85149}
 *{margin:0;padding:0;box-sizing:border-box}
@@ -25,177 +25,176 @@ code{background:var(--surface);padding:2px 6px;border-radius:4px;font-size:0.85r
 </head>
 <body>
 
-<h1>?? FZG 撠?餈質馱????閬???瘙????/h1>
+<h1>📋 FZG 專案追蹤器 — 規範、要求與技能</h1>
 
 <div class="section">
-<h2>??儭??銵瑽?/h2>
+<h2>🏗️ 技術架構</h2>
 <div class="card">
 <table>
-<tr><th>?</th><th>?批捆</th></tr>
-<tr><td>?垢</td><td>GitHub Pages ??蝬脤?嚗TML/CSS/JS ?桅??嚗?/td></tr>
-<tr><td>敺垢</td><td>Google Apps Script嚗EST API嚗?/td></tr>
-<tr><td>鞈?摨?/td><td>Google Sheets嚗heet as DB嚗?/td></tr>
+<tr><th>項目</th><th>內容</th></tr>
+<tr><td>前端</td><td>GitHub Pages 靜態網頁（HTML/CSS/JS 單頁應用）</td></tr>
+<tr><td>後端</td><td>Google Apps Script（REST API）</td></tr>
+<tr><td>資料庫</td><td>Google Sheets（Sheet as DB）</td></tr>
 <tr><td>URL</td><td><code>https://tonykober.github.io/FZG_tracker/</code></td></tr>
 <tr><td>Repo</td><td><code>tonykober/FZG_tracker</code></td></tr>
-<tr><td>撖Ⅳ</td><td><code>fzg</code></td></tr>
+<tr><td>密碼</td><td><code>fzg</code></td></tr>
 </table>
 </div>
 
 <div class="card">
 <h3>Google Sheets</h3>
 <table>
-<tr><th>?券?/th><th>Sheet ID</th></tr>
-<tr><td>銝?Sheet嚗?其遙??</td><td><code>142VCJ65sgkzmELIy6ImUFD8z2RXQRwVs-YvkWnPCF2s</code></td></tr>
-<tr><td>憭? Sheet</td><td><code>11cuSAO3MZfUmau1pd603685i18d0SlQKN-h--jUrp2s</code></td></tr>
-<tr><td>?舀?亙嚗?皞?</td><td><code>1gppJhZkxQYGNNM1-hk3v12Hp-qzV8VnJdCLCNrf-cog</code></td></tr>
+<tr><th>用途</th><th>Sheet ID</th></tr>
+<tr><td>主 Sheet（內部任務）</td><td><code>142VCJ65sgkzmELIy6ImUFD8z2RXQRwVs-YvkWnPCF2s</code></td></tr>
+<tr><td>外包 Sheet</td><td><code>11cuSAO3MZfUmau1pd603685i18d0SlQKN-h--jUrp2s</code></td></tr>
+<tr><td>唯晶日報（來源）</td><td><code>1gppJhZkxQYGNNM1-hk3v12Hp-qzV8VnJdCLCNrf-cog</code></td></tr>
 </table>
-<h3>銝?Sheet 甈?</h3>
-<p>A?迂 B鞎痊鈭?C???D?脣漲 E????F?芣迫??G?酉 H?芸?蝝?I璅惜 J?嗡遙??K撌交? L閰? M?? N?嗅?</p>
+<h3>主 Sheet 欄位</h3>
+<p>A名稱 B負責人 C狀態 D進度 E開始日 F截止日 G備註 H優先級 I標籤 J父任務 K工時 L評論 M排序 N收合</p>
 </div>
 </div>
 
 <div class="section">
-<h2>?? ?閮剛?閬?</h2>
+<h2>📐 頁面設計規範</h2>
 <div class="card">
-<h3>?餉??擃之撠?base 16px嚗?/h3>
+<h3>電腦版字體大小（base 16px）</h3>
 <table>
-<tr><th>???/th><th>??</th><th>憭批?</th></tr>
-<tr><td>Header</td><td>璅? h1</td><td>36px</td></tr>
-<tr><td>Header</td><td>?折/憭???</td><td>18px</td></tr>
-<tr><td>Header</td><td>?遢</td><td>16px</td></tr>
-<tr><td>蝚砌???/td><td>蝯梯??詨?</td><td>24px</td></tr>
-<tr><td>蝚砌???/td><td>蝯梯?璅惜</td><td>12px</td></tr>
-<tr><td>蝚砌???/td><td>?/??頠??勗?</td><td>16px</td></tr>
-<tr><td>蝚砌???/td><td>??獢??啣?/璅惜蝭拚</td><td>14px</td></tr>
-<tr><td>?</td><td>???璅?</td><td>16px</td></tr>
-<tr><td>?</td><td>鞎痊鈭?/td><td>15px</td></tr>
-<tr><td>?</td><td>銝颱遙??蝔?/td><td>14px</td></tr>
-<tr><td>?</td><td>璅惜</td><td>12px</td></tr>
-<tr><td>?</td><td>摮遙??/td><td>0.875rem (14px)</td></tr>
-<tr><td>??頠?/td><td>?交?</td><td>12px</td></tr>
-<tr><td>??頠?/td><td>隞餃??迂</td><td>14px</td></tr>
-<tr><td>??頠?/td><td>鞎痊鈭?/td><td>16px</td></tr>
+<tr><th>區域</th><th>元素</th><th>大小</th></tr>
+<tr><td>Header</td><td>標題 h1</td><td>36px</td></tr>
+<tr><td>Header</td><td>內部/外包按鈕</td><td>18px</td></tr>
+<tr><td>Header</td><td>月份</td><td>16px</td></tr>
+<tr><td>第二列</td><td>統計數字</td><td>24px</td></tr>
+<tr><td>第二列</td><td>統計標籤</td><td>12px</td></tr>
+<tr><td>第二列</td><td>看板/時間軸/報告</td><td>16px</td></tr>
+<tr><td>第二列</td><td>搜尋框/新增/標籤篩選</td><td>14px</td></tr>
+<tr><td>看板</td><td>狀態欄標題</td><td>16px</td></tr>
+<tr><td>看板</td><td>負責人</td><td>15px</td></tr>
+<tr><td>看板</td><td>主任務名稱</td><td>14px</td></tr>
+<tr><td>看板</td><td>標籤</td><td>12px</td></tr>
+<tr><td>看板</td><td>子任務</td><td>0.875rem (14px)</td></tr>
+<tr><td>時間軸</td><td>日期</td><td>12px</td></tr>
+<tr><td>時間軸</td><td>任務名稱</td><td>14px</td></tr>
+<tr><td>時間軸</td><td>負責人</td><td>16px</td></tr>
 </table>
-<h3>????/h3>
-<p>???摮撠?1em嚗??斗??遘??1rem嚗??遘 min-width: 1000px</p>
+<h3>手機版</h3>
+<p>所有文字至少 1em（排除時間軸用 1rem）、時間軸 min-width: 1000px</p>
 </div>
 </div>
 
 <div class="section">
-<h2>?? 憭?鞈??郊閬?</h2>
+<h2>🔄 外包資料同步規則</h2>
 <div class="card">
-<h3>??</h3>
-<p>瘥 09:05嚗????嚗 FZG agent ?瑁?</p>
+<h3>排程</h3>
+<p>每日 09:05（台北時間），由 FZG agent 執行</p>
 
-<h3>鞈?靘?嚗??摨?</h3>
+<h3>資料來源（優先順序）</h3>
 <ol>
-<li><strong>?祆? Excel</strong>嚗harePoint ?郊嚗?<code>F:\International Games System\??憭?_?舀蝘? - 獢?瑽\?舀_獢?瑽_蝢?_撌乩??亙.xlsx</code>嚗??撘?<code>YYYYMM</code></li>
-<li><strong>Google Sheet</strong>嚗allback嚗??舀?亙 Sheet嚗??撘?<code>2026/05</code></li>
-<li>?抵憭望? ????</li>
+<li><strong>本機 Excel</strong>（SharePoint 同步）：<code>F:\International Games System\研一外包_唯晶科技 - 桑比槍台\唯晶_桑比槍台_美術_工作日報.xlsx</code>，分頁格式 <code>YYYYMM</code></li>
+<li><strong>Google Sheet</strong>（fallback）：唯晶日報 Sheet，分頁格式 <code>2026/05</code></li>
+<li>兩者都失敗 → 通知老爺</li>
 </ol>
 
-<h3>閫??閬?</h3>
+<h3>解析規則</h3>
 <ul>
-<li><code>NAME嚗xx</code> ????鞎痊鈭?/li>
-<li>?詨??銵?<code>1. xxx</code>嚗? ??撌乩??</li>
-<li>?怒??? 撱箇?銝蝑?task="隢?", status="撌脣???</li>
-<li>?蕪隞餃??迂 ??2 摮?????/li>
-<li>Pipeline 蝯???<code>@(...)</code> 撘瑕頧???脫迫?桃?蝯?霈?銝莎?</li>
+<li><code>NAME：xxx</code> → 提取負責人</li>
+<li>數字開頭行（<code>1. xxx</code>）→ 提取工作項目</li>
+<li>含「請假」→ 建立一筆 task="請假", status="已完成"</li>
+<li>過濾任務名稱 ≤ 2 字元的項目</li>
+<li>Pipeline 結果用 <code>@(...)</code> 強制轉陣列（防止單筆結果變字串）</li>
 </ul>
 
-<h3>撖怠?孵?</h3>
+<h3>寫入方式</h3>
 <ul>
-<li>??clear ?嗆???</li>
-<li>?? add嚗?蝑???300ms嚗? 10 蝑?sleep 1s嚗?/li>
-<li>摰?敺?gviz 撽?蝑</li>
-<li>銝蝙??batch嚗歇蝣箄? batch action ?⊥?嚗?/li>
-</ul>
-</div>
-</div>
-
-<div class="section">
-<h2>?? ?閬?</h2>
-<div class="card">
-<h3>??</h3>
-<ul>
-<li>銝?雿?嚗?颲?/ ?脰?銝?/ 撌脣???/li>
-<li>鞎痊鈭箏?蝯??舀??單?摨??撅?嚗?/li>
-<li>隞餃??∴?????楊頛胯?扎?摮遙??/li>
-<li>蝛箸??芸??嗅?嚗??單??芸?撅?</li>
-<li>敺耨甇??嚗鞎痊鈭箇?隞餃??函?憿舐內?典?颲行?銝</li>
-<li>?交??身?嚗翰?唳?/?暹?霈嚗?????嚗?/li>
-<li>銝??遢???銝??詨僕??/li>
-</ul>
-
-<h3>?啣?隞餃?</h3>
-<ul>
-<li>敹‵甈?嚗遙??蝔晞?鞎砌犖嚗abel 敺?蝝??敹‵)??</li>
-<li>?芸‵? ??蝝?璅內嚗‵撖怠?瘨</li>
-<li>????蝵格???雿???/li>
-</ul>
-
-<h3>敺耨甇??</h3>
-<ul>
-<li>?函?甈?憛??典?颲行?銝</li>
-<li>蝝??嚗?嗅?/撅?</li>
-<li>隞餃??∪ ?? 蝺刻摩 + ??儭??芷??</li>
-<li>?芷蝡??嚗ire-and-forget嚗? await嚗?/li>
-<li>?∪?憿遙??銝＊蝷?/li>
-<li>??頠訾?憿舐內??隞餃?</li>
-</ul>
-
-<h3>憭??</h3>
-<ul>
-<li>銝???嚗??/鈭?/銝?嚗?/li>
-<li>蝢斤???嚗?潘?嚗漱???拙黎蝯??</li>
-<li>?郊??嚗? add + ?脣漲璇＊蝷?/li>
-<li>憿隤芣???撠???</li>
-</ul>
-
-<h3>頝典像?啣?甇?/h3>
-<ul>
-<li>???雿?神??Sheet嚗?閫?????</li>
-<li>?嗅????摨黎蝯?蝔???Sheet notes ??</li>
-<li>頛?? Sheet 霈????localStorage</li>
-<li>暺?璅? ??confirm ??皜敹怠? ??spinner ???頛</li>
+<li>先 clear 當月分頁</li>
+<li>逐筆 add（每筆間隔 300ms，每 10 筆 sleep 1s）</li>
+<li>完成後 gviz 驗證筆數</li>
+<li>不使用 batch（已確認 batch action 無效）</li>
 </ul>
 </div>
 </div>
 
 <div class="section">
-<h2>?? 撌乩?瘚?閬?</h2>
+<h2>⚙️ 功能規範</h2>
 <div class="card">
-<h3>?Ⅱ隤?撖虫?</h3>
+<h3>看板功能</h3>
+<ul>
+<li>三欄佈局：待辦 / 進行中 / 已完成</li>
+<li>負責人分組（可拖曳排序、收合/展開）</li>
+<li>任務卡：拖曳換欄、編輯、刪除、+子任務</li>
+<li>空欄自動收合，拖曳時自動展開</li>
+<li>待修正欄：無負責人的任務獨立顯示在待辦欄上方</li>
+<li>日期預設藍色，快到期/逾期變色（黃→橙→紅）</li>
+<li>不同月份拖曳操作不互相干擾</li>
+</ul>
+
+<h3>新增任務</h3>
+<ul>
+<li>必填欄位：任務名稱、負責人（label 後加紅色「(必填)」）</li>
+<li>未填送出 → 紅框標示，填寫後消除</li>
+<li>取消時重置所有欄位狀態</li>
+</ul>
+
+<h3>待修正欄</h3>
+<ul>
+<li>獨立欄區塊，在待辦欄上方</li>
+<li>紅色邊框，可收合/展開</li>
+<li>任務卡含 ✏️ 編輯 + 🗑️ 刪除按鈕</li>
+<li>刪除立即生效（fire-and-forget，不 await）</li>
+<li>無問題任務時不顯示</li>
+<li>時間軸不顯示這些任務</li>
+</ul>
+
+<h3>外包看板</h3>
+<ul>
+<li>三區分組（一區/二區/三區）</li>
+<li>群組排序（▲▼），交換時兩個群組都閃爍</li>
+<li>同步按鈕：逐筆 add + 進度條顯示</li>
+<li>顏色說明與搜尋框同列</li>
+</ul>
+
+<h3>跨平台同步</h3>
+<ul>
+<li>所有操作即時寫入 Sheet（需解鎖狀態）</li>
+<li>收合狀態、排序、群組名稱 → Sheet notes 分頁</li>
+<li>載入時從 Sheet 讀取覆蓋 localStorage</li>
+<li>點擊標題 → confirm → 清除快取 → spinner → 重新載入</li>
+</ul>
+</div>
+</div>
+
+<div class="section">
+<h2>📏 工作流程規範</h2>
+<div class="card">
+<h3>先確認再實作</h3>
 <ol>
-<li>?嗅??瘙?/li>
-<li>?渡??瘙??瑁?閮</li>
-<li>?券??閬Ⅱ隤?/li>
-<li>?蝣箄?敺???撖虫?</li>
+<li>收到老爺需求</li>
+<li>整理需求與執行計畫</li>
+<li>在頻道回覆確認</li>
+<li>老爺確認後才開始實作</li>
 </ol>
 
-<h3>皞???/h3>
+<h3>溝通規則</h3>
 <ul>
-<li>??典??閰梧???撠勗???駁?</li>
-<li>蝔勗?冽?箝??/li>
-<li>雿輻銝剜?</li>
-<li>FZG ?賊???FZG ?駁?嚗opic 2080嚗?閬?/li>
+<li>老爺在哪個頻道發話，回覆就在同一頻道</li>
+<li>稱呼用戶為「老爺」</li>
+<li>使用中文</li>
+<li>FZG 相關在 FZG 頻道（topic 2080）回覆</li>
 </ul>
 </div>
 </div>
 
 <div class="section">
-<h2>?? 撌脩??釣????/h2>
+<h2>⚠️ 已知限制與注意事項</h2>
 <div class="card">
 <ul>
-<li>Apps Script ??<code>batch</code> action ?⊥?嚗???? <code>add</code></li>
-<li>PowerShell ??<code>ConvertTo-Json</code> 敹???<code>-Depth 5</code> + <code>UTF8.GetBytes</code>嚗???<code>-Compress</code></li>
-<li>PowerShell pipeline ?桐?蝯??? String嚗???<code>@(...)</code> 撘瑕頧??/li>
-<li><code>no-cors</code> fetch ? opaque response嚗???await ?斗??</li>
-<li>gviz 霈??敹怠?撱園嚗?霅??航?蝑嗾蝘?/li>
+<li>Apps Script 的 <code>batch</code> action 無效，必須用逐筆 <code>add</code></li>
+<li>PowerShell 的 <code>ConvertTo-Json</code> 必須加 <code>-Depth 5</code> + <code>UTF8.GetBytes</code>，不加 <code>-Compress</code></li>
+<li>PowerShell pipeline 單一結果會變 String，需用 <code>@(...)</code> 強制轉陣列</li>
+<li><code>no-cors</code> fetch 回傳 opaque response，不能 await 判斷成功</li>
+<li>gviz 讀取有快取延遲，驗證時可能需等幾秒</li>
 </ul>
 </div>
 </div>
 
 <script src="nav.js"></script></body>
 </html>
-
