@@ -71,19 +71,22 @@ header span{color:var(--muted);font-size:14px;margin-left:12px}
 <script>
 let items=[],currentTab='main',pendingAction=null;
 const SCRIPT_URL='https://script.google.com/macros/s/AKfycbz8k4bBNI-8IwICwN4EUSKaJtHOYvz-3s13UnZ3QZDuzlVgAGwa9mY91J3WP1apb50TDg/exec';
-const SHEET_ID='';
+const SHEET_ID='12GcnSkOnxfZoiMU6a7402fmZ-h3MIxusBB4nbMChB2s';
 
 async function load(){
   try{
-    const res=await fetch('data/index.json?t='+Date.now());
-    if(!res.ok)throw new Error();
-    items=await res.json();
-  }catch(e){items=[]}
-  // Load archived state from Sheet (gviz)
-  try{
-    const cached=localStorage.getItem('workspace_index');
-    if(cached){const c=JSON.parse(cached);if(c.length)items=c}
+    const res=await fetch('https://docs.google.com/spreadsheets/d/'+SHEET_ID+'/gviz/tq?tqx=out:csv&sheet=items&t='+Date.now(),{cache:'no-store'});
+    if(res.ok){
+      const csv=await res.text();
+      const rows=csv.trim().split('\n').filter(r=>r);
+      if(rows.length){
+        items=rows.map(r=>{const cols=r.match(/(".*?"|[^,]+)/g)||[];const clean=s=>(s||'').replace(/^"|"$/g,'');return{title:clean(cols[0]),desc:clean(cols[1]),icon:clean(cols[2]),path:clean(cols[3]),date:clean(cols[4]),archived:clean(cols[5])==='TRUE'}});
+      }
+    }
   }catch(e){}
+  if(!items.length){
+    try{const res=await fetch('data/index.json?t='+Date.now());if(res.ok)items=await res.json()}catch(e){}
+  }
   render();
 }
 
