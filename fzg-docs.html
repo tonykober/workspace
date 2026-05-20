@@ -253,16 +253,18 @@ a{color:var(--accent)}
 
 <div class="ui-box ui-l2">
 <div class="ui-title" style="color:var(--green)">內部頁面</div>
+<div style="display:flex;gap:10px;align-items:flex-start">
 
-<div class="ui-box ui-l3">
+<div class="ui-box ui-l3" style="flex-shrink:0">
 <div class="ui-label">統計列</div>
-<div class="ui-row">
-<span style="background:var(--bg);padding:4px 12px;border-radius:4px">任務數</span>
-<span style="background:var(--bg);padding:4px 12px;border-radius:4px;color:var(--green)">完成</span>
-<span style="background:var(--bg);padding:4px 12px;border-radius:4px;color:var(--yellow)">未完成</span>
+<div class="ui-row" style="flex-direction:column;gap:4px">
+<span style="background:var(--bg);padding:4px 12px;border-radius:4px;text-align:center">任務數</span>
+<span style="background:var(--bg);padding:4px 12px;border-radius:4px;color:var(--green);text-align:center">完成</span>
+<span style="background:var(--bg);padding:4px 12px;border-radius:4px;color:var(--yellow);text-align:center">未完成</span>
 </div>
 </div>
 
+<div style="flex:1">
 <div class="ui-box ui-l3">
 <div class="ui-label">按鈕列 A</div>
 <div class="ui-row">
@@ -283,6 +285,9 @@ a{color:var(--accent)}
 <span style="background:var(--bg);padding:2px 8px;border-radius:12px;font-size:0.8rem">...</span>
 <span style="background:var(--bg);padding:2px 8px;border-radius:4px;font-size:0.8rem;margin-left:auto">🔍 搜尋</span>
 </div>
+</div>
+</div>
+
 </div>
 
 <div class="ui-box ui-l3">
