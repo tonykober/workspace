@@ -253,9 +253,25 @@ code{background:var(--surface);padding:2px 6px;border-radius:4px;font-size:0.85r
 <h2>CI 部署監控</h2>
 <div class="card">
 <ul>
-<li>監控 3 個 repo 的 GitHub Pages 部署</li>
-<li>部署失敗 → 在對應頻道通知老爺</li>
-<li>通常短暫失敗會自動重試恢復</li>
+<li>已停止自動監控（不再接收 pass/fail 通知）</li>
+<li>部署失敗不主動通知老爺</li>
+<li>老爺主動詢問時再查詢部署狀態</li>
+</ul>
+</div>
+
+<h2>預防性重啟</h2>
+<div class="card highlight">
+<ul>
+<li>大型任務（超過 5 次 commit）完成後，主動 replace 重置 context</li>
+<li>避免 context 過長導致 hung</li>
+</ul>
+</div>
+
+<h2>急件代理</h2>
+<div class="card">
+<ul>
+<li>成員 hung 時，老爺標記「急」的任務，秘書可直接代為處理</li>
+<li>非急件等成員恢復後處理</li>
 </ul>
 </div>
 
