@@ -37,6 +37,7 @@ a{color:var(--accent)}
 <div class="tab" onclick="showTab(2)">設定格式</div>
 <div class="tab" onclick="showTab(3)">功能架構</div>
 <div class="tab" onclick="showTab(4)">規則與限制</div>
+<div class="tab" onclick="showTab(5)">🖼️ UI 架構圖</div>
 </div>
 
 <div class="panel active">
@@ -219,6 +220,165 @@ a{color:var(--accent)}
 <li>用於：<code>_manualBoardGroups</code> key、<code>data-board-item</code> 屬性、排序陣列</li>
 <li>顯示時仍用任務名稱（<code>t['工作項目']</code>）</li>
 </ul>
+</div>
+
+<div class="panel">
+<h2>🖼️ UI 架構圖</h2>
+<style>
+.ui-box{border-radius:6px;padding:10px;margin:6px 0}
+.ui-l1{border:2px solid var(--accent);padding:12px}
+.ui-l2{border:2px solid var(--green);padding:10px;margin:6px 0}
+.ui-l3{border:1px solid var(--yellow);padding:8px;margin:4px 0}
+.ui-l4{border:1px dashed var(--muted);padding:6px;margin:3px 0}
+.ui-label{font-size:0.8rem;color:var(--muted);margin-bottom:4px}
+.ui-title{font-weight:600;margin-bottom:6px}
+.ui-row{display:flex;gap:8px;flex-wrap:wrap}
+.ui-col{flex:1;min-width:150px}
+</style>
+
+<div class="ui-box ui-l1">
+<div class="ui-title" style="color:var(--accent)">📋 FZG 專案追蹤器</div>
+<div class="ui-label">頁面切換：內部 / 外包</div>
+
+<div class="ui-box ui-l2">
+<div class="ui-title" style="color:var(--green)">共用 Header</div>
+<div class="ui-row">
+<span style="background:var(--bg);padding:2px 8px;border-radius:4px;font-size:0.85rem">📋 標題（清快取重載）</span>
+<span style="background:var(--bg);padding:2px 8px;border-radius:4px;font-size:0.85rem">[內部][外包]</span>
+<span style="background:var(--bg);padding:2px 8px;border-radius:4px;font-size:0.85rem">◀ 月份 ▶</span>
+<span style="background:var(--bg);padding:2px 8px;border-radius:4px;font-size:0.85rem">同步狀態</span>
+<span style="background:var(--bg);padding:2px 8px;border-radius:4px;font-size:0.85rem">密碼/管理</span>
+</div>
+</div>
+
+<div class="ui-box ui-l2">
+<div class="ui-title" style="color:var(--green)">內部頁面</div>
+
+<div class="ui-box ui-l3">
+<div class="ui-label">統計列</div>
+<div class="ui-row">
+<span style="background:var(--bg);padding:4px 12px;border-radius:4px">任務數</span>
+<span style="background:var(--bg);padding:4px 12px;border-radius:4px;color:var(--green)">完成</span>
+<span style="background:var(--bg);padding:4px 12px;border-radius:4px;color:var(--yellow)">未完成</span>
+</div>
+</div>
+
+<div class="ui-box ui-l3">
+<div class="ui-label">按鈕列 A</div>
+<div class="ui-row">
+<span style="background:var(--accent);color:#fff;padding:3px 8px;border-radius:4px;font-size:0.85rem">看板</span>
+<span style="background:var(--bg);padding:3px 8px;border-radius:4px;font-size:0.85rem">時間軸</span>
+<span style="background:var(--bg);padding:3px 8px;border-radius:4px;font-size:0.85rem">報告</span>
+<span style="background:var(--green);color:#fff;padding:3px 8px;border-radius:4px;font-size:0.85rem">➕ 新增任務</span>
+</div>
+</div>
+
+<div class="ui-box ui-l3">
+<div class="ui-label">標籤列 B + 搜尋</div>
+<div class="ui-row">
+<span style="background:var(--accent);color:#fff;padding:2px 8px;border-radius:12px;font-size:0.8rem">全部</span>
+<span style="background:var(--bg);padding:2px 8px;border-radius:12px;font-size:0.8rem">UI</span>
+<span style="background:var(--bg);padding:2px 8px;border-radius:12px;font-size:0.8rem">場景</span>
+<span style="background:var(--bg);padding:2px 8px;border-radius:12px;font-size:0.8rem">模型貼圖</span>
+<span style="background:var(--bg);padding:2px 8px;border-radius:12px;font-size:0.8rem">...</span>
+<span style="background:var(--bg);padding:2px 8px;border-radius:4px;font-size:0.8rem;margin-left:auto">🔍 搜尋</span>
+</div>
+</div>
+
+<div class="ui-box ui-l3">
+<div class="ui-label">看板視圖</div>
+<div class="ui-row">
+<div class="ui-col ui-box ui-l4">
+<div style="color:var(--red);font-size:0.85rem;font-weight:600">⚠️ 待修正</div>
+<div style="font-size:0.75rem;color:var(--muted)">無負責人任務</div>
+</div>
+<div class="ui-col ui-box ui-l4">
+<div style="color:var(--muted);font-size:0.85rem;font-weight:600">📝 待辦</div>
+<div class="ui-box ui-l4"><div style="font-size:0.75rem">👤 負責人分組</div>
+<div class="ui-box" style="border:1px solid var(--border);padding:4px;font-size:0.7rem">任務卡<br><span style="color:var(--muted)">└ 子任務</span></div>
+</div>
+</div>
+<div class="ui-col ui-box ui-l4">
+<div style="color:var(--yellow);font-size:0.85rem;font-weight:600">🔄 進行中</div>
+<div style="font-size:0.75rem;color:var(--muted)">同上結構</div>
+</div>
+<div class="ui-col ui-box ui-l4">
+<div style="color:var(--green);font-size:0.85rem;font-weight:600">✅ 已完成</div>
+<div style="font-size:0.75rem;color:var(--muted)">同上結構</div>
+</div>
+</div>
+</div>
+
+<div class="ui-box ui-l3">
+<div class="ui-label">時間軸視圖</div>
+<div class="ui-row">
+<div style="width:200px;font-size:0.8rem">
+<div style="color:var(--accent)">👤 負責人</div>
+<div style="padding-left:12px;color:var(--muted);font-size:0.75rem">任務名稱<br>└ 子任務</div>
+</div>
+<div style="flex:1;background:var(--bg);border-radius:4px;padding:8px;font-size:0.75rem;color:var(--muted)">
+← Gantt 條（日期軸）→
+</div>
+</div>
+</div>
+
+<div class="ui-box ui-l3">
+<div class="ui-label">報告視圖</div>
+<div style="font-size:0.8rem;color:var(--muted)">統計報表</div>
+</div>
+</div>
+
+<div class="ui-box ui-l2">
+<div class="ui-title" style="color:var(--green)">外包頁面</div>
+
+<div class="ui-box ui-l3">
+<div class="ui-label">按鈕列 + 顏色說明</div>
+<div class="ui-row">
+<span style="background:var(--accent);color:#fff;padding:3px 8px;border-radius:4px;font-size:0.85rem">看板</span>
+<span style="background:var(--bg);padding:3px 8px;border-radius:4px;font-size:0.85rem">時間軸</span>
+<span style="background:var(--accent);color:#fff;padding:3px 8px;border-radius:4px;font-size:0.85rem">🔄 重新載入</span>
+<span style="background:var(--green);color:#fff;padding:3px 8px;border-radius:4px;font-size:0.85rem">☁️ 雲端更新</span>
+<span style="font-size:0.75rem;color:var(--muted);margin-left:auto">🟡🟢⬜🔵</span>
+</div>
+</div>
+
+<div class="ui-box ui-l3">
+<div class="ui-label">看板視圖</div>
+<div class="ui-row">
+<div class="ui-col ui-box ui-l4">
+<div style="font-size:0.85rem;font-weight:600">一區</div>
+<div class="ui-box ui-l4"><div style="font-size:0.75rem;color:var(--accent)">👤 負責人</div>
+<div class="ui-box" style="border:1px solid var(--border);padding:4px;font-size:0.7rem">📁 群組<br><span style="color:var(--muted)">└ 任務項目</span></div>
+<div class="ui-box" style="border:1px solid var(--border);padding:4px;font-size:0.7rem">獨立任務卡</div>
+</div>
+</div>
+<div class="ui-col ui-box ui-l4">
+<div style="font-size:0.85rem;font-weight:600">二區</div>
+<div style="font-size:0.75rem;color:var(--muted)">同上結構</div>
+</div>
+<div class="ui-col ui-box ui-l4">
+<div style="font-size:0.85rem;font-weight:600">三區</div>
+<div style="font-size:0.75rem;color:var(--muted)">同上結構</div>
+</div>
+</div>
+</div>
+
+<div class="ui-box ui-l3">
+<div class="ui-label">時間軸視圖</div>
+<div class="ui-row">
+<div style="width:200px;font-size:0.8rem">
+<div style="color:var(--accent)">👤 負責人</div>
+<div style="padding-left:12px;font-size:0.75rem">📁 群組名稱</div>
+<div style="padding-left:24px;color:var(--muted);font-size:0.7rem">└ 任務項目</div>
+</div>
+<div style="flex:1;background:var(--bg);border-radius:4px;padding:8px;font-size:0.75rem;color:var(--muted)">
+← Gantt 條（日期軸）→
+</div>
+</div>
+</div>
+</div>
+
+</div>
 </div>
 
 <script>
