@@ -501,14 +501,16 @@ code{background:var(--surface);padding:2px 6px;border-radius:4px;font-size:0.85r
 </div>
 
 <div class="card highlight">
-<h3>多人加入機制（不中斷遊戲）</h3>
-<ul>
-<li><strong style="color:var(--text)">回合間加入：</strong>回合結算的 3 秒內投幣 → 下回合立即加入（最流暢）</li>
-<li><strong style="color:var(--text)">回合中加入：</strong>投幣後角色在下一次「重生點」出現（約等 5~10 秒），不中斷當前戰局</li>
-<li><strong style="color:var(--text)">取代 AI：</strong>新玩家加入時取代一個 AI 位置，無縫銜接</li>
-<li>❌ 不會中斷或重啟當前戰局</li>
-<li>❌ 不需要等整場結束</li>
-</ul>
+<h3>多人即時加入機制（不中斷遊戲）</h3>
+<ol>
+<li>新玩家投幣 → 畫面角落彈出選角浮層 +「NEW CHALLENGER!」</li>
+<li>新玩家選角色（限時 5 秒，超時隨機）— 戰場繼續不中斷</li>
+<li>選完 → AI 被「彈飛出場」（搞笑動畫）</li>
+<li>新角色從天空掉落 + 砸地震波（把附近的人彈開）</li>
+<li>落地 1 秒無敵 → 正式加入戰鬥</li>
+</ol>
+<p>⏱️ 投幣到可操作：約 7 秒（含選角）/ 跳過選角約 3 秒</p>
+<p>❌ 不中斷戰局 ❌ 不需等整場結束</p>
 </div>
 <div class="card">
 <h3>營收最大化設計</h3>
