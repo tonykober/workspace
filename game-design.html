@@ -486,8 +486,29 @@ code{background:var(--surface);padding:2px 6px;border-radius:4px;font-size:0.85r
 <tr><td>單次投幣</td><td>1 枚代幣 = 3 回合完整對局</td></tr>
 <tr><td>單局時間</td><td>約 2.5~3 分鐘</td></tr>
 <tr><td>續幣</td><td>結算後 10 秒內投幣再玩一輪</td></tr>
-<tr><td>中途加入</td><td>空位可隨時投幣加入</td></tr>
+<tr><td>中途加入</td><td>回合間空檔投幣即加入下回合</td></tr>
 </table></div>
+</div>
+
+<div class="card green">
+<h3>單人遊玩設計</h3>
+<ul>
+<li>1 人投幣即可開始（vs 3 個 AI 對手）</li>
+<li>AI 難度動態調整（連勝變強、連敗變弱）</li>
+<li>單人也有完整 3 回合體驗 + 排行榜挑戰</li>
+<li>AI 行為有趣（會互打、會搞笑跌倒），不無聊</li>
+</ul>
+</div>
+
+<div class="card highlight">
+<h3>多人加入機制（不中斷遊戲）</h3>
+<ul>
+<li><strong style="color:var(--text)">回合間加入：</strong>回合結算的 3 秒內投幣 → 下回合立即加入（最流暢）</li>
+<li><strong style="color:var(--text)">回合中加入：</strong>投幣後角色在下一次「重生點」出現（約等 5~10 秒），不中斷當前戰局</li>
+<li><strong style="color:var(--text)">取代 AI：</strong>新玩家加入時取代一個 AI 位置，無縫銜接</li>
+<li>❌ 不會中斷或重啟當前戰局</li>
+<li>❌ 不需要等整場結束</li>
+</ul>
 </div>
 <div class="card">
 <h3>營收最大化設計</h3>
@@ -512,118 +533,6 @@ code{background:var(--surface);padding:2px 6px;border-radius:4px;font-size:0.85r
 <div class="card highlight">
 <p><strong style="color:var(--text)">預估總開發時間：6~9 個月</strong></p>
 </div>
-</div>
-
-<h2>目標年齡層</h2>
-<div class="card highlight">
-<p><strong style="color:var(--text)">6～12 歲</strong> — 讓 6 歲覺得好玩，12 歲覺得不丟臉。</p>
-</div>
-
-<h2>推薦風格方向</h2>
-
-<h3>⭐ 推薦 1：3D 風格化卡通（Stylized 3D）</h3>
-<div class="card green">
-<p>圓潤造型 + 鮮豔配色 + 誇張比例</p>
-<ul>
-<li>參考：<strong style="color:var(--text)">Fall Guys</strong>、<strong style="color:var(--text)">Stumble Guys</strong>、<strong style="color:var(--text)">Brawl Stars</strong>、<strong style="color:var(--text)">Splatoon</strong></li>
-<li>6~12 歲最熟悉的視覺語言（Roblox/Fortnite 世代）</li>
-<li>角色辨識度高，遠距離也看得清</li>
-<li>街機大螢幕上視覺衝擊力強</li>
-<li>不會太幼稚，大人也能接受</li>
-</ul>
-</div>
-
-<h3>推薦 2：2.5D 厚塗卡通（Thick-line Cartoon）</h3>
-<div class="card">
-<p>粗線條 + 飽和色塊 + 動態誇張</p>
-<ul>
-<li>參考：<strong style="color:var(--text)">Brawl Stars</strong>、<strong style="color:var(--text)">Cuphead</strong>、<strong style="color:var(--text)">Skullgirls</strong></li>
-<li>製作成本比全 3D 低</li>
-<li>動畫表現力強，有「潮」感</li>
-</ul>
-</div>
-
-<h3>推薦 3：軟 Q 果凍體（Blob / Jelly）</h3>
-<div class="card">
-<p>軟體動物/果凍質感角色 + 物理變形</p>
-<ul>
-<li>參考：<strong style="color:var(--text)">Gang Beasts</strong>、<strong style="color:var(--text)">Fall Guys</strong> 的 bean 造型</li>
-<li>完美搭配物理亂鬥玩法</li>
-<li>碰撞變形本身就是視覺笑料</li>
-<li>極度容易辨識，無文化障礙</li>
-</ul>
-</div>
-
-<h2>設計要點</h2>
-
-<div class="card">
-<h3>1. 角色剪影辨識度</h3>
-<ul>
-<li>每個角色在純黑剪影下也能一眼分辨</li>
-<li>街機螢幕距離 1-2 公尺，細節看不到，輪廓最重要</li>
-<li>參考 Brawl Stars：每個角色頭身比、體型都不同</li>
-</ul>
-</div>
-
-<div class="card">
-<h3>2. 配色策略</h3>
-<ul>
-<li>高飽和 + 高對比（避免灰階/暗色調）</li>
-<li>每個角色有專屬主色，方便分辨陣營</li>
-<li>背景偏冷/暗，角色偏暖/亮 → 主體突出</li>
-<li>街機環境光線雜，需要比家用機更高的對比度</li>
-</ul>
-</div>
-
-<div class="card">
-<h3>3. 表情與動態誇張化</h3>
-<ul>
-<li>大眼睛、誇張表情（被打飛時的驚恐臉）</li>
-<li>動作預備幀拉長（squash & stretch）</li>
-<li>打擊/碰撞時加速度線、星星、爆炸特效</li>
-<li>6~12 歲對「誇張反應」的笑點接受度最高</li>
-</ul>
-</div>
-
-<div class="card">
-<h3>4. UI 與文字</h3>
-<ul>
-<li>最少文字，圖示為主（跨語言）</li>
-<li>數字要大、動態跳出</li>
-<li>倒數計時器要醒目（孩子注意力短）</li>
-<li>投幣提示用動畫而非文字</li>
-</ul>
-</div>
-
-<div class="card red">
-<h3>5. 避免的元素</h3>
-<ul>
-<li>❌ 寫實血腥/暴力表現</li>
-<li>❌ 過度性感或成人暗示</li>
-<li>❌ 太暗的色調（恐怖感）</li>
-<li>❌ 過於複雜的紋理細節（看不清）</li>
-<li>❌ 太「嬰幼兒」的風格（粉色系/圓圓臉 → 6 歲以上覺得幼稚）</li>
-</ul>
-</div>
-
-<div class="card warning">
-<h3>6. 「酷」的平衡點</h3>
-<ul>
-<li>加入一點「態度」：角色有個性、有帥氣動作</li>
-<li>參考 Splatoon：色彩繽紛但有街頭潮流感</li>
-<li>參考 Fortnite：卡通但有「酷炫」的皮膚系統</li>
-</ul>
-</div>
-
-<h2>搭配玩法的最佳組合</h2>
-<div class="table-wrap"><table>
-<tr><th>玩法方向</th><th>推薦美術風格</th><th>理由</th></tr>
-<tr><td>B 物理亂鬥</td><td>軟 Q 果凍體 / 3D 風格化</td><td>物理碰撞 + 軟體變形 = 天然笑料</td></tr>
-<tr><td>A 合作載具</td><td>3D 風格化卡通</td><td>載具可以很酷，角色跑來跑去有反差萌</td></tr>
-<tr><td>E 追逐破壞</td><td>3D 風格化 + 鮮豔場景</td><td>場景崩塌的視覺爽感需要 3D</td></tr>
-<tr><td>C Roguelike</td><td>2.5D 厚塗卡通</td><td>角色多樣性高，2D 製作效率好</td></tr>
-<tr><td>D 節奏動作</td><td>3D 風格化 + 霓虹光效</td><td>音樂節奏搭配光效最炫</td></tr>
-</table></div>
 </div>
 
 <script>
