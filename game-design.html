@@ -46,6 +46,7 @@ code{background:var(--surface);padding:2px 6px;border-radius:4px;font-size:0.85r
 <div class="tab" onclick="sw('research')">📊 市場研究</div>
 <div class="tab" onclick="sw('design')">🎯 玩法方向</div>
 <div class="tab" onclick="sw('art')">🎨 美術風格</div>
+<div class="tab" onclick="sw('gdd')">📖 GDD</div>
 </div>
 
 
@@ -86,7 +87,7 @@ code{background:var(--surface);padding:2px 6px;border-radius:4px;font-size:0.85r
 <tr><td>市場研究</td><td><span class="badge done">✅ 完成</span></td><td>多人遊戲品類分析、趨勢整理</td></tr>
 <tr><td>玩法方向</td><td><span class="badge done">✅ 完成</span></td><td>5 個玩法方向提案與分析</td></tr>
 <tr><td>美術風格設計</td><td><span class="badge done">✅ 完成</span></td><td>風格方向、設計要點、玩法搭配</td></tr>
-<tr><td>GDD 框架</td><td><span class="badge pending">🔲 待討論</span></td><td>—</td></tr>
+<tr><td>GDD 框架</td><td><span class="badge done">✅ 完成</span></td><td>物理亂鬥 + 3D 風格化完整規格</td></tr>
 <tr><td>操作配置</td><td><span class="badge pending">🔲 待討論</span></td><td>—</td></tr>
 <tr><td>投幣機制與營收模型</td><td><span class="badge pending">🔲 待討論</span></td><td>—</td></tr>
 </table></div>
@@ -318,6 +319,201 @@ code{background:var(--surface);padding:2px 6px;border-radius:4px;font-size:0.85r
 
 <!-- 美術風格 -->
 <div class="page" id="p-art">
+<h2>目標年齡層</h2>
+<div class="card highlight">
+<p><strong style="color:var(--text)">6～12 歲</strong> — 讓 6 歲覺得好玩，12 歲覺得不丟臉。</p>
+</div>
+
+<h2>推薦風格方向</h2>
+
+<h3>⭐ 推薦 1：3D 風格化卡通（Stylized 3D）</h3>
+<div class="card green">
+<p>圓潤造型 + 鮮豔配色 + 誇張比例</p>
+<ul>
+<li>參考：<strong style="color:var(--text)">Fall Guys</strong>、<strong style="color:var(--text)">Stumble Guys</strong>、<strong style="color:var(--text)">Brawl Stars</strong>、<strong style="color:var(--text)">Splatoon</strong></li>
+<li>6~12 歲最熟悉的視覺語言（Roblox/Fortnite 世代）</li>
+<li>角色辨識度高，遠距離也看得清</li>
+<li>街機大螢幕上視覺衝擊力強</li>
+<li>不會太幼稚，大人也能接受</li>
+</ul>
+</div>
+
+<h3>推薦 2：2.5D 厚塗卡通（Thick-line Cartoon）</h3>
+<div class="card">
+<p>粗線條 + 飽和色塊 + 動態誇張</p>
+<ul>
+<li>參考：<strong style="color:var(--text)">Brawl Stars</strong>、<strong style="color:var(--text)">Cuphead</strong>、<strong style="color:var(--text)">Skullgirls</strong></li>
+<li>製作成本比全 3D 低</li>
+<li>動畫表現力強，有「潮」感</li>
+</ul>
+</div>
+
+<h3>推薦 3：軟 Q 果凍體（Blob / Jelly）</h3>
+<div class="card">
+<p>軟體動物/果凍質感角色 + 物理變形</p>
+<ul>
+<li>參考：<strong style="color:var(--text)">Gang Beasts</strong>、<strong style="color:var(--text)">Fall Guys</strong> 的 bean 造型</li>
+<li>完美搭配物理亂鬥玩法</li>
+<li>碰撞變形本身就是視覺笑料</li>
+<li>極度容易辨識，無文化障礙</li>
+</ul>
+</div>
+
+<h2>設計要點</h2>
+
+<div class="card">
+<h3>1. 角色剪影辨識度</h3>
+<ul>
+<li>每個角色在純黑剪影下也能一眼分辨</li>
+<li>街機螢幕距離 1-2 公尺，細節看不到，輪廓最重要</li>
+</ul>
+</div>
+
+<div class="card">
+<h3>2. 配色策略</h3>
+<ul>
+<li>高飽和 + 高對比（避免灰階/暗色調）</li>
+<li>每個角色有專屬主色，方便分辨陣營</li>
+<li>背景偏冷/暗，角色偏暖/亮 → 主體突出</li>
+</ul>
+</div>
+
+<div class="card">
+<h3>3. 表情與動態誇張化</h3>
+<ul>
+<li>大眼睛、誇張表情（squash & stretch）</li>
+<li>打擊時加速度線、星星、爆炸特效</li>
+</ul>
+</div>
+
+<div class="card red">
+<h3>4. 避免的元素</h3>
+<ul>
+<li>❌ 寫實血腥 / 太暗色調 / 太嬰幼兒風格</li>
+<li>❌ 過於複雜的紋理細節</li>
+</ul>
+</div>
+
+<div class="card warning">
+<h3>5. 「酷」的平衡點</h3>
+<ul>
+<li>參考 Splatoon：色彩繽紛 + 街頭潮流感</li>
+<li>參考 Fortnite：卡通但有酷炫皮膚系統</li>
+</ul>
+</div>
+</div>
+
+<!-- GDD -->
+<div class="page" id="p-gdd">
+<h2>遊戲概述</h2>
+<div class="card highlight">
+<p><strong style="color:var(--text)">一句話描述：</strong>1~4 人 3D 物理亂鬥街機遊戲，玩家在充滿機關的競技場中互推互摔，物理碰撞製造不可預測的歡樂混亂。</p>
+</div>
+<div class="table-wrap"><table>
+<tr><th>項目</th><th>內容</th></tr>
+<tr><td>類型</td><td>物理亂鬥 / Party Brawler</td></tr>
+<tr><td>平台</td><td>大型街機台（自製框體）</td></tr>
+<tr><td>玩家數</td><td>1~4 人</td></tr>
+<tr><td>目標年齡</td><td>6~12 歲</td></tr>
+<tr><td>單局時間</td><td>2~3 分鐘（含結算）</td></tr>
+<tr><td>美術風格</td><td>3D 風格化卡通</td></tr>
+<tr><td>操作</td><td>搖桿 + 2 按鈕</td></tr>
+</table></div>
+
+<h2>核心玩法循環</h2>
+<div class="card">
+<p style="color:var(--text);font-family:monospace;font-size:0.85rem">投幣 → 選角色(8秒) → 競技場亂鬥(60~90秒×3回合) → 最終結算 → 排行榜</p>
+</div>
+<div class="card green">
+<h3>每秒在做什麼</h3>
+<ol>
+<li>移動（搖桿）— 靠近對手或躲避</li>
+<li>攻擊（A 鍵）— 推/打/撞擊對手</li>
+<li>抓取（B 鍵）— 抓住對手或物件，可投擲</li>
+<li>利用地圖機關 — 把對手推向陷阱</li>
+<li>被物理力量彈飛 — 製造笑料</li>
+</ol>
+</div>
+<div class="card">
+<h3>勝負條件（3 種模式）</h3>
+<ul>
+<li><strong style="color:var(--text)">生存模式：</strong>被推出場外即淘汰，最後存活者得分</li>
+<li><strong style="color:var(--text)">搶旗模式：</strong>持有旗幟累積秒數</li>
+<li><strong style="color:var(--text)">山丘之王：</strong>站在指定區域累積分數</li>
+</ul>
+</div>
+
+<h2>角色設計（8 角色）</h2>
+<div class="table-wrap"><table>
+<tr><th>#</th><th>代號</th><th>體型</th><th>視覺特徵</th></tr>
+<tr><td>1</td><td>圓胖子</td><td>矮胖球形</td><td>彈力最視覺化</td></tr>
+<tr><td>2</td><td>長條人</td><td>高瘦</td><td>搖晃幅度大</td></tr>
+<tr><td>3</td><td>方塊頭</td><td>中等方正</td><td>穩重感</td></tr>
+<tr><td>4</td><td>果凍怪</td><td>軟Q不定形</td><td>變形最誇張</td></tr>
+<tr><td>5</td><td>彈簧腿</td><td>小身體長腿</td><td>跳躍動態突出</td></tr>
+<tr><td>6</td><td>鐵球仔</td><td>小而重</td><td>撞擊力視覺感強</td></tr>
+<tr><td>7</td><td>氣球人</td><td>大而輕</td><td>容易被彈飛</td></tr>
+<tr><td>8</td><td>刺蝟球</td><td>中等帶刺</td><td>被抓時對方鬆手</td></tr>
+</table></div>
+<p>※ 角色無能力差異，僅外觀與物理動畫表現不同，確保公平性。</p>
+
+<h2>地圖設計（6 張）</h2>
+<div class="table-wrap"><table>
+<tr><th>#</th><th>名稱</th><th>機關</th><th>特色</th></tr>
+<tr><td>1</td><td>旋轉工廠</td><td>旋轉平台+傳送帶</td><td>站不穩就被甩飛</td></tr>
+<tr><td>2</td><td>彈跳城堡</td><td>彈跳地板+彈射牆</td><td>全場彈來彈去</td></tr>
+<tr><td>3</td><td>冰面滑道</td><td>低摩擦+裂縫</td><td>煞不住車</td></tr>
+<tr><td>4</td><td>崩塌擂台</td><td>地板逐漸消失</td><td>場地越來越小</td></tr>
+<tr><td>5</td><td>砲彈風暴</td><td>隨機砲彈射入</td><td>躲砲彈又要打人</td></tr>
+<tr><td>6</td><td>搖擺吊橋</td><td>物理搖晃橋面</td><td>重心控制是關鍵</td></tr>
+</table></div>
+
+<h2>操作配置</h2>
+<div class="table-wrap"><table>
+<tr><th>輸入</th><th>動作</th><th>說明</th></tr>
+<tr><td>搖桿</td><td>移動</td><td>8 方向</td></tr>
+<tr><td>A</td><td>攻擊</td><td>短按＝推擊</td></tr>
+<tr><td>A 長按</td><td>蓄力攻擊</td><td>推力更大，有前搖</td></tr>
+<tr><td>B</td><td>抓取</td><td>抓住對手或物件</td></tr>
+<tr><td>B+搖桿</td><td>投擲</td><td>朝方向丟出</td></tr>
+<tr><td>搖桿雙擊</td><td>衝刺</td><td>短距離快速移動</td></tr>
+</table></div>
+
+<h2>投幣機制與營收</h2>
+<div class="card warning">
+<div class="table-wrap"><table>
+<tr><th>項目</th><th>設定</th></tr>
+<tr><td>單次投幣</td><td>1 枚代幣 = 3 回合完整對局</td></tr>
+<tr><td>單局時間</td><td>約 2.5~3 分鐘</td></tr>
+<tr><td>續幣</td><td>結算後 10 秒內投幣再玩一輪</td></tr>
+<tr><td>中途加入</td><td>空位可隨時投幣加入</td></tr>
+</table></div>
+</div>
+<div class="card">
+<h3>營收最大化設計</h3>
+<ol>
+<li><strong style="color:var(--text)">圍觀轉化</strong> — 待機播放精彩回放吸引路人</li>
+<li><strong style="color:var(--text)">中途加入</strong> — 看別人玩得開心就投幣</li>
+<li><strong style="color:var(--text)">續幣誘導</strong> — 「差一點就贏了！」+ 倒數壓力</li>
+<li><strong style="color:var(--text)">排行榜驅動</strong> — 當日/當週排行激發挑戰慾</li>
+<li><strong style="color:var(--text)">高翻桌率</strong> — 3 分鐘一局，每小時最多 20 局</li>
+</ol>
+</div>
+
+<h2>開發里程碑</h2>
+<div class="table-wrap"><table>
+<tr><th>階段</th><th>內容</th><th>時間</th></tr>
+<tr><td>原型</td><td>灰盒物理 + 2 角色 + 1 地圖</td><td>4~6 週</td></tr>
+<tr><td>Alpha</td><td>4 角色 + 3 地圖 + 基本 UI</td><td>8~10 週</td></tr>
+<tr><td>Beta</td><td>8 角色 + 6 地圖 + 音效 + 投幣</td><td>8~10 週</td></tr>
+<tr><td>測試</td><td>實機測試 + 平衡調整</td><td>4~6 週</td></tr>
+<tr><td>上線</td><td>框體製作 + 部署</td><td>4 週</td></tr>
+</table></div>
+<div class="card highlight">
+<p><strong style="color:var(--text)">預估總開發時間：6~9 個月</strong></p>
+</div>
+</div>
+
 <h2>目標年齡層</h2>
 <div class="card highlight">
 <p><strong style="color:var(--text)">6～12 歲</strong> — 讓 6 歲覺得好玩，12 歲覺得不丟臉。</p>
