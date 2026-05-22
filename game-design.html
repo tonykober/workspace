@@ -48,6 +48,7 @@ code{background:var(--surface);padding:2px 6px;border-radius:4px;font-size:0.85r
 <div class="tab" onclick="sw('art')">🎨 美術風格</div>
 <div class="tab" onclick="sw('gdd')">📖 GDD</div>
 <div class="tab" onclick="sw('coin')">🎰 投幣與營收</div>
+<div class="tab" onclick="sw('controls')">🕹️ 操作配置</div>
 </div>
 
 
@@ -89,7 +90,7 @@ code{background:var(--surface);padding:2px 6px;border-radius:4px;font-size:0.85r
 <tr><td>玩法方向</td><td><span class="badge done">✅ 完成</span></td><td>5 個玩法方向提案與分析</td></tr>
 <tr><td>美術風格設計</td><td><span class="badge done">✅ 完成</span></td><td>風格方向、設計要點、玩法搭配</td></tr>
 <tr><td>GDD 框架</td><td><span class="badge done">✅ 完成</span></td><td>物理亂鬥 + 3D 風格化完整規格</td></tr>
-<tr><td>操作配置</td><td><span class="badge pending">🔲 待討論</span></td><td>—</td></tr>
+<tr><td>操作配置</td><td><span class="badge done">✅ 完成</span></td><td>硬體規格、操作表、框體設計</td></tr>
 <tr><td>投幣機制與營收模型</td><td><span class="badge done">✅ 完成</span></td><td>投幣設定、營收預估、回本分析</td></tr>
 </table></div>
 </div>
@@ -639,6 +640,92 @@ code{background:var(--surface);padding:2px 6px;border-radius:4px;font-size:0.85r
 <li>📸 <strong style="color:var(--text)">拍照/社群分享</strong> — 結算時拍攝搞笑瞬間，掃 QR code 下載（免費行銷）</li>
 <li>🏆 <strong style="color:var(--text)">賽事模式</strong> — 場地可舉辦週末錦標賽，收報名費+吸引人潮</li>
 <li>🎨 <strong style="color:var(--text)">角色皮膚販售</strong> — 投幣解鎖限定造型（額外收入來源）</li>
+</ul>
+</div>
+</div>
+
+<!-- 操作配置 -->
+<div class="page" id="p-controls">
+<h2>硬體配置（每位玩家）</h2>
+<div class="table-wrap"><table>
+<tr><th>項目</th><th>規格</th><th>說明</th></tr>
+<tr><td>搖桿</td><td>8 方向，短桿球頭</td><td>三和/Sanwa 等級，耐用型</td></tr>
+<tr><td>按鈕</td><td>2 顆大型凸面（A/B）</td><td>直徑 40mm，間距 60mm，適合小手</td></tr>
+<tr><td>配色</td><td>A=紅色、B=藍色</td><td>顏色區分功能，直覺辨識</td></tr>
+<tr><td>投幣口</td><td>每人 1 個</td><td>標準電子投幣器</td></tr>
+</table></div>
+
+<h2>操作表</h2>
+<div class="card highlight">
+<div class="table-wrap"><table>
+<tr><th>輸入</th><th>動作</th><th>說明</th></tr>
+<tr><td>搖桿</td><td>移動</td><td>8 方向移動角色</td></tr>
+<tr><td>A（短按）</td><td>攻擊/推擊</td><td>將對手推開</td></tr>
+<tr><td>A（長按）</td><td>蓄力攻擊</td><td>推力加倍，有前搖</td></tr>
+<tr><td>B（短按）</td><td>抓取</td><td>抓住對手或物件</td></tr>
+<tr><td>B + 搖桿</td><td>投擲</td><td>朝方向丟出</td></tr>
+<tr><td>搖桿雙擊</td><td>衝刺</td><td>短距離快移（1秒冷卻）</td></tr>
+</table></div>
+</div>
+
+<h2>模式專屬操作</h2>
+<div class="card">
+<div class="table-wrap"><table>
+<tr><th>模式</th><th>額外互動</th><th>操作</th></tr>
+<tr><td>搶旗混戰</td><td>撿/丟旗幟</td><td>靠近自動撿；B 丟出</td></tr>
+<tr><td>收集狂熱</td><td>撿金幣</td><td>靠近自動撿（無需按鍵）</td></tr>
+<tr><td>障礙賽跑</td><td>跳躍障礙</td><td>A = 跳躍（此模式攻擊改為跳）</td></tr>
+</table></div>
+<p>※ 障礙賽跑模式進入前有 2 秒提示畫面說明 A 鍵功能切換</p>
+</div>
+
+<h2>框體配置（俯視）</h2>
+<div class="card" style="font-family:monospace;font-size:0.8rem;line-height:1.4">
+<pre style="color:var(--text);margin:0">
+        ┌─────────────────────────────┐
+        │         55" 螢幕            │
+        │       (傾斜 15°)            │
+        └─────────────────────────────┘
+    
+    P1 [🕹️][🔴][🔵]          [🔴][🔵][🕹️] P2
+    
+    ┌─────────────────────────────────────┐
+    │              操作台面                │
+    P4 [🕹️][🔴][🔵]          [🔴][🔵][🕹️] P3
+    └─────────────────────────────────────┘
+              [💰]  [💰]  [💰]  [💰]
+</pre>
+</div>
+
+<h2>框體硬體規格</h2>
+<div class="table-wrap"><table>
+<tr><th>項目</th><th>規格</th></tr>
+<tr><td>螢幕</td><td>55 吋 LED，16:9，1920×1080，傾斜 15°</td></tr>
+<tr><td>主機</td><td>嵌入式 PC（GTX 1660 等級）</td></tr>
+<tr><td>音響</td><td>2.1 聲道，內建低音砲</td></tr>
+<tr><td>操作台高度</td><td>75cm（可選配 10cm 腳踏墊）</td></tr>
+<tr><td>框體尺寸</td><td>寬 150cm × 深 90cm × 高 200cm</td></tr>
+<tr><td>重量</td><td>約 120~150kg</td></tr>
+<tr><td>電源</td><td>AC 110V/220V，300W</td></tr>
+</table></div>
+
+<h2>設計考量</h2>
+<div class="card green">
+<h3>為何只用 2 顆按鈕</h3>
+<ol>
+<li>6 歲也能上手 — 按鈕越少門檻越低</li>
+<li>深度來自時機與位置 — 不是複雜指令</li>
+<li>物理引擎製造變數 — 同操作不同結果</li>
+<li>減少維護成本 — 故障率低</li>
+<li>街機黃金法則 — 經典街機都是極簡操作</li>
+</ol>
+</div>
+<div class="card">
+<h3>搖桿選型</h3>
+<ul>
+<li>球頭短桿（非蝙蝠頭）— 小手好握</li>
+<li>彈簧回中力適中 — 太硬小孩推不動</li>
+<li>防水防汙處理 — 小孩手汗+可能灑飲料</li>
 </ul>
 </div>
 </div>
