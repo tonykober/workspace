@@ -1,5 +1,6 @@
 (function(){
   var from=new URLSearchParams(window.location.search).get('from');
+  if(!from)return;
   var backUrl=from==='archive'?'index.html#archive':'index.html';
   var backLabel=from==='archive'?'📦 返回封存':'🏠 返回主頁';
   var nav=document.createElement('div');
