@@ -407,11 +407,11 @@ code{background:var(--surface);padding:2px 6px;border-radius:4px;font-size:0.85r
 <div class="page" id="p-gdd">
 <h2>遊戲概述</h2>
 <div class="card highlight">
-<p><strong style="color:var(--text)">一句話描述：</strong>1~4 人 3D 物理亂鬥街機遊戲，玩家在充滿機關的競技場中互推互摔，物理碰撞製造不可預測的歡樂混亂。</p>
+<p><strong style="color:var(--text)">一句話描述：</strong>1~4 人 3D 物理亂鬥街機遊戲，以物理引擎為核心，每回合隨機切換不同玩法模式（互推淘汰、障礙賽跑、搶旗混戰等），製造不可預測的歡樂混亂。</p>
 </div>
 <div class="table-wrap"><table>
 <tr><th>項目</th><th>內容</th></tr>
-<tr><td>類型</td><td>物理亂鬥 / Party Brawler</td></tr>
+<tr><td>類型</td><td>物理亂鬥 / 多模式派對（混合方案）</td></tr>
 <tr><td>平台</td><td>大型街機台（自製框體）</td></tr>
 <tr><td>玩家數</td><td>1~4 人</td></tr>
 <tr><td>目標年齡</td><td>6~12 歲</td></tr>
@@ -422,24 +422,26 @@ code{background:var(--surface);padding:2px 6px;border-radius:4px;font-size:0.85r
 
 <h2>核心玩法循環</h2>
 <div class="card">
-<p style="color:var(--text);font-family:monospace;font-size:0.85rem">投幣 → 選角色(8秒) → 競技場亂鬥(60~90秒×3回合) → 最終結算 → 排行榜</p>
+<p style="color:var(--text);font-family:monospace;font-size:0.85rem">投幣 → 選角色(8秒) → 回合1(隨機模式A) → 回合2(隨機模式B) → 回合3(隨機模式C) → 總分結算</p>
 </div>
 <div class="card green">
-<h3>每秒在做什麼</h3>
-<ol>
-<li>移動（搖桿）— 靠近對手或躲避</li>
-<li>攻擊（A 鍵）— 推/打/撞擊對手</li>
-<li>抓取（B 鍵）— 抓住對手或物件，可投擲</li>
-<li>利用地圖機關 — 把對手推向陷阱</li>
-<li>被物理力量彈飛 — 製造笑料</li>
-</ol>
+<h3>模式列表（每回合隨機抽選，不重複）</h3>
+<div class="table-wrap"><table>
+<tr><th>模式</th><th>類型</th><th>規則</th><th>時間</th></tr>
+<tr><td>互推淘汰</td><td>物理亂鬥</td><td>推出場外即淘汰</td><td>60~90秒</td></tr>
+<tr><td>障礙賽跑</td><td>闖關競速</td><td>跑到終點，最後者淘汰</td><td>45~60秒</td></tr>
+<tr><td>搶旗混戰</td><td>搶奪持有</td><td>持旗累積秒數</td><td>60秒</td></tr>
+<tr><td>山丘之王</td><td>佔領區域</td><td>站在區域累積分數</td><td>60秒</td></tr>
+<tr><td>躲避球風暴</td><td>閃躲生存</td><td>被砲彈擊中即淘汰</td><td>45~60秒</td></tr>
+<tr><td>收集狂熱</td><td>搶奪收集</td><td>搶收金幣，最多者勝</td><td>45秒</td></tr>
+</table></div>
 </div>
 <div class="card">
-<h3>勝負條件（3 種模式）</h3>
+<h3>計分系統</h3>
 <ul>
-<li><strong style="color:var(--text)">生存模式：</strong>被推出場外即淘汰，最後存活者得分</li>
-<li><strong style="color:var(--text)">搶旗模式：</strong>持有旗幟累積秒數</li>
-<li><strong style="color:var(--text)">山丘之王：</strong>站在指定區域累積分數</li>
+<li>每回合：1名=3分、2名=2分、3名=1分、4名=0分</li>
+<li>3 回合總分決定最終排名</li>
+<li>平手以最後一回合排名決勝</li>
 </ul>
 </div>
 
