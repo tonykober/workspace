@@ -47,6 +47,7 @@ code{background:var(--surface);padding:2px 6px;border-radius:4px;font-size:0.85r
 <div class="tab" onclick="sw('design')">🎯 玩法方向</div>
 <div class="tab" onclick="sw('art')">🎨 美術風格</div>
 <div class="tab" onclick="sw('gdd')">📖 GDD</div>
+<div class="tab" onclick="sw('coin')">🎰 投幣與營收</div>
 </div>
 
 
@@ -89,7 +90,7 @@ code{background:var(--surface);padding:2px 6px;border-radius:4px;font-size:0.85r
 <tr><td>美術風格設計</td><td><span class="badge done">✅ 完成</span></td><td>風格方向、設計要點、玩法搭配</td></tr>
 <tr><td>GDD 框架</td><td><span class="badge done">✅ 完成</span></td><td>物理亂鬥 + 3D 風格化完整規格</td></tr>
 <tr><td>操作配置</td><td><span class="badge pending">🔲 待討論</span></td><td>—</td></tr>
-<tr><td>投幣機制與營收模型</td><td><span class="badge pending">🔲 待討論</span></td><td>—</td></tr>
+<tr><td>投幣機制與營收模型</td><td><span class="badge done">✅ 完成</span></td><td>投幣設定、營收預估、回本分析</td></tr>
 </table></div>
 </div>
 
@@ -314,6 +315,42 @@ code{background:var(--surface);padding:2px 6px;border-radius:4px;font-size:0.85r
 <li>❌ 賽車模擬 — 方向盤硬體成本高</li>
 </ul>
 </div>
+
+<h2>追加研究：替代方向</h2>
+<div class="table-wrap"><table>
+<tr><th>方向</th><th>概念</th><th>市場數據</th><th>適合度</th></tr>
+<tr><td>F 障礙闖關</td><td>Fall Guys 街機版，跑障礙賽道</td><td>Fall Guys 5000萬玩家；Stumble Guys 下載5億</td><td class="stars">★★★★★</td></tr>
+<tr><td>G 合作兌獎</td><td>合作闖關+出票獎勵</td><td>Redemption 佔 FEC 收入 60-70%</td><td class="stars">★★★★</td></tr>
+<tr><td>H 體感AR</td><td>大螢幕+體感偵測</td><td>35%新街機整合AR/VR</td><td class="stars">★★★★</td></tr>
+<tr><td>I 迷你合集</td><td>每回合隨機小遊戲</td><td>Mario Party 累計7000萬銷量</td><td class="stars">★★★★</td></tr>
+<tr><td>J 道具競速</td><td>卡通競速+道具互炸</td><td>Mario Kart 累計1.87億；街機賽車市場13億美元</td><td class="stars">★★★★</td></tr>
+</table></div>
+
+<h2>⭐ 最終選定：混合方案</h2>
+<div class="card green">
+<p><strong style="color:var(--text)">核心概念：</strong>以物理亂鬥為核心引擎，結合多模式輪替設計。每回合隨機切換不同玩法模式。</p>
+<h3>為何選擇混合方案</h3>
+<ol>
+<li>重玩性最強 — 每局體驗都不同</li>
+<li>保留物理引擎投資 — 核心技術不浪費</li>
+<li>涵蓋多種樂趣 — 不同模式吸引不同偏好</li>
+<li>可持續擴充 — 後續可新增模式</li>
+<li>市場已驗證 — Fall Guys 證明多模式輪替成功</li>
+</ol>
+</div>
+<div class="card highlight">
+<h3>模式列表</h3>
+<div class="table-wrap"><table>
+<tr><th>模式</th><th>類型</th><th>規則</th><th>時間</th></tr>
+<tr><td>互推淘汰</td><td>物理亂鬥</td><td>推出場外即淘汰</td><td>60~90秒</td></tr>
+<tr><td>障礙賽跑</td><td>闖關競速</td><td>跑到終點，最後者淘汰</td><td>45~60秒</td></tr>
+<tr><td>搶旗混戰</td><td>搶奪持有</td><td>持旗累積秒數</td><td>60秒</td></tr>
+<tr><td>山丘之王</td><td>佔領區域</td><td>站在區域累積分數</td><td>60秒</td></tr>
+<tr><td>躲避球風暴</td><td>閃躲生存</td><td>被砲彈擊中即淘汰</td><td>45~60秒</td></tr>
+<tr><td>收集狂熱</td><td>搶奪收集</td><td>搶收金幣，最多者勝</td><td>45秒</td></tr>
+</table></div>
+<p style="color:var(--text);font-family:monospace;font-size:0.85rem">每局流程：投幣 → 選角色 → 回合1(模式A) → 回合2(模式B) → 回合3(模式C) → 總分結算</p>
+</div>
 </div>
 
 
@@ -536,6 +573,73 @@ code{background:var(--surface);padding:2px 6px;border-radius:4px;font-size:0.85r
 </table></div>
 <div class="card highlight">
 <p><strong style="color:var(--text)">預估總開發時間：6~9 個月</strong></p>
+</div>
+</div>
+
+<!-- 投幣與營收 -->
+<div class="page" id="p-coin">
+<h2>投幣機制設定</h2>
+<div class="table-wrap"><table>
+<tr><th>項目</th><th>設定</th><th>說明</th></tr>
+<tr><td>單次投幣</td><td>1 枚代幣</td><td>= 3 回合完整對局（約 2.5~3 分鐘）</td></tr>
+<tr><td>代幣定價</td><td>建議 NT$10~20/枚</td><td>依場地定位調整</td></tr>
+<tr><td>續幣</td><td>結算後 10 秒內</td><td>投幣即再玩一輪（保留排行分數）</td></tr>
+<tr><td>中途加入</td><td>隨時投幣</td><td>不中斷戰局，角色從天空掉落進場</td></tr>
+<tr><td>多人折扣</td><td>可選：4人同時投幣打折</td><td>鼓勵揪團（如 4 人只收 3 幣）</td></tr>
+</table></div>
+
+<h2>營收最大化設計</h2>
+<div class="card green">
+<h3>5 大營收驅動機制</h3>
+<ol>
+<li><strong style="color:var(--text)">圍觀轉化</strong> — 待機畫面播放精彩回放 + 搞笑瞬間，吸引路人駐足</li>
+<li><strong style="color:var(--text)">中途加入</strong> — 看別人玩得開心 → 隨時投幣加入，不用等</li>
+<li><strong style="color:var(--text)">續幣誘導</strong> — 結算時顯示「差一點就贏了！」+ 倒數壓力 + 下局模式預告</li>
+<li><strong style="color:var(--text)">排行榜驅動</strong> — 當日/當週排行，激發「再來一局超越他」的慾望</li>
+<li><strong style="color:var(--text)">高翻桌率</strong> — 3 分鐘一局，每小時最多 20 局 × 4 人 = 80 枚代幣上限</li>
+</ol>
+</div>
+
+<h2>營收預估模型</h2>
+<div class="card warning">
+<h3>每小時投幣預估</h3>
+<div class="table-wrap"><table>
+<tr><th>情境</th><th>投幣數/時</th><th>假設 NT$15/枚</th></tr>
+<tr><td>低流量（1人持續玩）</td><td>15~20 枚</td><td>NT$225~300</td></tr>
+<tr><td>中流量（2人輪替+續幣）</td><td>25~35 枚</td><td>NT$375~525</td></tr>
+<tr><td>高流量（4人滿座+輪替）</td><td>40~60 枚</td><td>NT$600~900</td></tr>
+</table></div>
+</div>
+
+<div class="card">
+<h3>每日/每月預估（以中流量計算）</h3>
+<div class="table-wrap"><table>
+<tr><th>時段</th><th>營業時間</th><th>日營收</th><th>月營收</th></tr>
+<tr><td>商場/FEC</td><td>10 小時/日</td><td>NT$3,750~5,250</td><td>NT$112,500~157,500</td></tr>
+<tr><td>夜市/遊樂場</td><td>6 小時/日</td><td>NT$2,250~3,150</td><td>NT$67,500~94,500</td></tr>
+</table></div>
+<p>※ 以上為單台預估，實際依場地人流、定價、競品密度而異</p>
+</div>
+
+<h2>回本分析</h2>
+<div class="card highlight">
+<div class="table-wrap"><table>
+<tr><th>項目</th><th>預估成本</th></tr>
+<tr><td>框體製作（含螢幕、主機、搖桿）</td><td>NT$150,000~250,000</td></tr>
+<tr><td>軟體開發（分攤至首批 10 台）</td><td>NT$100,000~200,000/台</td></tr>
+<tr><td>單台總成本</td><td>NT$250,000~450,000</td></tr>
+</table></div>
+<p><strong style="color:var(--green)">預估回本時間：3~6 個月</strong>（中流量場地）</p>
+</div>
+
+<h2>進階營收選項</h2>
+<div class="card">
+<ul>
+<li>🎫 <strong style="color:var(--text)">彩票兌獎模式</strong> — 可選加裝出票機，表現越好出票越多（提升家長付費意願）</li>
+<li>📸 <strong style="color:var(--text)">拍照/社群分享</strong> — 結算時拍攝搞笑瞬間，掃 QR code 下載（免費行銷）</li>
+<li>🏆 <strong style="color:var(--text)">賽事模式</strong> — 場地可舉辦週末錦標賽，收報名費+吸引人潮</li>
+<li>🎨 <strong style="color:var(--text)">角色皮膚販售</strong> — 投幣解鎖限定造型（額外收入來源）</li>
+</ul>
 </div>
 </div>
 
