@@ -646,38 +646,59 @@ code{background:var(--surface);padding:2px 6px;border-radius:4px;font-size:0.85r
 
 <!-- 操作配置 -->
 <div class="page" id="p-controls">
-<h2>硬體配置（每位玩家）</h2>
-<div class="table-wrap"><table>
-<tr><th>項目</th><th>規格</th><th>說明</th></tr>
-<tr><td>搖桿</td><td>8 方向，短桿球頭</td><td>三和/Sanwa 等級，耐用型</td></tr>
-<tr><td>按鈕</td><td>2 顆大型凸面（A/B）</td><td>直徑 40mm，間距 60mm，適合小手</td></tr>
-<tr><td>配色</td><td>A=紅色、B=藍色</td><td>顏色區分功能，直覺辨識</td></tr>
-<tr><td>投幣口</td><td>每人 1 個</td><td>標準電子投幣器</td></tr>
-</table></div>
+<h2>核心原則</h2>
+<div class="card highlight">
+<ul>
+<li><strong style="color:var(--red)">A 鍵 = 攻擊</strong>（永遠固定）</li>
+<li><strong style="color:var(--accent)">B 鍵 = 跳躍</strong>（永遠固定）</li>
+<li>互動 = 碰觸自動觸發（零學習成本）</li>
+<li>所有模式操作一致，不切換功能</li>
+</ul>
+</div>
 
 <h2>操作表</h2>
-<div class="card highlight">
 <div class="table-wrap"><table>
 <tr><th>輸入</th><th>動作</th><th>說明</th></tr>
-<tr><td>搖桿</td><td>移動</td><td>8 方向移動角色</td></tr>
-<tr><td>A（短按）</td><td>攻擊/推擊</td><td>將對手推開</td></tr>
-<tr><td>A（長按）</td><td>蓄力攻擊</td><td>推力加倍，有前搖</td></tr>
-<tr><td>B（短按）</td><td>抓取</td><td>抓住對手或物件</td></tr>
-<tr><td>B + 搖桿</td><td>投擲</td><td>朝方向丟出</td></tr>
+<tr><td>搖桿</td><td>移動</td><td>8 方向</td></tr>
+<tr><td>A</td><td>攻擊/推擊</td><td>空手時推擊對手</td></tr>
+<tr><td>A（持有道具）</td><td>使用道具</td><td>投擲/揮擊/發射</td></tr>
+<tr><td>B</td><td>跳躍</td><td>越過障礙、踩人頭</td></tr>
+<tr><td>B（空中）</td><td>下壓踩踏</td><td>向下踩人</td></tr>
 <tr><td>搖桿雙擊</td><td>衝刺</td><td>短距離快移（1秒冷卻）</td></tr>
 </table></div>
+
+<h2>自動互動</h2>
+<div class="card green">
+<ul>
+<li>撿道具 → 碰觸自動獲得</li>
+<li>撿旗幟 → 碰觸自動獲得</li>
+<li>撿金幣 → 跑過就收集</li>
+<li>使用道具 → 按 A</li>
+<li>同時只能持有 1 個道具，撿新覆蓋舊</li>
+</ul>
 </div>
 
-<h2>模式專屬操作</h2>
-<div class="card">
+<h2>道具系統</h2>
 <div class="table-wrap"><table>
-<tr><th>模式</th><th>額外互動</th><th>操作</th></tr>
-<tr><td>搶旗混戰</td><td>撿/丟旗幟</td><td>靠近自動撿；B 丟出</td></tr>
-<tr><td>收集狂熱</td><td>撿金幣</td><td>靠近自動撿（無需按鍵）</td></tr>
-<tr><td>障礙賽跑</td><td>跳躍障礙</td><td>A = 跳躍（此模式攻擊改為跳）</td></tr>
+<tr><th>道具</th><th>效果</th><th>A 鍵行為</th></tr>
+<tr><td>🥊 拳擊手套</td><td>超強推擊</td><td>揮拳，推力 3 倍</td></tr>
+<tr><td>🎳 保齡球</td><td>滾地擊倒</td><td>朝前方滾出</td></tr>
+<tr><td>💥 彈跳彈簧</td><td>彈飛周圍</td><td>原地震波</td></tr>
+<tr><td>🧊 冰凍炸彈</td><td>定身 2 秒</td><td>朝前方丟出</td></tr>
+<tr><td>🚀 火箭靴</td><td>超級衝刺</td><td>高速撞飛前方</td></tr>
+<tr><td>🛡️ 護盾</td><td>擋一次攻擊</td><td>自動觸發</td></tr>
 </table></div>
-<p>※ 障礙賽跑模式進入前有 2 秒提示畫面說明 A 鍵功能切換</p>
-</div>
+
+<h2>各模式操作體驗</h2>
+<div class="table-wrap"><table>
+<tr><th>模式</th><th>A 用途</th><th>B 用途</th><th>自動互動</th></tr>
+<tr><td>互推淘汰</td><td>推人/用道具</td><td>跳躲</td><td>撿道具</td></tr>
+<tr><td>障礙賽跑</td><td>推人/用加速道具</td><td>跳障礙</td><td>撿道具</td></tr>
+<tr><td>搶旗混戰</td><td>攻擊讓對手掉旗</td><td>跳躲</td><td>碰旗自動拿</td></tr>
+<tr><td>山丘之王</td><td>推人出區域</td><td>跳進區域</td><td>—</td></tr>
+<tr><td>躲避球風暴</td><td>推人擋砲彈</td><td>跳躲砲彈</td><td>—</td></tr>
+<tr><td>收集狂熱</td><td>打人掉金幣</td><td>跳搶高處金幣</td><td>碰金幣自動撿</td></tr>
+</table></div>
 
 <h2>框體配置（俯視）</h2>
 <div class="card" style="font-family:monospace;font-size:0.8rem;line-height:1.4">
@@ -697,37 +718,15 @@ code{background:var(--surface);padding:2px 6px;border-radius:4px;font-size:0.85r
 </pre>
 </div>
 
-<h2>框體硬體規格</h2>
+<h2>框體規格</h2>
 <div class="table-wrap"><table>
 <tr><th>項目</th><th>規格</th></tr>
-<tr><td>螢幕</td><td>55 吋 LED，16:9，1920×1080，傾斜 15°</td></tr>
+<tr><td>螢幕</td><td>55 吋 LED，1080p，傾斜 15°</td></tr>
 <tr><td>主機</td><td>嵌入式 PC（GTX 1660 等級）</td></tr>
-<tr><td>音響</td><td>2.1 聲道，內建低音砲</td></tr>
-<tr><td>操作台高度</td><td>75cm（可選配 10cm 腳踏墊）</td></tr>
-<tr><td>框體尺寸</td><td>寬 150cm × 深 90cm × 高 200cm</td></tr>
-<tr><td>重量</td><td>約 120~150kg</td></tr>
-<tr><td>電源</td><td>AC 110V/220V，300W</td></tr>
+<tr><td>音響</td><td>2.1 聲道 + 低音砲</td></tr>
+<tr><td>台面高度</td><td>75cm（+10cm 腳踏墊可選）</td></tr>
+<tr><td>尺寸</td><td>150×90×200cm，120~150kg</td></tr>
 </table></div>
-
-<h2>設計考量</h2>
-<div class="card green">
-<h3>為何只用 2 顆按鈕</h3>
-<ol>
-<li>6 歲也能上手 — 按鈕越少門檻越低</li>
-<li>深度來自時機與位置 — 不是複雜指令</li>
-<li>物理引擎製造變數 — 同操作不同結果</li>
-<li>減少維護成本 — 故障率低</li>
-<li>街機黃金法則 — 經典街機都是極簡操作</li>
-</ol>
-</div>
-<div class="card">
-<h3>搖桿選型</h3>
-<ul>
-<li>球頭短桿（非蝙蝠頭）— 小手好握</li>
-<li>彈簧回中力適中 — 太硬小孩推不動</li>
-<li>防水防汙處理 — 小孩手汗+可能灑飲料</li>
-</ul>
-</div>
 </div>
 
 <script>
