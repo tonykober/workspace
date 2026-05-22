@@ -132,7 +132,7 @@ function render(){
 }
 
 function cardHtml(item,idx,page){
-  const link=page==='archive'?item.path+'?from=archive':item.path;
+  const link=page==='archive'?item.path+'?from=archive':item.path+'?from=main';
   const btns=page==='main'
     ?`<button onclick="archiveItem(${idx})" title="封存">📦</button><button onclick="deleteItem(${idx})" title="刪除">🗑️</button>`
     :`<button onclick="restoreItem(${idx})" title="恢復">🔄</button><button onclick="deleteItem(${idx})" title="永久刪除">🗑️</button>`;
