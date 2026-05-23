@@ -1,0 +1,251 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>🛠️ 街機遊戲 — 開發團隊與技術棧分析</title>
+<style>
+:root{--bg:#0d1117;--surface:#161b22;--border:#30363d;--text:#e6edf3;--muted:#8b949e;--accent:#58a6ff;--green:#3fb950;--yellow:#d29922;--purple:#a371f7;--orange:#f0883e;--red:#f85149}
+*{margin:0;padding:0;box-sizing:border-box}
+body{background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;padding:30px 20px;line-height:1.7}
+h1{text-align:center;font-size:22px;color:var(--accent);margin-bottom:8px}
+.subtitle{text-align:center;color:var(--muted);font-size:14px;margin-bottom:20px}
+.tabs{display:flex;justify-content:center;gap:4px;margin-bottom:30px;border-bottom:1px solid var(--border);flex-wrap:wrap}
+.tab{padding:8px 14px;cursor:pointer;color:var(--muted);font-size:13px;border-bottom:2px solid transparent;transition:all .2s;white-space:nowrap}
+.tab:hover{color:var(--text)}
+.tab.active{color:var(--accent);border-bottom-color:var(--accent)}
+.page{display:none;max-width:1000px;margin:0 auto}
+.page.active{display:block}
+h2{font-size:1.2rem;color:var(--purple);margin:2rem 0 1rem;border-left:4px solid var(--purple);padding-left:12px}
+h3{font-size:1rem;margin:1.2rem 0 0.6rem}
+p{color:var(--muted);margin-bottom:0.8rem}
+.card{background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:1.2rem;margin:1rem 0}
+.card.highlight{border-left:4px solid var(--accent)}
+.card.warning{border-left:4px solid var(--yellow)}
+.card.green{border-left:4px solid var(--green)}
+.card.orange{border-left:4px solid var(--orange)}
+.card.red{border-left:4px solid var(--red)}
+table{width:100%;border-collapse:collapse;font-size:0.85rem;margin:0.8rem 0}
+th,td{padding:8px 10px;text-align:left;border-bottom:1px solid var(--border)}
+th{background:var(--surface);color:var(--accent);font-weight:600}
+ul,ol{margin:0.5rem 0 1rem 1.5rem;color:var(--muted)}
+li{margin-bottom:0.4rem}
+code{background:var(--surface);padding:2px 6px;border-radius:4px;font-size:0.85rem;color:var(--green)}
+.table-wrap{overflow-x:auto;-webkit-overflow-scrolling:touch}
+.badge{display:inline-block;padding:2px 8px;border-radius:12px;font-size:11px;font-weight:600}
+.badge.done{background:#1a3a2a;color:var(--green)}
+.badge.pending{background:#2a2000;color:var(--yellow)}
+.stars{color:var(--yellow)}
+</style>
+</head>
+<body>
+<h1>🛠️ 街機遊戲 — 開發團隊與技術棧分析</h1>
+<p class="subtitle">Unity 引擎 · 6 個月開發期 · 美術資源規劃</p>
+<div class="tabs">
+<div class="tab active" onclick="sw('tech')">⚙️ 技術棧</div>
+<div class="tab" onclick="sw('team')">👥 團隊規模</div>
+<div class="tab" onclick="sw('assets')">🎨 美術資源沿用</div>
+<div class="tab" onclick="sw('schedule')">📅 開發排程</div>
+<div class="tab" onclick="sw('risk')">⚠️ 技術門檻</div>
+<div class="tab" onclick="sw('visual')">🎯 視覺目標</div>
+</div>
+
+<!-- 技術棧 -->
+<div class="page active" id="p-tech">
+<h2>技術棧確認</h2>
+<div class="table-wrap"><table>
+<tr><th>項目</th><th>選擇</th><th>理由</th></tr>
+<tr><td>引擎</td><td>Unity 2022 LTS+ (URP)</td><td>穩定、街機嵌入式 PC 相容性好</td></tr>
+<tr><td>渲染管線</td><td>URP</td><td>風格化卡通最適配、效能友善 GTX 1660</td></tr>
+<tr><td>物理</td><td>Unity Physics + 自訂物理層</td><td>內建物理做基底，上層加「可控混亂」參數</td></tr>
+<tr><td>網路</td><td>不需要（本地多人）</td><td>4 人同機，省去 Netcode 複雜度</td></tr>
+<tr><td>輸入</td><td>Unity Input System (New)</td><td>支援多手把/搖桿映射</td></tr>
+<tr><td>音訊</td><td>FMOD 或 Wwise</td><td>動態音效分層控制</td></tr>
+<tr><td>硬體通訊</td><td>串口/USB HID</td><td>投幣器、按鈕、LED 控制</td></tr>
+</table></div>
+</div>
+
+<!-- 團隊規模 -->
+<div class="page" id="p-team">
+<h2>核心團隊（內部）</h2>
+<div class="table-wrap"><table>
+<tr><th>角色</th><th>人數</th><th>職責</th></tr>
+<tr><td>製作人/PM</td><td>1</td><td>進度控管、外包管理</td></tr>
+<tr><td>主程式</td><td>1</td><td>物理系統、框架、硬體整合</td></tr>
+<tr><td>程式</td><td>1~2</td><td>AI、UI、特效程式、工具</td></tr>
+<tr><td>主美術</td><td>1</td><td>風格把控、概念設計、外包審核</td></tr>
+<tr><td>3D 美術</td><td>2</td><td>角色/場景製作</td></tr>
+<tr><td>企劃/QA</td><td>1</td><td>模式設計、數值、測試</td></tr>
+</table></div>
+<div class="card highlight">
+<p><strong style="color:var(--text)">內部最低：7~8 人</strong></p>
+</div>
+
+<h2>外包需求</h2>
+<div class="table-wrap"><table>
+<tr><th>項目</th><th>數量</th><th>預估 (NT$)</th></tr>
+<tr><td>角色建模+綁定</td><td>8 隻</td><td>400K~600K</td></tr>
+<tr><td>角色動畫</td><td>8×15 組</td><td>500K~800K</td></tr>
+<tr><td>場景製作</td><td>6 張地圖</td><td>600K~900K</td></tr>
+<tr><td>UI/UX</td><td>全套</td><td>150K~250K</td></tr>
+<tr><td>特效</td><td>全套</td><td>200K~350K</td></tr>
+<tr><td>音效/音樂</td><td>全套</td><td>200K~350K</td></tr>
+</table></div>
+<div class="card warning">
+<p><strong style="color:var(--text)">外包預算：約 NT$2,050K~3,250K</strong></p>
+</div>
+
+<h2>3 位內部美術分工</h2>
+<div class="table-wrap"><table>
+<tr><th>人員</th><th>負責</th><th>時間</th></tr>
+<tr><td>美術 A（主美）</td><td>風格定義、角色概念、外包審核、整合</td><td>全程</td></tr>
+<tr><td>美術 B（3D）</td><td>2~3 隻角色建模+動畫、場景機關</td><td>M1~M5</td></tr>
+<tr><td>美術 C（2D/特效）</td><td>UI 全套、特效、待機畫面、宣傳物</td><td>M1~M6</td></tr>
+</table></div>
+</div>
+
+<!-- 美術資源沿用 -->
+<div class="page" id="p-assets">
+<h2>現有美術資源沿用分析</h2>
+<div class="card">
+<p>參考路徑：<code>\\10.1.0.52\rd1_card_1\專案_桑比槍台\03_美術</code></p>
+<p>策略：<strong style="color:var(--text)">「技術層沿用，視覺層重做」</strong></p>
+</div>
+<div class="table-wrap"><table>
+<tr><th>資源類型</th><th>可沿用度</th><th>處理方式</th></tr>
+<tr><td>場景模組（牆壁、箱子、地板）</td><td class="stars">⭐⭐⭐ 高</td><td>換材質為 Toon Shader</td></tr>
+<tr><td>特效素材（爆炸、火花）</td><td class="stars">⭐⭐⭐ 高</td><td>調色+誇張化</td></tr>
+<tr><td>音效素材</td><td class="stars">⭐⭐⭐ 高</td><td>打擊/環境音可直接用</td></tr>
+<tr><td>UI 框架</td><td class="stars">⭐⭐ 中</td><td>結構參考，視覺重做</td></tr>
+<tr><td>動畫骨架/Rig</td><td class="stars">⭐⭐ 中</td><td>人形骨架可部分沿用</td></tr>
+<tr><td>Shader/材質</td><td class="stars">⭐⭐ 中</td><td>若有 Toon Shader 可沿用</td></tr>
+<tr><td>角色模型</td><td class="stars">⭐ 低</td><td>風格差異大，需重做</td></tr>
+<tr><td>投幣器/硬體程式碼</td><td class="stars">⭐⭐⭐⭐ 極高</td><td>直接搬用</td></tr>
+</table></div>
+</div>
+
+<!-- 開發排程 -->
+<div class="page" id="p-schedule">
+<h2>6 個月開發排程</h2>
+
+<div class="card highlight">
+<h3>M1 — 前期準備</h3>
+<ul>
+<li>風格定義（Mood Board、色彩規範、Shader 測試）</li>
+<li>角色概念設計 8 隻</li>
+<li>沿用資源盤點</li>
+<li>外包發包</li>
+<li>原型灰盒場景 1 張</li>
+</ul>
+</div>
+
+<div class="card">
+<h3>M2 — 原型驗證</h3>
+<ul>
+<li>2 隻角色完成（內部）→ 進原型</li>
+<li>場景 1 美術化</li>
+<li>UI 框架搭建</li>
+<li>外包首批審核</li>
+</ul>
+</div>
+
+<div class="card green">
+<h3>M3 — Alpha</h3>
+<ul>
+<li>4 隻角色完成（含外包）</li>
+<li>3 張地圖完成</li>
+<li>特效系統建立</li>
+<li>UI 主流程完成</li>
+</ul>
+</div>
+
+<div class="card warning">
+<h3>M4 — Beta</h3>
+<ul>
+<li>8 隻角色全部完成</li>
+<li>6 張地圖全部完成</li>
+<li>全套特效 + 音效整合</li>
+<li>UI 完善</li>
+</ul>
+</div>
+
+<div class="card orange">
+<h3>M5 — 打磨</h3>
+<ul>
+<li>動畫打磨（搞笑反應）</li>
+<li>特效強化</li>
+<li>效能優化（穩定 60fps）</li>
+<li>實機測試</li>
+</ul>
+</div>
+
+<div class="card red">
+<h3>M6 — 收尾</h3>
+<ul>
+<li>Bug 修正 + 平衡調整</li>
+<li>框體組裝測試</li>
+<li>場地實測 + 封版</li>
+</ul>
+</div>
+</div>
+
+<!-- 技術門檻 -->
+<div class="page" id="p-risk">
+<h2>技術門檻評估</h2>
+<div class="table-wrap"><table>
+<tr><th>項目</th><th>難度</th><th>說明</th></tr>
+<tr><td>物理亂鬥手感</td><td>🔴 高</td><td>核心體驗，「可控混亂」比真實物理難</td></tr>
+<tr><td>風格化 Shader</td><td>🟡 中</td><td>URP Toon Shader 有成熟方案</td></tr>
+<tr><td>多模式框架</td><td>🟡 中</td><td>6 模式共用核心但規則不同</td></tr>
+<tr><td>AI 行為</td><td>🟡 中</td><td>要會搞笑、會互打、會失誤</td></tr>
+<tr><td>硬體整合</td><td>🟢 低</td><td>桑比槍台經驗直接沿用</td></tr>
+<tr><td>效能優化</td><td>🟡 中</td><td>4 角色+物理+特效@60fps</td></tr>
+</table></div>
+<div class="card red">
+<p><strong style="color:var(--text)">最大風險：物理手感調校。M1~M2 必須確認可行。</strong></p>
+</div>
+</div>
+
+<!-- 視覺目標 -->
+<div class="page" id="p-visual">
+<h2>視覺目標</h2>
+<div class="card highlight">
+<ul>
+<li><strong style="color:var(--text)">標竿：</strong>Fall Guys 圓潤感 × Brawl Stars 飽和度 × Splatoon 潮流感</li>
+<li><strong style="color:var(--text)">角色面數：</strong>3,000~5,000 面（風格化低模）</li>
+<li><strong style="color:var(--text)">場景面數：</strong>單地圖 50,000~80,000 面</li>
+<li><strong style="color:var(--text)">貼圖風格：</strong>手繪質感+漸層色塊，非 PBR</li>
+<li><strong style="color:var(--text)">幀率：</strong>穩定 60fps（1080p，4 角色+特效全開）</li>
+<li><strong style="color:var(--text)">色彩：</strong>背景冷/低飽和 → 角色暖/高飽和 → 特效最高飽和</li>
+</ul>
+</div>
+
+<h2>最終交付物</h2>
+<div class="table-wrap"><table>
+<tr><th>類別</th><th>數量</th></tr>
+<tr><td>可玩角色</td><td>8 隻（建模+綁定+15 組動畫）</td></tr>
+<tr><td>地圖</td><td>6 張（含機關+破壞效果）</td></tr>
+<tr><td>道具</td><td>6 種（含特效）</td></tr>
+<tr><td>UI</td><td>全套</td></tr>
+<tr><td>特效</td><td>30+ 種</td></tr>
+<tr><td>音樂</td><td>6+ 首</td></tr>
+<tr><td>音效</td><td>100+</td></tr>
+</table></div>
+
+<h2>結論</h2>
+<div class="card green">
+<ul>
+<li><strong style="color:var(--text)">可行性：</strong>有挑戰但可行</li>
+<li><strong style="color:var(--text)">前提：</strong>M1 立即發包、物理手感 M2 前確認、沿用桑比槍台框架</li>
+<li><strong style="color:var(--text)">最大風險：</strong>外包品質、物理迭代、6 模式全做</li>
+<li><strong style="color:var(--text)">建議：</strong>保底 4 模式先上線，後續更新補</li>
+</ul>
+</div>
+</div>
+
+<script>
+function sw(id){document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));document.getElementById('p-'+id).classList.add('active');event.target.classList.add('active')}
+</script>
+<script src="nav.js"></script>
+</body>
+</html>
