@@ -351,7 +351,7 @@ pre{overflow-x:auto;max-width:100%;background:#f5f5f5;border:1px solid #ddd}
 <div class="table-wrap"><table>
 <tr><th>類別</th><th>規格</th></tr>
 <tr><td>可玩角色</td><td>2,000~3,500 三角面、Base Color 1024、Normal 1024、MaskMap 512、ASTC 6x6</td></tr>
-<tr><td>NPC/跟班</td><td>1,500~2,500 三角面、Base Color 512、Normal 256、ASTC 6x6</td></tr>
+<tr><td>NPC/跟班</td><td>1,500~2,500 三角面、Base Color 512、Normal 256、ASTC 6x6、動畫格式：骨架動畫+VAT</td></tr>
 <tr><td>場景</td><td>總面數 ≤ 50K、Draw Calls ≤ 100、Atlas 1024（Tiling）、Lightmap 1024</td></tr>
 <tr><td>特效</td><td>單特效 ≤ 40 粒子、總數 ≤ 400、貼圖 ≤ 1024、Flipbook 512</td></tr>
 <tr><td>UI</td><td>Sprite Atlas、Icon 128~256、背景 1024、ASTC 6x6</td></tr>
@@ -370,6 +370,15 @@ pre{overflow-x:auto;max-width:100%;background:#f5f5f5;border:1px solid #ddd}
 <tr><td>動畫</td><td>10-12</td><td>.fbx</td><td>見動畫清單</td></tr>
 <tr><td>Turnaround 設定稿</td><td>1 組</td><td>.png</td><td>4 視角+表情表</td></tr>
 </table></div>
+
+<h4>NPC/跟班/演出角色 VAT 資產</h4>
+<div class="card">
+<ul>
+<li>NPC/跟班/演出角色除骨架動畫外，另需產出 VAT（Vertex Animation Texture）資產</li>
+<li>VAT 貼圖規格：Position Map + Normal Map，尺寸依動畫長度（通常 512×512 或 1024×256）</li>
+<li>壓縮格式：ASTC 6x6</li>
+</ul>
+</div>
 
 <h3 id="c2-anim">動畫幀數規格</h3>
 <div class="table-wrap"><table>
@@ -693,6 +702,8 @@ pre{overflow-x:auto;max-width:100%;background:#f5f5f5;border:1px solid #ddd}
 <li>非動態物件設為 Force No Motion</li>
 <li>可合併的 Mesh 進行合併</li>
 <li>高面數物件設定可視距離控管</li>
+<li>NPC/跟班/演出角色使用 VAT + GPU Instancing，減少骨架運算開銷</li>
+<li>VAT 角色 Material 需開啟 GPU Instancing</li>
 </ul>
 </div>
 
