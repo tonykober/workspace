@@ -47,6 +47,7 @@ code{background:var(--surface);padding:2px 6px;border-radius:4px;font-size:0.85r
 <div class="tab" onclick="sw('schedule')">📅 工時排程</div>
 <div class="tab" onclick="sw('guide')">📐 風格指南</div>
 <div class="tab" onclick="sw('assets')">📦 資產規格表</div>
+<div class="tab" onclick="sw('npc')">🎭 NPC 體系</div>
 </div>
 
 <!-- 現有美術能力 -->
@@ -155,6 +156,17 @@ code{background:var(--surface);padding:2px 6px;border-radius:4px;font-size:0.85r
 <tr><td>中等帶刺</td><td>防禦感</td></tr>
 </table></div>
 
+<h3>角色資源完整分配</h3>
+<div class="table-wrap"><table>
+<tr><th>用途</th><th>數量</th><th>處理方式</th></tr>
+<tr><td>可玩角色</td><td>8 隻</td><td>改貼圖為明亮風格</td></tr>
+<tr><td>場景 NPC（敵對/中立）</td><td>3 隻</td><td>改貼圖+加職業配件標誌</td></tr>
+<tr><td>跟班 NPC（協力）</td><td>5~8 隻</td><td>改貼圖+加友善標記</td></tr>
+<tr><td>演出裝飾角色</td><td>3~5 隻</td><td>改貼圖+最簡動畫</td></tr>
+<tr><td>總使用量</td><td>19~24 隻</td><td>資源利用率 63~80%</td></tr>
+<tr><td>未使用</td><td>6~11 隻</td><td>備用/後續更新</td></tr>
+</table></div>
+
 <h2>場景沿用</h2>
 <div class="table-wrap"><table>
 <tr><th>項目</th><th>沿用性</th><th>說明</th></tr>
@@ -176,11 +188,12 @@ code{background:var(--surface);padding:2px 6px;border-radius:4px;font-size:0.85r
 <h2>沿用總結</h2>
 <div class="card green">
 <div class="table-wrap"><table>
-<tr><th>對比項目</th><th>全重做方案</th><th>沿用優先方案</th><th>節省</th></tr>
+<tr><th>對比項目</th><th>全重做方案</th><th>沿用優先+NPC 體系</th><th>節省</th></tr>
 <tr><td>角色建模</td><td>8 隻全新</td><td>0 隻新建</td><td>100%</td></tr>
 <tr><td>角色綁定</td><td>8 隻全新</td><td>0 隻新綁定</td><td>100%</td></tr>
-<tr><td>動畫</td><td>80~96 組全新</td><td>31~33 組</td><td>65%</td></tr>
-<tr><td>場景貼圖</td><td>全新</td><td>部分沿用調色</td><td>20~30%</td></tr>
+<tr><td>動畫</td><td>80~96 組全新</td><td>31~33 組（可玩）+ NPC 追加 17~27 組</td><td>40~50%</td></tr>
+<tr><td>場景內容量</td><td>25~40 模組/張</td><td>15~25 模組/張</td><td>-35%</td></tr>
+<tr><td>場景工時</td><td>60~90 天</td><td>42~60 天</td><td>-30%</td></tr>
 </table></div>
 </div>
 </div>
@@ -267,18 +280,37 @@ code{background:var(--surface);padding:2px 6px;border-radius:4px;font-size:0.85r
 <tr><td><strong style="color:var(--text)">總計</strong></td><td><strong style="color:var(--text)">73~93 天</strong></td><td>✅ 可完成</td></tr>
 </table></div>
 
-<h3>3D 美術</h3>
-<div class="table-wrap"><table>
-<tr><th>工作項目</th><th>工時</th><th>月份</th></tr>
-<tr><td>角色改貼圖（8 隻 × 2~3 天）</td><td>16~24 天</td><td>M1~M2</td></tr>
-<tr><td>場景建模+貼圖（6 張全部）</td><td>60~90 天</td><td>M2~M5</td></tr>
-<tr><td>道具建模（6 種）</td><td>6~12 天</td><td>M3~M4</td></tr>
-<tr><td>Shader 測試</td><td>3 天</td><td>M1</td></tr>
-<tr><td>場景貼圖調色沿用</td><td>5~8 天</td><td>M2~M3</td></tr>
-<tr><td><strong style="color:var(--text)">總計</strong></td><td><strong style="color:var(--text)">90~137 天</strong></td><td>⚠️ 偏緊</td></tr>
-</table></div>
+<h3>3D 美術（含保守/樂觀對比）</h3>
 <div class="card warning">
-<p>⚠️ 6 個月 ≈ 130 工作天。建議場景模組化+共用素材，控制每張地圖 10~12 天。</p>
+<h3>保守評估（改貼圖每隻 2~3 天）</h3>
+<div class="table-wrap"><table>
+<tr><th>工作項目</th><th>工時</th></tr>
+<tr><td>角色改貼圖（19~24 隻 × 2~3 天）</td><td>38~72 天</td></tr>
+<tr><td>場景建模+貼圖（6 張 × 7~10 天）</td><td>42~60 天</td></tr>
+<tr><td>道具建模+Shader+調色</td><td>14~23 天</td></tr>
+<tr><td><strong style="color:var(--text)">保守總計</strong></td><td><strong style="color:var(--text)">94~155 天</strong></td></tr>
+<tr><td>狀態</td><td>⚠️ 偏緊~超時風險</td></tr>
+</table></div>
+</div>
+<div class="card green">
+<h3>樂觀評估（建立 SOP 批量化，改貼圖每隻 1~1.5 天）</h3>
+<div class="table-wrap"><table>
+<tr><th>工作項目</th><th>工時</th></tr>
+<tr><td>角色改貼圖（19~24 隻 × 1~1.5 天）</td><td>19~36 天</td></tr>
+<tr><td>場景建模+貼圖（6 張 × 7~10 天）</td><td>42~60 天</td></tr>
+<tr><td>道具建模+Shader+調色</td><td>14~23 天</td></tr>
+<tr><td><strong style="color:var(--text)">樂觀總計</strong></td><td><strong style="color:var(--text)">75~119 天</strong></td></tr>
+<tr><td>狀態</td><td>✅ 可控（緩衝 11~55 天）</td></tr>
+</table></div>
+</div>
+<div class="card highlight">
+<h3>達成樂觀評估的前提</h3>
+<ol>
+<li>建立改貼圖 SOP — 統一色板替換流程+配件標記模板</li>
+<li>批量處理 — 先做 1~2 隻確認流程，再套用其餘</li>
+<li>配件簡化 — NPC/跟班職業標誌用貼圖畫上去，不另外建模</li>
+</ol>
+<p><strong style="color:var(--text)">建議：</strong>採樂觀路線推進，M1 前 2 週建立 SOP 並驗證效率。若實測超過 2 天/隻，則部分改貼圖工作外包。</p>
 </div>
 
 <h3>2D 美術</h3>
@@ -295,14 +327,15 @@ code{background:var(--surface);padding:2px 6px;border-radius:4px;font-size:0.85r
 <div class="table-wrap"><table>
 <tr><th>外包項目</th><th>數量</th><th>預估費用 (NT$)</th><th>發包時間</th><th>交付時間</th></tr>
 <tr><td>角色骨架綁定</td><td>8 隻</td><td>80K~120K</td><td>M1 W3</td><td>M2</td></tr>
-<tr><td>角色動畫</td><td>8 隻 × 10~12 組</td><td>350K~550K</td><td>M2</td><td>M4</td></tr>
+<tr><td>角色動畫（可玩）</td><td>8 隻 × 10~12 組</td><td>350K~550K</td><td>M2</td><td>M4</td></tr>
+<tr><td>NPC/跟班/演出動畫</td><td>11~16 隻 × 2~3 組</td><td>60K~100K</td><td>M2</td><td>M4</td></tr>
 <tr><td>UI 設計+製作（70%）</td><td>全套 70%</td><td>200K~350K</td><td>M1 W4</td><td>M3~M4</td></tr>
-<tr><td>特效（全面重製）</td><td>30+ 種</td><td>300K~500K</td><td>M2</td><td>M4</td></tr>
+<tr><td>特效（全面重製+召喚特效）</td><td>30+ 種</td><td>300K~500K</td><td>M2</td><td>M4</td></tr>
 <tr><td>音樂</td><td>6+ 首</td><td>120K~200K</td><td>M2</td><td>M4</td></tr>
 <tr><td>音效</td><td>100+</td><td>80K~150K</td><td>M3</td><td>M5</td></tr>
 </table></div>
 <div class="card warning">
-<p><strong style="color:var(--text)">美術外包總預算：NT$1,130K~1,870K</strong></p>
+<p><strong style="color:var(--text)">美術外包總預算：NT$1,190K~1,970K</strong></p>
 </div>
 
 <h2>人力風險與對策</h2>
@@ -782,6 +815,102 @@ code{background:var(--surface);padding:2px 6px;border-radius:4px;font-size:0.85r
 <li>字級 ≥36pt ✓</li>
 <li>對比度 ≥4.5:1 ✓</li>
 </ul>
+</div>
+</div>
+
+
+<!-- NPC 體系 -->
+<div class="page" id="p-npc">
+<h2>NPC 體系總覽</h2>
+<div class="table-wrap"><table>
+<tr><th>類型</th><th>數量</th><th>身分</th><th>出現方式</th><th>動畫需求</th></tr>
+<tr><td>場景 NPC（敵對/中立）</td><td>3 隻</td><td>搗蛋鬼/砲彈手/裁判</td><td>固定出現在特定模式</td><td>各 3 組</td></tr>
+<tr><td>跟班 NPC（協力）</td><td>5~8 隻池</td><td>隨機召喚臨時夥伴</td><td>玩家撿召喚道具觸發</td><td>各 2 組</td></tr>
+<tr><td>演出裝飾角色</td><td>3~5 隻</td><td>觀眾/路人/待機演出</td><td>場景背景+待機畫面</td><td>各 1~2 組</td></tr>
+</table></div>
+
+<h2>角色資源分配（30 隻現有角色）</h2>
+<div class="table-wrap"><table>
+<tr><th>用途</th><th>數量</th><th>處理方式</th></tr>
+<tr><td>可玩角色</td><td>8 隻</td><td>改貼圖為明亮風格</td></tr>
+<tr><td>場景 NPC</td><td>3 隻</td><td>改貼圖+加職業配件標誌</td></tr>
+<tr><td>跟班 NPC 池</td><td>5~8 隻</td><td>改貼圖+加友善標記</td></tr>
+<tr><td>演出裝飾角色</td><td>3~5 隻</td><td>改貼圖，最簡動畫</td></tr>
+<tr><td><strong style="color:var(--text)">總使用量</strong></td><td><strong style="color:var(--text)">19~24 隻</strong></td><td>資源利用率 63~80%</td></tr>
+</table></div>
+
+<h2>場景 NPC 設計（敵對/中立）</h2>
+
+<div class="card orange">
+<h3>NPC 1 — 搗蛋鬼（Trickster）</h3>
+<ul>
+<li><strong style="color:var(--text)">定位：</strong>場景干擾者</li>
+<li><strong style="color:var(--text)">出現：</strong>收集狂熱、障礙賽跑</li>
+<li><strong style="color:var(--text)">行為：</strong>撒金幣/擋路/被撞誇張跌倒</li>
+<li><strong style="color:var(--text)">視覺：</strong>比玩家小一號，螢光色+搗蛋面具</li>
+<li><strong style="color:var(--text)">動畫：</strong>跑步循環、撒東西、被撞跌倒（3 組）</li>
+</ul>
+</div>
+
+<div class="card red">
+<h3>NPC 2 — 砲彈手（Bomber）</h3>
+<ul>
+<li><strong style="color:var(--text)">定位：</strong>遠程威脅製造者</li>
+<li><strong style="color:var(--text)">出現：</strong>躲避球風暴、山丘之王</li>
+<li><strong style="color:var(--text)">行為：</strong>站高台發射砲彈/定時丟炸彈清場</li>
+<li><strong style="color:var(--text)">視覺：</strong>比玩家大一號，工程背心+安全帽</li>
+<li><strong style="color:var(--text)">動畫：</strong>待機搖晃、瞄準蓄力、發射（3 組）</li>
+</ul>
+</div>
+
+<div class="card highlight">
+<h3>NPC 3 — 裁判（Referee）</h3>
+<ul>
+<li><strong style="color:var(--text)">定位：</strong>規則提示+氣氛製造</li>
+<li><strong style="color:var(--text)">出現：</strong>所有模式通用</li>
+<li><strong style="color:var(--text)">行為：</strong>開場吹哨/淘汰時誇張反應/待機搞笑互動</li>
+<li><strong style="color:var(--text)">視覺：</strong>黑白條紋衣+哨子</li>
+<li><strong style="color:var(--text)">動畫：</strong>吹哨、揮旗、誇張驚嚇（3 組）</li>
+</ul>
+</div>
+
+<h2>跟班 NPC 設計（協力）</h2>
+<div class="card green">
+<ul>
+<li><strong style="color:var(--text)">觸發方式：</strong>玩家撿到「召喚道具」（召喚鈴鐺/友誼球）</li>
+<li><strong style="color:var(--text)">持續時間：</strong>10~15 秒</li>
+<li><strong style="color:var(--text)">跟班行為：</strong>
+<ul>
+<li>自動追蹤最近敵方玩家並推擊</li>
+<li>或幫擋一次攻擊後消失</li>
+<li>或幫搶旗/金幣後交給玩家</li>
+<li>時間到自動「彈飛離場」（搞笑退場）</li>
+</ul></li>
+<li><strong style="color:var(--text)">跟班池：</strong>5~8 隻，每次隨機召喚不同角色</li>
+<li><strong style="color:var(--text)">視覺區分：</strong>頭上顯示愛心/星星標記</li>
+<li><strong style="color:var(--text)">動畫：</strong>跟隨跑步+攻擊（2 組，共用基礎動畫微調）</li>
+</ul>
+</div>
+
+<h2>演出裝飾角色</h2>
+<div class="card">
+<ul>
+<li><strong style="color:var(--text)">用途：</strong>場景背景觀眾（看台歡呼）、待機畫面演出、回合過場裝飾（舉牌/跑過畫面）</li>
+<li><strong style="color:var(--text)">視覺：</strong>改貼圖為觀眾風格（加圍巾/旗幟/爆米花等）</li>
+<li><strong style="color:var(--text)">動畫：</strong>歡呼循環、舉牌（1~2 組）</li>
+</ul>
+</div>
+
+<h2>對場景製作的影響</h2>
+<div class="card green">
+<p>NPC + 跟班 + 裝飾角色填充畫面，場景可精簡：</p>
+<div class="table-wrap"><table>
+<tr><th>場景元素</th><th>原本（無 NPC）</th><th>NPC 體系後</th><th>減幅</th></tr>
+<tr><td>裝飾道具</td><td>8~12 種/張</td><td>3~5 種/張</td><td>-50~60%</td></tr>
+<tr><td>背景物件</td><td>3~5 種/張</td><td>1~2 種/張</td><td>-60%</td></tr>
+<tr><td>機關物件</td><td>3~5 種/張</td><td>2~4 種/張</td><td>部分由 NPC 行為取代</td></tr>
+<tr><td>單張地圖總模組數</td><td>25~40 種</td><td>15~25 種</td><td>-35%</td></tr>
+</table></div>
 </div>
 </div>
 
