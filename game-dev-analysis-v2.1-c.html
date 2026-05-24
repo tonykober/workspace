@@ -96,6 +96,7 @@ pre{overflow-x:auto;max-width:100%;background:#f5f5f5;border:1px solid #ddd}
 <a href="#c3-format" class="h3-link">檔案格式</a>
 <a href="#c3-flow" class="h3-link">交付流程</a>
 <a href="#c3-checklist" class="h3-link">驗收檢查表</a>
+<a href="#c4">C4. 效能規範</a>
 <a href="#appendix">附錄：更新紀錄</a>
 </aside>
 
@@ -349,16 +350,18 @@ pre{overflow-x:auto;max-width:100%;background:#f5f5f5;border:1px solid #ddd}
 <h3>技術規格總覽</h3>
 <div class="table-wrap"><table>
 <tr><th>類別</th><th>規格</th></tr>
-<tr><td>角色</td><td>3,000~5,000 三角面、Diffuse 1024×1024、30-40 骨骼、6 組 Blendshape</td></tr>
-<tr><td>場景</td><td>單模組 500-3,000 面、整張 ≤ 50,000~80,000 面、Atlas 2048×2048</td></tr>
-<tr><td>特效</td><td>單特效 ≤ 200 粒子、同畫面 ≤ 8 個、Atlas 512×512</td></tr>
-<tr><td>UI</td><td>1920×1080、圖標 64/128px、PNG-24 含 Alpha</td></tr>
+<tr><td>可玩角色</td><td>2,000~3,500 三角面、Base Color 1024、Normal 1024、MaskMap 512、ASTC 6x6</td></tr>
+<tr><td>NPC/跟班</td><td>1,500~2,500 三角面、Base Color 512、Normal 256、ASTC 6x6</td></tr>
+<tr><td>場景</td><td>總面數 ≤ 50K、Draw Calls ≤ 100、Atlas 1024（Tiling）、Lightmap 1024</td></tr>
+<tr><td>特效</td><td>單特效 ≤ 40 粒子、總數 ≤ 400、貼圖 ≤ 1024、Flipbook 512</td></tr>
+<tr><td>UI</td><td>Sprite Atlas、Icon 128~256、背景 1024、ASTC 6x6</td></tr>
+<tr><td>效能目標</td><td>40 FPS、≤ 80K 三角面、≤ 100 Draw Calls、1 燈光</td></tr>
 </table></div>
 
 <h3 id="c2-char">角色資產（單角色）</h3>
 <div class="table-wrap"><table>
 <tr><th>資產</th><th>數量</th><th>格式</th><th>規格</th></tr>
-<tr><td>模型（T-Pose）</td><td>1</td><td>.fbx</td><td>3,000~5,000 面</td></tr>
+<tr><td>模型（T-Pose）</td><td>1</td><td>.fbx</td><td>2,000~3,500 面（可玩角色）/ 1,500~2,500 面（NPC）</td></tr>
 <tr><td>Diffuse 貼圖</td><td>1</td><td>.png</td><td>1024×1024</td></tr>
 <tr><td>Normal Map</td><td>1（可選）</td><td>.png</td><td>512×512</td></tr>
 <tr><td>骨架</td><td>1</td><td>內嵌</td><td>30-40 骨骼</td></tr>
@@ -388,7 +391,7 @@ pre{overflow-x:auto;max-width:100%;background:#f5f5f5;border:1px solid #ddd}
 <h3 id="c2-scene">場景資產（單地圖）</h3>
 <div class="table-wrap"><table>
 <tr><th>資產</th><th>數量</th><th>格式</th><th>規格</th></tr>
-<tr><td>地面模組</td><td>5-8 種</td><td>.fbx</td><td>500-3,000 面/個</td></tr>
+<tr><td>地面模組</td><td>5-8 種</td><td>.fbx</td><td>300~2,000 面/個</td></tr>
 <tr><td>平台模組</td><td>4-6 種</td><td>.fbx</td><td></td></tr>
 <tr><td>牆壁/邊界</td><td>3-5 種</td><td>.fbx</td><td></td></tr>
 <tr><td>機關物件</td><td>2-4 種</td><td>.fbx</td><td>含動畫</td></tr>
@@ -413,8 +416,8 @@ pre{overflow-x:auto;max-width:100%;background:#f5f5f5;border:1px solid #ddd}
 <div class="card warning">
 <strong>特效規格限制：</strong>
 <ul>
-<li>單特效最大粒子數：200</li>
-<li>同畫面特效上限：8 個同時</li>
+<li>單特效最大粒子數：40</li>
+<li>同畫面粒子總數上限：400</li>
 <li>特效 Atlas：512×512 共用</li>
 <li>特效持續時間：0.2s - 2s</li>
 <li>禁止：全螢幕遮擋、過度閃爍（≤3Hz）</li>
@@ -546,7 +549,7 @@ pre{overflow-x:auto;max-width:100%;background:#f5f5f5;border:1px solid #ddd}
 
 <h4>角色</h4>
 <ul class="checklist">
-<li>面數在 3,000~5,000 範圍內</li>
+<li>面數在 2,000~3,500 範圍內（可玩角色）/ 1,500~2,500（NPC）</li>
 <li>貼圖尺寸正確（1024×1024）</li>
 <li>UV 無重疊、Texel 密度均勻</li>
 <li>骨架綁定正確、無穿模</li>
@@ -559,8 +562,8 @@ pre{overflow-x:auto;max-width:100%;background:#f5f5f5;border:1px solid #ddd}
 
 <h4>場景</h4>
 <ul class="checklist">
-<li>單模組面數 ≤ 3,000</li>
-<li>地圖總面數 ≤ 80,000</li>
+<li>單模組面數 ≤ 2,000</li>
+<li>地圖總面數 ≤ 50,000</li>
 <li>碰撞體設置正確（Box/Capsule）</li>
 <li>互動物件有視覺提示</li>
 <li>Atlas 貼圖無浪費空間</li>
@@ -582,12 +585,146 @@ pre{overflow-x:auto;max-width:100%;background:#f5f5f5;border:1px solid #ddd}
 
 <h4>特效</h4>
 <ul class="checklist">
-<li>單特效粒子數 ≤ 200</li>
+<li>單特效粒子數 ≤ 40</li>
 <li>無全螢幕遮擋</li>
 <li>閃爍頻率 ≤ 3Hz</li>
 <li>持續時間在 0.2s~2s 內</li>
 <li>命名符合規範</li>
 </ul>
+
+<hr>
+
+<h2 id="c4">C4. 效能規範（Android 平台）</h2>
+<div class="card highlight">
+<p>📎 完整效能檢核表：<a href="https://docs.google.com/spreadsheets/d/1dyx24s1Y5IPUK1oBpCi05RGyDYdiFsvEExuGkvbGJZQ/edit?gid=1690640663#gid=1690640663" target="_blank">Google Sheets 連結</a></p>
+</div>
+
+<h3>硬體效能基準</h3>
+<div class="table-wrap"><table>
+<tr><th>項目</th><th>規範值</th></tr>
+<tr><td>目標 FPS</td><td>40</td></tr>
+<tr><td>場景總三角面（含角色）</td><td>≤ 80K</td></tr>
+<tr><td>Draw Calls</td><td>≤ 100</td></tr>
+<tr><td>SetPass Calls</td><td>≤ 25</td></tr>
+<tr><td>粒子總數</td><td>≤ 400</td></tr>
+<tr><td>單特效粒子數</td><td>≤ 40</td></tr>
+<tr><td>燈光數量</td><td>1</td></tr>
+<tr><td>Overdraw</td><td>≤ 10</td></tr>
+<tr><td>Shadow Type</td><td>Hard</td></tr>
+<tr><td>Shadow Resolution</td><td>1024</td></tr>
+</table></div>
+
+<h3>URP Asset 設定</h3>
+<div class="table-wrap"><table>
+<tr><th>項目</th><th>設定</th></tr>
+<tr><td>Depth Texture</td><td>關閉</td></tr>
+<tr><td>Opaque Texture</td><td>關閉</td></tr>
+<tr><td>MSAA</td><td>關閉</td></tr>
+<tr><td>HDR</td><td>關閉</td></tr>
+<tr><td>Reflection Probes</td><td>關閉</td></tr>
+<tr><td>Mixed Light</td><td>關閉</td></tr>
+<tr><td>Additional Lights</td><td>可開啟</td></tr>
+</table></div>
+
+<h3>後製效果</h3>
+<div class="table-wrap"><table>
+<tr><th>項目</th><th>設定</th></tr>
+<tr><td>Color Adjust</td><td>可開啟</td></tr>
+<tr><td>Bloom</td><td>僅特定橋段開啟</td></tr>
+<tr><td>SSR</td><td>關閉</td></tr>
+<tr><td>AO</td><td>關閉</td></tr>
+<tr><td>DOF</td><td>關閉（僅演出用）</td></tr>
+<tr><td>反鋸齒</td><td>關閉</td></tr>
+</table></div>
+
+<h3>貼圖規範</h3>
+<div class="table-wrap"><table>
+<tr><th>項目</th><th>規格</th></tr>
+<tr><td>壓縮格式</td><td>ASTC 6x6（統一）</td></tr>
+<tr><td>可玩角色 Base Color</td><td>1024</td></tr>
+<tr><td>可玩角色 Normal Map</td><td>1024</td></tr>
+<tr><td>可玩角色 MaskMap</td><td>512</td></tr>
+<tr><td>NPC Base Color</td><td>512</td></tr>
+<tr><td>NPC Normal Map</td><td>256</td></tr>
+<tr><td>場景地面/牆面（Tiling）</td><td>1024</td></tr>
+<tr><td>場景 Props</td><td>512</td></tr>
+<tr><td>Lightmap</td><td>1024（依場景大小）</td></tr>
+<tr><td>Skybox</td><td>1024</td></tr>
+<tr><td>UI Icon</td><td>128~256（Sprite Atlas）</td></tr>
+<tr><td>UI 背景/大圖</td><td>1024</td></tr>
+<tr><td>特效貼圖</td><td>1024</td></tr>
+<tr><td>特效 Flipbook</td><td>512</td></tr>
+</table></div>
+<div class="card">
+<h4>貼圖設定規則</h4>
+<ul>
+<li>UI/Skybox 等固定比例貼圖關閉 Mipmap</li>
+<li>Normal Map 關閉 Alpha</li>
+<li>未使用 Alpha 的 Diffuse 關閉 Alpha Channel</li>
+<li>關閉貼圖/Mesh 的 Read/Write（記憶體減半）</li>
+</ul>
+</div>
+
+<h3>面數預算分配（80K 內）</h3>
+<div class="table-wrap"><table>
+<tr><th>項目</th><th>面數預算</th><th>說明</th></tr>
+<tr><td>可玩角色（最多 4 隻同場）</td><td>8K~14K</td><td>每隻 2,000~3,500</td></tr>
+<tr><td>NPC（最多 2~3 隻同場）</td><td>4.5K~7.5K</td><td>每隻 1,500~2,500</td></tr>
+<tr><td>場景本體</td><td>≤ 50K</td><td>含地面/平台/牆壁/機關</td></tr>
+<tr><td>道具/裝飾</td><td>≤ 5K~10K</td><td></td></tr>
+<tr><td>預留緩衝</td><td>5K~10K</td><td></td></tr>
+</table></div>
+
+<h3>粒子預算分配（400 內）</h3>
+<div class="table-wrap"><table>
+<tr><th>項目</th><th>粒子預算</th><th>說明</th></tr>
+<tr><td>打擊特效（4 人同時）</td><td>≤ 160</td><td>每人 ≤ 40</td></tr>
+<tr><td>場景機關特效</td><td>≤ 120</td><td>2~3 個同時</td></tr>
+<tr><td>環境氛圍</td><td>≤ 60</td><td></td></tr>
+<tr><td>UI 特效</td><td>≤ 40</td><td></td></tr>
+<tr><td>預留</td><td>≤ 20</td><td></td></tr>
+</table></div>
+
+<h3>場景/Mesh 優化規則</h3>
+<div class="card">
+<ul>
+<li>場景平面合併為單一 Mesh/單一貼圖</li>
+<li>所有非動態物件設為 Static</li>
+<li>非動態物件設為 Force No Motion</li>
+<li>可合併的 Mesh 進行合併</li>
+<li>高面數物件設定可視距離控管</li>
+</ul>
+</div>
+
+<h3>光影規則</h3>
+<div class="card">
+<ul>
+<li>場景光源集中一次 Bake</li>
+<li>移除 Bake 後不必要的即時 Light</li>
+<li>不使用 Light Probe</li>
+<li>同場景光源限制 1 盞</li>
+<li>非必要物件關閉 Cast Shadow</li>
+<li>使用 Lightmap 的物件關閉 Cast Shadow</li>
+<li>ShadowMask/Lightmap 格式：ASTC 6x6</li>
+</ul>
+</div>
+
+<h3>UI/Sprite 規則</h3>
+<div class="card">
+<ul>
+<li>使用 Sprite Atlas</li>
+<li>Canvas 動靜分離</li>
+<li>依 Sorting Layer 拆分 Canvas</li>
+</ul>
+</div>
+
+<h3>Shader 規則</h3>
+<div class="card">
+<ul>
+<li>不用的 keywords 要 Strip</li>
+<li>避免過多獨立 Shader Variant</li>
+</ul>
+</div>
 
 <hr>
 

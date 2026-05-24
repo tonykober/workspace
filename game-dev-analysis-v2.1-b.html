@@ -59,6 +59,7 @@ pre code{background:none;padding:0}
 <a href="#b1-overview" class="h3-link">專案概述</a>
 <a href="#b1-gameplay" class="h3-link">玩法概述</a>
 <a href="#b1-visual" class="h3-link">視覺目標</a>
+<a href="#b1-perf" class="h3-link">硬體效能限制</a>
 <a href="#b2">B2. 風格轉換分析</a>
 <a href="#b2-diff" class="h3-link">新舊風格差異</a>
 <a href="#b2-reuse" class="h3-link">資源沿用策略</a>
@@ -136,6 +137,19 @@ pre code{background:none;padding:0}
 <li><strong>提亮化</strong> — 背景冷色低飽和，角色暖色高飽和，特效最高飽和</li>
 <li><strong>減法設計</strong> — 55 吋螢幕 1~2 公尺觀看距離，細節看不到，輪廓和色塊才是重點</li>
 </ol>
+
+<h3 id="b1-perf">硬體效能限制</h3>
+<div class="card red">
+<p>本遊戲運行於 Android 平台，美術製作須遵守硬體效能規範：</p>
+<ul>
+<li>場景總三角面 ≤ 80K（含角色）</li>
+<li>Draw Calls ≤ 100</li>
+<li>粒子總數 ≤ 400</li>
+<li>燈光 1 盞</li>
+<li>目標 40 FPS</li>
+</ul>
+<p>📎 <a href="https://docs.google.com/spreadsheets/d/1dyx24s1Y5IPUK1oBpCi05RGyDYdiFsvEExuGkvbGJZQ/edit?gid=1690640663#gid=1690640663" target="_blank">完整效能檢核表</a></p>
+</div>
 
 <hr>
 
@@ -215,7 +229,7 @@ pre code{background:none;padding:0}
 <tr><td>角色建模</td><td>6 隻全新</td><td>0 隻新建</td><td>100%</td></tr>
 <tr><td>角色綁定</td><td>6 隻全新</td><td>0 隻新綁定</td><td>100%</td></tr>
 <tr><td>動畫</td><td>60~72 組全新</td><td>共用+個性約 40~50 組</td><td>30~40%</td></tr>
-<tr><td>場景內容量</td><td>25~40 模組/張</td><td>15~25 模組/張</td><td>-35%</td></tr>
+<tr><td>場景內容量</td><td>25~40 模組/張</td><td>10~18 模組/張</td><td>-35%</td></tr>
 <tr><td>場景工時</td><td>50~75 天</td><td>35~50 天</td><td>-30%</td></tr>
 <tr><td>特效</td><td>40~55 種全新</td><td>24~33 種全新+12~22 種沿用</td><td>30~40%</td></tr>
 </table></div>
@@ -231,7 +245,7 @@ pre code{background:none;padding:0}
 <tr><td>角色</td><td>NPC/跟班/裝飾角色貼圖</td><td>改貼圖</td><td>10 隻</td></tr>
 <tr><td>角色</td><td>骨架綁定</td><td>外包</td><td>6 隻</td></tr>
 <tr><td>角色</td><td>動畫製作</td><td>外包</td><td>可玩 60~72 組 + NPC 20~30 組</td></tr>
-<tr><td>場景</td><td>地圖建模+貼圖</td><td>全新製作</td><td>5 張（每張 15~25 模組）</td></tr>
+<tr><td>場景</td><td>地圖建模+貼圖</td><td>全新製作</td><td>5 張（每張 10~18 模組）</td></tr>
 <tr><td>場景</td><td>道具建模</td><td>全新製作</td><td>約 6 種</td></tr>
 <tr><td>特效</td><td>全套特效</td><td>外包全新</td><td>30+ 種</td></tr>
 <tr><td>UI</td><td>全套介面</td><td>內部20%+外包80%</td><td>約 80 檔</td></tr>
@@ -290,13 +304,22 @@ pre code{background:none;padding:0}
 <li><strong>動畫：</strong>每隻 1~2 組（歡呼循環、舉牌）</li>
 </ul>
 
+<div class="card warning">
+<h4>效能限制</h4>
+<ul>
+<li>同時在場 NPC 不超過 2~3 隻</li>
+<li>跟班召喚：同時最多 1~2 隻跟班在場</li>
+<li>特效預算：NPC 相關特效控制在場景機關預算（≤ 120 粒子）內</li>
+</ul>
+</div>
+
 <h4>NPC 對場景的減量效益</h4>
 <div class="table-wrap"><table>
 <tr><th>場景元素</th><th>原本（無 NPC）</th><th>NPC 體系後</th><th>減幅</th></tr>
 <tr><td>裝飾道具</td><td>8~12 種/張</td><td>3~5 種/張</td><td>-50~60%</td></tr>
 <tr><td>背景物件</td><td>3~5 種/張</td><td>1~2 種/張</td><td>-60%</td></tr>
 <tr><td>機關物件</td><td>3~5 種/張</td><td>2~4 種/張</td><td>部分由 NPC 行為取代</td></tr>
-<tr><td>單張地圖總模組數</td><td>25~40 種</td><td>15~25 種</td><td>-35%</td></tr>
+<tr><td>單張地圖總模組數</td><td>25~40 種</td><td>10~18 種</td><td>-35%</td></tr>
 </table></div>
 
 <hr>
@@ -442,7 +465,7 @@ pre code{background:none;padding:0}
 <tr><td>M2 結束</td><td>角色就緒+框體定稿</td><td>6 隻貼圖+綁定完成、框體設計確認</td></tr>
 <tr><td>M3 結束</td><td>Alpha</td><td>動畫大部分+2 場景+UI 主流程</td></tr>
 <tr><td>M4 結束</td><td>Beta</td><td>動畫特效到齊+4~5 場景</td></tr>
-<tr><td>M5 結束</td><td>品質鎖定</td><td>5 場景全完成、60fps、視覺達標</td></tr>
+<tr><td>M5 結束</td><td>品質鎖定</td><td>5 場景全完成、40fps、視覺達標</td></tr>
 <tr><td>M6 結束</td><td>封版</td><td>實機+框體測試通過</td></tr>
 </table></div>
 
