@@ -14,15 +14,15 @@ html,body{overflow-x:hidden}*{word-wrap:break-word}body{background:var(--bg);col
 .top-nav a:hover{color:var(--text);border-color:var(--text)}
 .top-nav a.active{color:#fff;background:var(--section-color);border-color:var(--section-color)}
 .top-nav .print-btn{margin-left:auto;color:var(--yellow);border-color:var(--yellow)}.top-nav .home{color:var(--accent);border-color:transparent}
-.guide-hint{position:fixed;top:44px;left:0;right:0;z-index:99;background:var(--surface);border-bottom:1px solid var(--border);padding:.4rem 1rem;font-size:.8rem;color:var(--muted)}
-.guide-hint a{color:var(--accent);text-decoration:none}
+
+
 /* Sidebar */
-.sidebar{position:fixed;top:70px;left:0;width:240px;height:calc(100vh - 70px);overflow-y:auto;scrollbar-width:none;-ms-overflow-style:none;padding:1rem;border-right:1px solid var(--border);background:var(--bg)}
+.sidebar{position:fixed;top:42px;left:0;width:240px;height:calc(100vh - 42px);overflow-y:auto;scrollbar-width:none;-ms-overflow-style:none;padding:1rem;border-right:1px solid var(--border);background:var(--bg)}
 .sidebar::-webkit-scrollbar{display:none}.sidebar a{display:block;text-decoration:none;color:var(--muted);font-size:.8rem;padding:.3rem .6rem;border-left:2px solid transparent;margin-bottom:.2rem;border-radius:0 4px 4px 0;transition:all .15s}
 .sidebar a:hover,.sidebar a.active{color:var(--text);border-left-color:var(--section-color);background:rgba(88,166,255,.08)}
 .sidebar .h3-link{padding-left:1.2rem;font-size:.75rem}
 /* Content */
-.content{margin-left:240px;padding:80px 2rem 2rem 2rem;max-width:900px}
+.content{margin-left:240px;padding:50px 2rem 2rem 2rem;max-width:900px}
 h1{font-size:1.8rem;margin-bottom:.5rem;color:var(--section-color)}
 h2{font-size:1.4rem;margin:2rem 0 1rem;padding-left:.8rem;border-left:3px solid var(--section-color)}
 h3{font-size:1.1rem;margin:1.5rem 0 .8rem;color:var(--text)}
@@ -46,7 +46,7 @@ pre{overflow-x:auto;max-width:100%;background:var(--surface);padding:1rem;border
 pre code{background:none;padding:0}
 @media(max-width:768px){
 .sidebar{display:none}
-.content{margin-left:0;padding:80px 1rem 1rem 1rem}
+.content{margin-left:0;padding:50px 1rem 1rem 1rem}
 }
 </style>
 </head>
@@ -58,7 +58,6 @@ pre code{background:none;padding:0}
 <a href="game-dev-analysis-v2.1-c.html">C 執行規範</a>
 <a href="game-dev-analysis-v2.1-print.html" target="_blank" class="print-btn">📄 匯出 PDF</a>
 </nav>
-<div class="guide-hint">📌 你是誰？ 決策者→看 <a href="game-dev-analysis-v2.1-a.html">A</a>+<a href="game-dev-analysis-v2.1-b.html">B</a> ／ 美術執行→看 <a href="game-dev-analysis-v2.1-c.html">C</a></div>
 
 <aside class="sidebar" id="sidebar">
 <a href="#a1">A1. 現有美術資源盤點</a>
