@@ -1,4 +1,5 @@
 (function(){
+  if(sessionStorage.getItem('ws_unlocked')!=='1')return;
   var from=new URLSearchParams(window.location.search).get('from');
   var nav=document.createElement('div');
   nav.style.cssText='position:fixed;bottom:20px;right:20px;display:flex;flex-direction:column;gap:8px;z-index:100';
