@@ -26,7 +26,7 @@ h3{font-size:1.1rem;margin:1.5rem 0 .8rem}
 h4{font-size:1rem;margin:1.2rem 0 .6rem;color:var(--muted)}
 p{margin-bottom:.8rem}
 blockquote{border-left:3px solid var(--muted);padding:.5rem 1rem;color:var(--muted);margin-bottom:1rem;background:rgba(139,148,158,.05);border-radius:0 6px 6px 0}
-table{width:auto;border-collapse:collapse;margin-bottom:1.5rem;background:var(--surface);border-radius:8px;display:block;overflow-x:auto;-webkit-overflow-scrolling:touch;border:2px solid #f0883e}
+.table-wrap{overflow-x:auto;-webkit-overflow-scrolling:touch;margin-bottom:1.5rem;width:fit-content;max-width:100%}table{width:auto;border-collapse:collapse;background:var(--surface);border-radius:8px;border:2px solid #f0883e}
 th{text-align:left;padding:.6rem .8rem;background:rgba(240,136,62,.15);color:var(--section-color);border-bottom:1px solid var(--border)}
 td{padding:.6rem .8rem;border-bottom:1px solid var(--border)}
 tr:last-child td{border-bottom:none}
@@ -101,7 +101,7 @@ pre code{background:none;padding:0}
 <p style="font-family:monospace;font-size:0.85rem">投幣 → 選角色(8秒) → 回合1(隨機模式) → 回合2(隨機模式) → 回合3(隨機模式) → 總分結算</p>
 </div>
 <h4>遊戲模式（8 種）</h4>
-<table>
+<div class="table-wrap"><table>
 <tr><th>模式</th><th>類型</th><th>規則</th><th>時間</th></tr>
 <tr><td>互推淘汰</td><td>物理亂鬥</td><td>推出場外即淘汰</td><td>60~90 秒</td></tr>
 <tr><td>障礙賽跑</td><td>闖關競速</td><td>跑到終點，最後者淘汰</td><td>45~60 秒</td></tr>
@@ -111,7 +111,7 @@ pre code{background:none;padding:0}
 <tr><td>收集狂熱</td><td>搶奪收集</td><td>搶收金幣，最多者勝</td><td>45 秒</td></tr>
 <tr><td>親子搬運賽</td><td>2v2 合作</td><td>兩人合力搬大物件到終點</td><td>45~60 秒</td></tr>
 <tr><td>護送模式</td><td>2v2 合作</td><td>一人護送、一人開路清障</td><td>60 秒</td></tr>
-</table>
+</table></div>
 <div class="card">
 <ul>
 <li><strong style="color:var(--text)">操作：</strong>搖桿移動 + A 攻擊 + B 跳躍，30 秒內學會。碰觸自動互動（撿道具/旗幟/金幣）。</li>
@@ -124,14 +124,14 @@ pre code{background:none;padding:0}
 <div class="card highlight"><strong>目標：讓 6 歲覺得好玩，12 歲覺得不丟臉，家長願意一起玩</strong></div>
 
 <h4>風格參考標竿</h4>
-<table>
+<div class="table-wrap"><table>
 <tr><th>參考作品</th><th>參考元素</th><th>不參考的部分</th></tr>
 <tr><td>Fall Guys</td><td>圓潤角色比例、果凍材質感、鮮豔配色</td><td>服裝系統複雜度</td></tr>
 <tr><td>Splatoon</td><td>場景色彩運用、墨水特效活力感、UI 風格</td><td>角色寫實比例、武器設計</td></tr>
 <tr><td>Overcooked</td><td>場景模組化設計、俯瞰視角清晰度</td><td>2D 貼圖風格</td></tr>
 <tr><td>Party Animals</td><td>物理碰撞的誇張動態、軟體動物質感</td><td>寫實毛髮渲染</td></tr>
 <tr><td>Brawl Stars</td><td>色彩飽和度</td><td>—</td></tr>
-</table>
+</table></div>
 
 <h4>製作方向三要點</h4>
 <ol>
@@ -148,7 +148,7 @@ pre code{background:none;padding:0}
 <div class="card highlight"><strong>團隊技術能力完全足夠。30 隻現有角色完全覆蓋新遊戲 8 種體型需求，不需要新建角色模型或骨架。挑戰在於「風格轉換」— 透過改貼圖將恐怖風格轉為歡樂風格。</strong></div>
 
 <h3 id="b2-diff">新舊風格差異對照</h3>
-<table>
+<div class="table-wrap"><table>
 <tr><th>項目</th><th>桑比槍台（現有）</th><th>新街機遊戲（目標）</th></tr>
 <tr><td>色調</td><td>暗色系（紫/深綠/黑）</td><td>明亮高飽和（橙/黃/藍/綠）</td></tr>
 <tr><td>角色比例</td><td>Q 版但仍有細節（1:1.5~1:2）</td><td>更圓潤極簡（1:1~1:1.5）</td></tr>
@@ -157,7 +157,7 @@ pre code{background:none;padding:0}
 <tr><td>面數</td><td>5,000~10,000 面</td><td>3,000~5,000 面</td></tr>
 <tr><td>情緒</td><td>陰森/詭異/華麗</td><td>歡樂/搞笑/酷炫</td></tr>
 <tr><td>目標受眾</td><td>青少年~成人</td><td>6~12 歲兒童 + 陪同家長</td></tr>
-</table>
+</table></div>
 
 <h3>需要的心態轉換</h3>
 <p>團隊習慣做「細節豐富」的角色，新專案要學會「少即是多」：</p>
@@ -171,7 +171,7 @@ pre code{background:none;padding:0}
 <div class="card highlight"><strong>核心策略：「模型骨架全沿用，貼圖視覺全重做」</strong></div>
 
 <h4>角色沿用</h4>
-<table>
+<div class="table-wrap"><table>
 <tr><th>項目</th><th>數量</th><th>處理方式</th></tr>
 <tr><td>沿用舊模型（可玩角色）</td><td>9~10 隻（從 30 隻中挑選）</td><td>只改貼圖達到目標效果</td></tr>
 <tr><td>沿用舊模型（場景 NPC）</td><td>3 隻</td><td>改貼圖+加職業配件標誌</td></tr>
@@ -181,10 +181,10 @@ pre code{background:none;padding:0}
 <tr><td>沿用舊骨架</td><td>全部</td><td>使用現有骨架</td></tr>
 <tr><td>新建骨架</td><td>0 隻</td><td>不需要</td></tr>
 <tr><td><strong style="color:var(--text)">總使用量</strong></td><td><strong style="color:var(--text)">20~26 隻</strong></td><td>資源利用率 67~87%</td></tr>
-</table>
+</table></div>
 
 <h4>角色資源完整分配（30 隻現有角色）</h4>
-<table>
+<div class="table-wrap"><table>
 <tr><th>用途</th><th>數量</th><th>處理方式</th></tr>
 <tr><td>可玩角色</td><td>8 隻</td><td>改貼圖為明亮風格</td></tr>
 <tr><td>場景 NPC（敵對/中立）</td><td>3 隻</td><td>改貼圖+加職業配件標誌</td></tr>
@@ -192,42 +192,42 @@ pre code{background:none;padding:0}
 <tr><td>演出裝飾角色</td><td>3~5 隻</td><td>改貼圖+最簡動畫</td></tr>
 <tr><td><strong>總使用量</strong></td><td><strong>19~24 隻</strong></td><td>資源利用率 63~80%</td></tr>
 <tr><td>未使用</td><td>6~11 隻</td><td>備用/後續更新</td></tr>
-</table>
+</table></div>
 
 <h4>場景沿用</h4>
-<table>
+<div class="table-wrap"><table>
 <tr><th>項目</th><th>沿用性</th><th>說明</th></tr>
 <tr><td>場景模型</td><td>❌ 無法直接用</td><td>插片模型無法用於 3D 物理互動，需重建</td></tr>
 <tr><td>題材概念</td><td>⭐⭐ 部分可用</td><td>2~3 張地圖設計概念可從舊場景延伸</td></tr>
 <tr><td>貼圖素材</td><td>⭐⭐ 部分可用</td><td>金屬/石材等材質調色後可用，省 20~30% 貼圖工時</td></tr>
 <tr><td>模組化邏輯</td><td>⭐⭐⭐ 可用</td><td>場景拆分方式可直接參考</td></tr>
-</table>
+</table></div>
 
 <h4>其他資源沿用</h4>
-<table>
+<div class="table-wrap"><table>
 <tr><th>項目</th><th>沿用性</th><th>說明</th></tr>
 <tr><td>特效</td><td>❌ 無</td><td>全面重製，外包處理</td></tr>
 <tr><td>UI</td><td>❌ 無</td><td>全面重新設計，內部 2D 美術負責</td></tr>
 <tr><td>手繪貼圖製程</td><td>⭐⭐⭐ 可用</td><td>技術流程不變，畫風轉換</td></tr>
 <tr><td>硬體通訊程式碼</td><td>⭐⭐⭐⭐ 直接用</td><td>投幣器/搖桿通訊</td></tr>
-</table>
+</table></div>
 
 <h4>沿用效益總結</h4>
-<table>
+<div class="table-wrap"><table>
 <tr><th>對比項目</th><th>全重做方案</th><th>沿用優先+NPC 體系</th><th>節省</th></tr>
 <tr><td>角色建模</td><td>8 隻全新</td><td>0 隻新建</td><td>100%</td></tr>
 <tr><td>角色綁定</td><td>8 隻全新</td><td>0 隻新綁定</td><td>100%</td></tr>
 <tr><td>動畫</td><td>80~96 組全新</td><td>31~33 組（可玩）+ NPC 追加 17~27 組</td><td>40~50%</td></tr>
 <tr><td>場景內容量</td><td>25~40 模組/張</td><td>15~25 模組/張</td><td>-35%</td></tr>
 <tr><td>場景工時</td><td>60~90 天</td><td>42~60 天</td><td>-30%</td></tr>
-</table>
+</table></div>
 
 <hr>
 
 <h2 id="b3">B3. 製作項目總覽與資產量估算</h2>
 
 <h3 id="b3-items">需製作的項目</h3>
-<table>
+<div class="table-wrap"><table>
 <tr><th>類別</th><th>項目</th><th>工作性質</th><th>預估量</th></tr>
 <tr><td>角色</td><td>可玩角色貼圖重繪</td><td>改貼圖</td><td>8 隻</td></tr>
 <tr><td>角色</td><td>NPC/跟班/裝飾角色貼圖</td><td>改貼圖</td><td>11~16 隻</td></tr>
@@ -240,20 +240,20 @@ pre code{background:none;padding:0}
 <tr><td>音樂</td><td>BGM</td><td>外包</td><td>6+ 首</td></tr>
 <tr><td>音效</td><td>SFX</td><td>外包</td><td>100+ 個</td></tr>
 <tr><td>其他</td><td>機台框體外觀</td><td>內部設計</td><td>1 套</td></tr>
-</table>
+</table></div>
 
 <h3>資產總量估算</h3>
-<table>
+<div class="table-wrap"><table>
 <tr><th>類別</th><th>預估檔案數</th></tr>
 <tr><td>角色（8 可玩 + NPC）</td><td>~128</td></tr>
 <tr><td>場景（6 張）</td><td>~180</td></tr>
 <tr><td>UI</td><td>~80</td></tr>
 <tr><td>特效</td><td>~40</td></tr>
 <tr><td><strong>總計</strong></td><td><strong>~428 檔</strong></td></tr>
-</table>
+</table></div>
 
 <h3>角色體型需求（從 30 隻中挑選對應體型）</h3>
-<table>
+<div class="table-wrap"><table>
 <tr><th>需求體型</th><th>說明</th></tr>
 <tr><td>矮胖球形</td><td>彈力感</td></tr>
 <tr><td>高瘦</td><td>搖晃幅度大</td></tr>
@@ -263,17 +263,17 @@ pre code{background:none;padding:0}
 <tr><td>小而重</td><td>撞擊力感</td></tr>
 <tr><td>大而輕</td><td>容易被彈飛</td></tr>
 <tr><td>中等帶刺</td><td>防禦感</td></tr>
-</table>
+</table></div>
 
 <h3 id="b3-npc">NPC 體系</h3>
 
 <h4>場景 NPC（敵對/中立）— 3 隻</h4>
-<table>
+<div class="table-wrap"><table>
 <tr><th>NPC</th><th>定位</th><th>出現模式</th><th>行為</th><th>視覺特徵</th><th>動畫需求</th></tr>
 <tr><td>搗蛋鬼</td><td>場景干擾者</td><td>收集狂熱、障礙賽跑</td><td>撒金幣/擋路/被撞跌倒</td><td>比玩家小一號，螢光色+搗蛋面具</td><td>3 組</td></tr>
 <tr><td>砲彈手</td><td>遠程威脅</td><td>躲避球風暴、山丘之王</td><td>站高台發射砲彈/定時丟炸彈</td><td>比玩家大一號，工程背心+安全帽</td><td>3 組</td></tr>
 <tr><td>裁判</td><td>規則提示+氣氛</td><td>所有模式通用</td><td>開場吹哨/淘汰誇張反應</td><td>黑白條紋衣+哨子</td><td>3 組</td></tr>
-</table>
+</table></div>
 
 <h4>跟班 NPC（協力）— 5~8 隻池</h4>
 <ul>
@@ -293,25 +293,25 @@ pre code{background:none;padding:0}
 </ul>
 
 <h4>NPC 對場景的減量效益</h4>
-<table>
+<div class="table-wrap"><table>
 <tr><th>場景元素</th><th>原本（無 NPC）</th><th>NPC 體系後</th><th>減幅</th></tr>
 <tr><td>裝飾道具</td><td>8~12 種/張</td><td>3~5 種/張</td><td>-50~60%</td></tr>
 <tr><td>背景物件</td><td>3~5 種/張</td><td>1~2 種/張</td><td>-60%</td></tr>
 <tr><td>機關物件</td><td>3~5 種/張</td><td>2~4 種/張</td><td>部分由 NPC 行為取代</td></tr>
 <tr><td>單張地圖總模組數</td><td>25~40 種</td><td>15~25 種</td><td>-35%</td></tr>
-</table>
+</table></div>
 
 <hr>
 
 <h2 id="b4">B4. 人力配置與分工</h2>
 
 <h3>內部美術團隊（3 人）</h3>
-<table>
+<div class="table-wrap"><table>
 <tr><th>人員</th><th>角色定位</th><th>核心職責</th></tr>
 <tr><td>美術負責人</td><td>風格定義+品質把關</td><td>風格定義、外包審核、整合、機台框體外觀設計、視覺目標監修</td></tr>
 <tr><td>3D 美術</td><td>建模+貼圖+場景全包</td><td>所有建模（角色、場景）、貼圖、全遊戲場景製作（6 張）</td></tr>
 <tr><td>2D 美術</td><td>UI+平面+框體素材</td><td>UI 製作與監修（內部 20%，外包 80%）、平面素材、框體素材製作</td></tr>
-</table>
+</table></div>
 
 <h3>外包項目</h3>
 <p>其他需求（骨架綁定、動畫、特效、UI 80%、音樂、音效）= 外包，內部監修</p>
@@ -323,7 +323,7 @@ pre code{background:none;padding:0}
 <h3>各人員工時評估</h3>
 
 <h4>美術負責人</h4>
-<table>
+<div class="table-wrap"><table>
 <tr><th>工作項目</th><th>工時</th><th>月份</th></tr>
 <tr><td>風格定義+指南文件</td><td>8 天</td><td>M1</td></tr>
 <tr><td>動畫方向文件+範例指導</td><td>5 天</td><td>M1~M2</td></tr>
@@ -332,26 +332,26 @@ pre code{background:none;padding:0}
 <tr><td>視覺目標監修</td><td>持續穿插</td><td>全程</td></tr>
 <tr><td>整合+品質把關</td><td>15~20 天</td><td>M4~M6</td></tr>
 <tr><td><strong>總計</strong></td><td><strong>73~93 天</strong></td><td>✅ 可完成</td></tr>
-</table>
+</table></div>
 
 <h4>3D 美術</h4>
 <p><strong>保守評估（改貼圖每隻 2~3 天）：</strong></p>
-<table>
+<div class="table-wrap"><table>
 <tr><th>工作項目</th><th>工時</th></tr>
 <tr><td>角色改貼圖（19~24 隻 × 2~3 天）</td><td>38~72 天</td></tr>
 <tr><td>場景建模+貼圖（6 張 × 7~10 天）</td><td>42~60 天</td></tr>
 <tr><td>道具建模+Shader+調色</td><td>14~23 天</td></tr>
 <tr><td><strong>保守總計</strong></td><td><strong>94~155 天</strong> ⚠️ 偏緊~超時風險</td></tr>
-</table>
+</table></div>
 
 <p><strong>樂觀評估（建立 SOP 批量化，改貼圖每隻 1~1.5 天）：</strong></p>
-<table>
+<div class="table-wrap"><table>
 <tr><th>工作項目</th><th>工時</th></tr>
 <tr><td>角色改貼圖（19~24 隻 × 1~1.5 天）</td><td>19~36 天</td></tr>
 <tr><td>場景建模+貼圖（6 張 × 7~10 天）</td><td>42~60 天</td></tr>
 <tr><td>道具建模+Shader+調色</td><td>14~23 天</td></tr>
 <tr><td><strong>樂觀總計</strong></td><td><strong>75~119 天</strong> ✅ 可控（緩衝 11~55 天）</td></tr>
-</table>
+</table></div>
 
 <div class="card green">
 <strong>達成樂觀評估的前提：</strong>
@@ -367,75 +367,75 @@ pre code{background:none;padding:0}
 </div>
 
 <h4>2D 美術</h4>
-<table>
+<div class="table-wrap"><table>
 <tr><th>工作項目</th><th>工時</th><th>月份</th></tr>
 <tr><td>UI 設計+製作（內部 20%）</td><td>14~18 天</td><td>M1~M4</td></tr>
 <tr><td>UI 外包監修（80% 外包）</td><td>15~20 天</td><td>M2~M5</td></tr>
 <tr><td>平面素材製作（宣傳物/海報等）</td><td>15~20 天</td><td>M4~M5</td></tr>
 <tr><td>框體素材製作（機台外觀貼圖/裝飾）</td><td>10~15 天</td><td>M4~M5</td></tr>
 <tr><td><strong>總計</strong></td><td><strong>61~81 天</strong></td><td>✅ 充裕</td></tr>
-</table>
+</table></div>
 
 <h3 id="b5-schedule">月度排程</h3>
 
 <h4>M1 — 風格定義與前期（W1~W4）</h4>
-<table>
+<div class="table-wrap"><table>
 <tr><th>美術負責人</th><th>3D 美術</th><th>2D 美術</th></tr>
 <tr><td>風格定義、Mood Board</td><td>Shader 測試</td><td>UI 風格探索+規範制定</td></tr>
 <tr><td>風格指南文件</td><td>角色改貼圖測試 1~2 隻</td><td>UI wireframe</td></tr>
 <tr><td>動畫方向文件</td><td>確認 8 隻角色選定</td><td>—</td></tr>
 <tr><td>框體外觀設計開始</td><td>開始角色改貼圖</td><td>—</td></tr>
 <tr><td>外包發包（綁定+特效+UI）</td><td>—</td><td>UI 外包發包</td></tr>
-</table>
+</table></div>
 <div class="card highlight"><strong>關鍵產出：</strong>風格指南、動畫指引、改貼圖測試確認、框體設計初稿、外包已發包</div>
 
 <h4>M2 — 角色完成+場景啟動（W5~W8）</h4>
-<table>
+<div class="table-wrap"><table>
 <tr><th>美術負責人</th><th>3D 美術</th><th>2D 美術</th></tr>
 <tr><td>框體外觀設計完成</td><td>8 隻角色改貼圖完成</td><td>UI 內部 20% 製作</td></tr>
 <tr><td>綁定外包審核</td><td>場景 1 建模開始</td><td>UI 外包首批審核</td></tr>
 <tr><td>動畫外包首批審核</td><td>場景貼圖調色</td><td>—</td></tr>
-</table>
+</table></div>
 <div class="card highlight"><strong>關鍵產出：</strong>8 隻角色貼圖完成、綁定完成、框體設計定稿、UI 框架</div>
 
 <h4>M3 — 場景量產（W9~W12）</h4>
-<table>
+<div class="table-wrap"><table>
 <tr><th>美術負責人</th><th>3D 美術</th><th>2D 美術</th></tr>
 <tr><td>動畫外包審核（集中交付）</td><td>場景 1~2 完成</td><td>UI 外包審核</td></tr>
 <tr><td>特效外包審核</td><td>場景 3 建模</td><td>UI 內部補完</td></tr>
 <tr><td>視覺目標監修</td><td>道具建模 ×6</td><td>—</td></tr>
-</table>
+</table></div>
 <div class="card highlight"><strong>關鍵產出：</strong>動畫大部分完成、2 張場景完成、UI 主流程</div>
 
 <h4>M4 — 場景收尾（W13~W16）</h4>
-<table>
+<div class="table-wrap"><table>
 <tr><th>美術負責人</th><th>3D 美術</th><th>2D 美術</th></tr>
 <tr><td>動畫最終審核</td><td>場景 3~4 完成</td><td>平面素材製作</td></tr>
 <tr><td>特效最終審核</td><td>場景 5 建模</td><td>框體素材製作</td></tr>
 <tr><td>UI 外包最終審核</td><td>—</td><td>—</td></tr>
-</table>
+</table></div>
 <div class="card highlight"><strong>關鍵產出：</strong>動畫+特效到齊、4~5 張場景完成</div>
 
 <h4>M5 — 打磨（W17~W20）</h4>
-<table>
+<div class="table-wrap"><table>
 <tr><th>美術負責人</th><th>3D 美術</th><th>2D 美術</th></tr>
 <tr><td>整合+品質把關</td><td>場景 5~6 完成</td><td>平面素材補完</td></tr>
 <tr><td>視覺目標最終確認</td><td>場景打磨+效能優化</td><td>框體素材完成</td></tr>
 <tr><td>整體視覺統一</td><td>視覺 Bug 修正</td><td>UI 最終調整</td></tr>
-</table>
+</table></div>
 <div class="card highlight"><strong>關鍵產出：</strong>6 張場景全部完成、視覺品質達標</div>
 
 <h4>M6 — 收尾（W21~W24）</h4>
-<table>
+<div class="table-wrap"><table>
 <tr><th>美術負責人</th><th>3D 美術</th><th>2D 美術</th></tr>
 <tr><td>最終品質把關</td><td>實機色彩校正</td><td>最終修正</td></tr>
 <tr><td>框體視覺確認</td><td>Bug 修正</td><td>—</td></tr>
 <tr><td>封版確認</td><td>—</td><td>—</td></tr>
-</table>
+</table></div>
 <div class="card highlight"><strong>關鍵產出：</strong>封版、實機確認、框體視覺確認</div>
 
 <h3 id="b5-milestone">關鍵里程碑</h3>
-<table>
+<div class="table-wrap"><table>
 <tr><th>時間點</th><th>里程碑</th><th>判斷標準</th></tr>
 <tr><td>M1 W2</td><td>改貼圖測試通過</td><td>1~2 隻舊角色改貼圖效果達標</td></tr>
 <tr><td>M2 結束</td><td>角色就緒+框體定稿</td><td>8 隻貼圖+綁定完成、框體設計確認</td></tr>
@@ -443,7 +443,7 @@ pre code{background:none;padding:0}
 <tr><td>M4 結束</td><td>Beta</td><td>動畫特效到齊+4~5 場景</td></tr>
 <tr><td>M5 結束</td><td>品質鎖定</td><td>6 場景全完成、60fps、視覺達標</td></tr>
 <tr><td>M6 結束</td><td>封版</td><td>實機+框體測試通過</td></tr>
-</table>
+</table></div>
 
 <hr>
 <hr>
@@ -451,7 +451,7 @@ pre code{background:none;padding:0}
 <h2 id="b6">B6. 外包預算與風險對策</h2>
 
 <h3>外包需求明細</h3>
-<table>
+<div class="table-wrap"><table>
 <tr><th>外包項目</th><th>數量</th><th>預估費用 (NT$)</th><th>發包時間</th><th>交付時間</th></tr>
 <tr><td>角色骨架綁定</td><td>8 隻</td><td>80K~120K</td><td>M1 W3</td><td>M2</td></tr>
 <tr><td>角色動畫（可玩）</td><td>8 隻 × 10~12 組</td><td>350K~550K</td><td>M2</td><td>M4</td></tr>
@@ -460,37 +460,37 @@ pre code{background:none;padding:0}
 <tr><td>特效（全面重製+召喚特效）</td><td>30+ 種</td><td>300K~500K</td><td>M2</td><td>M4</td></tr>
 <tr><td>音樂</td><td>6+ 首</td><td>120K~200K</td><td>M2</td><td>M4</td></tr>
 <tr><td>音效</td><td>100+</td><td>80K~150K</td><td>M3</td><td>M5</td></tr>
-</table>
+</table></div>
 
 <div class="card warning"><strong>美術外包總預算：NT$1,190K~1,970K</strong></div>
 
 <h3>人力風險與對策</h3>
-<table>
+<div class="table-wrap"><table>
 <tr><th>風險</th><th>嚴重度</th><th>對策</th></tr>
 <tr><td>3D 美術場景全包壓力大（90~137 天）</td><td>🔴 高</td><td>模組化設計+共用素材+控制場景複雜度，目標每張 10~12 天</td></tr>
 <tr><td>UI 外包 80% 風格一致性</td><td>🟡 中</td><td>2D 美術出完整 UI 規範+持續監修</td></tr>
 <tr><td>動畫外包搞笑品質</td><td>🟡 中</td><td>美術負責人出動畫指引+動態參考影片</td></tr>
 <tr><td>框體設計與遊戲視覺整合</td><td>🟢 低</td><td>主美統一把關</td></tr>
-</table>
+</table></div>
 
 <hr>
 
 <h2 id="b7">B7. 親子共玩設計</h2>
 
 <h3>目標受眾修正</h3>
-<div class="table-wrap"><table>
+<div class="table-wrap"><div class="table-wrap"><table>
 <tr><th>項目</th><th>原本</th><th>修正後</th></tr>
 <tr><td>主要受眾</td><td>6~12 歲兒童</td><td>6~12 歲兒童 + 陪同家長（25~45 歲）</td></tr>
 <tr><td>設計目標</td><td>讓小孩覺得好玩</td><td>讓家長「願意一起玩」</td></tr>
 <tr><td>場景定位</td><td>兒童遊樂</td><td>家庭娛樂（親子共玩）</td></tr>
-</table></div>
+</table></div></div>
 
 <h3>合作模式新增</h3>
-<div class="table-wrap"><table>
+<div class="table-wrap"><div class="table-wrap"><table>
 <tr><th>模式</th><th>類型</th><th>規則</th><th>時間</th><th>親子適配</th></tr>
 <tr><td>親子搬運賽</td><td>2v2 合作</td><td>兩人合力搬大物件到終點</td><td>45~60 秒</td><td>家長出力+小孩指路</td></tr>
 <tr><td>護送模式</td><td>2v2 合作</td><td>一人護送目標、一人開路清障</td><td>60 秒</td><td>家長保護+小孩衝刺</td></tr>
-</table></div>
+</table></div></div>
 
 <h3>隱性平衡機制</h3>
 <div class="card">

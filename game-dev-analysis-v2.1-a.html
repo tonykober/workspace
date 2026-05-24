@@ -28,7 +28,7 @@ h2{font-size:1.4rem;margin:2rem 0 1rem;padding-left:.8rem;border-left:3px solid 
 h3{font-size:1.1rem;margin:1.5rem 0 .8rem;color:var(--text)}
 p{margin-bottom:.8rem}
 blockquote{border-left:3px solid var(--muted);padding:.5rem 1rem;color:var(--muted);margin-bottom:1rem;background:rgba(139,148,158,.05);border-radius:0 6px 6px 0}
-table{width:auto;border-collapse:collapse;margin-bottom:1.5rem;background:var(--surface);border-radius:8px;display:block;overflow-x:auto;-webkit-overflow-scrolling:touch;border:2px solid #58a6ff}
+.table-wrap{overflow-x:auto;-webkit-overflow-scrolling:touch;margin-bottom:1.5rem;width:fit-content;max-width:100%}table{width:auto;border-collapse:collapse;background:var(--surface);border-radius:8px;border:2px solid #58a6ff}
 th{text-align:left;padding:.6rem .8rem;background:rgba(88,166,255,.15);color:var(--section-color);border-bottom:1px solid var(--border)}
 td{padding:.6rem .8rem;border-bottom:1px solid var(--border)}
 tr:last-child td{border-bottom:none}
@@ -81,13 +81,13 @@ pre code{background:none;padding:0}
 <p>基於桑比槍台現有素材評估（參考路徑：<code>\\10.1.0.52\rd1_card_1\專案_桑比槍台\03_美術</code>）</p>
 
 <h3 id="a1-overview">現有資源概況</h3>
-<table>
+<div class="table-wrap"><table>
 <tr><th>資源類型</th><th>數量/狀態</th><th>說明</th></tr>
 <tr><td>角色模型</td><td>約 30 隻</td><td>多種體型（胖/瘦/壯/小/大/中等），含完整骨架綁定</td></tr>
 <tr><td>場景模型</td><td>多張</td><td>多為插片模型，少有完整 3D 物件</td></tr>
 <tr><td>特效素材</td><td>—</td><td>無可沿用資源</td></tr>
 <tr><td>UI</td><td>—</td><td>無可沿用資源</td></tr>
-</table>
+</table></div>
 
 <h3 id="a1-char">角色資源細節</h3>
 <ul>
@@ -111,20 +111,20 @@ pre code{background:none;padding:0}
 </ul>
 
 <h3 id="a1-other">其他資源</h3>
-<table>
+<div class="table-wrap"><table>
 <tr><th>項目</th><th>狀態</th><th>說明</th></tr>
 <tr><td>手繪貼圖製程</td><td>成熟</td><td>團隊有完整的手繪貼圖工作流程</td></tr>
 <tr><td>硬體通訊程式碼</td><td>可直接用</td><td>投幣器/搖桿通訊已開發完成</td></tr>
 <tr><td>特效</td><td>無</td><td>需全面製作</td></tr>
 <tr><td>UI</td><td>無</td><td>需全面製作</td></tr>
-</table>
+</table></div>
 
 <hr>
 
 <h2 id="a2">A2. 團隊能力評估與資源特性</h2>
 
 <h3 id="a2-ability">能力評估</h3>
-<table>
+<div class="table-wrap"><table>
 <tr><th>能力項目</th><th>水準</th><th>依據</th></tr>
 <tr><td>3D 角色建模</td><td>⭐⭐⭐⭐</td><td>多體型角色、細節到位</td></tr>
 <tr><td>手繪貼圖（Hand-painted）</td><td>⭐⭐⭐⭐</td><td>材質層次豐富、色彩控制好</td></tr>
@@ -132,7 +132,7 @@ pre code{background:none;padding:0}
 <tr><td>Q 版誇張比例</td><td>⭐⭐⭐⭐</td><td>已有多種誇張比例角色</td></tr>
 <tr><td>場景氛圍營造</td><td>⭐⭐⭐⭐</td><td>監獄+墓園光影處理精緻</td></tr>
 <tr><td>高飽和配色</td><td>⭐⭐⭐</td><td>亡靈節角色有，但整體偏暗色系</td></tr>
-</table>
+</table></div>
 
 <h3 id="a2-general">資源的通用能力</h3>
 

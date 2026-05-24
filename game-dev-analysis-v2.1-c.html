@@ -27,7 +27,7 @@ h3{font-size:1.1rem;margin:1.5rem 0 .8rem}
 h4{font-size:1rem;margin:1.2rem 0 .6rem;color:var(--muted)}
 p{margin-bottom:.8rem}
 blockquote{border-left:3px solid var(--muted);padding:.5rem 1rem;color:var(--muted);margin-bottom:1rem;background:rgba(139,148,158,.05);border-radius:0 6px 6px 0}
-table{width:auto;border-collapse:collapse;margin-bottom:1.5rem;background:var(--surface);border-radius:8px;display:block;overflow-x:auto;-webkit-overflow-scrolling:touch;border:2px solid #3fb950}
+.table-wrap{overflow-x:auto;-webkit-overflow-scrolling:touch;margin-bottom:1.5rem;width:fit-content;max-width:100%}table{width:auto;border-collapse:collapse;background:var(--surface);border-radius:8px;border:2px solid #3fb950}
 th{text-align:left;padding:.6rem .8rem;background:rgba(63,185,80,.15);color:var(--section-color);border-bottom:1px solid var(--border)}
 td{padding:.6rem .8rem;border-bottom:1px solid var(--border)}
 tr:last-child td{border-bottom:none}
@@ -108,14 +108,14 @@ pre{overflow-x:auto;max-width:100%;background:#f5f5f5;border:1px solid #ddd}
 <h2 id="c1">C1. 美術風格指南</h2>
 
 <h3 id="c1-style">風格化程度定義</h3>
-<table>
+<div class="table-wrap"><table>
 <tr><th>維度</th><th>程度</th><th>說明</th></tr>
 <tr><td>比例誇張度</td><td>高（2~2.5 頭身）</td><td>大頭短身，四肢圓潤粗短</td></tr>
 <tr><td>邊緣處理</td><td>圓滑無銳角</td><td>所有邊緣倒圓角，無尖刺造型</td></tr>
 <tr><td>材質簡化</td><td>中高</td><td>色塊+漸層為主，少量手繪紋理點綴</td></tr>
 <tr><td>細節密度</td><td>低</td><td>大面積留白，重點在臉部與配件</td></tr>
 <tr><td>光影風格</td><td>卡通渲染</td><td>明確明暗分界，柔和環境光</td></tr>
-</table>
+</table></div>
 
 <h3 id="c1-dodont">DO / DON'T</h3>
 
@@ -145,15 +145,15 @@ pre{overflow-x:auto;max-width:100%;background:#f5f5f5;border:1px solid #ddd}
 <h3 id="c1-color">色彩規範</h3>
 
 <h4>分層色彩策略</h4>
-<table>
+<div class="table-wrap"><table>
 <tr><th>層級</th><th>色調方向</th><th>飽和度</th><th>明度</th></tr>
 <tr><td>背景層</td><td>冷色調</td><td>30~50%</td><td>40~60%</td></tr>
 <tr><td>角色層</td><td>暖色調</td><td>70~90%</td><td>60~80%</td></tr>
 <tr><td>特效層</td><td>任意色相</td><td>90~100%</td><td>80~100%</td></tr>
-</table>
+</table></div>
 
 <h4>角色色盤</h4>
-<table>
+<div class="table-wrap"><table>
 <tr><th>角色</th><th>主色</th><th>輔色</th><th>點綴色</th><th>情緒</th></tr>
 <tr><td>角色 1</td><td><span style="display:inline-block;width:14px;height:14px;background:#FF6B6B;border-radius:3px;vertical-align:middle;margin-right:4px"></span>#FF6B6B 珊瑚紅</td><td><span style="display:inline-block;width:14px;height:14px;background:#FFFFFF;border-radius:3px;vertical-align:middle;margin-right:4px"></span>#FFFFFF 白</td><td><span style="display:inline-block;width:14px;height:14px;background:#FFD93D;border-radius:3px;vertical-align:middle;margin-right:4px"></span>#FFD93D 金黃</td><td>活力、領袖</td></tr>
 <tr><td>角色 2</td><td><span style="display:inline-block;width:14px;height:14px;background:#6BCB77;border-radius:3px;vertical-align:middle;margin-right:4px"></span>#6BCB77 草綠</td><td><span style="display:inline-block;width:14px;height:14px;background:#FFFDE7;border-radius:3px;vertical-align:middle;margin-right:4px"></span>#FFFDE7 米白</td><td><span style="display:inline-block;width:14px;height:14px;background:#FF8B94;border-radius:3px;vertical-align:middle;margin-right:4px"></span>#FF8B94 粉</td><td>自然、溫和</td></tr>
@@ -163,7 +163,7 @@ pre{overflow-x:auto;max-width:100%;background:#f5f5f5;border:1px solid #ddd}
 <tr><td>角色 6</td><td><span style="display:inline-block;width:14px;height:14px;background:#FFD93D;border-radius:3px;vertical-align:middle;margin-right:4px"></span>#FFD93D 金黃</td><td><span style="display:inline-block;width:14px;height:14px;background:#FFFFFF;border-radius:3px;vertical-align:middle;margin-right:4px"></span>#FFFFFF 白</td><td><span style="display:inline-block;width:14px;height:14px;background:#FF6B6B;border-radius:3px;vertical-align:middle;margin-right:4px"></span>#FF6B6B 紅</td><td>陽光、元氣</td></tr>
 <tr><td>角色 7</td><td><span style="display:inline-block;width:14px;height:14px;background:#00C9A7;border-radius:3px;vertical-align:middle;margin-right:4px"></span>#00C9A7 青綠</td><td><span style="display:inline-block;width:14px;height:14px;background:#E8FFF1;border-radius:3px;vertical-align:middle;margin-right:4px"></span>#E8FFF1 薄荷</td><td><span style="display:inline-block;width:14px;height:14px;background:#4D96FF;border-radius:3px;vertical-align:middle;margin-right:4px"></span>#4D96FF 藍</td><td>清爽、敏捷</td></tr>
 <tr><td>角色 8</td><td><span style="display:inline-block;width:14px;height:14px;background:#FF8B94;border-radius:3px;vertical-align:middle;margin-right:4px"></span>#FF8B94 粉紅</td><td><span style="display:inline-block;width:14px;height:14px;background:#FFF0F5;border-radius:3px;vertical-align:middle;margin-right:4px"></span>#FFF0F5 淡粉</td><td><span style="display:inline-block;width:14px;height:14px;background:#845EC2;border-radius:3px;vertical-align:middle;margin-right:4px"></span>#845EC2 紫</td><td>甜美、夢幻</td></tr>
-</table>
+</table></div>
 <div class="img-placeholder">🖼️ 角色色盤視覺化展示圖</div>
 
 <h4>UI 色盤</h4>
@@ -185,13 +185,13 @@ pre{overflow-x:auto;max-width:100%;background:#f5f5f5;border:1px solid #ddd}
 </ul>
 
 <h4>色彩情緒對應</h4>
-<table>
+<div class="table-wrap"><table>
 <tr><th>情境</th><th>色彩方向</th><th>範例</th></tr>
 <tr><td>歡樂/勝利</td><td>暖色高飽和 + 金色粒子</td><td>黃橘紅漸層爆發</td></tr>
 <tr><td>危險/倒數</td><td>紅橘脈衝 + 邊緣暗角</td><td>畫面邊緣紅色閃爍</td></tr>
 <tr><td>加速/強化</td><td>青藍流線 + 白色拖尾</td><td>角色周圍藍色光環</td></tr>
 <tr><td>暈眩/受擊</td><td>黃色星星 + 螺旋線</td><td>卡通式暈眩符號</td></tr>
-</table>
+</table></div>
 
 <!-- C1 CHARACTER DESIGN -->
 <h3 id="c1-char">角色設計規範</h3>
@@ -240,7 +240,7 @@ pre{overflow-x:auto;max-width:100%;background:#f5f5f5;border:1px solid #ddd}
 <h3 id="c1-scene">場景設計規範</h3>
 
 <h4>6 張地圖設定</h4>
-<table>
+<div class="table-wrap"><table>
 <tr><th>地圖</th><th>主題</th><th>色調方向</th><th>核心機關</th></tr>
 <tr><td>1</td><td>糖果工廠</td><td>粉紅/奶油/巧克力</td><td>輸送帶、彈跳果凍</td></tr>
 <tr><td>2</td><td>海洋派對</td><td>藍/青/珊瑚</td><td>浮板、水流推力</td></tr>
@@ -248,7 +248,7 @@ pre{overflow-x:auto;max-width:100%;background:#f5f5f5;border:1px solid #ddd}
 <tr><td>4</td><td>叢林遺跡</td><td>綠/金/土色</td><td>藤蔓擺盪、崩塌平台</td></tr>
 <tr><td>5</td><td>玩具城堡</td><td>紅/藍/黃（三原色）</td><td>積木牆、彈珠軌道</td></tr>
 <tr><td>6</td><td>雲端樂園</td><td>白/淡藍/彩虹</td><td>消失雲朵、風力推送</td></tr>
-</table>
+</table></div>
 
 <h4>場景視覺規則</h4>
 <ul>
@@ -350,16 +350,16 @@ pre{overflow-x:auto;max-width:100%;background:#f5f5f5;border:1px solid #ddd}
 <h2 id="c2">C2. 資產規格表</h2>
 
 <h3>技術規格總覽</h3>
-<table>
+<div class="table-wrap"><table>
 <tr><th>類別</th><th>規格</th></tr>
 <tr><td>角色</td><td>3,000~5,000 三角面、Diffuse 1024×1024、30-40 骨骼、6 組 Blendshape</td></tr>
 <tr><td>場景</td><td>單模組 500-3,000 面、整張 ≤ 50,000~80,000 面、Atlas 2048×2048</td></tr>
 <tr><td>特效</td><td>單特效 ≤ 200 粒子、同畫面 ≤ 8 個、Atlas 512×512</td></tr>
 <tr><td>UI</td><td>1920×1080、圖標 64/128px、PNG-24 含 Alpha</td></tr>
-</table>
+</table></div>
 
 <h3 id="c2-char">角色資產（單角色）</h3>
-<table>
+<div class="table-wrap"><table>
 <tr><th>資產</th><th>數量</th><th>格式</th><th>規格</th></tr>
 <tr><td>模型（T-Pose）</td><td>1</td><td>.fbx</td><td>3,000~5,000 面</td></tr>
 <tr><td>Diffuse 貼圖</td><td>1</td><td>.png</td><td>1024×1024</td></tr>
@@ -369,10 +369,10 @@ pre{overflow-x:auto;max-width:100%;background:#f5f5f5;border:1px solid #ddd}
 <tr><td>配色變體</td><td>2</td><td>.png</td><td>1024×1024</td></tr>
 <tr><td>動畫</td><td>10-12</td><td>.fbx</td><td>見動畫清單</td></tr>
 <tr><td>Turnaround 設定稿</td><td>1 組</td><td>.png</td><td>4 視角+表情表</td></tr>
-</table>
+</table></div>
 
 <h3 id="c2-anim">動畫幀數規格</h3>
-<table>
+<div class="table-wrap"><table>
 <tr><th>動畫</th><th>命名格式</th><th>幀數</th><th>循環</th><th>優先級</th></tr>
 <tr><td>待機</td><td>AN_[Name]_Idle_Loop</td><td>60-90</td><td>✅</td><td>P0</td></tr>
 <tr><td>跑步</td><td>AN_[Name]_Run_Loop</td><td>16-24</td><td>✅</td><td>P0</td></tr>
@@ -386,10 +386,10 @@ pre{overflow-x:auto;max-width:100%;background:#f5f5f5;border:1px solid #ddd}
 <tr><td>勝利</td><td>AN_[Name]_Victory</td><td>60-90</td><td>❌</td><td>P1</td></tr>
 <tr><td>落敗</td><td>AN_[Name]_Defeat</td><td>40-60</td><td>❌</td><td>P1</td></tr>
 <tr><td>特殊技能</td><td>AN_[Name]_Special</td><td>30-45</td><td>❌</td><td>P1</td></tr>
-</table>
+</table></div>
 
 <h3 id="c2-scene">場景資產（單地圖）</h3>
-<table>
+<div class="table-wrap"><table>
 <tr><th>資產</th><th>數量</th><th>格式</th><th>規格</th></tr>
 <tr><td>地面模組</td><td>5-8 種</td><td>.fbx</td><td>500-3,000 面/個</td></tr>
 <tr><td>平台模組</td><td>4-6 種</td><td>.fbx</td><td></td></tr>
@@ -399,10 +399,10 @@ pre{overflow-x:auto;max-width:100%;background:#f5f5f5;border:1px solid #ddd}
 <tr><td>Atlas 貼圖</td><td>2-3 張</td><td>.png</td><td>2048×2048</td></tr>
 <tr><td>Lightmap</td><td>1-2 張</td><td>.exr</td><td>1024×1024</td></tr>
 <tr><td>天空盒</td><td>1</td><td>.hdr/.png</td><td></td></tr>
-</table>
+</table></div>
 
 <h3 id="c2-fx">特效資產</h3>
-<table>
+<div class="table-wrap"><table>
 <tr><th>類別</th><th>項目</th><th>數量</th><th>優先級</th></tr>
 <tr><td>打擊</td><td>輕攻擊/重攻擊/擊飛拖尾</td><td>3</td><td>P0</td></tr>
 <tr><td>移動</td><td>跑步灰塵/跳躍落地/衝刺拖尾</td><td>3</td><td>P0-P1</td></tr>
@@ -410,7 +410,7 @@ pre{overflow-x:auto;max-width:100%;background:#f5f5f5;border:1px solid #ddd}
 <tr><td>場景</td><td>機關啟動/環境氛圍</td><td>12-18</td><td>P0-P1</td></tr>
 <tr><td>UI</td><td>倒數脈衝/勝利煙火</td><td>2</td><td>P0-P1</td></tr>
 <tr><td>角色</td><td>特殊技能</td><td>8</td><td>P1</td></tr>
-</table>
+</table></div>
 
 <div class="card warning">
 <strong>特效規格限制：</strong>
@@ -424,7 +424,7 @@ pre{overflow-x:auto;max-width:100%;background:#f5f5f5;border:1px solid #ddd}
 </div>
 
 <h3 id="c2-ui">UI 資產</h3>
-<table>
+<div class="table-wrap"><table>
 <tr><th>資產</th><th>數量</th><th>格式</th><th>尺寸</th></tr>
 <tr><td>角色頭像</td><td>8</td><td>.png</td><td>256×256</td></tr>
 <tr><td>技能圖標</td><td>8-16</td><td>.png</td><td>128×128</td></tr>
@@ -435,7 +435,7 @@ pre{overflow-x:auto;max-width:100%;background:#f5f5f5;border:1px solid #ddd}
 <tr><td>選單背景</td><td>3-5</td><td>.png</td><td>1920×1080</td></tr>
 <tr><td>勝利/結算畫面</td><td>1 組</td><td>.png</td><td>1920×1080</td></tr>
 <tr><td>Logo</td><td>1</td><td>.png + .ai</td><td>多尺寸</td></tr>
-</table>
+</table></div>
 
 <!-- C2 FOLDER STRUCTURE -->
 <h3 id="c2-folder">資料夾結構</h3>
@@ -480,7 +480,7 @@ pre{overflow-x:auto;max-width:100%;background:#f5f5f5;border:1px solid #ddd}
 <pre><code>[類型前綴]_[子類型]_[名稱]_[變體/編號].[副檔名]</code></pre>
 
 <h4>前綴表</h4>
-<table>
+<div class="table-wrap"><table>
 <tr><th>前綴</th><th>類型</th><th>範例</th></tr>
 <tr><td>CH</td><td>角色</td><td>CH_Body_Rabbit_Red.fbx</td></tr>
 <tr><td>ENV</td><td>場景</td><td>ENV_Platform_Candy_01.fbx</td></tr>
@@ -491,7 +491,7 @@ pre{overflow-x:auto;max-width:100%;background:#f5f5f5;border:1px solid #ddd}
 <tr><td>TX</td><td>貼圖</td><td>TX_Rabbit_Diffuse.png</td></tr>
 <tr><td>MAT</td><td>材質</td><td>MAT_Toon_Character_01</td></tr>
 <tr><td>LM</td><td>光照圖</td><td>LM_CandyFactory_01.exr</td></tr>
-</table>
+</table></div>
 
 <h4>命名細則</h4>
 <ul>
@@ -508,14 +508,14 @@ pre{overflow-x:auto;max-width:100%;background:#f5f5f5;border:1px solid #ddd}
 <h2 id="c3">C3. 交付流程與驗收標準</h2>
 
 <h3 id="c3-format">檔案格式</h3>
-<table>
+<div class="table-wrap"><table>
 <tr><th>資產類型</th><th>工作檔</th><th>交付檔</th></tr>
 <tr><td>3D 模型</td><td>.blend / .ma</td><td>.fbx</td></tr>
 <tr><td>貼圖</td><td>.psd</td><td>.png（含 Alpha）/ .jpg</td></tr>
 <tr><td>動畫</td><td>.blend / .ma</td><td>.fbx（內嵌動畫）</td></tr>
 <tr><td>UI</td><td>.psd / .ai / .fig</td><td>.png（切圖）</td></tr>
 <tr><td>特效</td><td>引擎內製作</td><td>引擎 Prefab</td></tr>
-</table>
+</table></div>
 
 <h3 id="c3-flow">交付流程</h3>
 <ol>
@@ -584,12 +584,12 @@ pre{overflow-x:auto;max-width:100%;background:#f5f5f5;border:1px solid #ddd}
 <hr>
 
 <h2 id="appendix">附錄：更新紀錄</h2>
-<table>
+<div class="table-wrap"><table>
 <tr><th>版本</th><th>日期</th><th>修改內容</th></tr>
 <tr><td>v1.0（原版）</td><td>2026-05-23</td><td>初版建立</td></tr>
 <tr><td>v2.0（重構版）</td><td>2026-05-24</td><td>三區塊架構重組</td></tr>
 <tr><td>v2.1</td><td>2026-05-24</td><td>A 區淨化（移除新遊戲相關內容）、核心判斷移至 B2、三子分頁</td></tr>
-</table>
+</table></div>
 
 </main>
 

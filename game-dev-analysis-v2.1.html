@@ -62,5 +62,17 @@ h1{font-size:2rem;margin-bottom:.5rem}
 </div>
 </div>
 <script src="nav.js"></script>
+<script>
+// Always show 返回主頁 button on this page
+(function(){
+  var btn=document.createElement('a');
+  btn.href='index.html';
+  btn.textContent='🏠 返回主頁';
+  btn.style.cssText='position:fixed;bottom:20px;right:20px;background:#161b22;border:1px solid #30363d;border-radius:8px;padding:10px 14px;color:#58a6ff;text-decoration:none;font-size:13px;z-index:100;transition:border-color .2s';
+  btn.onmouseover=function(){this.style.borderColor='#58a6ff'};
+  btn.onmouseout=function(){this.style.borderColor='#30363d'};
+  document.body.appendChild(btn);
+})();
+</script>
 </body>
 </html>
