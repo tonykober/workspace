@@ -7,7 +7,7 @@
 <style>
 :root{--bg:#0d1117;--surface:#161b22;--border:#30363d;--text:#e6edf3;--muted:#8b949e;--accent:#58a6ff;--green:#3fb950;--yellow:#d29922;--purple:#a371f7;--orange:#f0883e;--red:#f85149;--blue:#58a6ff}
 *{margin:0;padding:0;box-sizing:border-box}
-body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Helvetica,Arial,sans-serif;background:var(--bg);color:var(--text);line-height:1.6;display:flex}
+html,body{overflow-x:hidden}*{word-wrap:break-word}body{font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Helvetica,Arial,sans-serif;background:var(--bg);color:var(--text);line-height:1.6;display:flex}
 a{color:var(--accent);text-decoration:none}
 a:hover{text-decoration:underline}
 
@@ -56,7 +56,7 @@ code{background:var(--surface);padding:2px 6px;border-radius:4px;font-size:13px;
 hr{border:none;border-top:1px solid var(--border);margin:32px 0}
 
 /* Tables */
-table{width:100%;border-collapse:collapse;margin:12px 0 20px;font-size:13px}
+table{display:block;overflow-x:auto;-webkit-overflow-scrolling:touch;width:100%;border-collapse:collapse;margin:12px 0 20px;font-size:13px}
 th{background:var(--surface);color:var(--accent);text-align:left;padding:10px 12px;border-bottom:2px solid var(--border);font-weight:600}
 td{padding:8px 12px;border-bottom:1px solid var(--border)}
 tr:hover td{background:rgba(255,255,255,.02)}
@@ -72,7 +72,7 @@ tr:hover td{background:rgba(255,255,255,.02)}
 .img-placeholder{border:2px dashed var(--border);background:rgba(255,255,255,.02);border-radius:8px;padding:32px;text-align:center;color:var(--muted);margin:16px 0;font-size:13px}
 
 /* Code Blocks */
-pre{background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:16px;overflow-x:auto;margin:12px 0}
+pre{overflow-x:auto;max-width:100%;background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:16px;overflow-x:auto;margin:12px 0}
 pre code{background:none;border:none;padding:0;font-size:12px;font-family:"JetBrains Mono","Fira Code",monospace}
 
 /* Checklist */
@@ -98,8 +98,8 @@ pre code{background:none;border:none;padding:0;font-size:12px;font-family:"JetBr
 .top-nav,.sidebar,.menu-toggle,.print-btn{display:none!important}
 .main{margin:0;padding:16px}
 #section-a,#section-b,.page-header{display:none!important}
-body{background:#fff;color:#000}
-table{font-size:11px}
+html,body{overflow-x:hidden}*{word-wrap:break-word}body{background:#fff;color:#000}
+table{display:block;overflow-x:auto;-webkit-overflow-scrolling:touch;font-size:11px}
 th{background:#eee;color:#000}
 td{border-bottom:1px solid #ccc}
 .card{border:1px solid #ccc;background:#f9f9f9}

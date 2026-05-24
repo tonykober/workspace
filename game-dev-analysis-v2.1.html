@@ -7,7 +7,7 @@
 <style>
 :root{--bg:#0d1117;--surface:#161b22;--border:#30363d;--text:#e6edf3;--muted:#8b949e;--accent:#58a6ff;--green:#3fb950;--yellow:#d29922;--purple:#a371f7;--orange:#f0883e;--red:#f85149}
 *{margin:0;padding:0;box-sizing:border-box}
-body{background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;line-height:1.6;padding:2rem}
+html,body{overflow-x:hidden}*{word-wrap:break-word}body{background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;line-height:1.6;padding:2rem}
 .container{max-width:900px;margin:0 auto}
 h1{font-size:2rem;margin-bottom:.5rem}
 .subtitle{color:var(--muted);font-size:1.1rem;margin-bottom:2.5rem}
@@ -27,7 +27,7 @@ h1{font-size:2rem;margin-bottom:.5rem}
 .card-c h2{color:#3fb950}
 .guide{background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:1.5rem;margin-bottom:2rem}
 .guide h3{margin-bottom:.8rem;font-size:1.1rem}
-.guide table{width:100%;border-collapse:collapse}
+.guide table{display:block;overflow-x:auto;-webkit-overflow-scrolling:touch;width:100%;border-collapse:collapse}
 .guide th{text-align:left;padding:.5rem;color:var(--accent);border-bottom:1px solid var(--border)}
 .guide td{padding:.5rem;border-bottom:1px solid var(--border)}
 </style>
