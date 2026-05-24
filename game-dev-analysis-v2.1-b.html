@@ -26,7 +26,7 @@ h3{font-size:1.1rem;margin:1.5rem 0 .8rem}
 h4{font-size:1rem;margin:1.2rem 0 .6rem;color:var(--muted)}
 p{margin-bottom:.8rem}
 blockquote{border-left:3px solid var(--muted);padding:.5rem 1rem;color:var(--muted);margin-bottom:1rem;background:rgba(139,148,158,.05);border-radius:0 6px 6px 0}
-table{width:100%;border-collapse:collapse;margin-bottom:1.5rem;background:var(--surface);border-radius:8px;display:block;overflow-x:auto;-webkit-overflow-scrolling:touch}
+table{width:auto;border-collapse:collapse;margin-bottom:1.5rem;background:var(--surface);border-radius:8px;display:block;overflow-x:auto;-webkit-overflow-scrolling:touch;border:2px solid #f0883e}
 th{text-align:left;padding:.6rem .8rem;background:rgba(240,136,62,.15);color:var(--section-color);border-bottom:1px solid var(--border)}
 td{padding:.6rem .8rem;border-bottom:1px solid var(--border)}
 tr:last-child td{border-bottom:none}
@@ -57,6 +57,7 @@ pre code{background:none;padding:0}
 <aside class="sidebar" id="sidebar">
 <a href="#b1">B1. 遊戲概述與視覺目標</a>
 <a href="#b1-overview" class="h3-link">專案概述</a>
+<a href="#b1-gameplay" class="h3-link">玩法概述</a>
 <a href="#b1-visual" class="h3-link">視覺目標</a>
 <a href="#b2">B2. 風格轉換分析</a>
 <a href="#b2-diff" class="h3-link">新舊風格差異</a>
@@ -90,6 +91,34 @@ pre code{background:none;padding:0}
 
 <h3>核心體驗關鍵字</h3>
 <p><code>歡樂</code> <code>混亂</code> <code>可愛</code> <code>彈性</code> <code>派對感</code> <code>安全</code> <code>親子</code></p>
+
+<h3 id="b1-gameplay">玩法概述</h3>
+<div class="card highlight">
+<p><strong style="color:var(--text)">一句話描述：</strong>1~4 人 3D 物理亂鬥街機遊戲，以物理引擎為核心，每回合隨機切換不同玩法模式，製造不可預測的歡樂混亂。</p>
+</div>
+<div class="card">
+<p><strong style="color:var(--text)">核心循環：</strong></p>
+<p style="font-family:monospace;font-size:0.85rem">投幣 → 選角色(8秒) → 回合1(隨機模式) → 回合2(隨機模式) → 回合3(隨機模式) → 總分結算</p>
+</div>
+<h4>遊戲模式（8 種）</h4>
+<table>
+<tr><th>模式</th><th>類型</th><th>規則</th><th>時間</th></tr>
+<tr><td>互推淘汰</td><td>物理亂鬥</td><td>推出場外即淘汰</td><td>60~90 秒</td></tr>
+<tr><td>障礙賽跑</td><td>闖關競速</td><td>跑到終點，最後者淘汰</td><td>45~60 秒</td></tr>
+<tr><td>搶旗混戰</td><td>搶奪持有</td><td>持旗累積秒數</td><td>60 秒</td></tr>
+<tr><td>山丘之王</td><td>佔領區域</td><td>站在區域累積分數</td><td>60 秒</td></tr>
+<tr><td>躲避球風暴</td><td>閃躲生存</td><td>被砲彈擊中即淘汰</td><td>45~60 秒</td></tr>
+<tr><td>收集狂熱</td><td>搶奪收集</td><td>搶收金幣，最多者勝</td><td>45 秒</td></tr>
+<tr><td>親子搬運賽</td><td>2v2 合作</td><td>兩人合力搬大物件到終點</td><td>45~60 秒</td></tr>
+<tr><td>護送模式</td><td>2v2 合作</td><td>一人護送、一人開路清障</td><td>60 秒</td></tr>
+</table>
+<div class="card">
+<ul>
+<li><strong style="color:var(--text)">操作：</strong>搖桿移動 + A 攻擊 + B 跳躍，30 秒內學會。碰觸自動互動（撿道具/旗幟/金幣）。</li>
+<li><strong style="color:var(--text)">計分：</strong>每回合：1名=3分、2名=2分、3名=1分、4名=0分。3 回合總分決定最終排名。</li>
+<li><strong style="color:var(--text)">單局時間：</strong>約 2.5~3 分鐘（含結算），高翻桌率。</li>
+</ul>
+</div>
 
 <h3 id="b1-visual">視覺目標</h3>
 <div class="card highlight"><strong>目標：讓 6 歲覺得好玩，12 歲覺得不丟臉，家長願意一起玩</strong></div>
