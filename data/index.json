@@ -1,12 +1,9 @@
 [
   {"title":"團隊架構圖","desc":"AI 助理團隊組織架構、成員分工與通訊方式","icon":"🏗️","path":"team-structure.html","date":"2026-05-18"},
-  {"title":"FZG 系統架構","desc":"FZG 專案追蹤器的前端、後端、資料層、自動化流程","icon":"📐","path":"fzg-architecture.html","date":"2026-05-18"},
-  {"title":"FZG 規範與要求","desc":"技術架構、設計規範、同步規則、功能規範、工作流程","icon":"📏","path":"fzg-specs.html","date":"2026-05-18"},
-  {"title":"台股分析圖表","desc":"大盤、情緒、巴菲特指數、類股、國際市場、追蹤個股、操盤建議","icon":"📈","path":"stock-analysis.html","date":"2026-05-18"},
-  {"title":"投資策略文件","desc":"資產配置、標的定位、進出場策略、風險管理、操作計畫","icon":"📋","path":"investment-strategy.html","date":"2026-05-18"},
-  {"title":"300萬投資策略","desc":"新手起步方案：300萬分批進場、標的推薦、風險管理、預期成果","icon":"💰","path":"300w-investment-strategy.html","date":"2026-05-18"},
-  {"title":"街機遊戲設計發想","desc":"市場研究、玩法提案、美術風格、GDD、操作配置、投幣與營收","icon":"🎮","path":"game-design.html","date":"2026-05-24T11:51"},
-  {"title":"街機遊戲 — 美術開發製程分析","desc":"美術資源沿用、風格調整、人力需求、工時評估","icon":"🎨","path":"game-dev-analysis.html","date":"2026-05-24T11:51"},
-  {"title":"街機遊戲 — 美術開發製程分析（v2 重構版）","desc":"三區塊架構：現況盤點 · 製作規劃 · 執行規範","icon":"🎨","path":"game-dev-analysis-v2.html","date":"2026-05-24T11:51"},
-  {"title":"街機遊戲 — 美術開發製程分析（v2.1 三分頁版）","desc":"獨立三區塊：現況盤點 · 製作規劃 · 執行規範","icon":"🎨","path":"game-dev-analysis-v2.1.html","date":"2026-05-25T10:20"}
+  {"title":"FZG專案追蹤器-系統架構與規範","desc":"系統概覽、同步機制、設定格式、功能架構、規則與限制、UI架構圖（6分頁）","icon":"📋","path":"fzg-docs.html","date":"2026-05-21"},
+  {"title":"街機遊戲設計發想","desc":"市場研究、玩法提案、美術風格、GDD、操作配置、投幣與營收","icon":"🎮","path":"game-design.html","date":"2026-05-24"},
+  {"title":"街機遊戲 — 美術開發製程分析","desc":"美術資源沿用、風格調整、人力需求、工時評估","icon":"🎨","path":"game-dev-analysis.html","date":"2026-05-24"},
+  {"title":"街機遊戲 — 美術開發製程分析（v2 重構版）","desc":"三區塊架構：現況盤點 · 製作規劃 · 執行規範","icon":"🎨","path":"game-dev-analysis-v2.html","date":"2026-05-24"},
+  {"title":"街機遊戲 — 美術開發製程分析（v2.1 三分頁版）","desc":"獨立三區塊：現況盤點 · 製作規劃 · 執行規範","icon":"🎨","path":"game-dev-analysis-v2.1.html","date":"2026-05-25"},
+  {"title":"AI 動作工具採用計畫","desc":"動作AI工具選型、應用方式、覆蓋範圍","icon":"🎬","path":"ai-animation-tools.html","date":"2026-05-26"}
 ]
