@@ -108,6 +108,9 @@ async function load(){
   if(!items.length){
     try{const res=await fetch('data/index.json?t='+Date.now());if(res.ok)items=await res.json()}catch(e){}
   }
+  if(!items.length){
+    items=[{"title":"團隊架構圖","desc":"AI 助理團隊組織架構、成員分工與通訊方式","icon":"🏗️","path":"team-structure.html","date":"2026-05-18"},{"title":"FZG專案追蹤器-系統架構與規範","desc":"系統概覽、同步機制、設定格式、功能架構、規則與限制","icon":"📋","path":"fzg-docs.html","date":"2026-05-21"},{"title":"街機遊戲設計發想","desc":"市場研究、玩法提案、美術風格、GDD、操作配置、投幣與營收","icon":"🎮","path":"game-design.html","date":"2026-05-24"},{"title":"街機遊戲 — 美術開發製程分析","desc":"美術資源沿用、風格調整、人力需求、工時評估","icon":"🎨","path":"game-dev-analysis.html","date":"2026-05-24"},{"title":"街機遊戲 — 美術開發製程分析（v2 重構版）","desc":"三區塊架構：現況盤點 · 製作規劃 · 執行規範","icon":"🎨","path":"game-dev-analysis-v2.html","date":"2026-05-24"},{"title":"街機遊戲 — 美術開發製程分析（v2.1 三分頁版）","desc":"獨立三區塊：現況盤點 · 製作規劃 · 執行規範","icon":"🎨","path":"game-dev-analysis-v2.1.html","date":"2026-05-25"},{"title":"AI 動作工具採用計畫","desc":"動作AI工具選型、應用方式、覆蓋範圍","icon":"🎬","path":"ai-animation-tools.html","date":"2026-05-26"}];
+  }
   render();
 }
 
