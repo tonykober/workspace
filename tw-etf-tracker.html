@@ -113,7 +113,7 @@ body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; b
 
 <div class="header">
   <h1>📊 台股 ETF 績效追蹤</h1>
-  <div class="subtitle">6 檔熱門 ETF 即時數據 · 更新日期：2026/05/27</div>
+  <div class="subtitle">6 檔熱門 ETF 即時數據 · <span id="live-status">載入報價中...</span></div>
 </div>
 
 <div class="tabs" id="tabs">
@@ -326,6 +326,52 @@ renderCards();
 renderReturns();
 renderDividend();
 renderSector();
+
+// === Live Price Fetch (TWSE via CORS proxy) ===
+const TICKERS_LIVE = ["0050","0056","00878","00919","00929","00940"];
+const CORS_PROXY = "https://api.allorigins.win/raw?url=";
+
+async function fetchLivePrices() {
+  try {
+    const codes = TICKERS_LIVE.map(t => `tse_${t}.tw`).join("|");
+    const twseUrl = `https://mis.twse.com.tw/stock/api/getStockInfo.jsp?ex_ch=${codes}`;
+    const res = await fetch(CORS_PROXY + encodeURIComponent(twseUrl));
+    if (!res.ok) throw new Error("Proxy failed");
+    const data = await res.json();
+    if (data.msgArray && data.msgArray.length) {
+      data.msgArray.forEach(s => {
+        const price = parseFloat(s.z) || 0;
+        const prevClose = parseFloat(s.y) || 0;
+        if (price <= 0) return;
+        const change = price - prevClose;
+        const changePct = prevClose ? ((change/prevClose)*100).toFixed(2) : 0;
+        const etf = ETF_DATA.find(e => e.ticker === s.c);
+        if (etf) {
+          etf.price = price;
+          etf.change = +change.toFixed(2);
+          etf.changePercent = +changePct;
+        }
+      });
+      render();
+      const statusEl = document.getElementById("live-status");
+      if (statusEl) statusEl.textContent = `✅ 即時報價 ${new Date().toLocaleTimeString("zh-TW")}`;
+    }
+  } catch(e) {
+    const statusEl = document.getElementById("live-status");
+    if (statusEl) statusEl.textContent = "⚠️ 報價載入失敗，顯示靜態資料";
+    console.log("Live price error:", e);
+  }
+}
+
+// Auto refresh every 60s during market hours (Mon-Fri 9:00-13:30)
+function shouldFetch() {
+  const now = new Date();
+  const h = now.getHours(), m = now.getMinutes(), day = now.getDay();
+  return day >= 1 && day <= 5 && ((h === 9) || (h >= 10 && h <= 12) || (h === 13 && m <= 30));
+}
+
+fetchLivePrices();
+setInterval(() => { if(shouldFetch()) fetchLivePrices(); }, 60000);
 </script>
 </body>
 </html>
