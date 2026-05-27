@@ -1,0 +1,331 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>台股 ETF 績效追蹤</title>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+<style>
+:root {
+  --bg: #0a0e1a;
+  --surface: #131829;
+  --surface2: #1a2035;
+  --border: #2a3050;
+  --text: #e8ecf4;
+  --muted: #7a8599;
+  --accent: #00d4ff;
+  --accent2: #7c3aed;
+  --green: #10b981;
+  --red: #ef4444;
+  --yellow: #f59e0b;
+  --radius: 12px;
+}
+* { margin:0; padding:0; box-sizing:border-box; }
+body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background:var(--bg); color:var(--text); min-height:100vh; }
+
+/* Header */
+.header { background: linear-gradient(135deg, var(--surface) 0%, var(--surface2) 100%); border-bottom:1px solid var(--border); padding:16px 20px; position:sticky; top:0; z-index:100; backdrop-filter:blur(10px); }
+.header h1 { font-size:1.3rem; background:linear-gradient(90deg, var(--accent), var(--accent2)); -webkit-background-clip:text; -webkit-text-fill-color:transparent; }
+.header .subtitle { font-size:0.8rem; color:var(--muted); margin-top:2px; }
+
+/* Tab Navigation */
+.tabs { display:flex; gap:4px; padding:12px 16px; overflow-x:auto; -webkit-overflow-scrolling:touch; background:var(--surface); border-bottom:1px solid var(--border); }
+.tabs::-webkit-scrollbar { display:none; }
+.tab { padding:8px 16px; border-radius:20px; font-size:0.82rem; white-space:nowrap; cursor:pointer; border:1px solid var(--border); background:transparent; color:var(--muted); transition:all .2s; }
+.tab.active { background:var(--accent); color:#000; border-color:var(--accent); font-weight:600; }
+
+/* Main Content */
+.container { max-width:1200px; margin:0 auto; padding:16px; }
+
+/* Cards Grid */
+.cards { display:grid; grid-template-columns:1fr; gap:12px; }
+.card { background:var(--surface); border:1px solid var(--border); border-radius:var(--radius); padding:16px; transition:transform .2s, box-shadow .2s; }
+.card:hover { transform:translateY(-2px); box-shadow:0 8px 24px rgba(0,212,255,.08); }
+.card-header { display:flex; justify-content:space-between; align-items:center; margin-bottom:12px; }
+.card-ticker { font-size:1.1rem; font-weight:700; color:var(--accent); }
+.card-name { font-size:0.75rem; color:var(--muted); margin-top:2px; }
+.card-price { font-size:1.4rem; font-weight:700; }
+.card-change { font-size:0.85rem; font-weight:600; padding:3px 8px; border-radius:6px; }
+.card-change.up { color:var(--green); background:rgba(16,185,129,.12); }
+.card-change.down { color:var(--red); background:rgba(239,68,68,.12); }
+
+/* Stats Row */
+.stats { display:grid; grid-template-columns:repeat(3,1fr); gap:8px; margin-top:12px; padding-top:12px; border-top:1px solid var(--border); }
+.stat-label { font-size:0.7rem; color:var(--muted); }
+.stat-value { font-size:0.9rem; font-weight:600; margin-top:2px; }
+
+/* Section */
+.section { margin-top:24px; }
+.section-title { font-size:1rem; font-weight:700; margin-bottom:12px; padding-left:12px; border-left:3px solid var(--accent); }
+
+/* Return Table */
+.return-table { width:100%; border-collapse:collapse; font-size:0.82rem; }
+.return-table th { text-align:left; padding:10px 12px; background:var(--surface2); color:var(--muted); font-weight:500; border-bottom:1px solid var(--border); }
+.return-table td { padding:10px 12px; border-bottom:1px solid var(--border); }
+.return-table tr:last-child td { border-bottom:none; }
+.return-table .positive { color:var(--green); }
+.return-table .negative { color:var(--red); }
+
+/* Chart Container */
+.chart-container { background:var(--surface); border:1px solid var(--border); border-radius:var(--radius); padding:16px; margin-top:12px; }
+.chart-wrap { position:relative; width:100%; max-width:320px; margin:0 auto; }
+
+/* Detail Panel */
+.detail-panel { display:none; }
+.detail-panel.active { display:block; }
+.detail-back { display:inline-flex; align-items:center; gap:6px; color:var(--accent); font-size:0.85rem; cursor:pointer; margin-bottom:16px; padding:6px 0; }
+.detail-hero { text-align:center; padding:20px 0; }
+.detail-hero .ticker { font-size:1.5rem; font-weight:800; color:var(--accent); }
+.detail-hero .name { font-size:0.9rem; color:var(--muted); margin-top:4px; }
+.detail-hero .price { font-size:2.2rem; font-weight:800; margin-top:12px; }
+
+/* Yield Bar */
+.yield-bar { background:var(--surface); border:1px solid var(--border); border-radius:var(--radius); padding:16px; margin-top:12px; }
+.yield-row { display:flex; justify-content:space-between; align-items:center; padding:8px 0; border-bottom:1px solid var(--border); }
+.yield-row:last-child { border-bottom:none; }
+.yield-label { font-size:0.82rem; color:var(--muted); }
+.yield-value { font-size:0.95rem; font-weight:700; color:var(--yellow); }
+
+/* Responsive - Desktop */
+@media (min-width:768px) {
+  .container { padding:24px; }
+  .cards { grid-template-columns:repeat(2,1fr); gap:16px; }
+  .header { padding:20px 32px; }
+  .header h1 { font-size:1.6rem; }
+  .tabs { padding:12px 32px; justify-content:center; }
+  .chart-wrap { max-width:280px; }
+}
+@media (min-width:1024px) {
+  .cards { grid-template-columns:repeat(3,1fr); }
+  .return-table { font-size:0.88rem; }
+}
+
+/* Glow effects */
+.glow { box-shadow:0 0 20px rgba(0,212,255,.05); }
+
+/* Scrollbar */
+::-webkit-scrollbar { width:6px; }
+::-webkit-scrollbar-track { background:var(--bg); }
+::-webkit-scrollbar-thumb { background:var(--border); border-radius:3px; }
+</style>
+</head>
+<body>
+
+<div class="header">
+  <h1>📊 台股 ETF 績效追蹤</h1>
+  <div class="subtitle">6 檔熱門 ETF 即時數據 · 更新日期：2026/05/27</div>
+</div>
+
+<div class="tabs" id="tabs">
+  <div class="tab active" data-view="overview">總覽</div>
+  <div class="tab" data-view="returns">報酬率</div>
+  <div class="tab" data-view="dividend">殖利率</div>
+  <div class="tab" data-view="sector">產業分布</div>
+</div>
+
+<div class="container">
+  <!-- Overview -->
+  <div id="view-overview" class="view-panel active">
+    <div class="cards" id="etf-cards"></div>
+  </div>
+
+  <!-- Returns -->
+  <div id="view-returns" class="view-panel" style="display:none">
+    <div class="section">
+      <h3 class="section-title">累積報酬率比較</h3>
+      <div style="overflow-x:auto">
+        <table class="return-table" id="return-table"></table>
+      </div>
+    </div>
+  </div>
+
+  <!-- Dividend -->
+  <div id="view-dividend" class="view-panel" style="display:none">
+    <div class="section">
+      <h3 class="section-title">年化殖利率</h3>
+      <div class="cards" id="dividend-cards"></div>
+    </div>
+    <div class="section">
+      <h3 class="section-title">近期配息紀錄</h3>
+      <div style="overflow-x:auto">
+        <table class="return-table" id="dividend-table"></table>
+      </div>
+    </div>
+  </div>
+
+  <!-- Sector -->
+  <div id="view-sector" class="view-panel" style="display:none">
+    <div class="section">
+      <h3 class="section-title">持股產業分布</h3>
+      <div class="tabs" id="sector-tabs" style="padding:0;border:none;margin-bottom:12px;"></div>
+      <div class="chart-container">
+        <div class="chart-wrap"><canvas id="sectorChart"></canvas></div>
+      </div>
+      <div id="sector-legend" style="margin-top:12px;"></div>
+    </div>
+  </div>
+</div>
+
+<script>
+const ETF_DATA = [
+  {
+    ticker: '0050', name: '元大台灣50', type: '市值型',
+    price: 102.55, change: +2.45, changePercent: +2.45,
+    returns: { m1: 8.2, m3: 12.5, m6: 18.7, y1: 35.2 },
+    dividend: { annual: 3.5, yield: 3.41, frequency: '半年配', recent: [{date:'2026/01',amount:1.8},{date:'2025/07',amount:1.7},{date:'2025/01',amount:1.6},{date:'2024/07',amount:1.5}] },
+    sectors: { '半導體':62, '金融保險':8, '電子零組件':7, '電腦及週邊':6, '通信網路':5, '其他':12 }
+  },
+  {
+    ticker: '0056', name: '元大高股息', type: '高股息',
+    price: 49.64, change: +1.32, changePercent: +2.73,
+    returns: { m1: 5.8, m3: 9.2, m6: 14.1, y1: 22.6 },
+    dividend: { annual: 2.8, yield: 5.64, frequency: '季配', recent: [{date:'2026/04',amount:0.70},{date:'2026/01',amount:0.72},{date:'2025/10',amount:0.68},{date:'2025/07',amount:0.70}] },
+    sectors: { '半導體':35, '電子零組件':18, '金融保險':15, '電腦及週邊':10, '傳產':12, '其他':10 }
+  },
+  {
+    ticker: '00878', name: '國泰永續高股息', type: '高股息/ESG',
+    price: 30.55, change: +0.93, changePercent: +3.14,
+    returns: { m1: 6.1, m3: 10.8, m6: 15.3, y1: 24.1 },
+    dividend: { annual: 1.72, yield: 5.63, frequency: '季配', recent: [{date:'2026/05',amount:0.43},{date:'2026/02',amount:0.45},{date:'2025/11',amount:0.42},{date:'2025/08',amount:0.42}] },
+    sectors: { '半導體':38, '金融保險':18, '電子零組件':14, '電腦及週邊':9, '通信網路':8, '其他':13 }
+  },
+  {
+    ticker: '00919', name: '群益台灣精選高息', type: '高股息',
+    price: 28.85, change: +0.92, changePercent: +3.29,
+    returns: { m1: 7.5, m3: 13.2, m6: 19.8, y1: 28.5 },
+    dividend: { annual: 2.16, yield: 7.49, frequency: '季配', recent: [{date:'2026/04',amount:0.55},{date:'2026/01',amount:0.54},{date:'2025/10',amount:0.55},{date:'2025/07',amount:0.52}] },
+    sectors: { '半導體':42, '電子零組件':20, '電腦及週邊':12, '通信網路':8, '金融保險':7, '其他':11 }
+  },
+  {
+    ticker: '00929', name: '復華台灣科技優息', type: '月配/科技',
+    price: 30.04, change: +0.83, changePercent: +2.84,
+    returns: { m1: 12.1, m3: 18.5, m6: 25.2, y1: 32.8 },
+    dividend: { annual: 1.92, yield: 6.39, frequency: '月配', recent: [{date:'2026/05',amount:0.16},{date:'2026/04',amount:0.16},{date:'2026/03',amount:0.16},{date:'2026/02',amount:0.16}] },
+    sectors: { '半導體':55, '電子零組件':15, '電腦及週邊':12, '通信網路':8, '光電':5, '其他':5 }
+  },
+  {
+    ticker: '00940', name: '元大台灣價值高息', type: '高股息/價值',
+    price: 11.87, change: +0.11, changePercent: +0.94,
+    returns: { m1: 4.2, m3: 7.8, m6: 11.5, y1: 15.2 },
+    dividend: { annual: 0.72, yield: 6.07, frequency: '季配', recent: [{date:'2026/04',amount:0.18},{date:'2026/01',amount:0.18},{date:'2025/10',amount:0.18},{date:'2025/07',amount:0.18}] },
+    sectors: { '半導體':30, '金融保險':20, '電子零組件':16, '傳產':14, '電腦及週邊':10, '其他':10 }
+  }
+];
+
+// Render Overview Cards
+function renderCards() {
+  const container = document.getElementById('etf-cards');
+  container.innerHTML = ETF_DATA.map(etf => `
+    <div class="card glow" onclick="showDetail('${etf.ticker}')">
+      <div class="card-header">
+        <div>
+          <div class="card-ticker">${etf.ticker}</div>
+          <div class="card-name">${etf.name}</div>
+        </div>
+        <span class="card-change ${etf.changePercent>=0?'up':'down'}">${etf.changePercent>=0?'+':''}${etf.changePercent.toFixed(2)}%</span>
+      </div>
+      <div class="card-price">$${etf.price.toFixed(2)}</div>
+      <div class="stats">
+        <div><div class="stat-label">年化殖利率</div><div class="stat-value" style="color:var(--yellow)">${etf.dividend.yield}%</div></div>
+        <div><div class="stat-label">近1年報酬</div><div class="stat-value" style="color:var(--green)">+${etf.returns.y1}%</div></div>
+        <div><div class="stat-label">配息頻率</div><div class="stat-value">${etf.dividend.frequency}</div></div>
+      </div>
+    </div>
+  `).join('');
+}
+
+// Render Returns Table
+function renderReturns() {
+  const table = document.getElementById('return-table');
+  table.innerHTML = `
+    <thead><tr><th>ETF</th><th>近1月</th><th>近3月</th><th>近6月</th><th>近1年</th></tr></thead>
+    <tbody>${ETF_DATA.map(etf => `
+      <tr>
+        <td><strong>${etf.ticker}</strong><br><span style="color:var(--muted);font-size:0.75rem">${etf.name}</span></td>
+        ${['m1','m3','m6','y1'].map(k => `<td class="${etf.returns[k]>=0?'positive':'negative'}">${etf.returns[k]>=0?'+':''}${etf.returns[k]}%</td>`).join('')}
+      </tr>
+    `).join('')}</tbody>`;
+}
+
+// Render Dividend
+function renderDividend() {
+  const cards = document.getElementById('dividend-cards');
+  cards.innerHTML = ETF_DATA.map(etf => `
+    <div class="card">
+      <div class="card-header">
+        <div><div class="card-ticker">${etf.ticker}</div><div class="card-name">${etf.name}</div></div>
+        <div style="text-align:right"><div style="font-size:1.4rem;font-weight:800;color:var(--yellow)">${etf.dividend.yield}%</div><div style="font-size:0.7rem;color:var(--muted)">年化殖利率</div></div>
+      </div>
+      <div class="yield-row"><span class="yield-label">年配息金額</span><span class="yield-value">$${etf.dividend.annual}</span></div>
+      <div class="yield-row"><span class="yield-label">配息頻率</span><span style="font-size:0.9rem;font-weight:600">${etf.dividend.frequency}</span></div>
+    </div>
+  `).join('');
+
+  const table = document.getElementById('dividend-table');
+  table.innerHTML = `
+    <thead><tr><th>ETF</th><th>日期</th><th>每單位配息</th></tr></thead>
+    <tbody>${ETF_DATA.flatMap(etf => etf.dividend.recent.slice(0,2).map((r,i) => `
+      <tr><td>${i===0?`<strong>${etf.ticker}</strong>`:''}</td><td>${r.date}</td><td style="color:var(--yellow)">$${r.amount}</td></tr>
+    `)).join('')}</tbody>`;
+}
+
+// Sector Chart
+let sectorChart = null;
+function renderSector() {
+  const tabs = document.getElementById('sector-tabs');
+  tabs.innerHTML = ETF_DATA.map((etf,i) => `<div class="tab ${i===0?'active':''}" data-sector="${etf.ticker}">${etf.ticker}</div>`).join('');
+  tabs.querySelectorAll('.tab').forEach(t => t.addEventListener('click', () => {
+    tabs.querySelectorAll('.tab').forEach(x => x.classList.remove('active'));
+    t.classList.add('active');
+    updateSectorChart(t.dataset.sector);
+  }));
+  updateSectorChart('0050');
+}
+
+function updateSectorChart(ticker) {
+  const etf = ETF_DATA.find(e => e.ticker === ticker);
+  const labels = Object.keys(etf.sectors);
+  const data = Object.values(etf.sectors);
+  const colors = ['#00d4ff','#7c3aed','#10b981','#f59e0b','#ef4444','#6366f1','#ec4899','#14b8a6'];
+
+  if (sectorChart) sectorChart.destroy();
+  sectorChart = new Chart(document.getElementById('sectorChart'), {
+    type: 'doughnut',
+    data: { labels, datasets: [{ data, backgroundColor: colors.slice(0, data.length), borderWidth: 0 }] },
+    options: {
+      responsive: true,
+      plugins: {
+        legend: { display: false },
+        tooltip: { callbacks: { label: ctx => `${ctx.label}: ${ctx.parsed}%` } }
+      },
+      cutout: '60%'
+    }
+  });
+
+  document.getElementById('sector-legend').innerHTML = `<div style="display:grid;grid-template-columns:repeat(2,1fr);gap:6px">${labels.map((l,i) => `
+    <div style="display:flex;align-items:center;gap:6px;font-size:0.82rem">
+      <span style="width:10px;height:10px;border-radius:50%;background:${colors[i]};flex-shrink:0"></span>
+      <span style="color:var(--muted)">${l}</span>
+      <span style="margin-left:auto;font-weight:600">${data[i]}%</span>
+    </div>
+  `).join('')}</div>`;
+}
+
+// Tab switching
+document.getElementById('tabs').addEventListener('click', e => {
+  const tab = e.target.closest('.tab');
+  if (!tab) return;
+  document.querySelectorAll('#tabs .tab').forEach(t => t.classList.remove('active'));
+  tab.classList.add('active');
+  document.querySelectorAll('.view-panel').forEach(p => p.style.display = 'none');
+  document.getElementById('view-' + tab.dataset.view).style.display = 'block';
+});
+
+// Init
+renderCards();
+renderReturns();
+renderDividend();
+renderSector();
+</script>
+</body>
+</html>
