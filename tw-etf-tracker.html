@@ -89,7 +89,7 @@ body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; b
 <body>
 
 <div class="header">
-  <h1>📊 台股 ETF 績效追蹤</h1>
+  <h1 style="cursor:pointer" onclick="location.reload()">📊 台股 ETF 績效追蹤</h1>
   <div class="subtitle">6 檔熱門 ETF 即時數據 · <span id="live-status">載入報價中...</span></div>
 </div>
 
@@ -210,7 +210,17 @@ function renderSectorCharts() {
     const chart = new Chart(canvas, {
       type: 'doughnut',
       data: { labels, datasets: [{ data, backgroundColor: colors.slice(0, data.length), borderWidth: 0 }] },
-      options: { responsive: true, maintainAspectRatio: true, plugins: { legend: { display: false }, tooltip: { callbacks: { label: ctx => `${ctx.label}: ${ctx.parsed}%` } } }, cutout: '55%' }
+      options: { responsive: true, maintainAspectRatio: true, plugins: { legend: { display: false }, tooltip: { enabled: false } }, cutout: '55%',
+        onClick: (evt, elements) => {
+          if (!elements.length) return;
+          const idx = elements[0].index;
+          const legendItems = canvas.closest('.sector-area').querySelectorAll('.sector-legend-item');
+          legendItems.forEach((item, j) => {
+            item.style.background = j === idx ? 'rgba(88,166,255,.15)' : '';
+            item.style.borderRadius = '4px';
+          });
+        }
+      }
     });
     sectorCharts.push(chart);
   });
