@@ -314,49 +314,42 @@ renderReturns();
 renderDividend();
 renderSector();
 
-// === Live Price Fetch (TWSE via CORS proxy) ===
+// === Live Price Fetch (Yahoo Finance via Google Apps Script proxy) ===
 const TICKERS_LIVE = ["0050","0056","00878","00919","00929","00940"];
-const PROXIES = [
-  url => `https://api.allorigins.win/raw?url=${encodeURIComponent(url)}`,
-  url => `https://corsproxy.io/?${encodeURIComponent(url)}`
-];
+const GAS_PROXY = "https://script.google.com/macros/s/AKfycbwJCvfKn3K1bQgYvU7T-2XujXZRPZzXr7lPQt_mCEeQbTjA0HRny_YL04yhsyLvl_9y/exec";
 
 async function fetchLivePrices() {
-  const codes = TICKERS_LIVE.map(t => `tse_${t}.tw`).join("|");
-  const twseUrl = `https://mis.twse.com.tw/stock/api/getStockInfo.jsp?ex_ch=${codes}`;
-  
-  for (const makeUrl of PROXIES) {
-    try {
-      const res = await fetch(makeUrl(twseUrl));
-      if (!res.ok) continue;
+  let updated = 0;
+  try {
+    const fetches = TICKERS_LIVE.map(async ticker => {
+      const yahooUrl = `https://query1.finance.yahoo.com/v8/finance/chart/${ticker}.TW?interval=1d&range=1d`;
+      const res = await fetch(`${GAS_PROXY}?url=${encodeURIComponent(yahooUrl)}`);
+      if (!res.ok) return;
       const data = await res.json();
-      if (data.msgArray && data.msgArray.length) {
-        let updated = 0;
-        data.msgArray.forEach(s => {
-          const price = parseFloat(s.z);
-          const prevClose = parseFloat(s.y);
-          if (!price || price <= 0 || !prevClose) return;
-          const change = price - prevClose;
-          const changePct = ((change/prevClose)*100).toFixed(2);
-          const etf = ETF_DATA.find(e => e.ticker === s.c);
-          if (etf) {
-            etf.price = price;
-            etf.change = +change.toFixed(2);
-            etf.changePercent = +changePct;
-            updated++;
-          }
-        });
-        if (updated > 0) {
-          render();
-          const statusEl = document.getElementById("live-status");
-          if (statusEl) statusEl.textContent = `✅ 即時報價 ${new Date().toLocaleTimeString("zh-TW")}（${updated}檔更新）`;
-          return;
-        }
+      const meta = data?.chart?.result?.[0]?.meta;
+      if (!meta || !meta.regularMarketPrice) return;
+      const price = meta.regularMarketPrice;
+      const prevClose = meta.chartPreviousClose || 0;
+      const change = prevClose ? price - prevClose : 0;
+      const changePct = prevClose ? ((change/prevClose)*100).toFixed(2) : 0;
+      const etf = ETF_DATA.find(e => e.ticker === ticker);
+      if (etf) {
+        etf.price = price;
+        etf.change = +change.toFixed(2);
+        etf.changePercent = +changePct;
+        updated++;
       }
-    } catch(e) { continue; }
+    });
+    await Promise.all(fetches);
+    if (updated > 0) {
+      render();
+      const statusEl = document.getElementById("live-status");
+      if (statusEl) statusEl.textContent = `✅ 即時報價 ${new Date().toLocaleTimeString("zh-TW")}（${updated}檔更新）`;
+    }
+  } catch(e) {
+    const statusEl = document.getElementById("live-status");
+    if (statusEl) statusEl.textContent = "⚠️ 即時報價載入失敗，顯示靜態資料";
   }
-  const statusEl = document.getElementById("live-status");
-  if (statusEl) statusEl.textContent = "⚠️ 即時報價載入失敗，顯示靜態資料";
 }
 
 // Auto refresh every 60s during market hours (Mon-Fri 9:00-13:30)
