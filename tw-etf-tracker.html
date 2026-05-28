@@ -314,45 +314,38 @@ renderReturns();
 renderDividend();
 renderSector();
 
-// === Live Price Fetch (Yahoo Finance via Google Apps Script JSONP) ===
+// === Live Price Fetch (from Google Sheet, updated every 5 min by Apps Script) ===
 const TICKERS_LIVE = ["0050","0056","00878","00919","00929","00940"];
-const GAS_PROXY = "https://script.google.com/macros/s/AKfycbwJCvfKn3K1bQgYvU7T-2XujXZRPZzXr7lPQt_mCEeQbTjA0HRny_YL04yhsyLvl_9y/exec";
-
-function jsonp(url) {
-  return new Promise((resolve, reject) => {
-    const cb = '_cb' + Date.now() + Math.random().toString(36).slice(2);
-    window[cb] = data => { resolve(data); delete window[cb]; script.remove(); };
-    const script = document.createElement('script');
-    script.src = `${GAS_PROXY}?callback=${cb}&url=${encodeURIComponent(url)}`;
-    script.onerror = () => { reject(new Error('JSONP failed')); delete window[cb]; script.remove(); };
-    document.head.appendChild(script);
-  });
-}
+const PRICE_SHEET_ID = "1GT8LkzWJPo9psHwRIJwjfV2HEoYf7x8eIkI22BhuqIs";
 
 async function fetchLivePrices() {
-  let updated = 0;
   try {
-    for (const ticker of TICKERS_LIVE) {
-      const yahooUrl = `https://query1.finance.yahoo.com/v8/finance/chart/${ticker}.TW?interval=1d&range=1d`;
-      const data = await jsonp(yahooUrl);
-      const meta = data?.chart?.result?.[0]?.meta;
-      if (!meta || !meta.regularMarketPrice) continue;
-      const price = meta.regularMarketPrice;
-      const prevClose = meta.chartPreviousClose || 0;
-      const change = prevClose ? price - prevClose : 0;
-      const changePct = prevClose ? ((change/prevClose)*100).toFixed(2) : 0;
-      const etf = ETF_DATA.find(e => e.ticker === ticker);
-      if (etf) {
+    const res = await fetch(`https://docs.google.com/spreadsheets/d/${PRICE_SHEET_ID}/gviz/tq?tqx=out:csv&t=${Date.now()}`);
+    if (!res.ok) throw new Error('Sheet fetch failed');
+    const csv = await res.text();
+    const rows = csv.trim().split('\n').slice(1); // skip header
+    let updated = 0;
+    rows.forEach(row => {
+      const cols = row.match(/"([^"]*)"/g)?.map(s => s.replace(/"/g,'')) || [];
+      const ticker = cols[0]?.padStart(4,'0').padStart(5,'0'); // restore leading zeros
+      const price = parseFloat(cols[1]);
+      const change = parseFloat(cols[2]);
+      const changePct = parseFloat(cols[3]);
+      const updateTime = cols[4] || '';
+      // Match ticker: "50"→"0050", "56"→"0056", "878"→"00878", etc.
+      const etf = ETF_DATA.find(e => e.ticker === ticker || e.ticker.endsWith(cols[0]));
+      if (etf && price > 0) {
         etf.price = price;
-        etf.change = +change.toFixed(2);
-        etf.changePercent = +changePct;
+        etf.change = change;
+        etf.changePercent = changePct;
         updated++;
       }
-    }
+    });
     if (updated > 0) {
       render();
       const statusEl = document.getElementById("live-status");
-      if (statusEl) statusEl.textContent = `✅ 即時報價 ${new Date().toLocaleTimeString("zh-TW")}（${updated}檔更新）`;
+      const lastUpdate = rows[0]?.match(/"([^"]*)"/g)?.pop()?.replace(/"/g,'') || '';
+      if (statusEl) statusEl.textContent = `✅ 即時報價（${updated}檔）更新：${lastUpdate}`;
     }
   } catch(e) {
     const statusEl = document.getElementById("live-status");
