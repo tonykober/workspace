@@ -345,7 +345,7 @@ async function fetchLivePrices() {
     });
     console.log('[ETF] Updated:', updated);
     if (updated > 0) {
-      render();
+      renderCards(); renderReturns();
       const statusEl = document.getElementById("live-status");
       const lastUpdate = rows[0]?.match(/"([^"]*)"/g)?.pop()?.replace(/"/g,'') || '';
       if (statusEl) statusEl.textContent = `✅ 即時報價（${updated}檔）更新：${lastUpdate}`;
