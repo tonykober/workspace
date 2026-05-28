@@ -284,7 +284,7 @@ function shouldFetch() {
 
 // Always fetch once on page load, then auto-refresh during market hours
 fetchLivePrices();
-setInterval(() => { if(shouldFetch()) fetchLivePrices(); }, 60000);
+setInterval(() => { if(shouldFetch()) fetchLivePrices(); }, 300000);
 </script>
 <script src="nav.js"></script>
 </body>
