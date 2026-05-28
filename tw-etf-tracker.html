@@ -2,6 +2,7 @@
 <html lang="zh-TW">
 <head>
 <meta charset="UTF-8">
+<link rel="icon" href="data:,">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>台股 ETF 績效追蹤</title>
 <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
@@ -212,7 +213,7 @@ const ETF_DATA = [
 function renderCards() {
   const container = document.getElementById('etf-cards');
   container.innerHTML = ETF_DATA.map(etf => `
-    <div class="card glow" onclick="showDetail('${etf.ticker}')">
+    <div class="card glow">
       <div class="card-header">
         <div>
           <div class="card-ticker">${etf.ticker}</div>
