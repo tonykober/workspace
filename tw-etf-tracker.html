@@ -24,80 +24,61 @@
 * { margin:0; padding:0; box-sizing:border-box; }
 body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background:var(--bg); color:var(--text); min-height:100vh; padding-bottom:80px; }
 
-/* Header */
 .header { background: linear-gradient(135deg, var(--surface) 0%, var(--surface2) 100%); border-bottom:1px solid var(--border); padding:16px 20px; position:sticky; top:0; z-index:100; backdrop-filter:blur(10px); }
 .header h1 { font-size:1.3rem; background:linear-gradient(90deg, var(--accent), var(--accent2)); -webkit-background-clip:text; -webkit-text-fill-color:transparent; }
 .header .subtitle { font-size:0.8rem; color:var(--muted); margin-top:2px; }
 
-/* Tab Navigation */
-
-/* Main Content */
 .container { max-width:1200px; margin:0 auto; padding:16px; }
 
-/* Cards Grid */
-.cards { display:grid; grid-template-columns:1fr; gap:12px; }
+.cards { display:grid; grid-template-columns:1fr; gap:16px; }
+
 .card { background:var(--surface); border:1px solid var(--border); border-radius:var(--radius); padding:16px; transition:transform .2s, box-shadow .2s; }
 .card:hover { transform:translateY(-2px); box-shadow:0 8px 24px rgba(0,212,255,.08); }
-.card-header { display:flex; justify-content:space-between; align-items:center; margin-bottom:12px; }
+
+.card-top { display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:12px; }
+.card-left { display:flex; align-items:center; gap:8px; }
 .card-ticker { font-size:1.1rem; font-weight:700; color:var(--accent); }
-.card-name { font-size:0.75rem; color:var(--muted); margin-top:2px; }
-.card-price { font-size:1.4rem; font-weight:700; }
-.card-change { font-size:0.85rem; font-weight:600; padding:3px 8px; border-radius:6px; }
+.card-name { font-size:0.78rem; color:var(--muted); }
+.card-type { font-size:0.65rem; padding:2px 6px; border-radius:4px; background:var(--accent2); color:#fff; font-weight:500; white-space:nowrap; }
+.card-right { text-align:right; }
+.card-price { font-size:1.3rem; font-weight:700; }
+.card-change { font-size:0.8rem; font-weight:600; padding:2px 6px; border-radius:5px; display:inline-block; margin-top:2px; }
 .card-change.up { color:var(--green); background:rgba(16,185,129,.12); }
 .card-change.down { color:var(--red); background:rgba(239,68,68,.12); }
 
-/* Stats Row */
-.stats { display:grid; grid-template-columns:repeat(3,1fr); gap:8px; margin-top:12px; padding-top:12px; border-top:1px solid var(--border); }
-.stat-label { font-size:0.7rem; color:var(--muted); }
-.stat-value { font-size:0.9rem; font-weight:600; margin-top:2px; }
+.card-section { padding-top:10px; margin-top:10px; border-top:1px solid var(--border); }
+.card-section-title { font-size:0.7rem; color:var(--muted); margin-bottom:6px; font-weight:600; }
 
-/* Section */
-.section { margin-top:24px; }
-.section-title { font-size:1rem; font-weight:700; margin-bottom:12px; padding-left:12px; border-left:3px solid var(--accent); }
+.returns-row { display:grid; grid-template-columns:repeat(4,1fr); gap:6px; }
+.return-item { text-align:center; }
+.return-label { font-size:0.68rem; color:var(--muted); }
+.return-value { font-size:0.85rem; font-weight:700; margin-top:2px; }
+.return-value.positive { color:var(--green); }
+.return-value.negative { color:var(--red); }
 
-/* Return Table */
-.return-table { width:100%; border-collapse:collapse; font-size:0.82rem; }
-.return-table th { text-align:left; padding:10px 12px; background:var(--surface2); color:var(--muted); font-weight:500; border-bottom:1px solid var(--border); }
-.return-table td { padding:10px 12px; border-bottom:1px solid var(--border); }
-.return-table tr:last-child td { border-bottom:none; }
-.return-table .positive { color:var(--green); }
-.return-table .negative { color:var(--red); }
+.dividend-row { display:grid; grid-template-columns:1fr 1fr 1fr; gap:6px; margin-bottom:8px; }
+.div-item-label { font-size:0.68rem; color:var(--muted); }
+.div-item-value { font-size:0.85rem; font-weight:700; margin-top:1px; }
 
-/* Chart Container */
-.chart-container { background:var(--surface); border:1px solid var(--border); border-radius:var(--radius); padding:16px; margin-top:12px; }
-.chart-wrap { position:relative; width:100%; max-width:320px; margin:0 auto; }
+.recent-div { display:flex; gap:6px; flex-wrap:wrap; }
+.recent-div-item { font-size:0.7rem; background:var(--surface2); border:1px solid var(--border); border-radius:4px; padding:3px 6px; }
+.recent-div-item .rd-date { color:var(--muted); }
+.recent-div-item .rd-amt { color:var(--yellow); font-weight:600; margin-left:4px; }
 
-/* Detail Panel */
-.detail-panel { display:none; }
-.detail-panel.active { display:block; }
-.detail-back { display:inline-flex; align-items:center; gap:6px; color:var(--accent); font-size:0.85rem; cursor:pointer; margin-bottom:16px; padding:6px 0; }
-.detail-hero { text-align:center; padding:20px 0; }
-.detail-hero .ticker { font-size:1.5rem; font-weight:800; color:var(--accent); }
-.detail-hero .name { font-size:0.9rem; color:var(--muted); margin-top:4px; }
-.detail-hero .price { font-size:2.2rem; font-weight:800; margin-top:12px; }
+.sector-area { display:flex; align-items:center; gap:12px; }
+.sector-chart { width:100px; height:100px; flex-shrink:0; }
+.sector-legend { flex:1; }
+.sector-legend-item { display:flex; align-items:center; gap:4px; font-size:0.7rem; margin-bottom:2px; }
+.sector-legend-item .dot { width:7px; height:7px; border-radius:50%; flex-shrink:0; }
+.sector-legend-item .sl-name { color:var(--muted); }
+.sector-legend-item .sl-pct { margin-left:auto; font-weight:600; }
 
-/* Yield Bar */
-.yield-bar { background:var(--surface); border:1px solid var(--border); border-radius:var(--radius); padding:16px; margin-top:12px; }
-.yield-row { display:flex; justify-content:space-between; align-items:center; padding:8px 0; border-bottom:1px solid var(--border); }
-.yield-row:last-child { border-bottom:none; }
-.yield-label { font-size:0.82rem; color:var(--muted); }
-.yield-value { font-size:0.95rem; font-weight:700; color:var(--yellow); }
-
-/* Responsive - Desktop */
 @media (min-width:768px) {
   .container { padding:24px; }
-  .cards { grid-template-columns:repeat(2,1fr); gap:16px; }
+  .cards { grid-template-columns:repeat(auto-fit, minmax(340px, 1fr)); gap:16px; }
   .header { padding:20px 32px; }
   .header h1 { font-size:1.6rem; }
-  .chart-wrap { max-width:280px; }
 }
-@media (min-width:1024px) {
-  .cards { grid-template-columns:repeat(3,1fr); }
-  .return-table { font-size:0.88rem; }
-}
-
-/* Glow effects */
-.glow { box-shadow:0 0 20px rgba(0,212,255,.05); }
 
 /* Scrollbar */
 ::-webkit-scrollbar { width:6px; }
@@ -113,37 +94,7 @@ body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; b
 </div>
 
 <div class="container">
-  <!-- Overview -->
-  <div class="section">
-    <h3 class="section-title">即時報價</h3>
-    <div class="cards" id="etf-cards"></div>
-  </div>
-
-  <!-- Returns -->
-  <div class="section">
-    <h3 class="section-title">累積報酬率比較</h3>
-    <div style="overflow-x:auto">
-      <table class="return-table" id="return-table"></table>
-    </div>
-  </div>
-
-  <!-- Dividend -->
-  <div class="section">
-    <h3 class="section-title">年化殖利率</h3>
-    <div class="cards" id="dividend-cards"></div>
-  </div>
-  <div class="section">
-    <h3 class="section-title">近期配息紀錄</h3>
-    <div style="overflow-x:auto">
-      <table class="return-table" id="dividend-table"></table>
-    </div>
-  </div>
-
-  <!-- Sector -->
-  <div class="section">
-    <h3 class="section-title">持股產業分布</h3>
-    <div id="sector-grid" style="display:grid;grid-template-columns:repeat(auto-fit,minmax(280px,1fr));gap:16px;"></div>
-  </div>
+  <div class="cards" id="etf-cards"></div>
 </div>
 
 <script>
@@ -192,91 +143,74 @@ const ETF_DATA = [
   }
 ];
 
-// Render Overview Cards
 function renderCards() {
   const container = document.getElementById('etf-cards');
-  container.innerHTML = ETF_DATA.map(etf => `
-    <div class="card glow">
-      <div class="card-header">
+  container.innerHTML = ETF_DATA.map((etf, i) => `
+    <div class="card">
+      <div class="card-top">
         <div>
-          <div class="card-ticker">${etf.ticker}</div>
+          <div class="card-left">
+            <span class="card-ticker">${etf.ticker}</span>
+            <span class="card-type">${etf.type}</span>
+          </div>
           <div class="card-name">${etf.name}</div>
         </div>
-        <span class="card-change ${etf.changePercent>=0?'up':'down'}">${etf.changePercent>=0?'+':''}${etf.changePercent.toFixed(2)}%</span>
+        <div class="card-right">
+          <div class="card-price">$${etf.price.toFixed(2)}</div>
+          <span class="card-change ${etf.changePercent>=0?'up':'down'}">${etf.changePercent>=0?'+':''}${etf.changePercent.toFixed(2)}%</span>
+        </div>
       </div>
-      <div class="card-price">$${etf.price.toFixed(2)}</div>
-      <div class="stats">
-        <div><div class="stat-label">年化殖利率</div><div class="stat-value" style="color:var(--yellow)">${etf.dividend.yield}%</div></div>
-        <div><div class="stat-label">近1年報酬</div><div class="stat-value" style="color:var(--green)">+${etf.returns.y1}%</div></div>
-        <div><div class="stat-label">配息頻率</div><div class="stat-value">${etf.dividend.frequency}</div></div>
+      <div class="card-section">
+        <div class="card-section-title">累積報酬率</div>
+        <div class="returns-row">
+          ${[['1月','m1'],['3月','m3'],['6月','m6'],['1年','y1']].map(([label,key]) => `
+            <div class="return-item">
+              <div class="return-label">${label}</div>
+              <div class="return-value ${etf.returns[key]>=0?'positive':'negative'}">${etf.returns[key]>=0?'+':''}${etf.returns[key]}%</div>
+            </div>`).join('')}
+        </div>
+      </div>
+      <div class="card-section">
+        <div class="card-section-title">配息資訊</div>
+        <div class="dividend-row">
+          <div><div class="div-item-label">殖利率</div><div class="div-item-value" style="color:var(--yellow)">${etf.dividend.yield}%</div></div>
+          <div><div class="div-item-label">配息頻率</div><div class="div-item-value">${etf.dividend.frequency}</div></div>
+          <div><div class="div-item-label">年配息</div><div class="div-item-value">$${etf.dividend.annual}</div></div>
+        </div>
+        <div class="recent-div">
+          ${etf.dividend.recent.map(r => `<span class="recent-div-item"><span class="rd-date">${r.date}</span><span class="rd-amt">$${r.amount}</span></span>`).join('')}
+        </div>
+      </div>
+      <div class="card-section">
+        <div class="card-section-title">產業分布</div>
+        <div class="sector-area">
+          <div class="sector-chart"><canvas id="sector-${i}"></canvas></div>
+          <div class="sector-legend">
+            ${Object.entries(etf.sectors).map(([k,v],j) => {
+              const colors = ['#00d4ff','#7c3aed','#10b981','#f59e0b','#ef4444','#6366f1','#ec4899','#14b8a6'];
+              return `<div class="sector-legend-item"><span class="dot" style="background:${colors[j]}"></span><span class="sl-name">${k}</span><span class="sl-pct">${v}%</span></div>`;
+            }).join('')}
+          </div>
+        </div>
       </div>
     </div>
   `).join('');
 }
 
-// Render Returns Table
-function renderReturns() {
-  const table = document.getElementById('return-table');
-  table.innerHTML = `
-    <thead><tr><th>ETF</th><th>近1月</th><th>近3月</th><th>近6月</th><th>近1年</th></tr></thead>
-    <tbody>${ETF_DATA.map(etf => `
-      <tr>
-        <td><strong>${etf.ticker}</strong><br><span style="color:var(--muted);font-size:0.75rem">${etf.name}</span></td>
-        ${['m1','m3','m6','y1'].map(k => `<td class="${etf.returns[k]>=0?'positive':'negative'}">${etf.returns[k]>=0?'+':''}${etf.returns[k]}%</td>`).join('')}
-      </tr>
-    `).join('')}</tbody>`;
-}
-
-// Render Dividend
-function renderDividend() {
-  const cards = document.getElementById('dividend-cards');
-  cards.innerHTML = ETF_DATA.map(etf => `
-    <div class="card">
-      <div class="card-header">
-        <div><div class="card-ticker">${etf.ticker}</div><div class="card-name">${etf.name}</div></div>
-        <div style="text-align:right"><div style="font-size:1.4rem;font-weight:800;color:var(--yellow)">${etf.dividend.yield}%</div><div style="font-size:0.7rem;color:var(--muted)">年化殖利率</div></div>
-      </div>
-      <div class="yield-row"><span class="yield-label">年配息金額</span><span class="yield-value">$${etf.dividend.annual}</span></div>
-      <div class="yield-row"><span class="yield-label">配息頻率</span><span style="font-size:0.9rem;font-weight:600">${etf.dividend.frequency}</span></div>
-    </div>
-  `).join('');
-
-  const table = document.getElementById('dividend-table');
-  table.innerHTML = `
-    <thead><tr><th>ETF</th><th>日期</th><th>每單位配息</th></tr></thead>
-    <tbody>${ETF_DATA.flatMap(etf => etf.dividend.recent.slice(0,2).map((r,i) => `
-      <tr><td>${i===0?`<strong>${etf.ticker}</strong>`:''}</td><td>${r.date}</td><td style="color:var(--yellow)">$${r.amount}</td></tr>
-    `)).join('')}</tbody>`;
-}
-
-// Sector Chart
 let sectorCharts = [];
-function renderSector() {
-  const grid = document.getElementById('sector-grid');
+function renderSectorCharts() {
   const colors = ['#00d4ff','#7c3aed','#10b981','#f59e0b','#ef4444','#6366f1','#ec4899','#14b8a6'];
   sectorCharts.forEach(c => c.destroy());
   sectorCharts = [];
-  grid.innerHTML = ETF_DATA.map((etf,i) => `
-    <div style="background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:16px;">
-      <div style="font-weight:600;margin-bottom:8px;color:var(--accent)">${etf.ticker} ${etf.name}</div>
-      <div style="display:flex;align-items:center;gap:12px;">
-        <div style="width:120px;height:120px;flex-shrink:0"><canvas id="sector-${i}"></canvas></div>
-        <div style="flex:1">${Object.entries(etf.sectors).map(([k,v],j) => `
-          <div style="display:flex;align-items:center;gap:4px;font-size:0.75rem;margin-bottom:3px">
-            <span style="width:8px;height:8px;border-radius:50%;background:${colors[j]};flex-shrink:0"></span>
-            <span style="color:var(--muted)">${k}</span>
-            <span style="margin-left:auto;font-weight:600">${v}%</span>
-          </div>`).join('')}
-        </div>
-      </div>
-    </div>`).join('');
-  ETF_DATA.forEach((etf,i) => {
+  ETF_DATA.forEach((etf, i) => {
+    const canvas = document.getElementById(`sector-${i}`);
+    if (!canvas) return;
     const labels = Object.keys(etf.sectors);
     const data = Object.values(etf.sectors);
-    const chart = new Chart(document.getElementById(`sector-${i}`), {
+    const chart = new Chart(canvas, {
       type: 'doughnut',
       data: { labels, datasets: [{ data, backgroundColor: colors.slice(0, data.length), borderWidth: 0 }] },
-      options: { responsive: true, plugins: { legend: { display: false }, tooltip: { callbacks: { label: ctx => `${ctx.label}: ${ctx.parsed}%` } } }, cutout: '55%' }
+      options: { responsive: true, maintainAspectRatio: true, plugins: { legend: { display: false }, tooltip: { callbacks: { label: ctx => `${ctx.label}: ${ctx.parsed}%` } } }, cutout: '55%' }
     });
     sectorCharts.push(chart);
   });
@@ -284,9 +218,7 @@ function renderSector() {
 
 // Init
 renderCards();
-renderReturns();
-renderDividend();
-renderSector();
+renderSectorCharts();
 
 // === Live Price Fetch (from Google Sheet, updated every 5 min by Apps Script) ===
 const TICKERS_LIVE = ["0050","0056","00878","00919","00929","00940"];
@@ -319,7 +251,8 @@ async function fetchLivePrices() {
     });
     console.log('[ETF] Updated:', updated);
     if (updated > 0) {
-      renderCards(); renderReturns();
+      renderCards();
+      renderSectorCharts();
       const statusEl = document.getElementById("live-status");
       const lastUpdate = rows[0]?.match(/"([^"]*)"/g)?.pop()?.replace(/"/g,'') || '';
       if (statusEl) statusEl.textContent = `✅ 即時報價（${updated}檔）更新：${lastUpdate}`;
