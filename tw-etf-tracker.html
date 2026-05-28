@@ -314,20 +314,29 @@ renderReturns();
 renderDividend();
 renderSector();
 
-// === Live Price Fetch (Yahoo Finance via Google Apps Script proxy) ===
+// === Live Price Fetch (Yahoo Finance via Google Apps Script JSONP) ===
 const TICKERS_LIVE = ["0050","0056","00878","00919","00929","00940"];
 const GAS_PROXY = "https://script.google.com/macros/s/AKfycbwJCvfKn3K1bQgYvU7T-2XujXZRPZzXr7lPQt_mCEeQbTjA0HRny_YL04yhsyLvl_9y/exec";
+
+function jsonp(url) {
+  return new Promise((resolve, reject) => {
+    const cb = '_cb' + Date.now() + Math.random().toString(36).slice(2);
+    window[cb] = data => { resolve(data); delete window[cb]; script.remove(); };
+    const script = document.createElement('script');
+    script.src = `${GAS_PROXY}?callback=${cb}&url=${encodeURIComponent(url)}`;
+    script.onerror = () => { reject(new Error('JSONP failed')); delete window[cb]; script.remove(); };
+    document.head.appendChild(script);
+  });
+}
 
 async function fetchLivePrices() {
   let updated = 0;
   try {
-    const fetches = TICKERS_LIVE.map(async ticker => {
+    for (const ticker of TICKERS_LIVE) {
       const yahooUrl = `https://query1.finance.yahoo.com/v8/finance/chart/${ticker}.TW?interval=1d&range=1d`;
-      const res = await fetch(`${GAS_PROXY}?url=${encodeURIComponent(yahooUrl)}`);
-      if (!res.ok) return;
-      const data = await res.json();
+      const data = await jsonp(yahooUrl);
       const meta = data?.chart?.result?.[0]?.meta;
-      if (!meta || !meta.regularMarketPrice) return;
+      if (!meta || !meta.regularMarketPrice) continue;
       const price = meta.regularMarketPrice;
       const prevClose = meta.chartPreviousClose || 0;
       const change = prevClose ? price - prevClose : 0;
@@ -339,8 +348,7 @@ async function fetchLivePrices() {
         etf.changePercent = +changePct;
         updated++;
       }
-    });
-    await Promise.all(fetches);
+    }
     if (updated > 0) {
       render();
       const statusEl = document.getElementById("live-status");
