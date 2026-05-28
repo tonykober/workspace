@@ -319,10 +319,13 @@ const TICKERS_LIVE = ["0050","0056","00878","00919","00929","00940"];
 const PRICE_SHEET_ID = "1GT8LkzWJPo9psHwRIJwjfV2HEoYf7x8eIkI22BhuqIs";
 
 async function fetchLivePrices() {
+  console.log('[ETF] Fetching live prices...');
   try {
     const res = await fetch(`https://docs.google.com/spreadsheets/d/${PRICE_SHEET_ID}/gviz/tq?tqx=out:csv&t=${Date.now()}`);
-    if (!res.ok) throw new Error('Sheet fetch failed');
+    console.log('[ETF] Response status:', res.status);
+    if (!res.ok) throw new Error('Sheet fetch failed: ' + res.status);
     const csv = await res.text();
+    console.log('[ETF] CSV:', csv.substring(0, 100));
     const rows = csv.trim().split('\n').slice(1); // skip header
     let updated = 0;
     rows.forEach(row => {
@@ -340,18 +343,21 @@ async function fetchLivePrices() {
         updated++;
       }
     });
+    console.log('[ETF] Updated:', updated);
     if (updated > 0) {
       render();
       const statusEl = document.getElementById("live-status");
       const lastUpdate = rows[0]?.match(/"([^"]*)"/g)?.pop()?.replace(/"/g,'') || '';
       if (statusEl) statusEl.textContent = `✅ 即時報價（${updated}檔）更新：${lastUpdate}`;
+    } else {
+      throw new Error('No ETF matched');
     }
   } catch(e) {
+    console.log('[ETF] Error:', e.message);
     const statusEl = document.getElementById("live-status");
     if (statusEl) statusEl.textContent = "⚠️ 即時報價載入失敗，顯示靜態資料";
   }
 }
-
 // Auto refresh every 60s during market hours (Mon-Fri 9:00-13:30)
 function shouldFetch() {
   const now = new Date();
