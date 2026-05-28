@@ -327,13 +327,12 @@ async function fetchLivePrices() {
     let updated = 0;
     rows.forEach(row => {
       const cols = row.match(/"([^"]*)"/g)?.map(s => s.replace(/"/g,'')) || [];
-      const ticker = cols[0]?.padStart(4,'0').padStart(5,'0'); // restore leading zeros
+      const ticker = cols[0];
       const price = parseFloat(cols[1]);
       const change = parseFloat(cols[2]);
       const changePct = parseFloat(cols[3]);
       const updateTime = cols[4] || '';
-      // Match ticker: "50"→"0050", "56"→"0056", "878"→"00878", etc.
-      const etf = ETF_DATA.find(e => e.ticker === ticker || e.ticker.endsWith(cols[0]));
+      const etf = ETF_DATA.find(e => e.ticker === ticker);
       if (etf && price > 0) {
         etf.price = price;
         etf.change = change;
