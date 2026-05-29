@@ -584,8 +584,62 @@ function shouldFetch() {
   return day >= 1 && day <= 5 && ((h === 9) || (h >= 10 && h <= 12) || (h === 13 && m <= 30));
 }
 
+// === Fetch Holdings & Dividends from Sheet ===
+async function fetchHoldingsAndDividends() {
+  try {
+    // Fetch holdings
+    const holdRes = await fetch(`https://docs.google.com/spreadsheets/d/${PRICE_SHEET_ID}/gviz/tq?tqx=out:csv&sheet=etf_holdings&t=${Date.now()}`);
+    if (holdRes.ok) {
+      const csv = await holdRes.text();
+      const rows = csv.trim().split('\n').slice(1);
+      const holdingsMap = {};
+      rows.forEach(row => {
+        const cols = row.match(/"([^"]*)"/g)?.map(s => s.replace(/"/g,'')) || [];
+        const ticker = cols[0]?.padStart(4,'0');
+        if (!ticker) return;
+        if (!holdingsMap[ticker]) holdingsMap[ticker] = [];
+        holdingsMap[ticker].push({name: cols[2], pct: parseFloat(cols[3])});
+      });
+      ETF_DATA.forEach(etf => {
+        const key = Object.keys(holdingsMap).find(k => etf.ticker.endsWith(k) || etf.ticker === k);
+        if (key && holdingsMap[key].length) etf.topHoldings = holdingsMap[key];
+      });
+    }
+  } catch(e) { console.log('Holdings fetch error:', e); }
+
+  try {
+    // Fetch dividends
+    const divRes = await fetch(`https://docs.google.com/spreadsheets/d/${PRICE_SHEET_ID}/gviz/tq?tqx=out:csv&sheet=etf_dividend&t=${Date.now()}`);
+    if (divRes.ok) {
+      const csv = await divRes.text();
+      const rows = csv.trim().split('\n').slice(1);
+      const divMap = {};
+      rows.forEach(row => {
+        const cols = row.match(/"([^"]*)"/g)?.map(s => s.replace(/"/g,'')) || [];
+        const ticker = cols[0]?.padStart(4,'0');
+        if (!ticker) return;
+        if (!divMap[ticker]) divMap[ticker] = [];
+        divMap[ticker].push({date: cols[1], amount: parseFloat(cols[2])});
+      });
+      ETF_DATA.forEach(etf => {
+        const key = Object.keys(divMap).find(k => etf.ticker.endsWith(k) || etf.ticker === k);
+        if (key && divMap[key].length) {
+          etf.dividend.recent = divMap[key].slice(0, 6);
+          const totalAnnual = divMap[key].slice(0,4).reduce((s,d) => s + d.amount, 0);
+          if (totalAnnual > 0) etf.dividend.annual = +totalAnnual.toFixed(2);
+        }
+      });
+    }
+  } catch(e) { console.log('Dividend fetch error:', e); }
+
+  renderCards();
+  renderSectorCharts();
+  renderSparklines();
+}
+
 // Always fetch once on page load, then auto-refresh during market hours
 fetchLivePrices();
+fetchHoldingsAndDividends();
 setInterval(() => { if(shouldFetch()) fetchLivePrices(); }, 300000);
 </script>
 <p style="text-align:center;font-size:0.9rem;color:var(--muted);padding:20px 16px 0">本頁資訊僅供參考，不構成投資建議</p>
