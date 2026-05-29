@@ -84,9 +84,8 @@ body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; b
 .div-item-label { font-size:0.68rem; color:var(--muted); }
 .div-item-value { font-size:0.85rem; font-weight:700; margin-top:1px; }
 
-.recent-div { display:flex; gap:6px; flex-wrap:nowrap; overflow-x:auto; -webkit-overflow-scrolling:touch; scrollbar-width:none; }
-.recent-div::-webkit-scrollbar { display:none; }
-.recent-div-item { font-size:0.7rem; background:var(--surface2); border:1px solid var(--border); border-radius:4px; padding:3px 6px; white-space:nowrap; flex-shrink:0; }
+.recent-div { display:grid; grid-template-columns:1fr 1fr 1fr; gap:6px; }
+.recent-div-item { font-size:0.7rem; background:var(--surface2); border:1px solid var(--border); border-radius:4px; padding:3px 6px;  }
 .recent-div-item .rd-date { color:var(--muted); }
 .recent-div-item .rd-amt { color:var(--yellow); font-weight:600; margin-left:4px; }
 
@@ -128,7 +127,7 @@ const ETF_DATA = [
     ticker: '0050', name: '元大台灣50', type: '市值型',
     price: 102.55, change: +2.45, changePercent: +2.45,
     returns: { m1: 8.2, m3: 12.5, m6: 18.7, y1: 35.2 },
-    dividend: { annual: 3.5, yield: 3.41, frequency: '半年配', recent: [{date:'2026/01',amount:1.8},{date:'2025/07',amount:1.7},{date:'2025/01',amount:1.6},{date:'2024/07',amount:1.5}] },
+    dividend: { annual: 3.5, yield: 3.41, frequency: '半年配', recent: [{date:'2026/01',amount:1.8},{date:'2025/07',amount:1.7},{date:'2025/01',amount:1.6},{date:'2024/07',amount:1.5},{date:'2024/01',amount:1.4},{date:'2023/07',amount:1.3}] },
     sectors: { '半導體':62, '金融保險':8, '電子零組件':7, '電腦及週邊':6, '通信網路':5, '其他':12 },
     fundSize: 4200, holders: 293, nav: 101.11, premium: -0.61,
     topHoldings: [{name:'台積電',pct:55.2},{name:'鴻海',pct:5.1},{name:'聯發科',pct:4.8},{name:'廣達',pct:2.8},{name:'台達電',pct:2.5},{name:'中華電',pct:1.8},{name:'聯電',pct:1.7},{name:'富邦金',pct:1.5},{name:'國泰金',pct:1.4},{name:'中信金',pct:1.3}]
@@ -137,7 +136,7 @@ const ETF_DATA = [
     ticker: '0056', name: '元大高股息', type: '高股息',
     price: 49.64, change: +1.32, changePercent: +2.73,
     returns: { m1: 5.8, m3: 9.2, m6: 14.1, y1: 22.6 },
-    dividend: { annual: 2.8, yield: 5.64, frequency: '季配', recent: [{date:'2026/04',amount:0.70},{date:'2026/01',amount:0.72},{date:'2025/10',amount:0.68},{date:'2025/07',amount:0.70}] },
+    dividend: { annual: 2.8, yield: 5.64, frequency: '季配', recent: [{date:'2026/04',amount:0.70},{date:'2026/01',amount:0.72},{date:'2025/10',amount:0.68},{date:'2025/07',amount:0.70},{date:'2025/04',amount:0.66},{date:'2025/01',amount:0.65}] },
     sectors: { '半導體':35, '電子零組件':18, '金融保險':15, '電腦及週邊':10, '傳產':12, '其他':10 },
     fundSize: 2850, holders: 120, nav: 48.91, premium: -0.16,
     topHoldings: [{name:'台積電',pct:12.5},{name:'聯發科',pct:5.8},{name:'廣達',pct:4.2},{name:'仁寶',pct:3.8},{name:'英業達',pct:3.5},{name:'緯創',pct:3.2},{name:'光寶科',pct:3.0},{name:'華碩',pct:2.8},{name:'大聯大',pct:2.5},{name:'技嘉',pct:2.4}]
@@ -146,7 +145,7 @@ const ETF_DATA = [
     ticker: '00878', name: '國泰永續高股息', type: '高股息/ESG',
     price: 30.55, change: +0.93, changePercent: +3.14,
     returns: { m1: 6.1, m3: 10.8, m6: 15.3, y1: 24.1 },
-    dividend: { annual: 1.72, yield: 5.63, frequency: '季配', recent: [{date:'2026/05',amount:0.43},{date:'2026/02',amount:0.45},{date:'2025/11',amount:0.42},{date:'2025/08',amount:0.42}] },
+    dividend: { annual: 1.72, yield: 5.63, frequency: '季配', recent: [{date:'2026/05',amount:0.43},{date:'2026/02',amount:0.45},{date:'2025/11',amount:0.42},{date:'2025/08',amount:0.42},{date:'2025/05',amount:0.40},{date:'2025/02',amount:0.38}] },
     sectors: { '半導體':38, '金融保險':18, '電子零組件':14, '電腦及週邊':9, '通信網路':8, '其他':13 },
     fundSize: 3200, holders: 135, nav: 30.16, premium: -0.53,
     topHoldings: [{name:'台積電',pct:15.2},{name:'鴻海',pct:5.5},{name:'聯發科',pct:4.8},{name:'中華電',pct:4.2},{name:'台達電',pct:3.8},{name:'廣達',pct:3.5},{name:'兆豐金',pct:3.2},{name:'中信金',pct:2.8},{name:'華碩',pct:2.5},{name:'日月光',pct:2.3}]
@@ -155,7 +154,7 @@ const ETF_DATA = [
     ticker: '00919', name: '群益台灣精選高息', type: '高股息',
     price: 28.85, change: +0.92, changePercent: +3.29,
     returns: { m1: 7.5, m3: 13.2, m6: 19.8, y1: 28.5 },
-    dividend: { annual: 2.16, yield: 7.49, frequency: '季配', recent: [{date:'2026/04',amount:0.55},{date:'2026/01',amount:0.54},{date:'2025/10',amount:0.55},{date:'2025/07',amount:0.52}] },
+    dividend: { annual: 2.16, yield: 7.49, frequency: '季配', recent: [{date:'2026/04',amount:0.55},{date:'2026/01',amount:0.54},{date:'2025/10',amount:0.55},{date:'2025/07',amount:0.52},{date:'2025/04',amount:0.50},{date:'2025/01',amount:0.48}] },
     sectors: { '半導體':42, '電子零組件':20, '電腦及週邊':12, '通信網路':8, '金融保險':7, '其他':11 },
     fundSize: 2600, holders: 95, nav: 28.58, premium: -0.60,
     topHoldings: [{name:'台積電',pct:18.5},{name:'聯發科',pct:6.2},{name:'廣達',pct:5.1},{name:'緯創',pct:4.5},{name:'仁寶',pct:4.0},{name:'英業達',pct:3.8},{name:'光寶科',pct:3.5},{name:'技嘉',pct:3.2},{name:'華碩',pct:2.8},{name:'瑞昂',pct:2.5}]
@@ -164,7 +163,7 @@ const ETF_DATA = [
     ticker: '00929', name: '復華台灣科技優息', type: '月配/科技',
     price: 30.04, change: +0.83, changePercent: +2.84,
     returns: { m1: 12.1, m3: 18.5, m6: 25.2, y1: 32.8 },
-    dividend: { annual: 1.92, yield: 6.39, frequency: '月配', recent: [{date:'2026/05',amount:0.16},{date:'2026/04',amount:0.16},{date:'2026/03',amount:0.16},{date:'2026/02',amount:0.16}] },
+    dividend: { annual: 1.92, yield: 6.39, frequency: '月配', recent: [{date:'2026/05',amount:0.16},{date:'2026/04',amount:0.16},{date:'2026/03',amount:0.16},{date:'2026/02',amount:0.16},{date:'2026/01',amount:0.16},{date:'2025/12',amount:0.15}] },
     sectors: { '半導體':55, '電子零組件':15, '電腦及週邊':12, '通信網路':8, '光電':5, '其他':5 },
     fundSize: 2100, holders: 85, nav: 29.52, premium: -0.41,
     topHoldings: [{name:'台積電',pct:28.5},{name:'聯發科',pct:8.2},{name:'日月光',pct:5.5},{name:'聯電',pct:4.8},{name:'瑞昂',pct:4.2},{name:'聯詠',pct:3.8},{name:'矽力-KY',pct:3.5},{name:'穩懋',pct:3.0},{name:'世芯-KY',pct:2.8},{name:'創意',pct:2.5}]
@@ -173,7 +172,7 @@ const ETF_DATA = [
     ticker: '00940', name: '元大台灣價值高息', type: '高股息/價值',
     price: 11.87, change: +0.11, changePercent: +0.94,
     returns: { m1: 4.2, m3: 7.8, m6: 11.5, y1: 15.2 },
-    dividend: { annual: 0.72, yield: 6.07, frequency: '季配', recent: [{date:'2026/04',amount:0.18},{date:'2026/01',amount:0.18},{date:'2025/10',amount:0.18},{date:'2025/07',amount:0.18}] },
+    dividend: { annual: 0.72, yield: 6.07, frequency: '季配', recent: [{date:'2026/04',amount:0.18},{date:'2026/01',amount:0.18},{date:'2025/10',amount:0.18},{date:'2025/07',amount:0.18},{date:'2025/04',amount:0.17},{date:'2025/01',amount:0.17}] },
     sectors: { '半導體':30, '金融保險':20, '電子零組件':16, '傳產':14, '電腦及週邊':10, '其他':10 },
     fundSize: 1650, holders: 78, nav: 11.77, premium: -0.34,
     topHoldings: [{name:'台積電',pct:10.8},{name:'聯發科',pct:5.5},{name:'中信金',pct:4.8},{name:'兆豐金',pct:4.5},{name:'富邦金',pct:4.2},{name:'廣達',pct:3.8},{name:'仁寶',pct:3.5},{name:'台達電',pct:3.2},{name:'華碩',pct:2.8},{name:'光寶科',pct:2.5}]
