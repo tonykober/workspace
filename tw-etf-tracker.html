@@ -390,26 +390,28 @@ async function loadWatchlist() {
         return {text:'持有', cls:'sug-hold'};
       })();
       if (!ticker) return '';
-      return `<div class="wl-card">
-        <button class="wl-delete" onclick="confirmDelete('${ticker}','${name}')">&times;</button>
-        <div class="wl-top">
-          <div>
-            <div class="wl-ticker">${ticker}</div>
-            <div class="wl-name">${name}${sector ? ' · <span style="color:var(--purple)">'+sector+'</span>' : ''}</div>
-          </div>
-          <div style="text-align:right">
-            <div class="wl-price">${price ? '$'+price.toFixed(2) : '--'}</div>
-            <span class="wl-change ${pct>=0?'up':'down'}">${pct>=0?'+':''}${change} (${pct>=0?'+':''}${pct}%)</span>
-          </div>
-        </div>
-        <div style="display:flex;gap:12px;margin-top:8px;font-size:0.75rem;color:var(--muted);align-items:center;flex-wrap:wrap">
-          ${pe ? '<span>本益比 <b style="color:var(--text)">'+pe+'</b></span>' : ''}
-          ${divYield ? '<span>殖利率 <b style="color:var(--yellow)">'+divYield+'%</b></span>' : ''}
-          ${quarterLine !== null ? '<span>離季線 <b style="color:var(--text)">'+(quarterLine>=0?'+':'')+quarterLine+'%</b></span>' : ''}
-          <span class="sug-badge ${wlSug.cls}">${wlSug.text}</span>
-        </div>
-        ${updated ? '<div style="font-size:0.65rem;color:var(--muted);margin-top:4px">更新：'+updated+'</div>' : ''}
-      </div>`;
+      return `<div class="card" style="position:relative">
+  <button class="wl-delete" onclick="confirmDelete('${ticker}','${name}')">&times;</button>
+  <div class="card-top">
+    <div>
+      <div class="card-left">
+        <span class="card-ticker">${ticker}</span>
+        ${sector ? '<span class="card-type">'+sector+'</span>' : ''}
+      </div>
+      <div class="card-name">${name}</div>
+    </div>
+    <div class="card-right">
+      <div class="card-price">${price ? '$'+price.toFixed(2) : '--'}</div>
+      <span class="card-change ${pct>=0?'up':'down'}">${pct>=0?'+':''}${change} (${pct>=0?'+':''}${pct}%)</span>
+    </div>
+  </div>
+  <div class="fund-info-row">
+    <div class="fi-item"><div class="fi-label">本益比</div><div class="fi-value">${pe||'--'}</div></div>
+    <div class="fi-item"><div class="fi-label">殖利率</div><div class="fi-value" style="color:var(--yellow)">${divYield?divYield+'%':'--'}</div></div>
+    <div class="fi-item"><div class="fi-label">離季線</div><div class="fi-value">${quarterLine!==null?(quarterLine>=0?'+':'')+quarterLine+'%':'--'}</div></div>
+    <div class="fi-item"><div class="fi-label">建議</div><div class="fi-value"><span class="sug-badge ${wlSug.cls}">${wlSug.text}</span></div></div>
+  </div>
+</div>`;
     }).join('');
   } catch(e) {
     document.getElementById('watchlist-cards').innerHTML = '<p style="color:var(--muted)">載入失敗</p>';
@@ -486,7 +488,7 @@ async function fetchLivePrices() {
       renderCards();
       renderSectorCharts();
       const statusEl = document.getElementById("live-status");
-      const lastUpdate = rows[0]?.match(/"([^"]*)"/g)?.pop()?.replace(/"/g,'') || '';
+      const lastUpdate = rows[0]?.match(/"([^"]*)"/g)?.[4]?.replace(/"/g,'') || '';
       if (statusEl) statusEl.textContent = `✅ 即時報價（${updated}檔）更新：${lastUpdate}`;
     } else {
       throw new Error('No ETF matched');
