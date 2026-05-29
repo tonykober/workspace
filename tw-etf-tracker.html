@@ -47,13 +47,13 @@ body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; b
 .card-change.down { color:var(--green); background:rgba(16,185,129,.12); }
 
 .fund-info-row { display:grid; grid-template-columns:repeat(auto-fit, minmax(60px, 1fr)); gap:6px; margin-top:10px; padding-top:10px; border-top:2px solid var(--border); }
-.fund-info-row .fi-item { text-align:center; }
+.fund-info-row .fi-item { text-align:center; position:relative; }
 .fund-info-row .fi-label { font-size:0.9rem; color:var(--muted); }
 .fund-info-row .fi-value { font-size:0.9rem; font-weight:700; margin-top:1px; white-space:nowrap; }
 .premium-value.cheap { color:var(--green); }
 .premium-value.expensive { color:var(--red); }
 .premium-value.normal { color:var(--muted); }
-.premium-tag { font-size:0.9rem; white-space:nowrap; padding:1px 5px; border-radius:3px; display:block; margin-top:2px; }
+.premium-tag { font-size:0.7rem; white-space:nowrap; padding:1px 5px; border-radius:3px; position:absolute; top:-10px; left:50%; transform:translateX(-50%); }
 .cheap .premium-tag { background:rgba(16,185,129,.15); }
 .expensive .premium-tag { background:rgba(239,68,68,.15); }
 .normal .premium-tag { background:rgba(139,148,158,.15); }
