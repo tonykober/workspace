@@ -108,6 +108,29 @@ body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; b
 ::-webkit-scrollbar { width:6px; }
 ::-webkit-scrollbar-track { background:var(--bg); }
 ::-webkit-scrollbar-thumb { background:var(--border); border-radius:3px; }
+
+.main-tabs { display:flex; gap:4px; padding:8px 16px; background:var(--surface); border-bottom:1px solid var(--border); }
+.main-tab { padding:6px 16px; border-radius:20px; font-size:0.85rem; cursor:pointer; color:var(--muted); border:1px solid var(--border); transition:all .2s; }
+.main-tab.active { background:var(--accent); color:#000; border-color:var(--accent); font-weight:600; }
+.add-btn { background:var(--accent); color:#000; border:none; padding:6px 14px; border-radius:6px; font-size:0.82rem; font-weight:600; cursor:pointer; }
+.add-btn:hover { opacity:0.8; }
+.wl-card { background:var(--surface); border:1px solid var(--border); border-radius:12px; padding:14px; position:relative; }
+.wl-card .wl-top { display:flex; justify-content:space-between; align-items:flex-start; }
+.wl-card .wl-ticker { font-size:1.4rem; font-weight:700; color:var(--accent); }
+.wl-card .wl-name { font-size:0.8rem; color:var(--muted); }
+.wl-card .wl-price { font-size:1.2rem; font-weight:700; }
+.wl-card .wl-change { font-size:0.8rem; padding:2px 8px; border-radius:4px; }
+.wl-card .wl-change.up { color:var(--red); background:rgba(239,68,68,.12); }
+.wl-card .wl-change.down { color:var(--green); background:rgba(16,185,129,.12); }
+.wl-delete { position:absolute; top:8px; right:8px; background:none; border:none; color:var(--muted); font-size:1.2rem; cursor:pointer; padding:4px 8px; border-radius:4px; }
+.wl-delete:hover { background:rgba(239,68,68,.15); color:var(--red); }
+.confirm-overlay { position:fixed; top:0; left:0; right:0; bottom:0; background:rgba(0,0,0,.7); display:none; align-items:center; justify-content:center; z-index:999; }
+.confirm-box { background:var(--surface); border:1px solid var(--border); border-radius:10px; padding:24px; max-width:300px; text-align:center; }
+.confirm-box p { margin-bottom:16px; color:var(--text); }
+.confirm-box .btns { display:flex; gap:10px; justify-content:center; }
+.confirm-box button { padding:8px 20px; border-radius:6px; border:none; cursor:pointer; font-size:14px; }
+.confirm-box .btn-yes { background:var(--red); color:#fff; }
+.confirm-box .btn-no { background:var(--border); color:var(--text); }
 </style>
 </head>
 <body>
@@ -117,8 +140,23 @@ body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; b
   <div class="subtitle">6 檔熱門 ETF 即時數據 · <span id="live-status">載入報價中...</span></div>
 </div>
 
+<div class="main-tabs">
+  <div class="main-tab active" onclick="switchMainTab('etf')">ETF 追蹤</div>
+  <div class="main-tab" onclick="switchMainTab('watchlist')">自選個股</div>
+</div>
+
 <div class="container">
+<div id="view-etf">
   <div class="cards" id="etf-cards"></div>
+</div>
+<div id="view-watchlist" style="display:none">
+  <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px">
+    <h3 style="font-size:1rem;color:var(--accent)">自選追蹤清單</h3>
+    <button class="add-btn" onclick="addStock()">+ 新增</button>
+  </div>
+  <div class="cards" id="watchlist-cards"></div>
+  <div id="watchlist-empty" style="text-align:center;color:var(--muted);padding:40px">尚無追蹤個股，點擊「+ 新增」開始</div>
+</div>
 </div>
 
 <script>
@@ -289,6 +327,94 @@ function renderSectorCharts() {
 renderCards();
 renderSectorCharts();
 
+// === Watchlist Functions ===
+const GAS_URL = 'https://script.google.com/macros/s/AKfycbwJCvfKn3K1bQgYvU7T-2XujXZRPZzXr7lPQt_mCEeQbTjA0HRny_YL04yhsyLvl_9y/exec';
+const WL_SHEET_ID = '1GT8LkzWJPo9psHwRIJwjfV2HEoYf7x8eIkI22BhuqIs';
+
+function switchMainTab(tab) {
+  document.querySelectorAll('.main-tab').forEach(t => t.classList.remove('active'));
+  document.querySelector(`.main-tab[onclick*="${tab}"]`).classList.add('active');
+  document.getElementById('view-etf').style.display = tab === 'etf' ? 'block' : 'none';
+  document.getElementById('view-watchlist').style.display = tab === 'watchlist' ? 'block' : 'none';
+  if (tab === 'watchlist') loadWatchlist();
+}
+
+async function loadWatchlist() {
+  try {
+    const res = await fetch(`https://docs.google.com/spreadsheets/d/${WL_SHEET_ID}/gviz/tq?tqx=out:csv&sheet=watchlist&t=${Date.now()}`);
+    const csv = await res.text();
+    const rows = csv.trim().split('\n').filter(r => r);
+    const container = document.getElementById('watchlist-cards');
+    const empty = document.getElementById('watchlist-empty');
+    if (!rows.length || (rows.length === 1 && rows[0].match(/^"?",?/))) {
+      container.innerHTML = '';
+      empty.style.display = 'block';
+      return;
+    }
+    empty.style.display = 'none';
+    container.innerHTML = rows.map(row => {
+      const cols = row.match(/"([^"]*)"/g)?.map(s => s.replace(/"/g,'')) || row.split(',');
+      const ticker = cols[0] || '';
+      const name = cols[1] || '';
+      const price = parseFloat(cols[3]) || 0;
+      const change = parseFloat(cols[4]) || 0;
+      const pct = parseFloat(cols[5]) || 0;
+      const updated = cols[6] || '';
+      if (!ticker) return '';
+      return `<div class="wl-card">
+        <button class="wl-delete" onclick="confirmDelete('${ticker}','${name}')">&times;</button>
+        <div class="wl-top">
+          <div>
+            <div class="wl-ticker">${ticker}</div>
+            <div class="wl-name">${name}</div>
+          </div>
+          <div style="text-align:right">
+            <div class="wl-price">${price ? '$'+price.toFixed(2) : '--'}</div>
+            <span class="wl-change ${pct>=0?'up':'down'}">${pct>=0?'+':''}${pct}%</span>
+          </div>
+        </div>
+        ${updated ? '<div style="font-size:0.65rem;color:var(--muted);margin-top:6px">更新：'+updated+'</div>' : ''}
+      </div>`;
+    }).join('');
+  } catch(e) {
+    document.getElementById('watchlist-cards').innerHTML = '<p style="color:var(--muted)">載入失敗</p>';
+  }
+}
+
+function addStock() {
+  const ticker = prompt('請輸入股票代號（如 2330）：');
+  if (!ticker || !ticker.trim()) return;
+  fetch(GAS_URL, {
+    method: 'POST', mode: 'no-cors',
+    headers: {'Content-Type':'text/plain'},
+    body: JSON.stringify({action:'add', ticker: ticker.trim()})
+  });
+  alert('已新增 ' + ticker.trim() + '，報價將在下次更新時顯示。');
+  setTimeout(() => loadWatchlist(), 3000);
+}
+
+let pendingDelete = null;
+function confirmDelete(ticker, name) {
+  pendingDelete = ticker;
+  document.getElementById('confirm-overlay').style.display = 'flex';
+  document.getElementById('confirm-msg').textContent = `確定要移除 ${ticker} ${name}？`;
+}
+function doDelete() {
+  if (!pendingDelete) return;
+  fetch(GAS_URL, {
+    method: 'POST', mode: 'no-cors',
+    headers: {'Content-Type':'text/plain'},
+    body: JSON.stringify({action:'remove', ticker: pendingDelete})
+  });
+  pendingDelete = null;
+  document.getElementById('confirm-overlay').style.display = 'none';
+  setTimeout(() => loadWatchlist(), 2000);
+}
+function cancelDelete() {
+  pendingDelete = null;
+  document.getElementById('confirm-overlay').style.display = 'none';
+}
+
 // === Live Price Fetch (from Google Sheet, updated every 5 min by Apps Script) ===
 const TICKERS_LIVE = ["0050","0056","00878","00919","00929","00940"];
 const PRICE_SHEET_ID = "1GT8LkzWJPo9psHwRIJwjfV2HEoYf7x8eIkI22BhuqIs";
@@ -346,6 +472,15 @@ fetchLivePrices();
 setInterval(() => { if(shouldFetch()) fetchLivePrices(); }, 300000);
 </script>
 <p style="text-align:center;font-size:0.7rem;color:var(--muted);padding:20px 16px 0">本頁資訊僅供參考，不構成投資建議</p>
+<div class="confirm-overlay" id="confirm-overlay">
+  <div class="confirm-box">
+    <p id="confirm-msg"></p>
+    <div class="btns">
+      <button class="btn-yes" onclick="doDelete()">確定移除</button>
+      <button class="btn-no" onclick="cancelDelete()">取消</button>
+    </div>
+  </div>
+</div>
 <script src="nav.js"></script>
 </body>
 </html>
