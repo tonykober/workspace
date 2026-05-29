@@ -347,7 +347,7 @@ async function loadWatchlist() {
     const rows = csv.trim().split('\n').filter(r => r);
     const container = document.getElementById('watchlist-cards');
     const empty = document.getElementById('watchlist-empty');
-    if (!rows.length || (rows.length === 1 && rows[0].match(/^"?",?/))) {
+    if (!rows.length) {
       container.innerHTML = '';
       empty.style.display = 'block';
       return;
