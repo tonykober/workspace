@@ -354,11 +354,11 @@ function renderSparklines() {
     const canvas = document.getElementById('spark-etf-' + i);
     if (!canvas || !etf.sparkline || etf.sparkline.length < 2) return;
     const data = etf.sparkline;
-    const isUp = data[data.length-1] >= data[0];
-    const color = isUp ? '#ef4444' : '#10b981';
+    const changes = data.map((v,j) => j===0 ? 0 : v - data[j-1]);
+    const colors = changes.map(c => c >= 0 ? '#ef4444' : '#10b981');
     new Chart(canvas, {
-      type: 'line',
-      data: { labels: data.map((_,j)=>''), datasets: [{ data, borderColor: color, borderWidth: 1.5, pointRadius: 0, fill: false, tension: 0.3 }] },
+      type: 'bar',
+      data: { labels: data.map(()=>''), datasets: [{ data: changes, backgroundColor: colors, borderWidth: 0 }] },
       options: { responsive: true, maintainAspectRatio: false, plugins: { legend:{display:false}, tooltip:{enabled:false} }, scales: { x:{display:false}, y:{display:false} } }
     });
   });
@@ -440,10 +440,11 @@ async function loadWatchlist() {
       const data = raw.split('|').map(Number).filter(n=>n>0);
       if (data.length < 2) return;
       const isUp = data[data.length-1] >= data[0];
-      const color = isUp ? '#ef4444' : '#10b981';
+      const changes = data.map((v,j) => j===0 ? 0 : v - data[j-1]);
+      const colors = changes.map(c => c >= 0 ? '#ef4444' : '#10b981');
       new Chart(canvas, {
-        type:'line',
-        data:{labels:data.map(()=>''),datasets:[{data,borderColor:color,borderWidth:1.5,pointRadius:0,fill:false,tension:0.3}]},
+        type:'bar',
+        data:{labels:data.map(()=>''),datasets:[{data:changes,backgroundColor:colors,borderWidth:0}]},
         options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false},tooltip:{enabled:false}},scales:{x:{display:false},y:{display:false}}}
       });
     });
