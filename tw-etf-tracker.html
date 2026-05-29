@@ -151,7 +151,7 @@ body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; b
       <div class="main-tab" onclick="switchMainTab('watchlist')">自選個股</div>
     </div>
   </div>
-  <div class="subtitle">6 檔熱門 ETF 即時數據 · <span id="live-status">載入報價中...</span></div>
+  <div class="subtitle">10 檔熱門 ETF 即時數據 · <span id="live-status">載入報價中...</span></div>
 </div>
 
 <div class="container">
@@ -223,6 +223,42 @@ const ETF_DATA = [
     sectors: { '半導體':30, '金融保險':20, '電子零組件':16, '傳產':14, '電腦及週邊':10, '其他':10 },
     fundSize: 1650, holders: 78, nav: 11.77, premium: -0.34,
     topHoldings: [{name:'台積電',pct:10.8},{name:'聯發科',pct:5.5},{name:'中信金',pct:4.8},{name:'兆豐金',pct:4.5},{name:'富邦金',pct:4.2},{name:'廣達',pct:3.8},{name:'仁寶',pct:3.5},{name:'台達電',pct:3.2},{name:'華碩',pct:2.8},{name:'光寶科',pct:2.5}]
+  },
+  {
+    ticker: '006208', name: '富邦台50', type: '市值型', sparkline: [],
+    price: 105.20, change: +2.30, changePercent: +2.23,
+    returns: { m1: 7.8, m3: 12.1, m6: 18.2, y1: 34.5 },
+    dividend: { annual: 3.2, yield: 3.04, frequency: '半年配', recent: [{date:'2026/01',amount:1.7},{date:'2025/07',amount:1.5},{date:'2025/01',amount:1.4},{date:'2024/07',amount:1.3},{date:'2024/01',amount:1.2},{date:'2023/07',amount:1.1}] },
+    sectors: { '半導體':61, '金融保險':8, '電子零組件':7, '電腦及週邊':6, '通信網路':5, '其他':13 },
+    fundSize: 3800, holders: 180, nav: 104.50, premium: -0.67,
+    topHoldings: [{name:'台積電',pct:54.8},{name:'鴻海',pct:5.2},{name:'聯發科',pct:4.9},{name:'廣達',pct:2.9},{name:'台達電',pct:2.6},{name:'中華電',pct:1.9},{name:'聯電',pct:1.8},{name:'富邦金',pct:1.6},{name:'國泰金',pct:1.5},{name:'中信金',pct:1.4}]
+  },
+  {
+    ticker: '00713', name: '元大台灣高息低波', type: '高股息/低波動', sparkline: [],
+    price: 62.50, change: +1.85, changePercent: +3.05,
+    returns: { m1: 6.5, m3: 10.2, m6: 15.8, y1: 26.3 },
+    dividend: { annual: 3.6, yield: 5.76, frequency: '季配', recent: [{date:'2026/04',amount:0.92},{date:'2026/01',amount:0.90},{date:'2025/10',amount:0.88},{date:'2025/07',amount:0.90},{date:'2025/04',amount:0.85},{date:'2025/01',amount:0.82}] },
+    sectors: { '半導體':28, '金融保險':22, '電子零組件':15, '傳產':12, '電腦及週邊':10, '其他':13 },
+    fundSize: 1200, holders: 65, nav: 62.10, premium: -0.64,
+    topHoldings: [{name:'台積電',pct:15.2},{name:'中華電',pct:5.8},{name:'兆豐金',pct:4.5},{name:'中信金',pct:4.2},{name:'富邦金',pct:3.8},{name:'台達電',pct:3.5},{name:'聯發科',pct:3.2},{name:'廣達',pct:2.8},{name:'仁寶',pct:2.5},{name:'緯創',pct:2.3}]
+  },
+  {
+    ticker: '00900', name: '富邦特選高股息30', type: '高股息', sparkline: [],
+    price: 16.80, change: +0.45, changePercent: +2.75,
+    returns: { m1: 5.2, m3: 8.8, m6: 13.5, y1: 20.8 },
+    dividend: { annual: 1.28, yield: 7.62, frequency: '季配', recent: [{date:'2026/04',amount:0.33},{date:'2026/01',amount:0.32},{date:'2025/10',amount:0.32},{date:'2025/07',amount:0.31},{date:'2025/04',amount:0.30},{date:'2025/01',amount:0.28}] },
+    sectors: { '半導體':32, '電子零組件':18, '金融保險':16, '電腦及週邊':12, '傳產':10, '其他':12 },
+    fundSize: 950, holders: 55, nav: 16.65, premium: -0.90,
+    topHoldings: [{name:'台積電',pct:12.5},{name:'聯發科',pct:5.5},{name:'廣達',pct:4.8},{name:'仁寶',pct:4.2},{name:'英業達',pct:3.8},{name:'緯創',pct:3.5},{name:'光寶科',pct:3.2},{name:'技嘉',pct:2.8},{name:'華碩',pct:2.5},{name:'大聯大',pct:2.3}]
+  },
+  {
+    ticker: '00939', name: '統一台灣高息動能', type: '高股息/動能', sparkline: [],
+    price: 18.95, change: +0.52, changePercent: +2.82,
+    returns: { m1: 6.8, m3: 11.5, m6: 16.2, y1: 23.5 },
+    dividend: { annual: 1.44, yield: 7.60, frequency: '月配', recent: [{date:'2026/05',amount:0.12},{date:'2026/04',amount:0.12},{date:'2026/03',amount:0.12},{date:'2026/02',amount:0.12},{date:'2026/01',amount:0.12},{date:'2025/12',amount:0.11}] },
+    sectors: { '半導體':35, '電子零組件':20, '電腦及週邊':15, '金融保險':10, '通信網路':8, '其他':12 },
+    fundSize: 2200, holders: 110, nav: 18.80, premium: -0.79,
+    topHoldings: [{name:'台積電',pct:18.5},{name:'聯發科',pct:6.2},{name:'廣達',pct:5.0},{name:'緯創',pct:4.2},{name:'仁寶',pct:3.8},{name:'英業達',pct:3.5},{name:'光寶科',pct:3.2},{name:'技嘉',pct:2.8},{name:'華碩',pct:2.5},{name:'瑞昂',pct:2.3}]
   }
 ];
 
@@ -488,7 +524,7 @@ function cancelDelete() {
 }
 
 // === Live Price Fetch (from Google Sheet, updated every 5 min by Apps Script) ===
-const TICKERS_LIVE = ["0050","0056","00878","00919","00929","00940"];
+const TICKERS_LIVE = ["0050","0056","00878","00919","00929","00940","006208","00713","00900","00939"];
 const PRICE_SHEET_ID = "1GT8LkzWJPo9psHwRIJwjfV2HEoYf7x8eIkI22BhuqIs";
 
 async function fetchLivePrices() {
