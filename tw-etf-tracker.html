@@ -114,6 +114,9 @@ body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; b
 ::-webkit-scrollbar-track { background:var(--bg); }
 ::-webkit-scrollbar-thumb { background:var(--border); border-radius:3px; }
 
+.sparkline-wrap { margin-top:8px; height:40px; }
+.sparkline-wrap canvas { width:100% !important; }
+
 .main-tabs { display:flex; gap:4px; }
 .main-tab { padding:6px 16px; border-radius:20px; font-size:0.85rem; cursor:pointer; color:var(--muted); border:1px solid var(--border); transition:all .2s; }
 .main-tab.active { background:var(--accent); color:#000; border-color:var(--accent); font-weight:600; }
@@ -168,7 +171,7 @@ body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; b
 <script>
 const ETF_DATA = [
   {
-    ticker: '0050', name: '元大台灣50', type: '市值型',
+    ticker: '0050', name: '元大台灣50', type: '市值型', sparkline: [],
     price: 102.55, change: +2.45, changePercent: +2.45,
     returns: { m1: 8.2, m3: 12.5, m6: 18.7, y1: 35.2 },
     dividend: { annual: 3.5, yield: 3.41, frequency: '半年配', recent: [{date:'2026/01',amount:1.8},{date:'2025/07',amount:1.7},{date:'2025/01',amount:1.6},{date:'2024/07',amount:1.5},{date:'2024/01',amount:1.4},{date:'2023/07',amount:1.3}] },
@@ -177,7 +180,7 @@ const ETF_DATA = [
     topHoldings: [{name:'台積電',pct:55.2},{name:'鴻海',pct:5.1},{name:'聯發科',pct:4.8},{name:'廣達',pct:2.8},{name:'台達電',pct:2.5},{name:'中華電',pct:1.8},{name:'聯電',pct:1.7},{name:'富邦金',pct:1.5},{name:'國泰金',pct:1.4},{name:'中信金',pct:1.3}]
   },
   {
-    ticker: '0056', name: '元大高股息', type: '高股息',
+    ticker: '0056', name: '元大高股息', type: '高股息', sparkline: [],
     price: 49.64, change: +1.32, changePercent: +2.73,
     returns: { m1: 5.8, m3: 9.2, m6: 14.1, y1: 22.6 },
     dividend: { annual: 2.8, yield: 5.64, frequency: '季配', recent: [{date:'2026/04',amount:0.70},{date:'2026/01',amount:0.72},{date:'2025/10',amount:0.68},{date:'2025/07',amount:0.70},{date:'2025/04',amount:0.66},{date:'2025/01',amount:0.65}] },
@@ -186,7 +189,7 @@ const ETF_DATA = [
     topHoldings: [{name:'台積電',pct:12.5},{name:'聯發科',pct:5.8},{name:'廣達',pct:4.2},{name:'仁寶',pct:3.8},{name:'英業達',pct:3.5},{name:'緯創',pct:3.2},{name:'光寶科',pct:3.0},{name:'華碩',pct:2.8},{name:'大聯大',pct:2.5},{name:'技嘉',pct:2.4}]
   },
   {
-    ticker: '00878', name: '國泰永續高股息', type: '高股息/ESG',
+    ticker: '00878', name: '國泰永續高股息', type: '高股息/ESG', sparkline: [],
     price: 30.55, change: +0.93, changePercent: +3.14,
     returns: { m1: 6.1, m3: 10.8, m6: 15.3, y1: 24.1 },
     dividend: { annual: 1.72, yield: 5.63, frequency: '季配', recent: [{date:'2026/05',amount:0.43},{date:'2026/02',amount:0.45},{date:'2025/11',amount:0.42},{date:'2025/08',amount:0.42},{date:'2025/05',amount:0.40},{date:'2025/02',amount:0.38}] },
@@ -195,7 +198,7 @@ const ETF_DATA = [
     topHoldings: [{name:'台積電',pct:15.2},{name:'鴻海',pct:5.5},{name:'聯發科',pct:4.8},{name:'中華電',pct:4.2},{name:'台達電',pct:3.8},{name:'廣達',pct:3.5},{name:'兆豐金',pct:3.2},{name:'中信金',pct:2.8},{name:'華碩',pct:2.5},{name:'日月光',pct:2.3}]
   },
   {
-    ticker: '00919', name: '群益台灣精選高息', type: '高股息',
+    ticker: '00919', name: '群益台灣精選高息', type: '高股息', sparkline: [],
     price: 28.85, change: +0.92, changePercent: +3.29,
     returns: { m1: 7.5, m3: 13.2, m6: 19.8, y1: 28.5 },
     dividend: { annual: 2.16, yield: 7.49, frequency: '季配', recent: [{date:'2026/04',amount:0.55},{date:'2026/01',amount:0.54},{date:'2025/10',amount:0.55},{date:'2025/07',amount:0.52},{date:'2025/04',amount:0.50},{date:'2025/01',amount:0.48}] },
@@ -204,7 +207,7 @@ const ETF_DATA = [
     topHoldings: [{name:'台積電',pct:18.5},{name:'聯發科',pct:6.2},{name:'廣達',pct:5.1},{name:'緯創',pct:4.5},{name:'仁寶',pct:4.0},{name:'英業達',pct:3.8},{name:'光寶科',pct:3.5},{name:'技嘉',pct:3.2},{name:'華碩',pct:2.8},{name:'瑞昂',pct:2.5}]
   },
   {
-    ticker: '00929', name: '復華台灣科技優息', type: '月配/科技',
+    ticker: '00929', name: '復華台灣科技優息', type: '月配/科技', sparkline: [],
     price: 30.04, change: +0.83, changePercent: +2.84,
     returns: { m1: 12.1, m3: 18.5, m6: 25.2, y1: 32.8 },
     dividend: { annual: 1.92, yield: 6.39, frequency: '月配', recent: [{date:'2026/05',amount:0.16},{date:'2026/04',amount:0.16},{date:'2026/03',amount:0.16},{date:'2026/02',amount:0.16},{date:'2026/01',amount:0.16},{date:'2025/12',amount:0.15}] },
@@ -213,7 +216,7 @@ const ETF_DATA = [
     topHoldings: [{name:'台積電',pct:28.5},{name:'聯發科',pct:8.2},{name:'日月光',pct:5.5},{name:'聯電',pct:4.8},{name:'瑞昂',pct:4.2},{name:'聯詠',pct:3.8},{name:'矽力-KY',pct:3.5},{name:'穩懋',pct:3.0},{name:'世芯-KY',pct:2.8},{name:'創意',pct:2.5}]
   },
   {
-    ticker: '00940', name: '元大台灣價值高息', type: '高股息/價值',
+    ticker: '00940', name: '元大台灣價值高息', type: '高股息/價值', sparkline: [],
     price: 11.87, change: +0.11, changePercent: +0.94,
     returns: { m1: 4.2, m3: 7.8, m6: 11.5, y1: 15.2 },
     dividend: { annual: 0.72, yield: 6.07, frequency: '季配', recent: [{date:'2026/04',amount:0.18},{date:'2026/01',amount:0.18},{date:'2025/10',amount:0.18},{date:'2025/07',amount:0.18},{date:'2025/04',amount:0.17},{date:'2025/01',amount:0.17}] },
@@ -267,6 +270,7 @@ function renderCards() {
         <div class="fi-item"><div class="fi-label">離季線</div><div class="fi-value">${etf.quarterLine != null ? (etf.quarterLine>=0?'+':'')+etf.quarterLine+'%' : '--'}</div></div>
         <div class="fi-item"><div class="fi-label">建議</div><div class="fi-value"><span class="sug-badge ${getSuggestion(etf).cls}">${getSuggestion(etf).text}</span></div></div>
       </div>
+      <div class="sparkline-wrap"><canvas id="spark-etf-${i}" height="40"></canvas></div>
       <div class="card-section">
         <div class="card-section-title">累積報酬率</div>
         <div class="returns-row">
@@ -343,6 +347,22 @@ function renderSectorCharts() {
 // Init
 renderCards();
 renderSectorCharts();
+renderSparklines();
+
+function renderSparklines() {
+  ETF_DATA.forEach((etf, i) => {
+    const canvas = document.getElementById('spark-etf-' + i);
+    if (!canvas || !etf.sparkline || etf.sparkline.length < 2) return;
+    const data = etf.sparkline;
+    const isUp = data[data.length-1] >= data[0];
+    const color = isUp ? '#ef4444' : '#10b981';
+    new Chart(canvas, {
+      type: 'line',
+      data: { labels: data.map((_,j)=>''), datasets: [{ data, borderColor: color, borderWidth: 1.5, pointRadius: 0, fill: false, tension: 0.3 }] },
+      options: { responsive: true, maintainAspectRatio: false, plugins: { legend:{display:false}, tooltip:{enabled:false} }, scales: { x:{display:false}, y:{display:false} } }
+    });
+  });
+}
 
 // === Watchlist Functions ===
 const GAS_URL = 'https://script.google.com/macros/s/AKfycbwJCvfKn3K1bQgYvU7T-2XujXZRPZzXr7lPQt_mCEeQbTjA0HRny_YL04yhsyLvl_9y/exec';
@@ -369,7 +389,7 @@ async function loadWatchlist() {
       return;
     }
     empty.style.display = 'none';
-    container.innerHTML = rows.map(row => {
+    container.innerHTML = rows.map((row, i) => {
       const cols = row.match(/"([^"]*)"/g)?.map(s => s.replace(/"/g,'')) || row.split(',');
       const ticker = cols[0] || '';
       const name = cols[1] || '';
@@ -405,12 +425,11 @@ async function loadWatchlist() {
       <span class="card-change ${pct>=0?'up':'down'}">${pct>=0?'+':''}${change} (${pct>=0?'+':''}${pct}%)</span>
     </div>
   </div>
-  <div class="fund-info-row">
-    <div class="fi-item"><div class="fi-label">本益比</div><div class="fi-value">${pe||'--'}</div></div>
-    <div class="fi-item"><div class="fi-label">殖利率</div><div class="fi-value" style="color:var(--yellow)">${divYield?divYield+'%':'--'}</div></div>
+  <div class="fund-info-row" style="grid-template-columns:1fr 1fr">
     <div class="fi-item"><div class="fi-label">離季線</div><div class="fi-value">${quarterLine!==null?(quarterLine>=0?'+':'')+quarterLine+'%':'--'}</div></div>
     <div class="fi-item"><div class="fi-label">建議</div><div class="fi-value"><span class="sug-badge ${wlSug.cls}">${wlSug.text}</span></div></div>
   </div>
+  <div class="sparkline-wrap"><canvas id="spark-wl-${i}" height="40"></canvas></div>
 </div>`;
     }).join('');
   } catch(e) {
@@ -474,12 +493,15 @@ async function fetchLivePrices() {
       const changePct = parseFloat(cols[3]);
       const updateTime = cols[4] || '';
       const quarterLine = parseFloat(cols[5]) || null;
+      const sparkRaw = cols[6] || '';
+      const sparkline = sparkRaw ? sparkRaw.split('|').map(Number).filter(n=>n>0) : [];
       const etf = ETF_DATA.find(e => e.ticker === ticker);
       if (etf && price > 0) {
         etf.price = price;
         etf.change = change;
         etf.changePercent = changePct;
         etf.quarterLine = quarterLine;
+        etf.sparkline = sparkline;
         updated++;
       }
     });
@@ -487,6 +509,7 @@ async function fetchLivePrices() {
     if (updated > 0) {
       renderCards();
       renderSectorCharts();
+      renderSparklines();
       const statusEl = document.getElementById("live-status");
       const lastUpdate = rows[0]?.match(/"([^"]*)"/g)?.[4]?.replace(/"/g,'') || '';
       if (statusEl) statusEl.textContent = `✅ 即時報價（${updated}檔）更新：${lastUpdate}`;
