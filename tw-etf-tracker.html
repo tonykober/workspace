@@ -321,7 +321,7 @@ function renderCards() {
         <div class="card-section-title">配息資訊</div>
         <div class="dividend-inline">殖利率 <span style="color:var(--yellow)">${etf.dividend.yield}%</span> ｜ ${etf.dividend.frequency} ｜ 年配 <span style="color:var(--yellow)">$${etf.dividend.annual}</span></div>
         <div class="recent-div">
-          ${etf.dividend.recent.map(r => `<span class="recent-div-item"><span class="rd-date">${r.date}</span><span class="rd-amt">$${r.amount}</span></span>`).join('')}
+          ${etf.dividend.recent.map(r => `<span class="recent-div-item"><span class="rd-date">${r.date.substring(0,7)}</span><span class="rd-amt">$${r.amount}</span></span>`).join('')}
         </div>
       </div>
       <div class="card-section">
