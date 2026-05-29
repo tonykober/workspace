@@ -401,6 +401,7 @@ async function loadWatchlist() {
       const sector = cols[8] || '';
       const divYield = cols[9] || '';
       const quarterLine = cols[10] ? parseFloat(cols[10]) : null;
+      const wlSpark = cols[11] ? cols[11].split('|').map(Number).filter(n=>n>0) : [];
       const wlSug = (function(){
         const q = quarterLine;
         if (q === null) return {text:'--', cls:'sug-hold'};
@@ -429,9 +430,23 @@ async function loadWatchlist() {
     <div class="fi-item"><div class="fi-label">離季線</div><div class="fi-value">${quarterLine!==null?(quarterLine>=0?'+':'')+quarterLine+'%':'--'}</div></div>
     <div class="fi-item"><div class="fi-label">建議</div><div class="fi-value"><span class="sug-badge ${wlSug.cls}">${wlSug.text}</span></div></div>
   </div>
-  <div class="sparkline-wrap"><canvas id="spark-wl-${i}" height="40"></canvas></div>
+  <div class="sparkline-wrap"><canvas id="spark-wl-${i}" height="40" data-spark="${wlSpark.join('|')}"></canvas></div>
 </div>`;
     }).join('');
+    // Render watchlist sparklines
+    document.querySelectorAll('[id^="spark-wl-"]').forEach(canvas => {
+      const raw = canvas.dataset.spark;
+      if (!raw) return;
+      const data = raw.split('|').map(Number).filter(n=>n>0);
+      if (data.length < 2) return;
+      const isUp = data[data.length-1] >= data[0];
+      const color = isUp ? '#ef4444' : '#10b981';
+      new Chart(canvas, {
+        type:'line',
+        data:{labels:data.map(()=>''),datasets:[{data,borderColor:color,borderWidth:1.5,pointRadius:0,fill:false,tension:0.3}]},
+        options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false},tooltip:{enabled:false}},scales:{x:{display:false},y:{display:false}}}
+      });
+    });
   } catch(e) {
     document.getElementById('watchlist-cards').innerHTML = '<p style="color:var(--muted)">載入失敗</p>';
   }
