@@ -380,6 +380,15 @@ async function loadWatchlist() {
       const pe = cols[7] || '';
       const sector = cols[8] || '';
       const divYield = cols[9] || '';
+      const quarterLine = cols[10] ? parseFloat(cols[10]) : null;
+      const wlSug = (function(){
+        const q = quarterLine;
+        if (q === null) return {text:'--', cls:'sug-hold'};
+        if (q < -8) return {text:'買進', cls:'sug-buy'};
+        if (q > 15) return {text:'減碼', cls:'sug-sell'};
+        if (q > 10) return {text:'觀望', cls:'sug-wait'};
+        return {text:'持有', cls:'sug-hold'};
+      })();
       if (!ticker) return '';
       return `<div class="wl-card">
         <button class="wl-delete" onclick="confirmDelete('${ticker}','${name}')">&times;</button>
@@ -393,9 +402,11 @@ async function loadWatchlist() {
             <span class="wl-change ${pct>=0?'up':'down'}">${pct>=0?'+':''}${change} (${pct>=0?'+':''}${pct}%)</span>
           </div>
         </div>
-        <div style="display:flex;gap:12px;margin-top:8px;font-size:0.75rem;color:var(--muted)">
+        <div style="display:flex;gap:12px;margin-top:8px;font-size:0.75rem;color:var(--muted);align-items:center;flex-wrap:wrap">
           ${pe ? '<span>本益比 <b style="color:var(--text)">'+pe+'</b></span>' : ''}
           ${divYield ? '<span>殖利率 <b style="color:var(--yellow)">'+divYield+'%</b></span>' : ''}
+          ${quarterLine !== null ? '<span>離季線 <b style="color:var(--text)">'+(quarterLine>=0?'+':'')+quarterLine+'%</b></span>' : ''}
+          <span class="sug-badge ${wlSug.cls}">${wlSug.text}</span>
         </div>
         ${updated ? '<div style="font-size:0.65rem;color:var(--muted);margin-top:4px">更新：'+updated+'</div>' : ''}
       </div>`;
