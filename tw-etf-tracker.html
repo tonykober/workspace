@@ -546,6 +546,8 @@ async function fetchLivePrices() {
       const quarterLine = parseFloat(cols[5]) || null;
       const sparkRaw = cols[6] || '';
       const sparkline = sparkRaw ? sparkRaw.split('|').map(Number).filter(n=>n>0) : [];
+      const navVal = parseFloat(cols[7]) || null;
+      const premiumVal = parseFloat(cols[8]) || null;
       const etf = ETF_DATA.find(e => e.ticker === ticker);
       if (etf && price > 0) {
         etf.price = price;
@@ -553,6 +555,8 @@ async function fetchLivePrices() {
         etf.changePercent = changePct;
         etf.quarterLine = quarterLine;
         etf.sparkline = sparkline;
+        if (navVal) etf.nav = navVal;
+        if (premiumVal !== null) etf.premium = premiumVal;
         updated++;
       }
     });
