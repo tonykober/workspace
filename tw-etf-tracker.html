@@ -99,7 +99,7 @@ body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; b
 
 @media (min-width:768px) {
   .container { padding:24px; }
-  .cards { grid-template-columns:repeat(auto-fit, minmax(340px, 1fr)); gap:16px; }
+  .cards { grid-template-columns:repeat(auto-fill, minmax(340px, 380px)); gap:16px; }
   .header { padding:20px 32px; }
   .header h1 { font-size:1.6rem; }
 }
@@ -361,20 +361,27 @@ async function loadWatchlist() {
       const change = parseFloat(cols[4]) || 0;
       const pct = parseFloat(cols[5]) || 0;
       const updated = cols[6] || '';
+      const pe = cols[7] || '';
+      const sector = cols[8] || '';
+      const divYield = cols[9] || '';
       if (!ticker) return '';
       return `<div class="wl-card">
         <button class="wl-delete" onclick="confirmDelete('${ticker}','${name}')">&times;</button>
         <div class="wl-top">
           <div>
             <div class="wl-ticker">${ticker}</div>
-            <div class="wl-name">${name}</div>
+            <div class="wl-name">${name}${sector ? ' · <span style="color:var(--purple)">'+sector+'</span>' : ''}</div>
           </div>
           <div style="text-align:right">
             <div class="wl-price">${price ? '$'+price.toFixed(2) : '--'}</div>
-            <span class="wl-change ${pct>=0?'up':'down'}">${pct>=0?'+':''}${pct}%</span>
+            <span class="wl-change ${pct>=0?'up':'down'}">${pct>=0?'+':''}${change} (${pct>=0?'+':''}${pct}%)</span>
           </div>
         </div>
-        ${updated ? '<div style="font-size:0.65rem;color:var(--muted);margin-top:6px">更新：'+updated+'</div>' : ''}
+        <div style="display:flex;gap:12px;margin-top:8px;font-size:0.75rem;color:var(--muted)">
+          ${pe ? '<span>本益比 <b style="color:var(--text)">'+pe+'</b></span>' : ''}
+          ${divYield ? '<span>殖利率 <b style="color:var(--yellow)">'+divYield+'%</b></span>' : ''}
+        </div>
+        ${updated ? '<div style="font-size:0.65rem;color:var(--muted);margin-top:4px">更新：'+updated+'</div>' : ''}
       </div>`;
     }).join('');
   } catch(e) {
