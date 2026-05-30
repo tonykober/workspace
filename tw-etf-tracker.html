@@ -545,7 +545,7 @@ function toggleOverlay(idx) {
 }
 
 function updateOverlayBtnColors() {
-  const colors = ["#58a6ff","#f0883e","#3fb950","#a371f7","#d29922"];
+  const colors = ["#00d4ff","#ff6b6b","#3fb950","#ffd93d","#a371f7","#ff8b94","#00c9a7","#f0883e","#6366f1","#ec4899"];
   chartOverlays.forEach((idx, ci) => {
     const btn = document.getElementById("overlay-btn-"+idx);
     if (btn) { btn.style.background = colors[ci % colors.length]; btn.style.color = "#000"; btn.style.borderColor = colors[ci % colors.length]; }
