@@ -222,7 +222,7 @@ body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; b
 <div class="container">
 <div id="view-etf">
   <div class="filter-bar">
-    <span class="label">排序：</span>
+    <span class="label">排序：</span><button class="pill active" onclick="sortETF('default')">預設</button>
     <button class="pill" onclick="sortETF('yield')">殖利率</button>
     <button class="pill" onclick="sortETF('ret1m')">1月報酬</button>
     <button class="pill" onclick="sortETF('premium')">折溢價</button>
@@ -239,7 +239,7 @@ body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; b
     <h3 style="font-size:1rem;color:var(--accent)">自選追蹤清單</h3>
     <button class="add-btn" onclick="addStock()">+ 新增</button>
   </div>
-  <div class="filter-bar" style="margin-top:8px"><span class="label">排序：</span><button class="pill" onclick="sortWatchlist('pct')">漲跌幅</button><button class="pill" onclick="sortWatchlist('qline')">離季線</button></div>
+  <div class="filter-bar" style="margin-top:8px"><span class="label">排序：</span><button class="pill active" onclick="sortETF('default')">預設</button><button class="pill" onclick="sortWatchlist('pct')">漲跌幅</button><button class="pill" onclick="sortWatchlist('qline')">離季線</button></div>
   <div class="cards" id="watchlist-cards"></div>
   <div id="watchlist-empty" style="text-align:center;color:var(--muted);padding:40px">尚無追蹤個股，點擊「+ 新增」開始</div>
 </div>
@@ -359,7 +359,9 @@ function renderSectorCharts() {
 // === Sort & Filter ===
 let currentFilter = 'all';
 
+let originalOrder = [];
 function sortETF(key) {
+  if (key === 'default') { if (originalOrder.length) ETF_DATA = [...originalOrder]; renderCards(); renderSectorCharts(); renderSparklines(); return; }
   if (key === 'yield') ETF_DATA.sort((a,b) => b.dividend.yield - a.dividend.yield);
   else if (key === 'ret1m') ETF_DATA.sort((a,b) => b.returns.m1 - a.returns.m1);
   else if (key === 'premium') ETF_DATA.sort((a,b) => a.premium - b.premium);
@@ -708,13 +710,13 @@ async function loadAllData() {
       };
     });
     
-    document.getElementById('live-status').textContent = '\u2705 \u8cc7\u6599\u8f09\u5165\u5b8c\u6210 ' + new Date().toLocaleTimeString('zh-TW');
+    originalOrder = [...ETF_DATA]; document.getElementById('live-status').textContent = '\u2705 \u8cc7\u6599\u8f09\u5165\u5b8c\u6210 ' + new Date().toLocaleTimeString('zh-TW');
     const priceTime = priceData[0]?.updated || '';
     const ptEl = document.getElementById('price-time');
     if (ptEl) ptEl.textContent = '股價：' + priceTime + ' 更新 · ';
   } catch(e) {
     console.error('loadAllData error:', e);
-    document.getElementById('live-status').textContent = '\u26a0\ufe0f \u8cc7\u6599\u8f09\u5165\u5931\u6557';
+    originalOrder = [...ETF_DATA]; document.getElementById('live-status').textContent = '\u26a0\ufe0f \u8cc7\u6599\u8f09\u5165\u5931\u6557';
   }
 }
 

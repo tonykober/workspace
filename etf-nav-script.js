@@ -86,3 +86,29 @@ function fetchWatchlistData() {
     }
   });
 }
+
+// === ETF 收盤價備案（超過24小時沒更新就從TWSE抓）===
+function checkAndUpdatePrices() {
+  var ss = SpreadsheetApp.openById('1GT8LkzWJPo9psHwRIJwjfV2HEoYf7x8eIkI22BhuqIs');
+  var sheet = ss.getSheetByName('Sheet1') || ss.getSheets()[0];
+  var updated = sheet.getRange(2, 5).getValue();
+  if (!updated || (new Date() - new Date(updated)) > 24*60*60*1000) {
+    try {
+      var data = JSON.parse(UrlFetchApp.fetch('https://openapi.twse.com.tw/v1/exchangeReport/STOCK_DAY_ALL',{muteHttpExceptions:true}).getContentText());
+      var tickers = ['0050','0056','00878','00919','00929','00940','006208','00713','00900','00939'];
+      tickers.forEach(function(ticker, idx) {
+        var found = data.find(function(d){return d.Code === ticker});
+        if (found) {
+          var price = parseFloat(found.ClosingPrice);
+          var change = parseFloat(found.Change);
+          var prev = price - change;
+          var pct = prev > 0 ? (change/prev*100).toFixed(2) : 0;
+          sheet.getRange(idx+2, 2).setValue(price);
+          sheet.getRange(idx+2, 3).setValue(change);
+          sheet.getRange(idx+2, 4).setValue(pct);
+          sheet.getRange(idx+2, 5).setValue(new Date().toLocaleString('zh-TW'));
+        }
+      });
+    } catch(e) { Logger.log('Price backup error: ' + e.message); }
+  }
+}
