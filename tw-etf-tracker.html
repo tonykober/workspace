@@ -53,7 +53,7 @@ body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; b
 .premium-value.cheap { color:var(--green); }
 .premium-value.expensive { color:var(--red); }
 .premium-value.normal { color:var(--muted); }
-.premium-tag { font-size:0.7rem; white-space:nowrap; padding:2px 6px; border-radius:4px; position:absolute; top:-20px; left:50%; transform:translateX(-50%); border:1.5px solid currentColor; z-index:1; }
+.premium-tag { font-size:0.7rem; white-space:nowrap; padding:1px 5px; border-radius:3px; display:inline; margin-left:4px; border:1.5px solid currentColor; }
 .cheap .premium-tag { background:rgba(16,185,129,.15); }
 .expensive .premium-tag { background:rgba(239,68,68,.15); }
 .normal .premium-tag { background:rgba(139,148,158,.15); }
@@ -200,7 +200,7 @@ body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; b
 .update-info { font-size:0.8rem; color:var(--muted); margin-top:2px; }
 .update-info span { margin-right:12px; }
 .card-mid { display:flex; gap:12px; margin:10px 0; align-items:stretch; }
-.card-mid-left { flex:1; cursor:pointer; border:1px solid var(--border); border-radius:6px; padding:4px; min-height:60px; }
+.card-mid-left { flex:1; cursor:pointer; border:1px solid var(--border); border-radius:6px; padding:4px; min-height:30px; }
 .card-mid-left canvas { width:100% !important; height:100% !important; }
 .card-mid-right { flex:1; display:flex; flex-direction:column; justify-content:center; gap:4px; font-size:0.9rem; }
 .card-mid-right .kpi { display:flex; justify-content:space-between; align-items:center; }
@@ -290,7 +290,7 @@ function renderCards() {
         </div>
       </div>
       <div class="card-mid">
-        <div class="card-mid-left" onclick="showChart(${i})"><canvas id="spark-etf-${i}" height="70"></canvas></div>
+        <div class="card-mid-left" onclick="showChart(${i})"><div style="font-size:0.75rem;color:var(--muted);margin-bottom:2px">${etf.fundSize}億 · ${etf.holders}萬人</div><canvas id="spark-etf-${i}" height="35"></canvas></div>
         <div class="card-mid-right">
           <div class="kpi"><span class="kpi-label">折溢價</span><span class="kpi-value premium-value ${getPremiumClass(etf.premium)}">${etf.premium}% <span class="premium-tag">${getPremiumLabel(etf.premium)}</span></span></div>
           <div class="kpi"><span class="kpi-label">建議</span><span class="kpi-value"><span class="sug-badge ${getSuggestion(etf).cls}">${getSuggestion(etf).text}</span></span></div>
@@ -647,20 +647,22 @@ function parseCSV(csv) {
 async function loadAllData() {
   const t = Date.now();
   try {
-    const [infoRes, priceRes, secRes, holdRes] = await Promise.all([
+    const [infoRes, priceRes, secRes, holdRes, navRes] = await Promise.all([
       fetch(SHEET_BASE + 'info&t=' + t),
       fetch(SHEET_BASE + 'Sheet1&t=' + t),
       fetch(SHEET_BASE + 'sectors&t=' + t),
-      fetch(SHEET_BASE + 'holdings&t=' + t)
+      fetch(SHEET_BASE + 'holdings&t=' + t),
+      fetch(SHEET_BASE + 'nav_data&t=' + t)
     ]);
-    const [infoCsv, priceCsv, secCsv, holdCsv] = await Promise.all([
-      infoRes.text(), priceRes.text(), secRes.text(), holdRes.text()
+    const [infoCsv, priceCsv, secCsv, holdCsv, navCsv] = await Promise.all([
+      infoRes.text(), priceRes.text(), secRes.text(), holdRes.text(), navRes.text()
     ]);
     
     const infoData = parseCSV(infoCsv);
     const priceData = parseCSV(priceCsv);
     const secData = parseCSV(secCsv);
     const holdData = parseCSV(holdCsv);
+    const navData = parseCSV(navCsv);
     
     // Build ETF_DATA from info as base
     ETF_DATA = infoData.map(info => {
@@ -668,6 +670,7 @@ async function loadAllData() {
       const price = priceData.find(p => p.ticker === ticker) || {};
       const sec = secData.find(s => s.ticker === ticker) || {};
       const hold = holdData.find(h => h.ticker === ticker) || {};
+      const navRow = navData.find(n => n.ticker === ticker || ticker.endsWith(n.ticker) || n.ticker === ticker.replace(/^0+/,'')) || {};
       
       // Parse sectors
       const sectors = {};
@@ -686,7 +689,7 @@ async function loadAllData() {
       const sparkline = sparkRaw ? sparkRaw.split('|').map(Number).filter(n=>n>0) : [];
       
       // Parse dividend recent
-      const divRecentRaw = price.divRecent || '';
+      const divRecentRaw = navRow.divRecent || '';
       const recent = divRecentRaw ? divRecentRaw.split('|').map(s => { const p=s.split(':'); return {date:p[0],amount:parseFloat(p[1])||0}; }) : [];
       
       return {
@@ -698,22 +701,22 @@ async function loadAllData() {
         change: parseFloat(price.change) || 0,
         changePercent: parseFloat(price.changePct) || 0,
         returns: {
-          m1: parseFloat(price.ret1m) || 0,
-          m3: parseFloat(price.ret3m) || 0,
-          m6: parseFloat(price.ret6m) || 0,
-          y1: parseFloat(price.ret1y) || 0
+          m1: parseFloat(navRow.ret1m) || 0,
+          m3: parseFloat(navRow.ret3m) || 0,
+          m6: parseFloat(navRow.ret6m) || 0,
+          y1: parseFloat(navRow.ret1y) || 0
         },
         dividend: {
           annual: recent.slice(0,4).reduce((s,r)=>s+r.amount, 0),
-          yield: parseFloat(price.divYield) || 0,
+          yield: parseFloat(navRow.divYield) || 0,
           frequency: info.frequency || '',
           recent: recent.length ? recent : [{date:'--',amount:0}]
         },
         sectors,
         fundSize: parseFloat(info.fundSize) || 0,
         holders: parseFloat(info.holders) || 0,
-        nav: parseFloat(price.nav) || 0,
-        premium: parseFloat(price.premium) || 0,
+        nav: parseFloat(navRow.nav) || 0,
+        premium: parseFloat(navRow.premium) || 0,
         quarterLine: parseFloat(price.quarterLine) || null,
         topHoldings
       };
@@ -898,14 +901,6 @@ async function fetchLivePrices() {
       const quarterLine = parseFloat(cols[5]) || null;
       const sparkRaw = cols[6] || '';
       const sparkline = sparkRaw ? sparkRaw.split('|').map(Number).filter(n=>n>0) : [];
-      const navVal = parseFloat(cols[7]) || null;
-      const premiumVal = parseFloat(cols[8]) || null;
-      const ret1m = parseFloat(cols[9]) || null;
-      const ret3m = parseFloat(cols[10]) || null;
-      const ret6m = parseFloat(cols[11]) || null;
-      const ret1y = parseFloat(cols[12]) || null;
-      const divYield = parseFloat(cols[13]) || null;
-      const divRecent = cols[14] || '';
       const etf = ETF_DATA.find(e => e.ticker === ticker);
       if (etf && price > 0) {
         etf.price = price;
@@ -913,16 +908,6 @@ async function fetchLivePrices() {
         etf.changePercent = changePct;
         etf.quarterLine = quarterLine;
         etf.sparkline = sparkline;
-        if (navVal) etf.nav = navVal;
-        if (premiumVal !== null) etf.premium = premiumVal;
-        if (ret1m !== null) etf.returns.m1 = ret1m;
-        if (ret3m !== null) etf.returns.m3 = ret3m;
-        if (ret6m !== null) etf.returns.m6 = ret6m;
-        if (ret1y !== null) etf.returns.y1 = ret1y;
-        if (divYield) etf.dividend.yield = divYield;
-        if (divRecent) {
-          etf.dividend.recent = divRecent.split('|').map(function(s) { var p=s.split(':'); return {date:p[0],amount:parseFloat(p[1])}; });
-        }
         updated++;
       }
     });
