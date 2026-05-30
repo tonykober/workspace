@@ -208,7 +208,7 @@ body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; b
 
 <div class="header">
   <div style="display:flex;align-items:center;gap:8px;flex-wrap:nowrap">
-    <h1><span style="cursor:pointer" onclick="fetchLivePrices();loadWatchlist();renderCards();renderSectorCharts();renderSparklines()">📊 台股 ETF 績效追蹤</span></h1>
+    <h1><span style="cursor:pointer" onclick="refreshAll()">📊 台股 ETF 績效追蹤</span></h1>
     <div class="main-tabs">
       <div class="main-tab active" onclick="switchMainTab('etf')">ETF 追蹤</div>
       <div class="main-tab" onclick="switchMainTab('watchlist')">自選個股</div>
@@ -720,6 +720,20 @@ async function loadAllData() {
   }
 }
 
+// Refresh with toast
+async function refreshAll() {
+  try {
+    await fetchLivePrices(); loadWatchlist(); renderCards(); renderSectorCharts(); renderSparklines();
+    showToast('✅ 資料已更新', 'var(--green)');
+  } catch(e) { showToast('⚠️ 更新失敗，顯示快取資料', 'var(--yellow)'); }
+}
+function showToast(msg, color) {
+  let t = document.getElementById('toast');
+  if (!t) { t=document.createElement('div'); t.id='toast'; t.style.cssText='position:fixed;top:60px;left:50%;transform:translateX(-50%);padding:8px 16px;border-radius:6px;font-size:0.85rem;z-index:999;transition:opacity .5s'; document.body.appendChild(t); }
+  t.style.background=color; t.style.color='#000'; t.style.opacity='1'; t.textContent=msg;
+  setTimeout(()=>{t.style.opacity='0'},3000);
+}
+
 // Init
 async function init() {
   await loadAllData();
@@ -871,18 +885,15 @@ function renderWlCompare() {
     const yieldText = card?.querySelectorAll('.kpi-value')?.[2]?.textContent || '--';
     return {ticker, pct, q, pe:peText, yield:yieldText, color:colors[ci]};
   });
-  let html = '<div class="compare-section"><h4>漲跌幅 / 離季線 / 本益比 / 殖利率</h4>';
-  ['漲跌幅','離季線','本益比','殖利率'].forEach((label, li) => {
-    html += '<div class="compare-bar-row"><span class="compare-bar-label">'+label+'</span>';
-    items.forEach(it => {
-      const val = li===0?it.pct+'%':li===1?it.q+'%':li===2?it.pe:it.yield;
-      html += '<span class="compare-bar-val" style="color:'+it.color+'">'+it.ticker+' '+val+'</span>';
-    });
-    html += '</div>';
+  let html = '<div class="compare-section" style="overflow-x:auto"><table style="width:100%;border-collapse:collapse;font-size:0.85rem"><tr><th style="text-align:left;padding:6px;color:var(--muted)">指標</th>';
+  items.forEach(it => { html += '<th style="padding:6px;color:'+it.color+'">'+it.ticker+'</th>'; });
+  html += '</tr>';
+  [['漲跌幅','pct'],['離季線','q'],['本益比','pe'],['殖利率','yield']].forEach(([label,key]) => {
+    html += '<tr><td style="padding:6px;color:var(--muted)">'+label+'</td>';
+    items.forEach(it => { const v=key==='pct'?it.pct+'%':key==='q'?it.q+'%':it[key]; html += '<td style="padding:6px;font-weight:600">'+v+'</td>'; });
+    html += '</tr>';
   });
-  html += '</div><div style="display:flex;gap:12px;font-size:0.8rem">';
-  items.forEach(it => { html += '<span style="color:'+it.color+'">● '+it.ticker+'</span>'; });
-  html += '</div>';
+  html += '</table></div>';
   document.getElementById('compare-content').innerHTML = html;
   document.getElementById('compare-panel').classList.add('show');
 }
