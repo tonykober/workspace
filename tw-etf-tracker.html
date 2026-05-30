@@ -1008,7 +1008,7 @@ function renderWlMainChart() {
   });
   mainChart = new Chart(document.getElementById('chart-main'), {
     type:'line', data:{labels:datasets[0].data.map((_,i)=>'D'+(i+1)), datasets},
-    options:{responsive:true, maintainAspectRatio:false, animation:false, interaction:{mode:'index',intersect:false}, plugins:{legend:{display:false}, tooltip:{enabled:true, callbacks:{label:ctx=>ctx.dataset.label+': '+(multi?parseFloat(ctx.parsed.y).toFixed(2)+'%':'$'+parseFloat(ctx.parsed.y).toFixed(2))}}}, scales:{x:{display:true,grid:{color:'#30363d'},ticks:{color:'#8b949e',font:{size:10}}}, y:{display:true,grid:{color:'#30363d'},ticks:{color:'#8b949e',font:{size:10},callback:v=>multi?v.toFixed(1)+'%':'$'+v}}}}
+    options:{responsive:true, maintainAspectRatio:false, animation:false, interaction:{mode:'index',intersect:false}, plugins:{legend:{display:false}, tooltip:{enabled:true, callbacks:{label:ctx=>ctx.dataset.label+': '+(multi?parseFloat(ctx.parsed.y).toFixed(2)+'%':'$'+parseFloat(ctx.parsed.y).toFixed(2))}}}, scales:{x:{display:true,grid:{color:'#30363d'},ticks:{color:'#8b949e',font:{size:13}}}, y:{display:true,grid:{color:'#30363d'},ticks:{color:'#8b949e',font:{size:13},callback:v=>multi?v.toFixed(1)+'%':'$'+v}}}}
   });
 }
 
