@@ -797,6 +797,7 @@ async function loadWatchlist(sortKey) {
       if (!ticker) return '';
       return `<div class="card" style="position:relative">
         <button class="wl-delete" onclick="confirmDelete('${ticker}','${name}')">&times;</button>
+        <button class="compare-btn" onclick="toggleWlCompare(${i})">比較</button>
         <div class="card-top">
           <div>
             <div class="card-left"><span class="card-ticker">${ticker}</span>${sector ? '<span class="card-type">'+sector+'</span>' : ''}</div>
@@ -812,7 +813,7 @@ async function loadWatchlist(sortKey) {
             <div class="card-mid-left" onclick="showWlChart(${i})"><canvas id="spark-wl-${i}" height="35" data-spark="${wlSpark.join('|')}"></canvas></div>
             <div class="card-mid-right">
               <div class="kpi"><span class="kpi-label">離季線 ${quarterLine>15?'<span style="color:var(--red);font-size:0.75rem">過熱</span>':quarterLine>10?'<span style="color:var(--yellow);font-size:0.75rem">偏高</span>':quarterLine<-8?'<span style="color:var(--green);font-size:0.75rem">超跌</span>':'<span style="color:var(--muted);font-size:0.75rem">正常</span>'}</span><span class="kpi-value">${quarterLine!==null?(quarterLine>=0?'+':'')+quarterLine+'%':'--'}</span></div>
-              <div class="kpi"><span class="kpi-label">PE</span><span class="kpi-value">${pe||'--'}</span></div>
+              <div class="kpi"><span class="kpi-label">本益比</span><span class="kpi-value">${pe||'--'}</span></div>
               <div class="kpi"><span class="kpi-label">殖利率</span><span class="kpi-value" style="color:var(--yellow)">${divYield?divYield+'%':'--'}</span></div>
               <div class="kpi"><span class="kpi-label">建議</span><span class="kpi-value"><span class="sug-badge ${wlSug.cls}">${wlSug.text}</span></span></div>
             </div>
@@ -841,6 +842,50 @@ async function loadWatchlist(sortKey) {
 }
 
 let wlSortKey = 'default';
+let wlCompareList = [];
+function toggleWlCompare(idx) {
+  const i = wlCompareList.indexOf(idx);
+  if (i >= 0) wlCompareList.splice(i, 1);
+  else if (wlCompareList.length < 3) wlCompareList.push(idx);
+  else return;
+  document.querySelectorAll('#view-watchlist .card').forEach((card, ci) => {
+    const btn = card.querySelector('.compare-btn');
+    const sel = wlCompareList.includes(ci);
+    card.classList.toggle('comparing', sel);
+    if (btn) { btn.classList.toggle('active', sel); btn.textContent = sel ? '✓ 已選' : '比較'; }
+  });
+  if (wlCompareList.length >= 2) renderWlCompare();
+  else document.getElementById('compare-panel').classList.remove('show');
+}
+function renderWlCompare() {
+  const cards = document.querySelectorAll('#view-watchlist .card');
+  const colors = ['#00d4ff','#ff6b6b','#3fb950'];
+  const items = wlCompareList.map((idx, ci) => {
+    const card = cards[idx];
+    const ticker = card?.querySelector('.card-ticker')?.textContent || '';
+    const pctText = card?.querySelector('.card-change')?.textContent || '0';
+    const pct = parseFloat(pctText.match(/([-\d.]+)%/)?.[1]) || 0;
+    const qText = card?.querySelectorAll('.kpi-value')?.[0]?.textContent || '0';
+    const q = parseFloat(qText) || 0;
+    const peText = card?.querySelectorAll('.kpi-value')?.[1]?.textContent || '--';
+    const yieldText = card?.querySelectorAll('.kpi-value')?.[2]?.textContent || '--';
+    return {ticker, pct, q, pe:peText, yield:yieldText, color:colors[ci]};
+  });
+  let html = '<div class="compare-section"><h4>漲跌幅 / 離季線 / 本益比 / 殖利率</h4>';
+  ['漲跌幅','離季線','本益比','殖利率'].forEach((label, li) => {
+    html += '<div class="compare-bar-row"><span class="compare-bar-label">'+label+'</span>';
+    items.forEach(it => {
+      const val = li===0?it.pct+'%':li===1?it.q+'%':li===2?it.pe:it.yield;
+      html += '<span class="compare-bar-val" style="color:'+it.color+'">'+it.ticker+' '+val+'</span>';
+    });
+    html += '</div>';
+  });
+  html += '</div><div style="display:flex;gap:12px;font-size:0.8rem">';
+  items.forEach(it => { html += '<span style="color:'+it.color+'">● '+it.ticker+'</span>'; });
+  html += '</div>';
+  document.getElementById('compare-content').innerHTML = html;
+  document.getElementById('compare-panel').classList.add('show');
+}
 function sortWatchlist(key) {
   wlSortKey = key;
   document.querySelectorAll('#view-watchlist .pill').forEach(p => p.classList.remove('active'));
