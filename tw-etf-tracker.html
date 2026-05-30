@@ -442,33 +442,47 @@ function closeDivCalendar() {
 // === Historical Chart ===
 let mainChart = null;
 let chartOverlays = [];
+let chartRange = 22; // default 1M
 
 function showChart(idx) {
   const etf = ETF_DATA[idx];
   if (!etf.sparkline || etf.sparkline.length < 2) return;
+  chartRange = 22;
   const data = etf.sparkline;
   const high = Math.max(...data);
   const low = Math.min(...data);
   const start = data[0];
   const latest = data[data.length-1];
   
-  document.getElementById('chart-title').textContent = etf.ticker + ' ' + etf.name + ' — 近一個月走勢';
+  document.getElementById('chart-title').textContent = etf.ticker + ' ' + etf.name + ' — 走勢圖';
   document.getElementById('chart-info').innerHTML = 
     '<span>起始 <b>$'+start.toFixed(2)+'</b></span>' +
     '<span>最高 <b style="color:var(--red)">$'+high.toFixed(2)+'</b></span>' +
     '<span>最低 <b style="color:var(--green)">$'+low.toFixed(2)+'</b></span>' +
     '<span>最新 <b>$'+latest.toFixed(2)+'</b></span>';
   
-  // Actions: overlay buttons for other ETFs
+  // Range buttons + overlay buttons
   chartOverlays = [idx];
+  const rangeHtml = '<span style="font-size:0.8rem;color:var(--muted)">區間：</span>' +
+    '<button class="pill" onclick="setChartRange(5)">1W</button>' +
+    '<button class="pill active" onclick="setChartRange(22)">1M</button>' +
+    '<button class="pill" onclick="setChartRange(60)">3M</button>' +
+    '<span style="margin-left:12px;font-size:0.8rem;color:var(--muted)">疊加比較：</span>';
   const actionsHtml = ETF_DATA.map((e, i) => {
     if (i === idx) return '';
     return '<button onclick="toggleOverlay('+i+')" id="overlay-btn-'+i+'">'+e.ticker+'</button>';
   }).join('');
-  document.getElementById('chart-actions').innerHTML = '<span style="font-size:0.8rem;color:var(--muted)">疊加比較：</span>' + actionsHtml;
+  document.getElementById('chart-actions').innerHTML = rangeHtml + actionsHtml;
   
   renderMainChart();
   document.getElementById('chart-modal').classList.add('show');
+}
+
+function setChartRange(n) {
+  chartRange = n;
+  document.querySelectorAll('#chart-actions .pill').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('#chart-actions .pill').forEach(p => { if((n===5&&p.textContent==='1W')||(n===22&&p.textContent==='1M')||(n===60&&p.textContent==='3M')) p.classList.add('active'); });
+  renderMainChart();
 }
 
 function closeChart() {
@@ -503,7 +517,8 @@ function renderMainChart() {
   const colors = ["#00d4ff","#ff6b6b","#3fb950","#ffd93d","#a371f7","#ff8b94","#00c9a7","#f0883e","#6366f1","#ec4899"];
   const datasets = chartOverlays.map((idx, ci) => {
     const etf = ETF_DATA[idx];
-    const data = etf.sparkline || [];
+    const fullData = etf.sparkline || [];
+    const data = fullData.slice(-chartRange);
     // Normalize to % change from first day
     const base = data[0] || 1;
     const normalized = data.map(v => ((v - base) / base * 100).toFixed(2));

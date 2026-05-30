@@ -120,3 +120,57 @@ function checkAndUpdatePrices() {
     } catch(e) { Logger.log('Price backup error: ' + e.message); }
   }
 }
+
+// === 一次性：補齊 3 個月歷史 sparkline ===
+function backfillSparkline() {
+  var ss = SpreadsheetApp.openById('1GT8LkzWJPo9psHwRIJwjfV2HEoYf7x8eIkI22BhuqIs');
+  
+  // ETF (Sheet1)
+  var sheet1 = ss.getSheetByName('Sheet1') || ss.getSheets()[0];
+  var etfTickers = ['0050','0056','00878','00919','00929','00940','006208','00713','00900','00939'];
+  etfTickers.forEach(function(ticker, idx) {
+    var prices = fetchThreeMonths(ticker);
+    if (prices.length) {
+      sheet1.getRange(idx + 2, 7).setValue(prices.join('|')); // G欄 sparkline
+    }
+    Utilities.sleep(1000);
+  });
+  
+  // 自選股 (watchlist)
+  var wlSheet = ss.getSheetByName('watchlist');
+  if (wlSheet && wlSheet.getLastRow() > 0) {
+    var wlTickers = wlSheet.getRange(1, 1, wlSheet.getLastRow(), 1).getValues().map(function(r){return r[0].toString().trim()}).filter(function(t){return t});
+    wlTickers.forEach(function(ticker, idx) {
+      var prices = fetchThreeMonths(ticker);
+      if (prices.length) {
+        wlSheet.getRange(idx + 1, 12).setValue(prices.join('|')); // L欄 sparkline
+      }
+      Utilities.sleep(1000);
+    });
+  }
+  
+  Logger.log('backfillSparkline 完成');
+}
+
+function fetchThreeMonths(ticker) {
+  var allPrices = [];
+  var months = ['20260301','20260401','20260501'];
+  for (var i = 0; i < months.length; i++) {
+    try {
+      var url = 'https://www.twse.com.tw/exchangeReport/STOCK_DAY?response=json&date=' + months[i] + '&stockNo=' + ticker;
+      var res = UrlFetchApp.fetch(url, {muteHttpExceptions: true});
+      var json = JSON.parse(res.getContentText());
+      if (json.stat === 'OK' && json.data) {
+        json.data.forEach(function(row) {
+          var price = parseFloat(row[6].replace(/,/g, ''));
+          if (price > 0) allPrices.push(price);
+        });
+      }
+    } catch(e) {
+      Logger.log('TWSE fetch error ' + ticker + ' ' + months[i] + ': ' + e.message);
+    }
+    Utilities.sleep(1000);
+  }
+  // 取最近 60 筆
+  return allPrices.slice(-60);
+}
