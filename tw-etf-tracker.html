@@ -784,7 +784,12 @@ async function loadWatchlist() {
     const res = await fetch(`https://docs.google.com/spreadsheets/d/${WL_SHEET_ID}/gviz/tq?tqx=out:csv&sheet=watchlist&t=${Date.now()}`);
     const csv = await res.text();
     const allRows = csv.trim().split('\n').filter(r => r);
-    wlOriginalRows = allRows.slice(1); // skip header
+    const rows = allRows.slice(1);
+    wlData = rows.map(row => {
+      const cols = row.match(/"([^"]*)"/g)?.map(s => s.replace(/"/g,'')) || row.split(',');
+      return { ticker:cols[0]||'', name:cols[1]||'', price:parseFloat(cols[3])||0, change:parseFloat(cols[4])||0, changePct:parseFloat(cols[5])||0, updated:cols[6]||'', pe:cols[7]||'', sector:cols[8]||'', divYield:cols[9]||'', quarterLine:cols[10]?parseFloat(cols[10]):null, sparkline:cols[11]||'', divRecent:cols[12]||'' };
+    }).filter(d => d.ticker);
+    wlOriginalData = [...wlData];
     renderWatchlistCards();
   } catch(e) {
     document.getElementById('watchlist-cards').innerHTML = '<p style="color:var(--muted)">載入失敗</p>';
@@ -794,67 +799,38 @@ async function loadWatchlist() {
 function renderWatchlistCards() {
     const container = document.getElementById('watchlist-cards');
     const empty = document.getElementById('watchlist-empty');
-    if (!wlOriginalRows.length) {
-      container.innerHTML = '';
-      empty.style.display = 'block';
-      return;
-    }
+    if (!wlData.length) { container.innerHTML = ''; empty.style.display = 'block'; return; }
     empty.style.display = 'none';
-    const sortedRows = [...wlOriginalRows];
-    if (wlSortKey === 'pct') sortedRows.sort((a,b) => { const pa=parseFloat((a.match(/"([^"]*)"/g)||[])[5])||0; const pb=parseFloat((b.match(/"([^"]*)"/g)||[])[5])||0; return pb-pa; });
-    if (wlSortKey === 'qline') sortedRows.sort((a,b) => { const qa=parseFloat((a.match(/"([^"]*)"/g)||[])[10])||0; const qb=parseFloat((b.match(/"([^"]*)"/g)||[])[10])||0; return qb-qa; });
-    container.innerHTML = sortedRows.map((row, i) => {
-      const cols = row.match(/"([^"]*)"/g)?.map(s => s.replace(/"/g,'')) || row.split(',');
-      const ticker = cols[0] || '';
-      const name = cols[1] || '';
-      const price = parseFloat(cols[3]) || 0;
-      const change = parseFloat(cols[4]) || 0;
-      const pct = parseFloat(cols[5]) || 0;
-      const updated = cols[6] || '';
-      const pe = cols[7] || '';
-      const sector = cols[8] || '';
-      const divYield = cols[9] || '';
-      const quarterLine = cols[10] ? parseFloat(cols[10]) : null;
-      const wlSpark = cols[11] ? cols[11].split('|').map(Number).filter(n=>n>0) : [];
-      const divRecent = cols[12] || '';
-      const divItems = divRecent ? divRecent.split('|').map(s => { const p=s.split(':'); return {date:p[0],amount:p[1]}; }) : [];
-      const wlSug = (function(){
-        const q = quarterLine;
-        if (q === null) return {text:'--', cls:'sug-hold'};
-        if (q < -8) return {text:'買進', cls:'sug-buy'};
-        if (q <= 10) return {text:'持有', cls:'sug-hold'};
-        if (q <= 15) return {text:'觀望', cls:'sug-wait'};
-        return {text:'減碼', cls:'sug-sell'};
-      })();
-      if (!ticker) return '';
+    container.innerHTML = wlData.map((d, i) => {
+      const wlSpark = d.sparkline ? d.sparkline.split('|').map(Number).filter(n=>n>0) : [];
+      const divItems = d.divRecent ? d.divRecent.split('|').map(s => { const p=s.split(':'); return {date:p[0],amount:p[1]}; }) : [];
+      const q = d.quarterLine;
+      const wlSug = q===null?{text:'--',cls:'sug-hold'}:q<-8?{text:'買進',cls:'sug-buy'}:q<=10?{text:'持有',cls:'sug-hold'}:q<=15?{text:'觀望',cls:'sug-wait'}:{text:'減碼',cls:'sug-sell'};
       return `<div class="card" style="position:relative">
-        <button class="wl-delete" onclick="confirmDelete('${ticker}','${name}')">&times;</button>
+        <button class="wl-delete" onclick="confirmDelete('${d.ticker}','${d.name}')">&times;</button>
         <button class="compare-btn" onclick="toggleWlCompare(${i})">比較</button>
         <div class="card-top">
           <div>
-            <div class="card-left"><span class="card-ticker">${ticker}</span>${sector ? '<span class="card-type">'+sector+'</span>' : ''}</div>
-            <div class="card-name">${name}</div>
+            <div class="card-left"><span class="card-ticker">${d.ticker}</span>${d.sector?'<span class="card-type">'+d.sector+'</span>':''}</div>
+            <div class="card-name">${d.name}</div>
           </div>
           <div class="card-right">
-            <div class="card-price">${price ? '$'+price.toFixed(2) : '--'}</div>
-            <span class="card-change ${pct>=0?'up':'down'}">${change>=0?'+':''}${change} (${pct>=0?'+':''}${pct}%)</span>
+            <div class="card-price">${d.price?'$'+d.price.toFixed(2):'--'}</div>
+            <span class="card-change ${d.changePct>=0?'up':'down'}">${d.change>=0?'+':''}${d.change} (${d.changePct>=0?'+':''}${d.changePct}%)</span>
           </div>
         </div>
         <div style="border-top:1px solid var(--border);margin-top:8px;padding-top:8px">
           <div class="card-mid">
             <div class="card-mid-left" onclick="showWlChart(${i})"><canvas id="spark-wl-${i}" height="35" data-spark="${wlSpark.join('|')}"></canvas></div>
             <div class="card-mid-right">
-              <div class="kpi"><span class="kpi-label">離季線 ${quarterLine>15?'<span style="color:var(--red);font-size:0.75rem">過熱</span>':quarterLine>10?'<span style="color:var(--yellow);font-size:0.75rem">偏高</span>':quarterLine<-8?'<span style="color:var(--green);font-size:0.75rem">超跌</span>':'<span style="color:var(--muted);font-size:0.75rem">正常</span>'}</span><span class="kpi-value">${quarterLine!==null?(quarterLine>=0?'+':'')+quarterLine+'%':'--'}</span></div>
-              <div class="kpi"><span class="kpi-label">本益比</span><span class="kpi-value">${pe||'--'}</span></div>
-              <div class="kpi"><span class="kpi-label">殖利率</span><span class="kpi-value" style="color:var(--yellow)">${divYield?divYield+'%':'--'}</span></div>
+              <div class="kpi"><span class="kpi-label">離季線 ${q>15?'<span style="color:var(--red);font-size:0.75rem">過熱</span>':q>10?'<span style="color:var(--yellow);font-size:0.75rem">偏高</span>':q<-8?'<span style="color:var(--green);font-size:0.75rem">超跌</span>':'<span style="color:var(--muted);font-size:0.75rem">正常</span>'}</span><span class="kpi-value">${q!==null?(q>=0?'+':'')+q+'%':'--'}</span></div>
+              <div class="kpi"><span class="kpi-label">本益比</span><span class="kpi-value">${d.pe||'--'}</span></div>
+              <div class="kpi"><span class="kpi-label">殖利率</span><span class="kpi-value" style="color:var(--yellow)">${d.divYield?d.divYield+'%':'--'}</span></div>
               <div class="kpi"><span class="kpi-label">建議</span><span class="kpi-value"><span class="sug-badge ${wlSug.cls}">${wlSug.text}</span></span></div>
             </div>
           </div>
         </div>
-        ${divItems.length ? `<div style="border-top:1px solid var(--border);margin-top:8px;padding-top:8px">
-          <div style="font-size:0.85rem;color:var(--muted);margin-bottom:4px">配息 殖利率 <span style="color:var(--yellow)">${divYield}%</span></div>
-          <div class="recent-div">${divItems.map(r => '<span class="recent-div-item"><span class="rd-date">'+r.date+'</span><span class="rd-amt">$'+r.amount+'</span></span>').join('')}</div>
-        </div>` : ''}
+        ${divItems.length?`<div style="border-top:1px solid var(--border);margin-top:8px;padding-top:8px"><div style="font-size:0.85rem;color:var(--muted);margin-bottom:4px">配息 殖利率 <span style="color:var(--yellow)">${d.divYield}%</span></div><div class="recent-div">${divItems.map(r=>'<span class="recent-div-item"><span class="rd-date">'+r.date+'</span><span class="rd-amt">$'+r.amount+'</span></span>').join('')}</div></div>`:''}
       </div>`;
     }).join('');
     // Render watchlist sparklines
@@ -863,7 +839,6 @@ function renderWatchlistCards() {
       if (!raw) return;
       const data = raw.split('|').map(Number).filter(n=>n>0);
       if (data.length < 2) return;
-      const isUp = data[data.length-1] >= data[0];
       const changes = data.slice(1).map((v,j) => v - data[j]);
       const colors = changes.map(c => c >= 0 ? '#ef4444' : '#10b981');
       new Chart(canvas, {
@@ -875,7 +850,8 @@ function renderWatchlistCards() {
 }
 
 let wlSortKey = 'default';
-let wlOriginalRows = [];
+let wlData = [];
+let wlOriginalData = [];
 let wlCompareList = [];
 function toggleWlCompare(idx) {
   const i = wlCompareList.indexOf(idx);
@@ -923,6 +899,9 @@ function sortWatchlist(key) {
   document.querySelectorAll('#view-watchlist .filter-bar .pill').forEach(p => p.classList.remove('active'));
   const labels = {default:'預設',pct:'漲跌幅',qline:'離季線'};
   document.querySelectorAll('#view-watchlist .filter-bar .pill').forEach(p => { if(p.textContent===labels[key]) p.classList.add('active'); });
+  if (key === 'default') { wlData = [...wlOriginalData]; }
+  else if (key === 'pct') { wlData.sort((a,b) => b.changePct - a.changePct); }
+  else if (key === 'qline') { wlData.sort((a,b) => (b.quarterLine||0) - (a.quarterLine||0)); }
   renderWatchlistCards();
 }
 
