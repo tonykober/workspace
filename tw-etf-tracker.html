@@ -448,31 +448,35 @@ function showChart(idx) {
   const etf = ETF_DATA[idx];
   if (!etf.sparkline || etf.sparkline.length < 2) return;
   chartRange = 22;
-  const data = etf.sparkline;
-  const high = Math.max(...data);
-  const low = Math.min(...data);
-  const start = data[0];
-  const latest = data[data.length-1];
+  const fullData = etf.historySparkline && etf.historySparkline.length ? etf.historySparkline : etf.sparkline;
+  const len = fullData.length;
+  const latest = fullData[fullData.length-1];
+  const high = Math.max(...fullData);
+  const low = Math.min(...fullData);
   
   document.getElementById('chart-title').textContent = etf.ticker + ' ' + etf.name + ' — 走勢圖';
   document.getElementById('chart-info').innerHTML = 
-    '<span>起始 <b>$'+start.toFixed(2)+'</b></span>' +
     '<span>最高 <b style="color:var(--red)">$'+high.toFixed(2)+'</b></span>' +
     '<span>最低 <b style="color:var(--green)">$'+low.toFixed(2)+'</b></span>' +
     '<span>最新 <b>$'+latest.toFixed(2)+'</b></span>';
   
-  // Range buttons + overlay buttons
+  // Range buttons (top) with disabled state
+  const dis5 = len < 5 ? ' style="opacity:0.4;pointer-events:none"' : '';
+  const dis22 = len < 22 ? ' style="opacity:0.4;pointer-events:none"' : '';
+  const dis60 = len < 40 ? ' style="opacity:0.4;pointer-events:none"' : '';
+  document.getElementById('chart-actions').innerHTML =
+    '<span style="font-size:0.8rem;color:var(--muted)">區間：</span>' +
+    '<button class="pill"'+dis5+' onclick="setChartRange(5)">週線</button>' +
+    '<button class="pill active"'+dis22+' onclick="setChartRange(22)">月線</button>' +
+    '<button class="pill"'+dis60+' onclick="setChartRange(60)">季線</button>';
+  
+  // Comparison buttons (bottom)
   chartOverlays = [idx];
-  const rangeHtml = '<span style="font-size:0.8rem;color:var(--muted)">區間：</span>' +
-    '<button class="pill" onclick="setChartRange(5)">週線</button>' +
-    '<button class="pill active" onclick="setChartRange(22)">月線</button>' +
-    '<button class="pill" onclick="setChartRange(60)">季線</button>' +
-    '<span style="margin-left:12px;font-size:0.8rem;color:var(--muted)">疊加比較：</span>';
   const actionsHtml = ETF_DATA.map((e, i) => {
     if (i === idx) return '';
     return '<button onclick="toggleOverlay('+i+')" id="overlay-btn-'+i+'">'+e.ticker+'</button>';
   }).join('');
-  document.getElementById('chart-actions').innerHTML = rangeHtml + actionsHtml;
+  document.getElementById('chart-actions-bottom').innerHTML = '<span style="font-size:0.8rem;color:var(--muted)">疊加比較：</span>' + actionsHtml;
   
   renderMainChart();
   document.getElementById('chart-modal').classList.add('show');
@@ -488,6 +492,7 @@ function setChartRange(n) {
 function closeChart() {
   document.getElementById('chart-modal').classList.remove('show');
   if (mainChart) { mainChart.destroy(); mainChart = null; }
+  document.getElementById('chart-actions-bottom').innerHTML = '';
 }
 
 function toggleOverlay(idx) {
@@ -544,7 +549,7 @@ function renderMainChart() {
       interaction: { mode: 'index', intersect: false },
       plugins: {
         legend: { display: false },
-        tooltip: { enabled: true, callbacks: { label: ctx => ctx.dataset.label + ': ' + (chartOverlays.length > 1 ? ctx.parsed.y + '%' : '$' + ctx.parsed.y) } }
+        tooltip: { enabled: true, callbacks: { label: ctx => ctx.dataset.label + ': ' + (chartOverlays.length > 1 ? parseFloat(ctx.parsed.y).toFixed(2) + '%' : '$' + parseFloat(ctx.parsed.y).toFixed(2)) } }
       },
       scales: {
         x: { display: true, grid: { color: '#30363d' }, ticks: { color: '#8b949e', font: { size: 10 } } },
@@ -942,23 +947,45 @@ function showWlChart(idx) {
   const fullData = histData.length > shortData.length ? histData : shortData;
   if (fullData.length < 2) return;
   chartRange = 22;
-  wlChartFullData = fullData;
+  wlChartIdx = idx;
+  wlChartOverlays = [idx];
   
   document.getElementById('chart-title').textContent = d.ticker + ' ' + d.name + ' — 走勢圖';
-  const high = Math.max(...fullData), low = Math.min(...fullData), start = fullData[0], latest = fullData[fullData.length-1];
-  document.getElementById('chart-info').innerHTML = '<span>起始 <b>$'+start.toFixed(2)+'</b></span><span>最高 <b style="color:var(--red)">$'+high.toFixed(2)+'</b></span><span>最低 <b style="color:var(--green)">$'+low.toFixed(2)+'</b></span><span>最新 <b>$'+latest.toFixed(2)+'</b></span>';
+  const high = Math.max(...fullData), low = Math.min(...fullData), latest = fullData[fullData.length-1];
+  document.getElementById('chart-info').innerHTML = '<span>最高 <b style="color:var(--red)">$'+high.toFixed(2)+'</b></span><span>最低 <b style="color:var(--green)">$'+low.toFixed(2)+'</b></span><span>最新 <b>$'+latest.toFixed(2)+'</b></span>';
   
-  const rangeHtml = '<span style="font-size:0.8rem;color:var(--muted)">區間：</span>' +
-    '<button class="pill" onclick="setWlChartRange(5)">週線</button>' +
-    '<button class="pill active" onclick="setWlChartRange(22)">月線</button>' +
-    '<button class="pill" onclick="setWlChartRange(60)">季線</button>';
-  document.getElementById('chart-actions').innerHTML = rangeHtml;
-  chartOverlays = [];
+  const len = fullData.length;
+  const dis5 = len < 5 ? ' style="opacity:0.4;pointer-events:none"' : '';
+  const dis22 = len < 22 ? ' style="opacity:0.4;pointer-events:none"' : '';
+  const dis60 = len < 40 ? ' style="opacity:0.4;pointer-events:none"' : '';
+  document.getElementById('chart-actions').innerHTML =
+    '<span style="font-size:0.8rem;color:var(--muted)">區間：</span>' +
+    '<button class="pill"'+dis5+' onclick="setWlChartRange(5)">週線</button>' +
+    '<button class="pill active"'+dis22+' onclick="setWlChartRange(22)">月線</button>' +
+    '<button class="pill"'+dis60+' onclick="setWlChartRange(60)">季線</button>';
+  
+  // Comparison buttons (bottom)
+  const actionsHtml = wlData.map((e, i) => {
+    if (i === idx) return '';
+    return '<button onclick="toggleWlOverlay('+i+')" id="wl-overlay-btn-'+i+'">'+e.ticker+'</button>';
+  }).join('');
+  document.getElementById('chart-actions-bottom').innerHTML = '<span style="font-size:0.8rem;color:var(--muted)">疊加比較：</span>' + actionsHtml;
+  
   renderWlMainChart();
   document.getElementById('chart-modal').classList.add('show');
 }
 
-let wlChartFullData = [];
+let wlChartIdx = 0;
+let wlChartOverlays = [];
+function toggleWlOverlay(idx) {
+  const i = wlChartOverlays.indexOf(idx);
+  if (i >= 0) wlChartOverlays.splice(i, 1);
+  else wlChartOverlays.push(idx);
+  const btn = document.getElementById('wl-overlay-btn-'+idx);
+  if (btn) btn.classList.toggle('active');
+  renderWlMainChart();
+}
+
 function setWlChartRange(n) {
   chartRange = n;
   document.querySelectorAll('#chart-actions .pill').forEach(p => p.classList.remove('active'));
@@ -968,10 +995,20 @@ function setWlChartRange(n) {
 
 function renderWlMainChart() {
   if (mainChart) mainChart.destroy();
-  const data = wlChartFullData.slice(-chartRange);
+  const colors = ["#58a6ff","#ff6b6b","#3fb950","#ffd93d","#a371f7","#ff8b94","#00c9a7","#f0883e","#6366f1","#ec4899"];
+  const multi = wlChartOverlays.length > 1;
+  const datasets = wlChartOverlays.map((oi, ci) => {
+    const d = wlData[oi];
+    const shortData = d.sparkline ? d.sparkline.split('|').map(Number).filter(n=>n>0) : [];
+    const histData = wlHistoryData[d.ticker] || shortData;
+    const fullData = (histData.length > shortData.length ? histData : shortData).slice(-chartRange);
+    const base = fullData[0] || 1;
+    const normalized = fullData.map(v => ((v - base) / base * 100));
+    return { label: d.ticker, data: multi ? normalized : fullData, borderColor: colors[ci % colors.length], backgroundColor: colors[ci % colors.length]+'20', borderWidth: 2, pointRadius: 0, pointHoverRadius: 4, fill: !multi, tension: 0.3 };
+  });
   mainChart = new Chart(document.getElementById('chart-main'), {
-    type:'line', data:{labels:data.map((_,i)=>'D'+(i+1)), datasets:[{data, borderColor:'#58a6ff', backgroundColor:'#58a6ff20', borderWidth:2, pointRadius:0, fill:true, tension:0.3}]},
-    options:{responsive:true, maintainAspectRatio:false, animation:false, interaction:{mode:'index',intersect:false}, plugins:{legend:{display:false}, tooltip:{enabled:true, callbacks:{label:ctx=>'$'+ctx.parsed.y}}}, scales:{x:{display:true,grid:{color:'#30363d'},ticks:{color:'#8b949e',font:{size:10}}}, y:{display:true,grid:{color:'#30363d'},ticks:{color:'#8b949e',font:{size:10},callback:v=>'$'+v}}}}
+    type:'line', data:{labels:datasets[0].data.map((_,i)=>'D'+(i+1)), datasets},
+    options:{responsive:true, maintainAspectRatio:false, animation:false, interaction:{mode:'index',intersect:false}, plugins:{legend:{display:false}, tooltip:{enabled:true, callbacks:{label:ctx=>ctx.dataset.label+': '+(multi?parseFloat(ctx.parsed.y).toFixed(2)+'%':'$'+parseFloat(ctx.parsed.y).toFixed(2))}}}, scales:{x:{display:true,grid:{color:'#30363d'},ticks:{color:'#8b949e',font:{size:10}}}, y:{display:true,grid:{color:'#30363d'},ticks:{color:'#8b949e',font:{size:10},callback:v=>multi?v.toFixed(1)+'%':'$'+v}}}}
   });
 }
 
@@ -1082,6 +1119,7 @@ setInterval(() => { if(shouldFetch()) fetchLivePrices(); }, 300000);
     <div class="chart-info" id="chart-info"></div>
     <div class="chart-actions" id="chart-actions"></div>
     <canvas id="chart-main"></canvas>
+    <div class="chart-actions" id="chart-actions-bottom"></div>
   </div>
 </div>
 <div class="compare-panel" id="compare-panel">
