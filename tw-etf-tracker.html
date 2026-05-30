@@ -239,7 +239,7 @@ body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; b
     <h3 style="font-size:1rem;color:var(--accent)">自選追蹤清單</h3>
     <button class="add-btn" onclick="addStock()">+ 新增</button>
   </div>
-  <div class="filter-bar" style="margin-top:8px"><span class="label">排序：</span><button class="pill active" onclick="sortWatchlist('default')">預設</button><button class="pill" onclick="sortWatchlist('pct')">漲跌幅</button><button class="pill" onclick="sortWatchlist('qline')">離季線</button></div>
+  <div class="filter-bar" style="margin-top:8px"><span class="label">排序：</span><button class="pill active" onclick="sortWatchlist('default')">預設</button><button class="pill" onclick="sortWatchlist('pct')">漲跌幅</button><button class="pill" onclick="sortWatchlist('qline')">離季線</button><span class="label" style="margin-left:8px">篩選：</span><button class="pill active" onclick="filterWatchlist('all')">全部</button><button class="pill" onclick="filterWatchlist('半導體')">半導體</button><button class="pill" onclick="filterWatchlist('金融')">金融</button><button class="pill" onclick="filterWatchlist('電子')">電子</button><button class="pill" onclick="filterWatchlist('其他')">其他</button></div>
   <div class="cards" id="watchlist-cards"></div>
   <div id="watchlist-empty" style="text-align:center;color:var(--muted);padding:40px">尚無追蹤個股，點擊「+ 新增」開始</div>
 </div>
@@ -834,11 +834,20 @@ function renderWatchlistCards() {
     if (!wlData.length) { container.innerHTML = ''; empty.style.display = 'block'; return; }
     empty.style.display = 'none';
     container.innerHTML = wlData.map((d, i) => {
+      // Filter logic
+      let show = true;
+      if (wlFilter !== 'all') {
+        const s = d.sector || '';
+        if (wlFilter === '半導體') show = s.includes('半導體');
+        else if (wlFilter === '金融') show = s.includes('金融');
+        else if (wlFilter === '電子') show = s.includes('電腦') || s.includes('電子');
+        else if (wlFilter === '其他') show = !s.includes('半導體') && !s.includes('金融') && !s.includes('電腦') && !s.includes('電子');
+      }
       const wlSpark = d.sparkline ? d.sparkline.split('|').map(Number).filter(n=>n>0) : [];
       const divItems = d.divRecent ? d.divRecent.split('|').map(s => { const p=s.split(':'); return {date:p[0],amount:p[1]}; }) : [];
       const q = d.quarterLine;
       const wlSug = q===null?{text:'--',cls:'sug-hold'}:q<-8?{text:'買進',cls:'sug-buy'}:q<=10?{text:'持有',cls:'sug-hold'}:q<=15?{text:'觀望',cls:'sug-wait'}:{text:'減碼',cls:'sug-sell'};
-      return `<div class="card" style="position:relative">
+      return `<div class="card" style="position:relative;${show?'':'display:none'}">
         <button class="wl-delete" onclick="confirmDelete('${d.ticker}','${d.name}')">&times;</button>
         <button class="compare-btn" onclick="toggleWlCompare(${i})">比較</button>
         <div class="card-top">
@@ -926,14 +935,22 @@ function renderWlCompare() {
   document.getElementById('compare-content').innerHTML = html;
   document.getElementById('compare-panel').classList.add('show');
 }
+let wlFilter = 'all';
 function sortWatchlist(key) {
   wlSortKey = key;
-  document.querySelectorAll('#view-watchlist .filter-bar .pill').forEach(p => p.classList.remove('active'));
-  const labels = {default:'預設',pct:'漲跌幅',qline:'離季線'};
-  document.querySelectorAll('#view-watchlist .filter-bar .pill').forEach(p => { if(p.textContent===labels[key]) p.classList.add('active'); });
+  // Only toggle sort buttons (first 3 pills after label)
+  const pills = document.querySelectorAll('#view-watchlist .filter-bar .pill');
+  pills.forEach((p,i) => { if(i<3) p.classList.toggle('active', p.textContent==={default:'預設',pct:'漲跌幅',qline:'離季線'}[key]); });
   if (key === 'default') { wlData = [...wlOriginalData]; }
   else if (key === 'pct') { wlData.sort((a,b) => b.changePct - a.changePct); }
   else if (key === 'qline') { wlData.sort((a,b) => (b.quarterLine||0) - (a.quarterLine||0)); }
+  renderWatchlistCards();
+}
+
+function filterWatchlist(f) {
+  wlFilter = f;
+  const pills = document.querySelectorAll('#view-watchlist .filter-bar .pill');
+  pills.forEach((p,i) => { if(i>=3) p.classList.toggle('active', p.textContent==={all:'全部','半導體':'半導體','金融':'金融','電子':'電子','其他':'其他'}[f]); });
   renderWatchlistCards();
 }
 
