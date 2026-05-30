@@ -174,6 +174,25 @@ body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; b
 .chart-box .chart-actions button:hover { border-color:var(--accent); color:var(--accent); }
 .chart-box .chart-actions button.active { background:var(--accent); color:#000; border-color:var(--accent); }
 .chart-close { position:absolute; top:12px; right:16px; background:none; border:none; color:var(--muted); font-size:1.5rem; cursor:pointer; }
+.div-cal-btn { background:var(--surface2); border:1px solid var(--border); color:var(--muted); padding:6px 12px; border-radius:6px; font-size:0.85rem; cursor:pointer; margin-left:8px; }
+.div-cal-btn:hover { border-color:var(--accent); color:var(--accent); }
+.cal-modal { position:fixed; top:0; left:0; right:0; bottom:0; background:rgba(0,0,0,.85); z-index:300; display:none; align-items:center; justify-content:center; padding:16px; overflow-y:auto; }
+.cal-modal.show { display:flex; }
+.cal-box { background:var(--surface); border:1px solid var(--border); border-radius:12px; padding:20px; width:100%; max-width:900px; max-height:90vh; overflow-y:auto; position:relative; }
+.cal-box h3 { color:var(--accent); margin-bottom:12px; }
+.cal-close { position:absolute; top:12px; right:16px; background:none; border:none; color:var(--muted); font-size:1.5rem; cursor:pointer; }
+.cal-timeline { display:grid; grid-template-columns:repeat(12, 1fr); gap:4px; }
+.cal-month { background:var(--surface2); border-radius:6px; padding:8px 4px; min-height:80px; }
+.cal-month-label { font-size:0.75rem; color:var(--muted); text-align:center; margin-bottom:6px; font-weight:600; }
+.cal-item { font-size:0.7rem; padding:2px 4px; border-radius:3px; margin-bottom:3px; text-align:center; }
+.cal-empty { color:var(--muted); font-size:0.7rem; text-align:center; font-style:italic; }
+.cal-summary { margin-top:16px; padding-top:12px; border-top:1px solid var(--border); }
+.cal-summary h4 { color:var(--purple); font-size:0.9rem; margin-bottom:8px; }
+.cal-summary-grid { display:grid; grid-template-columns:repeat(12, 1fr); gap:4px; text-align:center; font-size:0.8rem; }
+.cal-summary-item { padding:6px 2px; border-radius:4px; }
+.cal-summary-item.has { background:rgba(59,185,80,.1); color:var(--green); }
+.cal-summary-item.empty { background:rgba(248,81,73,.1); color:var(--red); }
+@media(max-width:768px) { .cal-timeline { grid-template-columns:repeat(4, 1fr); } .cal-summary-grid { grid-template-columns:repeat(4, 1fr); } }
 </style>
 </head>
 <body>
@@ -185,6 +204,7 @@ body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; b
       <div class="main-tab active" onclick="switchMainTab('etf')">ETF 追蹤</div>
       <div class="main-tab" onclick="switchMainTab('watchlist')">自選個股</div>
     </div>
+    <button class="div-cal-btn" onclick="showDivCalendar()">📅 配息日曆</button>
   </div>
   <div class="subtitle">10 檔熱門 ETF 即時數據 · <span id="live-status">載入報價中...</span></div>
 </div>
@@ -414,6 +434,68 @@ function renderSectorCharts() {
     });
     sectorCharts.push(chart);
   });
+}
+
+// === Dividend Calendar ===
+const DIV_COLORS = ['#58a6ff','#f0883e','#3fb950','#a371f7','#d29922','#f85149','#ec4899','#14b8a6','#6366f1','#00d4ff'];
+
+function showDivCalendar() {
+  const now = new Date();
+  const months = [];
+  for (let i = 11; i >= 0; i--) {
+    const d = new Date(now.getFullYear(), now.getMonth() - i, 1);
+    months.push({ year: d.getFullYear(), month: d.getMonth() + 1, label: (d.getMonth()+1) + '月', items: [] });
+  }
+  
+  ETF_DATA.forEach((etf, ei) => {
+    (etf.dividend.recent || []).forEach(r => {
+      const parts = r.date.split('/');
+      const y = parseInt(parts[0]), m = parseInt(parts[1]);
+      const mo = months.find(x => x.year === y && x.month === m);
+      if (mo) mo.items.push({ ticker: etf.ticker, amount: r.amount, color: DIV_COLORS[ei % DIV_COLORS.length] });
+    });
+  });
+  
+  let html = '<div class="cal-timeline">';
+  months.forEach(mo => {
+    html += '<div class="cal-month"><div class="cal-month-label">' + mo.label + '</div>';
+    if (mo.items.length) {
+      mo.items.forEach(item => {
+        html += '<div class="cal-item" style="background:' + item.color + '22;color:' + item.color + ';border:1px solid ' + item.color + '44">' + item.ticker + '<br>$' + item.amount + '</div>';
+      });
+    } else {
+      html += '<div class="cal-empty">無</div>';
+    }
+    html += '</div>';
+  });
+  html += '</div>';
+  
+  html += '<div class="cal-summary"><h4>💰 月月配組合建議（假設各持有 1 張）</h4>';
+  html += '<div class="cal-summary-grid">';
+  months.forEach(mo => {
+    const total = mo.items.reduce((s, i) => s + i.amount, 0);
+    const hasDiv = total > 0;
+    html += '<div class="cal-summary-item ' + (hasDiv ? 'has' : 'empty') + '">';
+    html += '<div style="font-size:0.7rem">' + mo.label + '</div>';
+    html += '<div style="font-weight:700">' + (hasDiv ? '$' + total.toFixed(2) : '—') + '</div>';
+    html += '</div>';
+  });
+  html += '</div>';
+  
+  const gaps = months.filter(m => m.items.length === 0).map(m => m.label);
+  if (gaps.length) {
+    html += '<p style="margin-top:8px;font-size:0.85rem;color:var(--red)">⚠️ 未覆蓋月份：' + gaps.join('、') + '</p>';
+  } else {
+    html += '<p style="margin-top:8px;font-size:0.85rem;color:var(--green)">✅ 每月都有配息覆蓋！</p>';
+  }
+  html += '</div>';
+  
+  document.getElementById('cal-content').innerHTML = html;
+  document.getElementById('cal-modal').classList.add('show');
+}
+
+function closeDivCalendar() {
+  document.getElementById('cal-modal').classList.remove('show');
 }
 
 // === Historical Chart ===
@@ -863,6 +945,13 @@ fetchLivePrices();
 fetchHoldingsAndDividends();
 setInterval(() => { if(shouldFetch()) fetchLivePrices(); }, 300000);
 </script>
+<div class="cal-modal" id="cal-modal" onclick="if(event.target===this)closeDivCalendar()">
+  <div class="cal-box">
+    <button class="cal-close" onclick="closeDivCalendar()">&times;</button>
+    <h3>📅 配息日曆 — 近 12 個月配息分布</h3>
+    <div id="cal-content"></div>
+  </div>
+</div>
 <div class="chart-modal" id="chart-modal" onclick="if(event.target===this)closeChart()">
   <div class="chart-box" style="position:relative">
     <button class="chart-close" onclick="closeChart()">&times;</button>
