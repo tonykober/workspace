@@ -464,9 +464,9 @@ function showChart(idx) {
   // Range buttons + overlay buttons
   chartOverlays = [idx];
   const rangeHtml = '<span style="font-size:0.8rem;color:var(--muted)">區間：</span>' +
-    '<button class="pill" onclick="setChartRange(5)">1W</button>' +
-    '<button class="pill active" onclick="setChartRange(22)">1M</button>' +
-    '<button class="pill" onclick="setChartRange(60)">3M</button>' +
+    '<button class="pill" onclick="setChartRange(5)">週線</button>' +
+    '<button class="pill active" onclick="setChartRange(22)">月線</button>' +
+    '<button class="pill" onclick="setChartRange(60)">季線</button>' +
     '<span style="margin-left:12px;font-size:0.8rem;color:var(--muted)">疊加比較：</span>';
   const actionsHtml = ETF_DATA.map((e, i) => {
     if (i === idx) return '';
@@ -481,7 +481,7 @@ function showChart(idx) {
 function setChartRange(n) {
   chartRange = n;
   document.querySelectorAll('#chart-actions .pill').forEach(p => p.classList.remove('active'));
-  document.querySelectorAll('#chart-actions .pill').forEach(p => { if((n===5&&p.textContent==='1W')||(n===22&&p.textContent==='1M')||(n===60&&p.textContent==='3M')) p.classList.add('active'); });
+  document.querySelectorAll('#chart-actions .pill').forEach(p => { if((n===5&&p.textContent==='週線')||(n===22&&p.textContent==='月線')||(n===60&&p.textContent==='季線')) p.classList.add('active'); });
   renderMainChart();
 }
 
@@ -742,7 +742,10 @@ async function loadAllData() {
       };
     });
     
-    originalOrder = [...ETF_DATA]; document.getElementById('live-status').textContent = '\u2705 \u8cc7\u6599\u8f09\u5165\u5b8c\u6210 ' + new Date().toLocaleTimeString('zh-TW');
+    originalOrder = [...ETF_DATA];
+    // Build wlHistoryData for watchlist chart
+    histData.forEach(h => { if(h.ticker && h.sparkline) wlHistoryData[h.ticker] = h.sparkline.split('|').map(Number).filter(n=>n>0); });
+    document.getElementById('live-status').textContent = '\u2705 \u8cc7\u6599\u8f09\u5165\u5b8c\u6210 ' + new Date().toLocaleTimeString('zh-TW');
     const priceTime = priceData[0]?.updated || '';
     const ptEl = document.getElementById('price-time');
     if (ptEl) ptEl.textContent = '股價：' + priceTime + ' 更新 · ';
@@ -929,25 +932,47 @@ function sortWatchlist(key) {
   renderWatchlistCards();
 }
 
+let wlHistoryData = {};
+
 function showWlChart(idx) {
-  const cards = document.querySelectorAll('#view-watchlist .card');
-  const card = cards[idx];
-  if (!card) return;
-  const canvas = card.querySelector('canvas');
-  const sparkAttr = canvas?.dataset?.spark || '';
-  const data = sparkAttr ? sparkAttr.split('|').map(Number).filter(n=>n>0) : [];
-  if (data.length < 2) return;
-  const high = Math.max(...data), low = Math.min(...data), start = data[0], latest = data[data.length-1];
-  document.getElementById('chart-title').textContent = card.querySelector('.card-ticker')?.textContent + ' — 近一個月走勢';
+  const d = wlData[idx];
+  if (!d) return;
+  const shortData = d.sparkline ? d.sparkline.split('|').map(Number).filter(n=>n>0) : [];
+  const histData = wlHistoryData[d.ticker] || shortData;
+  const fullData = histData.length > shortData.length ? histData : shortData;
+  if (fullData.length < 2) return;
+  chartRange = 22;
+  wlChartFullData = fullData;
+  
+  document.getElementById('chart-title').textContent = d.ticker + ' ' + d.name + ' — 走勢圖';
+  const high = Math.max(...fullData), low = Math.min(...fullData), start = fullData[0], latest = fullData[fullData.length-1];
   document.getElementById('chart-info').innerHTML = '<span>起始 <b>$'+start.toFixed(2)+'</b></span><span>最高 <b style="color:var(--red)">$'+high.toFixed(2)+'</b></span><span>最低 <b style="color:var(--green)">$'+low.toFixed(2)+'</b></span><span>最新 <b>$'+latest.toFixed(2)+'</b></span>';
-  document.getElementById('chart-actions').innerHTML = '';
+  
+  const rangeHtml = '<span style="font-size:0.8rem;color:var(--muted)">區間：</span>' +
+    '<button class="pill" onclick="setWlChartRange(5)">週線</button>' +
+    '<button class="pill active" onclick="setWlChartRange(22)">月線</button>' +
+    '<button class="pill" onclick="setWlChartRange(60)">季線</button>';
+  document.getElementById('chart-actions').innerHTML = rangeHtml;
   chartOverlays = [];
+  renderWlMainChart();
+  document.getElementById('chart-modal').classList.add('show');
+}
+
+let wlChartFullData = [];
+function setWlChartRange(n) {
+  chartRange = n;
+  document.querySelectorAll('#chart-actions .pill').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('#chart-actions .pill').forEach(p => { if((n===5&&p.textContent==='週線')||(n===22&&p.textContent==='月線')||(n===60&&p.textContent==='季線')) p.classList.add('active'); });
+  renderWlMainChart();
+}
+
+function renderWlMainChart() {
   if (mainChart) mainChart.destroy();
+  const data = wlChartFullData.slice(-chartRange);
   mainChart = new Chart(document.getElementById('chart-main'), {
     type:'line', data:{labels:data.map((_,i)=>'D'+(i+1)), datasets:[{data, borderColor:'#58a6ff', backgroundColor:'#58a6ff20', borderWidth:2, pointRadius:0, fill:true, tension:0.3}]},
     options:{responsive:true, maintainAspectRatio:false, animation:false, interaction:{mode:'index',intersect:false}, plugins:{legend:{display:false}, tooltip:{enabled:true, callbacks:{label:ctx=>'$'+ctx.parsed.y}}}, scales:{x:{display:true,grid:{color:'#30363d'},ticks:{color:'#8b949e',font:{size:10}}}, y:{display:true,grid:{color:'#30363d'},ticks:{color:'#8b949e',font:{size:10},callback:v=>'$'+v}}}}
   });
-  document.getElementById('chart-modal').classList.add('show');
 }
 
 function addStock() {
@@ -1055,8 +1080,8 @@ setInterval(() => { if(shouldFetch()) fetchLivePrices(); }, 300000);
     <button class="chart-close" onclick="closeChart()">&times;</button>
     <h3 id="chart-title"></h3>
     <div class="chart-info" id="chart-info"></div>
-    <canvas id="chart-main"></canvas>
     <div class="chart-actions" id="chart-actions"></div>
+    <canvas id="chart-main"></canvas>
   </div>
 </div>
 <div class="compare-panel" id="compare-panel">
