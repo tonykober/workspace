@@ -206,7 +206,7 @@ body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; b
     </div>
     <button class="div-cal-btn" onclick="showDivCalendar()">📅 配息日曆</button>
   </div>
-  <div class="subtitle">10 檔熱門 ETF 即時數據 · <span id="live-status">載入報價中...</span></div>
+  <div class="subtitle">即時數據 · <span id="live-status">載入報價中...</span></div>
 </div>
 
 <div class="container">
@@ -224,98 +224,7 @@ body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; b
 </div>
 
 <script>
-const ETF_DATA = [
-  {
-    ticker: '0050', name: '元大台灣50', type: '市值型', sparkline: [],
-    price: 102.55, change: +2.45, changePercent: +2.45,
-    returns: { m1: 8.2, m3: 12.5, m6: 18.7, y1: 35.2 },
-    dividend: { annual: 3.5, yield: 3.41, frequency: '半年配', recent: [{date:'2026/01',amount:1.8},{date:'2025/07',amount:1.7},{date:'2025/01',amount:1.6},{date:'2024/07',amount:1.5},{date:'2024/01',amount:1.4},{date:'2023/07',amount:1.3}] },
-    sectors: { '半導體':62, '金融保險':8, '電子零組件':7, '電腦及週邊':6, '通信網路':5, '其他':12 },
-    fundSize: 4200, holders: 293, nav: 101.11, premium: -0.61,
-    topHoldings: [{name:'台積電',pct:55.2},{name:'鴻海',pct:5.1},{name:'聯發科',pct:4.8},{name:'廣達',pct:2.8},{name:'台達電',pct:2.5},{name:'中華電',pct:1.8},{name:'聯電',pct:1.7},{name:'富邦金',pct:1.5},{name:'國泰金',pct:1.4},{name:'中信金',pct:1.3}]
-  },
-  {
-    ticker: '0056', name: '元大高股息', type: '高股息', sparkline: [],
-    price: 49.64, change: +1.32, changePercent: +2.73,
-    returns: { m1: 5.8, m3: 9.2, m6: 14.1, y1: 22.6 },
-    dividend: { annual: 2.8, yield: 5.64, frequency: '季配', recent: [{date:'2026/04',amount:0.70},{date:'2026/01',amount:0.72},{date:'2025/10',amount:0.68},{date:'2025/07',amount:0.70},{date:'2025/04',amount:0.66},{date:'2025/01',amount:0.65}] },
-    sectors: { '半導體':35, '電子零組件':18, '金融保險':15, '電腦及週邊':10, '傳產':12, '其他':10 },
-    fundSize: 2850, holders: 120, nav: 48.91, premium: -0.16,
-    topHoldings: [{name:'台積電',pct:12.5},{name:'聯發科',pct:5.8},{name:'廣達',pct:4.2},{name:'仁寶',pct:3.8},{name:'英業達',pct:3.5},{name:'緯創',pct:3.2},{name:'光寶科',pct:3.0},{name:'華碩',pct:2.8},{name:'大聯大',pct:2.5},{name:'技嘉',pct:2.4}]
-  },
-  {
-    ticker: '00878', name: '國泰永續高股息', type: '高股息/ESG', sparkline: [],
-    price: 30.55, change: +0.93, changePercent: +3.14,
-    returns: { m1: 6.1, m3: 10.8, m6: 15.3, y1: 24.1 },
-    dividend: { annual: 1.72, yield: 5.63, frequency: '季配', recent: [{date:'2026/05',amount:0.43},{date:'2026/02',amount:0.45},{date:'2025/11',amount:0.42},{date:'2025/08',amount:0.42},{date:'2025/05',amount:0.40},{date:'2025/02',amount:0.38}] },
-    sectors: { '半導體':38, '金融保險':18, '電子零組件':14, '電腦及週邊':9, '通信網路':8, '其他':13 },
-    fundSize: 3200, holders: 135, nav: 30.16, premium: -0.53,
-    topHoldings: [{name:'台積電',pct:15.2},{name:'鴻海',pct:5.5},{name:'聯發科',pct:4.8},{name:'中華電',pct:4.2},{name:'台達電',pct:3.8},{name:'廣達',pct:3.5},{name:'兆豐金',pct:3.2},{name:'中信金',pct:2.8},{name:'華碩',pct:2.5},{name:'日月光',pct:2.3}]
-  },
-  {
-    ticker: '00919', name: '群益台灣精選高息', type: '高股息', sparkline: [],
-    price: 28.85, change: +0.92, changePercent: +3.29,
-    returns: { m1: 7.5, m3: 13.2, m6: 19.8, y1: 28.5 },
-    dividend: { annual: 2.16, yield: 7.49, frequency: '季配', recent: [{date:'2026/04',amount:0.55},{date:'2026/01',amount:0.54},{date:'2025/10',amount:0.55},{date:'2025/07',amount:0.52},{date:'2025/04',amount:0.50},{date:'2025/01',amount:0.48}] },
-    sectors: { '半導體':42, '電子零組件':20, '電腦及週邊':12, '通信網路':8, '金融保險':7, '其他':11 },
-    fundSize: 2600, holders: 95, nav: 28.58, premium: -0.60,
-    topHoldings: [{name:'台積電',pct:18.5},{name:'聯發科',pct:6.2},{name:'廣達',pct:5.1},{name:'緯創',pct:4.5},{name:'仁寶',pct:4.0},{name:'英業達',pct:3.8},{name:'光寶科',pct:3.5},{name:'技嘉',pct:3.2},{name:'華碩',pct:2.8},{name:'瑞昂',pct:2.5}]
-  },
-  {
-    ticker: '00929', name: '復華台灣科技優息', type: '月配/科技', sparkline: [],
-    price: 30.04, change: +0.83, changePercent: +2.84,
-    returns: { m1: 12.1, m3: 18.5, m6: 25.2, y1: 32.8 },
-    dividend: { annual: 1.92, yield: 6.39, frequency: '月配', recent: [{date:'2026/05',amount:0.16},{date:'2026/04',amount:0.16},{date:'2026/03',amount:0.16},{date:'2026/02',amount:0.16},{date:'2026/01',amount:0.16},{date:'2025/12',amount:0.15}] },
-    sectors: { '半導體':55, '電子零組件':15, '電腦及週邊':12, '通信網路':8, '光電':5, '其他':5 },
-    fundSize: 2100, holders: 85, nav: 29.52, premium: -0.41,
-    topHoldings: [{name:'台積電',pct:28.5},{name:'聯發科',pct:8.2},{name:'日月光',pct:5.5},{name:'聯電',pct:4.8},{name:'瑞昂',pct:4.2},{name:'聯詠',pct:3.8},{name:'矽力-KY',pct:3.5},{name:'穩懋',pct:3.0},{name:'世芯-KY',pct:2.8},{name:'創意',pct:2.5}]
-  },
-  {
-    ticker: '00940', name: '元大台灣價值高息', type: '高股息/價值', sparkline: [],
-    price: 11.87, change: +0.11, changePercent: +0.94,
-    returns: { m1: 4.2, m3: 7.8, m6: 11.5, y1: 15.2 },
-    dividend: { annual: 0.72, yield: 6.07, frequency: '季配', recent: [{date:'2026/04',amount:0.18},{date:'2026/01',amount:0.18},{date:'2025/10',amount:0.18},{date:'2025/07',amount:0.18},{date:'2025/04',amount:0.17},{date:'2025/01',amount:0.17}] },
-    sectors: { '半導體':30, '金融保險':20, '電子零組件':16, '傳產':14, '電腦及週邊':10, '其他':10 },
-    fundSize: 1650, holders: 78, nav: 11.77, premium: -0.34,
-    topHoldings: [{name:'台積電',pct:10.8},{name:'聯發科',pct:5.5},{name:'中信金',pct:4.8},{name:'兆豐金',pct:4.5},{name:'富邦金',pct:4.2},{name:'廣達',pct:3.8},{name:'仁寶',pct:3.5},{name:'台達電',pct:3.2},{name:'華碩',pct:2.8},{name:'光寶科',pct:2.5}]
-  },
-  {
-    ticker: '006208', name: '富邦台50', type: '市值型', sparkline: [],
-    price: 105.20, change: +2.30, changePercent: +2.23,
-    returns: { m1: 7.8, m3: 12.1, m6: 18.2, y1: 34.5 },
-    dividend: { annual: 3.2, yield: 3.04, frequency: '半年配', recent: [{date:'2026/01',amount:1.7},{date:'2025/07',amount:1.5},{date:'2025/01',amount:1.4},{date:'2024/07',amount:1.3},{date:'2024/01',amount:1.2},{date:'2023/07',amount:1.1}] },
-    sectors: { '半導體':61, '金融保險':8, '電子零組件':7, '電腦及週邊':6, '通信網路':5, '其他':13 },
-    fundSize: 3800, holders: 180, nav: 104.50, premium: -0.67,
-    topHoldings: [{name:'台積電',pct:54.8},{name:'鴻海',pct:5.2},{name:'聯發科',pct:4.9},{name:'廣達',pct:2.9},{name:'台達電',pct:2.6},{name:'中華電',pct:1.9},{name:'聯電',pct:1.8},{name:'富邦金',pct:1.6},{name:'國泰金',pct:1.5},{name:'中信金',pct:1.4}]
-  },
-  {
-    ticker: '00713', name: '元大台灣高息低波', type: '高股息/低波動', sparkline: [],
-    price: 62.50, change: +1.85, changePercent: +3.05,
-    returns: { m1: 6.5, m3: 10.2, m6: 15.8, y1: 26.3 },
-    dividend: { annual: 3.6, yield: 5.76, frequency: '季配', recent: [{date:'2026/04',amount:0.92},{date:'2026/01',amount:0.90},{date:'2025/10',amount:0.88},{date:'2025/07',amount:0.90},{date:'2025/04',amount:0.85},{date:'2025/01',amount:0.82}] },
-    sectors: { '半導體':28, '金融保險':22, '電子零組件':15, '傳產':12, '電腦及週邊':10, '其他':13 },
-    fundSize: 1200, holders: 65, nav: 62.10, premium: -0.64,
-    topHoldings: [{name:'台積電',pct:15.2},{name:'中華電',pct:5.8},{name:'兆豐金',pct:4.5},{name:'中信金',pct:4.2},{name:'富邦金',pct:3.8},{name:'台達電',pct:3.5},{name:'聯發科',pct:3.2},{name:'廣達',pct:2.8},{name:'仁寶',pct:2.5},{name:'緯創',pct:2.3}]
-  },
-  {
-    ticker: '00900', name: '富邦特選高股息30', type: '高股息', sparkline: [],
-    price: 16.80, change: +0.45, changePercent: +2.75,
-    returns: { m1: 5.2, m3: 8.8, m6: 13.5, y1: 20.8 },
-    dividend: { annual: 1.28, yield: 7.62, frequency: '季配', recent: [{date:'2026/04',amount:0.33},{date:'2026/01',amount:0.32},{date:'2025/10',amount:0.32},{date:'2025/07',amount:0.31},{date:'2025/04',amount:0.30},{date:'2025/01',amount:0.28}] },
-    sectors: { '半導體':32, '電子零組件':18, '金融保險':16, '電腦及週邊':12, '傳產':10, '其他':12 },
-    fundSize: 950, holders: 55, nav: 16.65, premium: -0.90,
-    topHoldings: [{name:'台積電',pct:12.5},{name:'聯發科',pct:5.5},{name:'廣達',pct:4.8},{name:'仁寶',pct:4.2},{name:'英業達',pct:3.8},{name:'緯創',pct:3.5},{name:'光寶科',pct:3.2},{name:'技嘉',pct:2.8},{name:'華碩',pct:2.5},{name:'大聯大',pct:2.3}]
-  },
-  {
-    ticker: '00939', name: '統一台灣高息動能', type: '高股息/動能', sparkline: [],
-    price: 18.95, change: +0.52, changePercent: +2.82,
-    returns: { m1: 6.8, m3: 11.5, m6: 16.2, y1: 23.5 },
-    dividend: { annual: 1.44, yield: 7.60, frequency: '月配', recent: [{date:'2026/05',amount:0.12},{date:'2026/04',amount:0.12},{date:'2026/03',amount:0.12},{date:'2026/02',amount:0.12},{date:'2026/01',amount:0.12},{date:'2025/12',amount:0.11}] },
-    sectors: { '半導體':35, '電子零組件':20, '電腦及週邊':15, '金融保險':10, '通信網路':8, '其他':12 },
-    fundSize: 2200, holders: 110, nav: 18.80, premium: -0.79,
-    topHoldings: [{name:'台積電',pct:18.5},{name:'聯發科',pct:6.2},{name:'廣達',pct:5.0},{name:'緯創',pct:4.2},{name:'仁寶',pct:3.8},{name:'英業達',pct:3.5},{name:'光寶科',pct:3.2},{name:'技嘉',pct:2.8},{name:'華碩',pct:2.5},{name:'瑞昂',pct:2.3}]
-  }
-];
+let ETF_DATA = [];
 
 function getPremiumClass(p) {
   if (p < -0.3) return 'cheap';
@@ -679,10 +588,111 @@ function renderCompare() {
   container.innerHTML = html;
 }
 
+const SHEET_BASE = 'https://docs.google.com/spreadsheets/d/1GT8LkzWJPo9psHwRIJwjfV2HEoYf7x8eIkI22BhuqIs/gviz/tq?tqx=out:csv&sheet=';
+
+function parseCSV(csv) {
+  const lines = csv.trim().split('\n');
+  if (lines.length < 2) return [];
+  const headers = lines[0].match(/"([^"]*)"/g)?.map(s=>s.replace(/"/g,'')) || lines[0].split(',');
+  return lines.slice(1).map(line => {
+    const cols = line.match(/"([^"]*)"/g)?.map(s=>s.replace(/"/g,'')) || line.split(',');
+    const obj = {};
+    headers.forEach((h,i) => obj[h] = cols[i] || '');
+    return obj;
+  });
+}
+
+async function loadAllData() {
+  const t = Date.now();
+  try {
+    const [infoRes, priceRes, secRes, holdRes] = await Promise.all([
+      fetch(SHEET_BASE + 'info&t=' + t),
+      fetch(SHEET_BASE + 'Sheet1&t=' + t),
+      fetch(SHEET_BASE + 'sectors&t=' + t),
+      fetch(SHEET_BASE + 'holdings&t=' + t)
+    ]);
+    const [infoCsv, priceCsv, secCsv, holdCsv] = await Promise.all([
+      infoRes.text(), priceRes.text(), secRes.text(), holdRes.text()
+    ]);
+    
+    const infoData = parseCSV(infoCsv);
+    const priceData = parseCSV(priceCsv);
+    const secData = parseCSV(secCsv);
+    const holdData = parseCSV(holdCsv);
+    
+    // Build ETF_DATA from info as base
+    ETF_DATA = infoData.map(info => {
+      const ticker = info.ticker;
+      const price = priceData.find(p => p.ticker === ticker) || {};
+      const sec = secData.find(s => s.ticker === ticker) || {};
+      const hold = holdData.find(h => h.ticker === ticker) || {};
+      
+      // Parse sectors
+      const sectors = {};
+      for (let i = 1; i <= 6; i++) {
+        if (sec['s'+i] && sec['p'+i]) sectors[sec['s'+i]] = parseFloat(sec['p'+i]) || 0;
+      }
+      
+      // Parse holdings
+      const topHoldings = [];
+      for (let i = 1; i <= 10; i++) {
+        if (hold['h'+i] && hold['p'+i]) topHoldings.push({name: hold['h'+i], pct: parseFloat(hold['p'+i]) || 0});
+      }
+      
+      // Parse sparkline
+      const sparkRaw = price.sparkline || '';
+      const sparkline = sparkRaw ? sparkRaw.split('|').map(Number).filter(n=>n>0) : [];
+      
+      // Parse dividend recent
+      const divRecentRaw = price.divRecent || '';
+      const recent = divRecentRaw ? divRecentRaw.split('|').map(s => { const p=s.split(':'); return {date:p[0],amount:parseFloat(p[1])||0}; }) : [];
+      
+      return {
+        ticker,
+        name: info.name || '',
+        type: info.type || '',
+        sparkline,
+        price: parseFloat(price.price) || 0,
+        change: parseFloat(price.change) || 0,
+        changePercent: parseFloat(price.changePct) || 0,
+        returns: {
+          m1: parseFloat(price.ret1m) || 0,
+          m3: parseFloat(price.ret3m) || 0,
+          m6: parseFloat(price.ret6m) || 0,
+          y1: parseFloat(price.ret1y) || 0
+        },
+        dividend: {
+          annual: recent.slice(0,4).reduce((s,r)=>s+r.amount, 0),
+          yield: parseFloat(price.divYield) || 0,
+          frequency: info.frequency || '',
+          recent: recent.length ? recent : [{date:'--',amount:0}]
+        },
+        sectors,
+        fundSize: parseFloat(info.fundSize) || 0,
+        holders: parseFloat(info.holders) || 0,
+        nav: parseFloat(price.nav) || 0,
+        premium: parseFloat(price.premium) || 0,
+        quarterLine: parseFloat(price.quarterLine) || null,
+        topHoldings
+      };
+    });
+    
+    document.getElementById('live-status').textContent = '\u2705 \u8cc7\u6599\u8f09\u5165\u5b8c\u6210 ' + new Date().toLocaleTimeString('zh-TW');
+  } catch(e) {
+    console.error('loadAllData error:', e);
+    document.getElementById('live-status').textContent = '\u26a0\ufe0f \u8cc7\u6599\u8f09\u5165\u5931\u6557';
+  }
+}
+
 // Init
-renderCards();
-renderSectorCharts();
-renderSparklines();
+async function init() {
+  await loadAllData();
+  renderCards();
+  renderSectorCharts();
+  renderSparklines();
+  fetchHoldingsAndDividends();
+}
+init();
 
 function renderSparklines() {
   ETF_DATA.forEach((etf, i) => {
@@ -827,13 +837,10 @@ const TICKERS_LIVE = ["0050","0056","00878","00919","00929","00940","006208","00
 const PRICE_SHEET_ID = "1GT8LkzWJPo9psHwRIJwjfV2HEoYf7x8eIkI22BhuqIs";
 
 async function fetchLivePrices() {
-  console.log('[ETF] Fetching live prices...');
   try {
     const res = await fetch(`https://docs.google.com/spreadsheets/d/${PRICE_SHEET_ID}/gviz/tq?tqx=out:csv&t=${Date.now()}`);
-    console.log('[ETF] Response status:', res.status);
     if (!res.ok) throw new Error('Sheet fetch failed: ' + res.status);
     const csv = await res.text();
-    console.log('[ETF] CSV:', csv.substring(0, 100));
     const rows = csv.trim().split('\n').slice(1); // skip header
     let updated = 0;
     rows.forEach(row => {
@@ -874,7 +881,6 @@ async function fetchLivePrices() {
         updated++;
       }
     });
-    console.log('[ETF] Updated:', updated);
     if (updated > 0) {
       renderCards();
       renderSectorCharts();
@@ -886,7 +892,6 @@ async function fetchLivePrices() {
       throw new Error('No ETF matched');
     }
   } catch(e) {
-    console.log('[ETF] Error:', e.message);
     const statusEl = document.getElementById("live-status");
     if (statusEl) statusEl.textContent = "⚠️ 即時報價載入失敗，顯示靜態資料";
   }
@@ -898,62 +903,10 @@ function shouldFetch() {
   return day >= 1 && day <= 5 && ((h === 9) || (h >= 10 && h <= 12) || (h === 13 && m <= 30));
 }
 
-// === Fetch Holdings & Dividends from Sheet ===
-async function fetchHoldingsAndDividends() {
-  try {
-    // Fetch holdings
-    const holdRes = await fetch(`https://docs.google.com/spreadsheets/d/${PRICE_SHEET_ID}/gviz/tq?tqx=out:csv&sheet=etf_holdings&t=${Date.now()}`);
-    if (holdRes.ok) {
-      const csv = await holdRes.text();
-      const rows = csv.trim().split('\n').slice(1);
-      const holdingsMap = {};
-      rows.forEach(row => {
-        const cols = row.match(/"([^"]*)"/g)?.map(s => s.replace(/"/g,'')) || [];
-        const ticker = cols[0]?.padStart(4,'0');
-        if (!ticker) return;
-        if (!holdingsMap[ticker]) holdingsMap[ticker] = [];
-        holdingsMap[ticker].push({name: cols[2], pct: parseFloat(cols[3])});
-      });
-      ETF_DATA.forEach(etf => {
-        const key = Object.keys(holdingsMap).find(k => etf.ticker.endsWith(k) || etf.ticker === k);
-        if (key && holdingsMap[key].length) etf.topHoldings = holdingsMap[key];
-      });
-    }
-  } catch(e) { console.log('Holdings fetch error:', e); }
+async function fetchHoldingsAndDividends() {}
 
-  try {
-    // Fetch dividends
-    const divRes = await fetch(`https://docs.google.com/spreadsheets/d/${PRICE_SHEET_ID}/gviz/tq?tqx=out:csv&sheet=etf_dividend&t=${Date.now()}`);
-    if (divRes.ok) {
-      const csv = await divRes.text();
-      const rows = csv.trim().split('\n').slice(1);
-      const divMap = {};
-      rows.forEach(row => {
-        const cols = row.match(/"([^"]*)"/g)?.map(s => s.replace(/"/g,'')) || [];
-        const ticker = cols[0]?.padStart(4,'0');
-        if (!ticker) return;
-        if (!divMap[ticker]) divMap[ticker] = [];
-        divMap[ticker].push({date: cols[1], amount: parseFloat(cols[2])});
-      });
-      ETF_DATA.forEach(etf => {
-        const key = Object.keys(divMap).find(k => etf.ticker.endsWith(k) || etf.ticker === k);
-        if (key && divMap[key].length) {
-          etf.dividend.recent = divMap[key].slice(0, 6);
-          const totalAnnual = divMap[key].slice(0,4).reduce((s,d) => s + d.amount, 0);
-          if (totalAnnual > 0) etf.dividend.annual = +totalAnnual.toFixed(2);
-        }
-      });
-    }
-  } catch(e) { console.log('Dividend fetch error:', e); }
-
-  renderCards();
-  renderSectorCharts();
-  renderSparklines();
-}
-
-// Always fetch once on page load, then auto-refresh during market hours
+// Auto-refresh during market hours
 fetchLivePrices();
-fetchHoldingsAndDividends();
 setInterval(() => { if(shouldFetch()) fetchLivePrices(); }, 300000);
 </script>
 <div class="cal-modal" id="cal-modal" onclick="if(event.target===this)closeDivCalendar()">
