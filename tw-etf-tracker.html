@@ -196,7 +196,7 @@ body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; b
 .update-info { font-size:0.8rem; color:var(--muted); margin-top:2px; }
 .update-info span { margin-right:12px; }
 .card-mid { display:flex; gap:12px; margin:10px 0; align-items:stretch; }
-.card-mid-left { flex:1; cursor:pointer; border:1px solid var(--border); border-radius:6px; padding:4px; display:flex; flex-direction:column; justify-content:flex-end; }
+.card-mid-left { flex:1; cursor:pointer; border:1px solid var(--border); border-radius:6px; padding:4px; display:flex; flex-direction:column; justify-content:center; }
 .card-mid-left canvas { width:100% !important; height:35px !important; }
 .card-mid-right { flex:1; display:flex; flex-direction:column; justify-content:center; gap:4px; font-size:0.9rem; }
 .card-mid-right .kpi { display:flex; justify-content:space-between; align-items:center; }
@@ -284,8 +284,8 @@ function renderCards() {
     <div class="card-mid">
       <div class="card-mid-left" onclick="showChart(${i})"><canvas id="spark-etf-${i}" height="35"></canvas></div>
       <div class="card-mid-right">
-        <div class="kpi"><span class="kpi-label">折溢價</span><span class="kpi-value premium-value ${getPremiumClass(etf.premium)}">${etf.premium}%</span></div>
-        <div class="kpi"><span class="kpi-label">離季線</span><span class="kpi-value">${etf.quarterLine != null ? (etf.quarterLine>=0?'+':'')+etf.quarterLine+'%' : '--'} ${etf.quarterLine>15?'<span style="color:var(--red);font-size:0.75rem">過熱</span>':etf.quarterLine>10?'<span style="color:var(--yellow);font-size:0.75rem">偏高</span>':etf.quarterLine<-8?'<span style="color:var(--green);font-size:0.75rem">超跌</span>':''}</span></div>
+        <div class="kpi"><span class="kpi-label">折溢價 ${etf.premium<-1?'<span style="color:var(--green);font-size:0.75rem">折價</span>':etf.premium>1?'<span style="color:var(--red);font-size:0.75rem">溢價</span>':''}</span><span class="kpi-value premium-value ${getPremiumClass(etf.premium)}">${etf.premium}%</span></div>
+        <div class="kpi"><span class="kpi-label">離季線 ${etf.quarterLine>15?'<span style="color:var(--red);font-size:0.75rem">過熱</span>':etf.quarterLine>10?'<span style="color:var(--yellow);font-size:0.75rem">偏高</span>':etf.quarterLine<-8?'<span style="color:var(--green);font-size:0.75rem">超跌</span>':''}</span><span class="kpi-value">${etf.quarterLine != null ? (etf.quarterLine>=0?'+':'')+etf.quarterLine+'%' : '--'}</span></div>
         <div class="kpi"><span class="kpi-label">建議</span><span class="kpi-value"><span class="sug-badge ${getSuggestion(etf).cls}">${getSuggestion(etf).text}</span></span></div>
       </div>
     </div>
