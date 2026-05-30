@@ -305,23 +305,24 @@ function renderCards() {
     </div>
   </div>
   <div class="card-section" style="border-top:1px solid var(--border);margin-top:8px;padding-top:8px">
-    <div class="card-section-title holdings-toggle" onclick="this.parentElement.classList.toggle('open')">產業分布</div>
+    <div class="card-section-title holdings-toggle" onclick="this.parentElement.classList.toggle('open')">產業分布 / 前10大持股</div>
     <div class="holdings-content">
-    <div class="sector-area">
-      <div class="sector-chart"><canvas id="sector-${i}"></canvas></div>
-      <div class="sector-legend">
-        ${Object.entries(etf.sectors||{}).map(([k,v],j) => {
-          const colors = ['#00d4ff','#7c3aed','#10b981','#f59e0b','#ef4444','#6366f1','#ec4899','#14b8a6'];
-          return '<div class="sector-legend-item"><span class="dot" style="background:'+colors[j]+'"></span><span class="sl-name">'+k+'</span><span class="sl-pct">'+v+'%</span></div>';
-        }).join('')}
+    <div style="display:flex;gap:12px">
+      <div style="flex:1;min-width:0">
+        <div class="sector-area" style="flex-direction:column">
+          <div class="sector-chart"><canvas id="sector-${i}"></canvas></div>
+          <div class="sector-legend">
+            ${Object.entries(etf.sectors||{}).map(([k,v],j) => {
+              const colors = ['#00d4ff','#7c3aed','#10b981','#f59e0b','#ef4444','#6366f1','#ec4899','#14b8a6'];
+              return '<div class="sector-legend-item"><span class="dot" style="background:'+colors[j]+'"></span><span class="sl-name">'+k+'</span><span class="sl-pct">'+v+'%</span></div>';
+            }).join('')}
+          </div>
+        </div>
+      </div>
+      <div style="flex:1;min-width:0">
+        ${(etf.topHoldings||[]).map(h => '<div class="holding-bar"><div class="hb-track"><div class="hb-fill" style="width:'+(etf.topHoldings[0]?(h.pct/etf.topHoldings[0].pct*100).toFixed(0):0)+'%"></div><span class="hb-name">'+h.name+'</span><span class="hb-pct">'+h.pct+'%</span></div></div>').join('')}
       </div>
     </div>
-    </div>
-  </div>
-  <div class="card-section" style="border-top:1px solid var(--border);margin-top:6px;padding-top:6px">
-    <div class="card-section-title holdings-toggle" onclick="this.parentElement.classList.toggle('open')">前10大持股</div>
-    <div class="holdings-content">
-      ${(etf.topHoldings||[]).map(h => '<div class="holding-bar"><div class="hb-track"><div class="hb-fill" style="width:'+(etf.topHoldings[0]?(h.pct/etf.topHoldings[0].pct*100).toFixed(0):0)+'%"></div><span class="hb-name">'+h.name+'</span><span class="hb-pct">'+h.pct+'%</span></div></div>').join('')}
     </div>
   </div>
 </div>`).join('');
