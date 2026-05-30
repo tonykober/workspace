@@ -239,6 +239,7 @@ body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; b
     <h3 style="font-size:1rem;color:var(--accent)">自選追蹤清單</h3>
     <button class="add-btn" onclick="addStock()">+ 新增</button>
   </div>
+  <div class="filter-bar" style="margin-top:8px"><span class="label">排序：</span><button class="pill" onclick="sortWatchlist('pct')">漲跌幅</button><button class="pill" onclick="sortWatchlist('qline')">離季線</button></div>
   <div class="cards" id="watchlist-cards"></div>
   <div id="watchlist-empty" style="text-align:center;color:var(--muted);padding:40px">尚無追蹤個股，點擊「+ 新增」開始</div>
 </div>
@@ -754,7 +755,7 @@ function switchMainTab(tab) {
   if (tab === 'watchlist') loadWatchlist();
 }
 
-async function loadWatchlist() {
+async function loadWatchlist(sortKey) {
   try {
     const res = await fetch(`https://docs.google.com/spreadsheets/d/${WL_SHEET_ID}/gviz/tq?tqx=out:csv&sheet=watchlist&t=${Date.now()}`);
     const csv = await res.text();
@@ -784,32 +785,33 @@ async function loadWatchlist() {
         const q = quarterLine;
         if (q === null) return {text:'--', cls:'sug-hold'};
         if (q < -8) return {text:'買進', cls:'sug-buy'};
-        if (q > 15) return {text:'減碼', cls:'sug-sell'};
-        if (q > 10) return {text:'觀望', cls:'sug-wait'};
-        return {text:'持有', cls:'sug-hold'};
+        if (q <= 10) return {text:'持有', cls:'sug-hold'};
+        if (q <= 15) return {text:'觀望', cls:'sug-wait'};
+        return {text:'減碼', cls:'sug-sell'};
       })();
       if (!ticker) return '';
       return `<div class="card" style="position:relative">
-  <button class="wl-delete" onclick="confirmDelete('${ticker}','${name}')">&times;</button>
-  <div class="card-top">
-    <div>
-      <div class="card-left">
-        <span class="card-ticker">${ticker}</span>
-        ${sector ? '<span class="card-type">'+sector+'</span>' : ''}
-      </div>
-      <div class="card-name">${name}</div>
-    </div>
-    <div class="card-right">
-      <div class="card-price">${price ? '$'+price.toFixed(2) : '--'}</div>
-      <span class="card-change ${pct>=0?'up':'down'}">${pct>=0?'+':''}${change} (${pct>=0?'+':''}${pct}%)</span>
-    </div>
-  </div>
-  <div class="fund-info-row" style="grid-template-columns:1fr 1fr">
-    <div class="fi-item"><div class="fi-label">離季線</div><div class="fi-value">${quarterLine!==null?(quarterLine>=0?'+':'')+quarterLine+'%':'--'}</div></div>
-    <div class="fi-item"><div class="fi-label">建議</div><div class="fi-value"><span class="sug-badge ${wlSug.cls}">${wlSug.text}</span></div></div>
-  </div>
-  <div class="sparkline-wrap"><canvas id="spark-wl-${i}" height="40" data-spark="${wlSpark.join('|')}"></canvas></div>
-</div>`;
+        <button class="wl-delete" onclick="confirmDelete('${ticker}','${name}')">&times;</button>
+        <div class="card-top">
+          <div>
+            <div class="card-left"><span class="card-ticker">${ticker}</span>${sector ? '<span class="card-type">'+sector+'</span>' : ''}</div>
+            <div class="card-name">${name}</div>
+          </div>
+          <div class="card-right">
+            <div class="card-price">${price ? '$'+price.toFixed(2) : '--'}</div>
+            <span class="card-change ${pct>=0?'up':'down'}">${change>=0?'+':''}${change} (${pct>=0?'+':''}${pct}%)</span>
+          </div>
+        </div>
+        <div style="border-top:1px solid var(--border);margin-top:8px;padding-top:8px">
+          <div class="card-mid">
+            <div class="card-mid-left" onclick="showWlChart(${i})"><canvas id="spark-wl-${i}" height="35" data-spark="${wlSpark.join('|')}"></canvas></div>
+            <div class="card-mid-right">
+              <div class="kpi"><span class="kpi-label">離季線 ${quarterLine>15?'<span style="color:var(--red);font-size:0.75rem">過熱</span>':quarterLine>10?'<span style="color:var(--yellow);font-size:0.75rem">偏高</span>':quarterLine<-8?'<span style="color:var(--green);font-size:0.75rem">超跌</span>':'<span style="color:var(--muted);font-size:0.75rem">正常</span>'}</span><span class="kpi-value">${quarterLine!==null?(quarterLine>=0?'+':'')+quarterLine+'%':'--'}</span></div>
+              <div class="kpi"><span class="kpi-label">建議</span><span class="kpi-value"><span class="sug-badge ${wlSug.cls}">${wlSug.text}</span></span></div>
+            </div>
+          </div>
+        </div>
+      </div>`;
     }).join('');
     // Render watchlist sparklines
     document.querySelectorAll('[id^="spark-wl-"]').forEach(canvas => {
@@ -829,6 +831,31 @@ async function loadWatchlist() {
   } catch(e) {
     document.getElementById('watchlist-cards').innerHTML = '<p style="color:var(--muted)">載入失敗</p>';
   }
+}
+
+function sortWatchlist(key) {
+  loadWatchlist(key);
+}
+
+function showWlChart(idx) {
+  const cards = document.querySelectorAll('#view-watchlist .card');
+  const card = cards[idx];
+  if (!card) return;
+  const canvas = card.querySelector('canvas');
+  const sparkAttr = canvas?.dataset?.spark || '';
+  const data = sparkAttr ? sparkAttr.split('|').map(Number).filter(n=>n>0) : [];
+  if (data.length < 2) return;
+  const high = Math.max(...data), low = Math.min(...data), start = data[0], latest = data[data.length-1];
+  document.getElementById('chart-title').textContent = card.querySelector('.card-ticker')?.textContent + ' — 近一個月走勢';
+  document.getElementById('chart-info').innerHTML = '<span>起始 <b>$'+start.toFixed(2)+'</b></span><span>最高 <b style="color:var(--red)">$'+high.toFixed(2)+'</b></span><span>最低 <b style="color:var(--green)">$'+low.toFixed(2)+'</b></span><span>最新 <b>$'+latest.toFixed(2)+'</b></span>';
+  document.getElementById('chart-actions').innerHTML = '';
+  chartOverlays = [];
+  if (mainChart) mainChart.destroy();
+  mainChart = new Chart(document.getElementById('chart-main'), {
+    type:'line', data:{labels:data.map((_,i)=>'D'+(i+1)), datasets:[{data, borderColor:'#58a6ff', backgroundColor:'#58a6ff20', borderWidth:2, pointRadius:0, fill:true, tension:0.3}]},
+    options:{responsive:true, maintainAspectRatio:false, animation:false, interaction:{mode:'index',intersect:false}, plugins:{legend:{display:false}, tooltip:{enabled:true, callbacks:{label:ctx=>'$'+ctx.parsed.y}}}, scales:{x:{display:true,grid:{color:'#30363d'},ticks:{color:'#8b949e',font:{size:10}}}, y:{display:true,grid:{color:'#30363d'},ticks:{color:'#8b949e',font:{size:10},callback:v=>'$'+v}}}}
+  });
+  document.getElementById('chart-modal').classList.add('show');
 }
 
 function addStock() {
