@@ -56,3 +56,33 @@ function fetchNavData() {
     sheet.appendRow([ticker, nav, premium, ret1m, ret3m, ret6m, ret1y, divYield, divRecent]);
   });
 }
+
+// === 自選股 PE/殖利率自動抓取（每日 16:00 跟 fetchNavData 一起跑）===
+function fetchWatchlistData() {
+  var ss = SpreadsheetApp.openById('1GT8LkzWJPo9psHwRIJwjfV2HEoYf7x8eIkI22BhuqIs');
+  var sheet = ss.getSheetByName('watchlist');
+  if (!sheet) return;
+  var lastRow = sheet.getLastRow();
+  if (lastRow < 1) return;
+  var tickers = sheet.getRange(1, 1, lastRow, 1).getValues().map(function(r){return r[0].toString().trim()});
+  
+  var twseData = [], tpexData = [];
+  try { twseData = JSON.parse(UrlFetchApp.fetch('https://openapi.twse.com.tw/v1/exchangeReport/BWIBBU_d', {muteHttpExceptions:true}).getContentText()); } catch(e){}
+  try { tpexData = JSON.parse(UrlFetchApp.fetch('https://www.tpex.org.tw/openapi/v1/tpex_mainboard_peratio_analysis', {muteHttpExceptions:true}).getContentText()); } catch(e){}
+  
+  tickers.forEach(function(ticker, idx) {
+    if (!ticker) return;
+    var row = idx + 1;
+    var found = twseData.find(function(d){return d.Code === ticker});
+    if (found) {
+      if (found.PEratio) sheet.getRange(row, 8).setValue(found.PEratio);
+      if (found.DividendYield) sheet.getRange(row, 10).setValue(found.DividendYield);
+    } else {
+      var otc = tpexData.find(function(d){return d.SecuritiesCompanyCode === ticker});
+      if (otc) {
+        if (otc.PriceEarningRatio) sheet.getRange(row, 8).setValue(otc.PriceEarningRatio);
+        if (otc.YieldRatio) sheet.getRange(row, 10).setValue(otc.YieldRatio);
+      }
+    }
+  });
+}
