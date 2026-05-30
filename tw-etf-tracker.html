@@ -68,10 +68,10 @@ body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; b
 .card-section.open .holdings-toggle::after { content:' ▲'; }
 .holdings-content { max-height:0; overflow:hidden; transition:max-height .3s ease; }
 .card-section.open .holdings-content { max-height:400px; }
-.holding-bar { display:flex; align-items:center; gap:6px; margin-bottom:4px; font-size:0.9rem; }
-.holding-bar .hb-name { width:50px; text-align:right; color:var(--muted); flex-shrink:0; }
+.holding-bar { display:flex; align-items:center; margin-bottom:4px; font-size:0.9rem; }
 .holding-bar .hb-track { flex:1; height:18px; background:var(--surface2); border-radius:3px; overflow:hidden; position:relative; }
 .holding-bar .hb-fill { height:100%; background:linear-gradient(90deg, var(--accent), var(--accent2)); border-radius:3px; }
+.holding-bar .hb-name { position:absolute; left:4px; top:50%; transform:translateY(-50%); color:var(--muted); font-size:0.75rem; white-space:nowrap; text-shadow:0 0 3px var(--bg); z-index:1; }
 .holding-bar .hb-pct { position:absolute; right:4px; top:50%; transform:translateY(-50%); font-weight:600; font-size:0.9rem; color:var(--text); text-shadow:0 0 3px var(--bg); }
 
 .returns-row { display:grid; grid-template-columns:repeat(4,1fr); gap:6px; }
@@ -321,7 +321,7 @@ function renderCards() {
   <div class="card-section" style="border-top:1px solid var(--border);margin-top:6px;padding-top:6px">
     <div class="card-section-title holdings-toggle" onclick="this.parentElement.classList.toggle('open')">前10大持股</div>
     <div class="holdings-content">
-      ${(etf.topHoldings||[]).map(h => '<div class="holding-bar"><span class="hb-name">'+h.name+'</span><div class="hb-track"><div class="hb-fill" style="width:'+(etf.topHoldings[0]?(h.pct/etf.topHoldings[0].pct*100).toFixed(0):0)+'%"></div><span class="hb-pct">'+h.pct+'%</span></div></div>').join('')}
+      ${(etf.topHoldings||[]).map(h => '<div class="holding-bar"><div class="hb-track"><div class="hb-fill" style="width:'+(etf.topHoldings[0]?(h.pct/etf.topHoldings[0].pct*100).toFixed(0):0)+'%"></div><span class="hb-name">'+h.name+'</span><span class="hb-pct">'+h.pct+'%</span></div></div>').join('')}
     </div>
   </div>
 </div>`).join('');
