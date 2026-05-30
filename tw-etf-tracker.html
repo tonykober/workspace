@@ -552,8 +552,8 @@ function renderMainChart() {
         tooltip: { enabled: true, callbacks: { label: ctx => ctx.dataset.label + ': ' + (chartOverlays.length > 1 ? parseFloat(ctx.parsed.y).toFixed(2) + '%' : '$' + parseFloat(ctx.parsed.y).toFixed(2)) } }
       },
       scales: {
-        x: { display: true, grid: { color: '#30363d' }, ticks: { color: '#8b949e', font: { size: 10 } } },
-        y: { display: true, grid: { color: '#30363d' }, ticks: { color: '#8b949e', font: { size: 10 }, callback: v => chartOverlays.length > 1 ? parseFloat(v).toFixed(1)+'%' : '$'+parseFloat(v).toFixed(2) } }
+        x: { display: true, grid: { color: '#30363d' }, ticks: { color: '#8b949e', font: { size: 13 } } },
+        y: { display: true, grid: { color: '#30363d' }, ticks: { color: '#8b949e', font: { size: 13 }, callback: v => chartOverlays.length > 1 ? parseFloat(v).toFixed(1)+'%' : '$'+parseFloat(v).toFixed(2) } }
       }
     }
   });
