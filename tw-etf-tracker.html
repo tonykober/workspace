@@ -584,7 +584,7 @@ function renderMainChart() {
     data: { labels: datasets[0].data.map((_, i) => 'D'+(i+1)), datasets },
     options: {
       responsive: true,
-      maintainAspectRatio: false,
+      maintainAspectRatio: false, animation: false,
       interaction: { mode: 'index', intersect: false },
       plugins: {
         legend: { display: false },
