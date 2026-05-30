@@ -284,8 +284,8 @@ function renderCards() {
     <div class="card-mid">
       <div class="card-mid-left" onclick="showChart(${i})"><canvas id="spark-etf-${i}" height="35"></canvas></div>
       <div class="card-mid-right">
-        <div class="kpi"><span class="kpi-label">折溢價 ${etf.premium<-1?'<span style="color:var(--green);font-size:0.75rem">折價</span>':etf.premium>1?'<span style="color:var(--red);font-size:0.75rem">溢價</span>':''}</span><span class="kpi-value premium-value ${getPremiumClass(etf.premium)}">${etf.premium}%</span></div>
-        <div class="kpi"><span class="kpi-label">離季線 ${etf.quarterLine>15?'<span style="color:var(--red);font-size:0.75rem">過熱</span>':etf.quarterLine>10?'<span style="color:var(--yellow);font-size:0.75rem">偏高</span>':etf.quarterLine<-8?'<span style="color:var(--green);font-size:0.75rem">超跌</span>':''}</span><span class="kpi-value">${etf.quarterLine != null ? (etf.quarterLine>=0?'+':'')+etf.quarterLine+'%' : '--'}</span></div>
+        <div class="kpi"><span class="kpi-label">折溢價 ${etf.premium<-0.3?'<span style="color:var(--green);font-size:0.75rem">折價買點</span>':etf.premium>0.3?'<span style="color:var(--red);font-size:0.75rem">溢價偏高</span>':'<span style="color:var(--muted);font-size:0.75rem">正常</span>'}</span><span class="kpi-value premium-value ${getPremiumClass(etf.premium)}">${etf.premium}%</span></div>
+        <div class="kpi"><span class="kpi-label">離季線 ${etf.quarterLine>15?'<span style="color:var(--red);font-size:0.75rem">過熱</span>':etf.quarterLine>10?'<span style="color:var(--yellow);font-size:0.75rem">偏高</span>':etf.quarterLine<-8?'<span style="color:var(--green);font-size:0.75rem">超跌</span>':'<span style="color:var(--muted);font-size:0.75rem">正常</span>'}</span><span class="kpi-value">${etf.quarterLine != null ? (etf.quarterLine>=0?'+':'')+etf.quarterLine+'%' : '--'}</span></div>
         <div class="kpi"><span class="kpi-label">建議</span><span class="kpi-value"><span class="sug-badge ${getSuggestion(etf).cls}">${getSuggestion(etf).text}</span></span></div>
       </div>
     </div>
