@@ -239,7 +239,7 @@ body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; b
     <h3 style="font-size:1rem;color:var(--accent)">自選追蹤清單</h3>
     <button class="add-btn" onclick="addStock()">+ 新增</button>
   </div>
-  <div class="filter-bar" style="margin-top:8px"><span class="label">排序：</span><button class="pill active" onclick="sortETF('default')">預設</button><button class="pill" onclick="sortWatchlist('pct')">漲跌幅</button><button class="pill" onclick="sortWatchlist('qline')">離季線</button></div>
+  <div class="filter-bar" style="margin-top:8px"><span class="label">排序：</span><button class="pill active" onclick="sortWatchlist('default')">預設</button><button class="pill" onclick="sortWatchlist('pct')">漲跌幅</button><button class="pill" onclick="sortWatchlist('qline')">離季線</button></div>
   <div class="cards" id="watchlist-cards"></div>
   <div id="watchlist-empty" style="text-align:center;color:var(--muted);padding:40px">尚無追蹤個股，點擊「+ 新增」開始</div>
 </div>
@@ -361,6 +361,7 @@ let currentFilter = 'all';
 
 let originalOrder = [];
 function sortETF(key) {
+  document.querySelectorAll('#view-etf .filter-bar .pill').forEach((p,i) => { if(i<4) p.classList.toggle('active', p.textContent==={default:'預設',yield:'殖利率',ret1m:'1月報酬',premium:'折溢價'}[key]); });
   if (key === 'default') { if (originalOrder.length) ETF_DATA = [...originalOrder]; renderCards(); renderSectorCharts(); renderSparklines(); return; }
   if (key === 'yield') ETF_DATA.sort((a,b) => b.dividend.yield - a.dividend.yield);
   else if (key === 'ret1m') ETF_DATA.sort((a,b) => b.returns.m1 - a.returns.m1);
@@ -784,10 +785,11 @@ async function loadWatchlist(sortKey) {
       return;
     }
     empty.style.display = 'none';
-    // Sort rows before rendering
-    if (wlSortKey === 'pct') rows.sort((a,b) => { const pa=parseFloat((a.match(/"([^"]*)"/g)||[])[5])||0; const pb=parseFloat((b.match(/"([^"]*)"/g)||[])[5])||0; return pb-pa; });
-    if (wlSortKey === 'qline') rows.sort((a,b) => { const qa=parseFloat((a.match(/"([^"]*)"/g)||[])[10])||0; const qb=parseFloat((b.match(/"([^"]*)"/g)||[])[10])||0; return qb-qa; });
-    container.innerHTML = rows.map((row, i) => {
+    if (!wlOriginalRows.length || wlSortKey === 'default') wlOriginalRows = [...rows];
+    const sortedRows = wlSortKey === 'default' ? [...wlOriginalRows] : [...rows];
+    if (wlSortKey === 'pct') sortedRows.sort((a,b) => { const pa=parseFloat((a.match(/"([^"]*)"/g)||[])[5])||0; const pb=parseFloat((b.match(/"([^"]*)"/g)||[])[5])||0; return pb-pa; });
+    if (wlSortKey === 'qline') sortedRows.sort((a,b) => { const qa=parseFloat((a.match(/"([^"]*)"/g)||[])[10])||0; const qb=parseFloat((b.match(/"([^"]*)"/g)||[])[10])||0; return qb-qa; });
+    container.innerHTML = sortedRows.map((row, i) => {
       const cols = row.match(/"([^"]*)"/g)?.map(s => s.replace(/"/g,'')) || row.split(',');
       const ticker = cols[0] || '';
       const name = cols[1] || '';
@@ -800,6 +802,8 @@ async function loadWatchlist(sortKey) {
       const divYield = cols[9] || '';
       const quarterLine = cols[10] ? parseFloat(cols[10]) : null;
       const wlSpark = cols[11] ? cols[11].split('|').map(Number).filter(n=>n>0) : [];
+      const divRecent = cols[12] || '';
+      const divItems = divRecent ? divRecent.split('|').map(s => { const p=s.split(':'); return {date:p[0],amount:p[1]}; }) : [];
       const wlSug = (function(){
         const q = quarterLine;
         if (q === null) return {text:'--', cls:'sug-hold'};
@@ -833,6 +837,10 @@ async function loadWatchlist(sortKey) {
             </div>
           </div>
         </div>
+        ${divItems.length ? `<div style="border-top:1px solid var(--border);margin-top:8px;padding-top:8px">
+          <div style="font-size:0.85rem;color:var(--muted);margin-bottom:4px">配息 殖利率 <span style="color:var(--yellow)">${divYield}%</span></div>
+          <div class="recent-div">${divItems.map(r => '<span class="recent-div-item"><span class="rd-date">'+r.date+'</span><span class="rd-amt">$'+r.amount+'</span></span>').join('')}</div>
+        </div>` : ''}
       </div>`;
     }).join('');
     // Render watchlist sparklines
@@ -856,6 +864,7 @@ async function loadWatchlist(sortKey) {
 }
 
 let wlSortKey = 'default';
+let wlOriginalRows = [];
 let wlCompareList = [];
 function toggleWlCompare(idx) {
   const i = wlCompareList.indexOf(idx);
@@ -877,20 +886,21 @@ function renderWlCompare() {
   const items = wlCompareList.map((idx, ci) => {
     const card = cards[idx];
     const ticker = card?.querySelector('.card-ticker')?.textContent || '';
+    const name = card?.querySelector('.card-name')?.textContent || '';
     const pctText = card?.querySelector('.card-change')?.textContent || '0';
     const pct = parseFloat(pctText.match(/([-\d.]+)%/)?.[1]) || 0;
     const qText = card?.querySelectorAll('.kpi-value')?.[0]?.textContent || '0';
     const q = parseFloat(qText) || 0;
     const peText = card?.querySelectorAll('.kpi-value')?.[1]?.textContent || '--';
     const yieldText = card?.querySelectorAll('.kpi-value')?.[2]?.textContent || '--';
-    return {ticker, pct, q, pe:peText, yield:yieldText, color:colors[ci]};
+    return {ticker, name, pct, q, pe:peText, yield:yieldText, color:colors[ci]};
   });
   let html = '<div class="compare-section" style="overflow-x:auto"><table style="width:100%;border-collapse:collapse;font-size:0.85rem"><tr><th style="text-align:left;padding:6px;color:var(--muted)">指標</th>';
-  items.forEach(it => { html += '<th style="padding:6px;color:'+it.color+'">'+it.ticker+'</th>'; });
+  items.forEach(it => { html += '<th style="padding:6px;color:'+it.color+';text-align:center">'+it.name+'<br>'+it.ticker+'</th>'; });
   html += '</tr>';
   [['漲跌幅','pct'],['離季線','q'],['本益比','pe'],['殖利率','yield']].forEach(([label,key]) => {
     html += '<tr><td style="padding:6px;color:var(--muted)">'+label+'</td>';
-    items.forEach(it => { const v=key==='pct'?it.pct+'%':key==='q'?it.q+'%':it[key]; html += '<td style="padding:6px;font-weight:600">'+v+'</td>'; });
+    items.forEach(it => { const v=key==='pct'?it.pct+'%':key==='q'?it.q+'%':it[key]; html += '<td style="padding:6px;font-weight:600;text-align:center">'+v+'</td>'; });
     html += '</tr>';
   });
   html += '</table></div>';
@@ -899,8 +909,9 @@ function renderWlCompare() {
 }
 function sortWatchlist(key) {
   wlSortKey = key;
-  document.querySelectorAll('#view-watchlist .pill').forEach(p => p.classList.remove('active'));
-  event.target.classList.add('active');
+  document.querySelectorAll('#view-watchlist .filter-bar .pill').forEach(p => p.classList.remove('active'));
+  const labels = {default:'預設',pct:'漲跌幅',qline:'離季線'};
+  document.querySelectorAll('#view-watchlist .filter-bar .pill').forEach(p => { if(p.textContent===labels[key]) p.classList.add('active'); });
   loadWatchlist();
 }
 
