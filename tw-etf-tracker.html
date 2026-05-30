@@ -113,7 +113,7 @@ body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; b
 .sparkline-wrap { margin-top:8px; height:40px; border:1px solid var(--border); border-radius:6px; padding:4px; }
 .sparkline-wrap canvas { width:100% !important; }
 
-.compare-btn { position:absolute; top:-8px; left:-8px; background:var(--accent); border:none; color:#000; font-size:0.75rem; padding:4px 8px; border-radius:12px; cursor:pointer; z-index:2; font-weight:600; }
+.compare-btn { position:absolute; top:-8px; left:50%; transform:translateX(-50%); background:var(--accent); border:none; color:#000; font-size:0.75rem; padding:4px 8px; border-radius:12px; cursor:pointer; z-index:2; font-weight:600; }
 .compare-btn:hover { opacity:0.8; }
 .compare-btn.active { background:var(--green); color:#000; }
 .card.comparing { border-color:var(--accent); box-shadow:0 0 8px rgba(88,166,255,.3); }
@@ -213,7 +213,6 @@ body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; b
       <div class="main-tab active" onclick="switchMainTab('etf')">ETF 追蹤</div>
       <div class="main-tab" onclick="switchMainTab('watchlist')">自選個股</div>
     </div>
-    <button class="div-cal-btn" onclick="showDivCalendar()">📅 配息日曆</button>
   </div>
   <div class="subtitle">即時數據 · <span id="live-status">載入報價中...</span></div>
   <div class="update-info"><span id="price-time"></span><span>NAV/報酬率：每日 16:00 更新</span></div>
@@ -231,6 +230,7 @@ body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; b
     <button class="pill" onclick="filterETF('月配')" id="f-月配">月配</button>
     <button class="pill" onclick="filterETF('季配')" id="f-季配">季配</button>
     <button class="pill" onclick="filterETF('半年配')" id="f-半年配">半年配</button>
+    <button class="div-cal-btn" style="margin-left:auto" onclick="showDivCalendar()">📅 配息日曆</button>
   </div>
   <div class="cards" id="etf-cards"></div>
 </div>
@@ -563,7 +563,14 @@ function updateCompareUI() {
 
 function closeCompare() {
   compareList = [];
+  wlCompareList = [];
   updateCompareUI();
+  document.querySelectorAll('#view-watchlist .card').forEach(card => {
+    card.classList.remove('comparing');
+    const btn = card.querySelector('.compare-btn');
+    if (btn) { btn.classList.remove('active'); btn.textContent = '比較'; }
+  });
+  document.getElementById('compare-panel').classList.remove('show');
 }
 
 function renderCompare() {
@@ -777,17 +784,23 @@ async function loadWatchlist() {
     const res = await fetch(`https://docs.google.com/spreadsheets/d/${WL_SHEET_ID}/gviz/tq?tqx=out:csv&sheet=watchlist&t=${Date.now()}`);
     const csv = await res.text();
     const allRows = csv.trim().split('\n').filter(r => r);
-    const rows = allRows.slice(1); // skip header
+    wlOriginalRows = allRows.slice(1); // skip header
+    renderWatchlistCards();
+  } catch(e) {
+    document.getElementById('watchlist-cards').innerHTML = '<p style="color:var(--muted)">載入失敗</p>';
+  }
+}
+
+function renderWatchlistCards() {
     const container = document.getElementById('watchlist-cards');
     const empty = document.getElementById('watchlist-empty');
-    if (!rows.length) {
+    if (!wlOriginalRows.length) {
       container.innerHTML = '';
       empty.style.display = 'block';
       return;
     }
     empty.style.display = 'none';
-    wlOriginalRows = [...rows];
-    const sortedRows = [...rows];
+    const sortedRows = [...wlOriginalRows];
     if (wlSortKey === 'pct') sortedRows.sort((a,b) => { const pa=parseFloat((a.match(/"([^"]*)"/g)||[])[5])||0; const pb=parseFloat((b.match(/"([^"]*)"/g)||[])[5])||0; return pb-pa; });
     if (wlSortKey === 'qline') sortedRows.sort((a,b) => { const qa=parseFloat((a.match(/"([^"]*)"/g)||[])[10])||0; const qb=parseFloat((b.match(/"([^"]*)"/g)||[])[10])||0; return qb-qa; });
     container.innerHTML = sortedRows.map((row, i) => {
@@ -859,9 +872,6 @@ async function loadWatchlist() {
         options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false},tooltip:{enabled:false}},scales:{x:{display:false},y:{display:false}}}
       });
     });
-  } catch(e) {
-    document.getElementById('watchlist-cards').innerHTML = '<p style="color:var(--muted)">載入失敗</p>';
-  }
 }
 
 let wlSortKey = 'default';
@@ -913,7 +923,7 @@ function sortWatchlist(key) {
   document.querySelectorAll('#view-watchlist .filter-bar .pill').forEach(p => p.classList.remove('active'));
   const labels = {default:'預設',pct:'漲跌幅',qline:'離季線'};
   document.querySelectorAll('#view-watchlist .filter-bar .pill').forEach(p => { if(p.textContent===labels[key]) p.classList.add('active'); });
-  loadWatchlist();
+  renderWatchlistCards();
 }
 
 function showWlChart(idx) {
