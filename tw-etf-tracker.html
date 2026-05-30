@@ -286,7 +286,7 @@ function renderCards() {
       <div class="card-mid-right">
         <div class="kpi"><span class="kpi-label">折溢價</span><span class="kpi-value premium-value ${getPremiumClass(etf.premium)}">${etf.premium}%</span></div>
         <div class="kpi"><span class="kpi-label">離季線</span><span class="kpi-value">${etf.quarterLine != null ? (etf.quarterLine>=0?'+':'')+etf.quarterLine+'%' : '--'}</span></div>
-        <div class="kpi"><span class="kpi-label">建議</span><span class="kpi-value"><span class="sug-badge ${getSuggestion(etf).cls}" title="${getSuggestion(etf).reason}">${getSuggestion(etf).text}</span></span></div>
+        <div class="kpi"><span class="kpi-label">建議</span><span class="kpi-value"><span class="sug-badge ${getSuggestion(etf).cls}" onclick="alert('${getSuggestion(etf).reason}')" title="${getSuggestion(etf).reason}">${getSuggestion(etf).text}</span></span></div>
       </div>
     </div>
   </div>
@@ -737,7 +737,7 @@ function renderSparklines() {
     new Chart(canvas, {
       type: 'bar',
       data: { labels: data.map(()=>''), datasets: [{ data: changes, backgroundColor: colors, borderWidth: 0 }] },
-      options: { responsive: true, maintainAspectRatio: false, animation: false, plugins: { legend:{display:false}, tooltip:{enabled:false} }, scales: { x:{display:false}, y:{display:false, min:-Math.max(...changes.map(c=>Math.abs(c))), max:Math.max(...changes.map(c=>Math.abs(c)))} } }
+      options: { responsive: true, maintainAspectRatio: false, animation: false, plugins: { legend:{display:false}, tooltip:{enabled:false} }, scales: { x:{display:false}, y:{display:false, min:-(Math.max(...changes.map(c=>Math.abs(c)))||1), max:(Math.max(...changes.map(c=>Math.abs(c)))||1)} }, layout:{padding:0} }
     });
   });
 }
