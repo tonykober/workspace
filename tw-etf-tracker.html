@@ -276,7 +276,7 @@ function renderCards() {
     </div>
     <div class="card-right">
       <div class="card-price">${etf.price ? '$'+etf.price.toFixed(2) : '--'}</div>
-      <span class="card-change ${etf.changePercent>=0?'up':'down'}">${etf.changePercent>=0?'+':''}${etf.changePercent.toFixed(2)}%</span>
+      <span class="card-change ${etf.changePercent>=0?'up':'down'}">${etf.change>=0?'+':''}${etf.change} (${etf.changePercent>=0?'+':''}${etf.changePercent.toFixed(2)}%)</span>
     </div>
   </div>
   <div style="border-top:1px solid var(--border);margin-top:8px;padding-top:8px">
@@ -737,7 +737,7 @@ function renderSparklines() {
     new Chart(canvas, {
       type: 'bar',
       data: { labels: data.map(()=>''), datasets: [{ data: changes, backgroundColor: colors, borderWidth: 0 }] },
-      options: { responsive: true, maintainAspectRatio: false, animation: false, plugins: { legend:{display:false}, tooltip:{enabled:false} }, scales: { x:{display:false}, y:{display:false, beginAtZero:true, suggestedMin:-Math.max(...changes.map(Math.abs)), suggestedMax:Math.max(...changes.map(Math.abs))} } }
+      options: { responsive: true, maintainAspectRatio: false, animation: false, plugins: { legend:{display:false}, tooltip:{enabled:false} }, scales: { x:{display:false}, y:{display:false, min:-Math.max(...changes.map(c=>Math.abs(c))), max:Math.max(...changes.map(c=>Math.abs(c)))} } }
     });
   });
 }
