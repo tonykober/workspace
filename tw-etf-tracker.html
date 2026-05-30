@@ -548,6 +548,12 @@ async function fetchLivePrices() {
       const sparkline = sparkRaw ? sparkRaw.split('|').map(Number).filter(n=>n>0) : [];
       const navVal = parseFloat(cols[7]) || null;
       const premiumVal = parseFloat(cols[8]) || null;
+      const ret1m = parseFloat(cols[9]) || null;
+      const ret3m = parseFloat(cols[10]) || null;
+      const ret6m = parseFloat(cols[11]) || null;
+      const ret1y = parseFloat(cols[12]) || null;
+      const divYield = parseFloat(cols[13]) || null;
+      const divRecent = cols[14] || '';
       const etf = ETF_DATA.find(e => e.ticker === ticker);
       if (etf && price > 0) {
         etf.price = price;
@@ -557,6 +563,14 @@ async function fetchLivePrices() {
         etf.sparkline = sparkline;
         if (navVal) etf.nav = navVal;
         if (premiumVal !== null) etf.premium = premiumVal;
+        if (ret1m !== null) etf.returns.m1 = ret1m;
+        if (ret3m !== null) etf.returns.m3 = ret3m;
+        if (ret6m !== null) etf.returns.m6 = ret6m;
+        if (ret1y !== null) etf.returns.y1 = ret1y;
+        if (divYield) etf.dividend.yield = divYield;
+        if (divRecent) {
+          etf.dividend.recent = divRecent.split('|').map(function(s) { var p=s.split(':'); return {date:p[0],amount:parseFloat(p[1])}; });
+        }
         updated++;
       }
     });
