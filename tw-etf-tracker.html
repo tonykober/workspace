@@ -517,7 +517,7 @@ function renderMainChart() {
   const colors = ["#00d4ff","#ff6b6b","#3fb950","#ffd93d","#a371f7","#ff8b94","#00c9a7","#f0883e","#6366f1","#ec4899"];
   const datasets = chartOverlays.map((idx, ci) => {
     const etf = ETF_DATA[idx];
-    const fullData = etf.sparkline || [];
+    const fullData = etf.historySparkline.length ? etf.historySparkline : (etf.sparkline || []);
     const data = fullData.slice(-chartRange);
     // Normalize to % change from first day
     const base = data[0] || 1;
@@ -659,15 +659,16 @@ function parseCSV(csv) {
 async function loadAllData() {
   const t = Date.now();
   try {
-    const [infoRes, priceRes, secRes, holdRes, navRes] = await Promise.all([
+    const [infoRes, priceRes, secRes, holdRes, navRes, histRes] = await Promise.all([
       fetch(SHEET_BASE + 'info&t=' + t),
       fetch(SHEET_BASE + 'Sheet1&t=' + t),
       fetch(SHEET_BASE + 'sectors&t=' + t),
       fetch(SHEET_BASE + 'holdings&t=' + t),
-      fetch(SHEET_BASE + 'nav_data&t=' + t)
+      fetch(SHEET_BASE + 'nav_data&t=' + t),
+      fetch(SHEET_BASE + 'history&t=' + t)
     ]);
-    const [infoCsv, priceCsv, secCsv, holdCsv, navCsv] = await Promise.all([
-      infoRes.text(), priceRes.text(), secRes.text(), holdRes.text(), navRes.text()
+    const [infoCsv, priceCsv, secCsv, holdCsv, navCsv, histCsv] = await Promise.all([
+      infoRes.text(), priceRes.text(), secRes.text(), holdRes.text(), navRes.text(), histRes.text()
     ]);
     
     const infoData = parseCSV(infoCsv);
@@ -675,6 +676,7 @@ async function loadAllData() {
     const secData = parseCSV(secCsv);
     const holdData = parseCSV(holdCsv);
     const navData = parseCSV(navCsv);
+    const histData = parseCSV(histCsv);
     
     // Build ETF_DATA from info as base
     ETF_DATA = infoData.map(info => {
@@ -683,6 +685,7 @@ async function loadAllData() {
       const sec = secData.find(s => s.ticker === ticker) || {};
       const hold = holdData.find(h => h.ticker === ticker) || {};
       const navRow = navData.find(n => n.ticker === ticker || ticker.endsWith(n.ticker) || n.ticker === ticker.replace(/^0+/,'')) || {};
+      const histRow = histData.find(h => h.ticker === ticker) || {};
       
       // Parse sectors
       const sectors = {};
@@ -696,9 +699,13 @@ async function loadAllData() {
         if (hold['h'+i] && hold['p'+i]) topHoldings.push({name: hold['h'+i], pct: parseFloat(hold['p'+i]) || 0});
       }
       
-      // Parse sparkline
+      // Parse sparkline (Sheet1 for card preview)
       const sparkRaw = price.sparkline || '';
       const sparkline = sparkRaw ? sparkRaw.split('|').map(Number).filter(n=>n>0) : [];
+      
+      // Parse history sparkline (60 days for chart modal)
+      const histRaw = histRow.sparkline || '';
+      const historySparkline = histRaw ? histRaw.split('|').map(Number).filter(n=>n>0) : [];
       
       // Parse dividend recent
       const divRecentRaw = navRow.divRecent || '';
@@ -709,6 +716,7 @@ async function loadAllData() {
         name: info.name || '',
         type: info.type || '',
         sparkline,
+        historySparkline,
         price: parseFloat(price.price) || 0,
         change: parseFloat(price.change) || 0,
         changePercent: parseFloat(price.changePct) || 0,
