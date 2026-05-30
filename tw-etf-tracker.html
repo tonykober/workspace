@@ -160,6 +160,20 @@ body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; b
 .confirm-box button { padding:8px 20px; border-radius:6px; border:none; cursor:pointer; font-size:14px; }
 .confirm-box .btn-yes { background:var(--red); color:#fff; }
 .confirm-box .btn-no { background:var(--border); color:var(--text); }
+.chart-btn { position:absolute; top:8px; left:60px; background:var(--surface2); border:1px solid var(--border); color:var(--muted); font-size:0.75rem; padding:3px 8px; border-radius:4px; cursor:pointer; z-index:1; }
+.chart-btn:hover { border-color:var(--accent); color:var(--accent); }
+.chart-modal { position:fixed; top:0; left:0; right:0; bottom:0; background:rgba(0,0,0,.85); z-index:300; display:none; align-items:center; justify-content:center; padding:16px; }
+.chart-modal.show { display:flex; }
+.chart-box { background:var(--surface); border:1px solid var(--border); border-radius:12px; padding:20px; width:100%; max-width:800px; max-height:90vh; overflow-y:auto; }
+.chart-box h3 { color:var(--accent); margin-bottom:4px; font-size:1rem; }
+.chart-box .chart-info { display:flex; gap:16px; font-size:0.85rem; color:var(--muted); margin-bottom:12px; flex-wrap:wrap; }
+.chart-box .chart-info span b { color:var(--text); }
+.chart-box canvas { width:100% !important; height:250px !important; }
+.chart-box .chart-actions { display:flex; gap:8px; margin-top:12px; flex-wrap:wrap; }
+.chart-box .chart-actions button { background:var(--surface2); border:1px solid var(--border); color:var(--muted); padding:4px 10px; border-radius:4px; font-size:0.8rem; cursor:pointer; }
+.chart-box .chart-actions button:hover { border-color:var(--accent); color:var(--accent); }
+.chart-box .chart-actions button.active { background:var(--accent); color:#000; border-color:var(--accent); }
+.chart-close { position:absolute; top:12px; right:16px; background:none; border:none; color:var(--muted); font-size:1.5rem; cursor:pointer; }
 </style>
 </head>
 <body>
@@ -308,6 +322,7 @@ function renderCards() {
   container.innerHTML = ETF_DATA.map((etf, i) => `
     <div class="card" style="position:relative">
       <button class="compare-btn" onclick="toggleCompare(${i})">比較</button>
+      <button class="chart-btn" onclick="event.stopPropagation();showChart(${i})">走勢</button>
       <div class="card-top">
         <div>
           <div class="card-left">
@@ -398,6 +413,95 @@ function renderSectorCharts() {
       }
     });
     sectorCharts.push(chart);
+  });
+}
+
+// === Historical Chart ===
+let mainChart = null;
+let chartOverlays = [];
+
+function showChart(idx) {
+  const etf = ETF_DATA[idx];
+  if (!etf.sparkline || etf.sparkline.length < 2) return;
+  const data = etf.sparkline;
+  const high = Math.max(...data);
+  const low = Math.min(...data);
+  const start = data[0];
+  const latest = data[data.length-1];
+  
+  document.getElementById('chart-title').textContent = etf.ticker + ' ' + etf.name + ' — 近一個月走勢';
+  document.getElementById('chart-info').innerHTML = 
+    '<span>起始 <b>$'+start.toFixed(2)+'</b></span>' +
+    '<span>最高 <b style="color:var(--red)">$'+high.toFixed(2)+'</b></span>' +
+    '<span>最低 <b style="color:var(--green)">$'+low.toFixed(2)+'</b></span>' +
+    '<span>最新 <b>$'+latest.toFixed(2)+'</b></span>';
+  
+  // Actions: overlay buttons for other ETFs
+  chartOverlays = [idx];
+  const actionsHtml = ETF_DATA.map((e, i) => {
+    if (i === idx) return '';
+    return '<button onclick="toggleOverlay('+i+')" id="overlay-btn-'+i+'">+ '+e.ticker+'</button>';
+  }).join('');
+  document.getElementById('chart-actions').innerHTML = '<span style="font-size:0.8rem;color:var(--muted)">疊加比較：</span>' + actionsHtml;
+  
+  renderMainChart();
+  document.getElementById('chart-modal').classList.add('show');
+}
+
+function closeChart() {
+  document.getElementById('chart-modal').classList.remove('show');
+  if (mainChart) { mainChart.destroy(); mainChart = null; }
+}
+
+function toggleOverlay(idx) {
+  const i = chartOverlays.indexOf(idx);
+  if (i >= 0) chartOverlays.splice(i, 1);
+  else chartOverlays.push(idx);
+  const btn = document.getElementById('overlay-btn-'+idx);
+  if (btn) btn.classList.toggle('active');
+  renderMainChart();
+}
+
+function renderMainChart() {
+  const canvas = document.getElementById('chart-main');
+  if (mainChart) mainChart.destroy();
+  
+  const colors = ['#58a6ff','#f0883e','#3fb950','#a371f7','#d29922'];
+  const datasets = chartOverlays.map((idx, ci) => {
+    const etf = ETF_DATA[idx];
+    const data = etf.sparkline || [];
+    // Normalize to % change from first day
+    const base = data[0] || 1;
+    const normalized = data.map(v => ((v - base) / base * 100).toFixed(2));
+    return {
+      label: etf.ticker,
+      data: chartOverlays.length > 1 ? normalized : data,
+      borderColor: colors[ci % colors.length],
+      backgroundColor: colors[ci % colors.length] + '20',
+      borderWidth: 2,
+      pointRadius: 0,
+      pointHoverRadius: 4,
+      fill: chartOverlays.length === 1,
+      tension: 0.3
+    };
+  });
+  
+  mainChart = new Chart(canvas, {
+    type: 'line',
+    data: { labels: datasets[0].data.map((_, i) => 'D'+(i+1)), datasets },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false,
+      interaction: { mode: 'index', intersect: false },
+      plugins: {
+        legend: { display: chartOverlays.length > 1, labels: { color: '#8b949e', font: { size: 11 } } },
+        tooltip: { enabled: true, callbacks: { label: ctx => ctx.dataset.label + ': ' + (chartOverlays.length > 1 ? ctx.parsed.y + '%' : '$' + ctx.parsed.y) } }
+      },
+      scales: {
+        x: { display: true, grid: { color: '#30363d' }, ticks: { color: '#8b949e', font: { size: 10 } } },
+        y: { display: true, grid: { color: '#30363d' }, ticks: { color: '#8b949e', font: { size: 10 }, callback: v => chartOverlays.length > 1 ? v+'%' : '$'+v } }
+      }
+    }
   });
 }
 
@@ -759,6 +863,15 @@ fetchLivePrices();
 fetchHoldingsAndDividends();
 setInterval(() => { if(shouldFetch()) fetchLivePrices(); }, 300000);
 </script>
+<div class="chart-modal" id="chart-modal" onclick="if(event.target===this)closeChart()">
+  <div class="chart-box" style="position:relative">
+    <button class="chart-close" onclick="closeChart()">&times;</button>
+    <h3 id="chart-title"></h3>
+    <div class="chart-info" id="chart-info"></div>
+    <canvas id="chart-main"></canvas>
+    <div class="chart-actions" id="chart-actions"></div>
+  </div>
+</div>
 <div class="compare-panel" id="compare-panel">
   <div class="compare-header">
     <h3>🔍 ETF 比較</h3>
