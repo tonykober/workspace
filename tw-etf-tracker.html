@@ -772,11 +772,12 @@ function switchMainTab(tab) {
   if (tab === 'watchlist') loadWatchlist();
 }
 
-async function loadWatchlist(sortKey) {
+async function loadWatchlist() {
   try {
     const res = await fetch(`https://docs.google.com/spreadsheets/d/${WL_SHEET_ID}/gviz/tq?tqx=out:csv&sheet=watchlist&t=${Date.now()}`);
     const csv = await res.text();
-    const rows = csv.trim().split('\n').filter(r => r);
+    const allRows = csv.trim().split('\n').filter(r => r);
+    const rows = allRows.slice(1); // skip header
     const container = document.getElementById('watchlist-cards');
     const empty = document.getElementById('watchlist-empty');
     if (!rows.length) {
@@ -785,8 +786,8 @@ async function loadWatchlist(sortKey) {
       return;
     }
     empty.style.display = 'none';
-    if (!wlOriginalRows.length || wlSortKey === 'default') wlOriginalRows = [...rows];
-    const sortedRows = wlSortKey === 'default' ? [...wlOriginalRows] : [...rows];
+    wlOriginalRows = [...rows];
+    const sortedRows = [...rows];
     if (wlSortKey === 'pct') sortedRows.sort((a,b) => { const pa=parseFloat((a.match(/"([^"]*)"/g)||[])[5])||0; const pb=parseFloat((b.match(/"([^"]*)"/g)||[])[5])||0; return pb-pa; });
     if (wlSortKey === 'qline') sortedRows.sort((a,b) => { const qa=parseFloat((a.match(/"([^"]*)"/g)||[])[10])||0; const qb=parseFloat((b.match(/"([^"]*)"/g)||[])[10])||0; return qb-qa; });
     container.innerHTML = sortedRows.map((row, i) => {
@@ -895,8 +896,8 @@ function renderWlCompare() {
     const yieldText = card?.querySelectorAll('.kpi-value')?.[2]?.textContent || '--';
     return {ticker, name, pct, q, pe:peText, yield:yieldText, color:colors[ci]};
   });
-  let html = '<div class="compare-section" style="overflow-x:auto"><table style="width:100%;border-collapse:collapse;font-size:0.85rem"><tr><th style="text-align:left;padding:6px;color:var(--muted)">指標</th>';
-  items.forEach(it => { html += '<th style="padding:6px;color:'+it.color+';text-align:center">'+it.name+'<br>'+it.ticker+'</th>'; });
+  let html = '<div class="compare-section" style="overflow-x:auto"><table style="width:fit-content;margin:0 auto;border-collapse:collapse;font-size:0.85rem"><tr><th style="text-align:left;padding:6px;color:var(--muted)">指標</th>';
+  items.forEach(it => { html += '<th style="padding:6px 16px;color:'+it.color+';text-align:center">'+it.name+'<br>'+it.ticker+'</th>'; });
   html += '</tr>';
   [['漲跌幅','pct'],['離季線','q'],['本益比','pe'],['殖利率','yield']].forEach(([label,key]) => {
     html += '<tr><td style="padding:6px;color:var(--muted)">'+label+'</td>';
