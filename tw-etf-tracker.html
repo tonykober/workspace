@@ -559,7 +559,7 @@ function renderMainChart() {
   const canvas = document.getElementById('chart-main');
   if (mainChart) mainChart.destroy();
   
-  const colors = ['#58a6ff','#f0883e','#3fb950','#a371f7','#d29922'];
+  const colors = ["#00d4ff","#ff6b6b","#3fb950","#ffd93d","#a371f7","#ff8b94","#00c9a7","#f0883e","#6366f1","#ec4899"];
   const datasets = chartOverlays.map((idx, ci) => {
     const etf = ETF_DATA[idx];
     const data = etf.sparkline || [];
