@@ -304,7 +304,8 @@ function renderCards() {
     </div>
   </div>
   <div class="card-section" style="border-top:1px solid var(--border);margin-top:8px;padding-top:8px">
-    <div class="card-section-title">產業分布</div>
+    <div class="card-section-title holdings-toggle" onclick="this.parentElement.classList.toggle('open')">產業分布</div>
+    <div class="holdings-content">
     <div class="sector-area">
       <div class="sector-chart"><canvas id="sector-${i}"></canvas></div>
       <div class="sector-legend">
@@ -313,6 +314,7 @@ function renderCards() {
           return '<div class="sector-legend-item"><span class="dot" style="background:'+colors[j]+'"></span><span class="sl-name">'+k+'</span><span class="sl-pct">'+v+'%</span></div>';
         }).join('')}
       </div>
+    </div>
     </div>
   </div>
   <div class="card-section" style="border-top:1px solid var(--border);margin-top:6px;padding-top:6px">
@@ -735,7 +737,7 @@ function renderSparklines() {
     new Chart(canvas, {
       type: 'bar',
       data: { labels: data.map(()=>''), datasets: [{ data: changes, backgroundColor: colors, borderWidth: 0 }] },
-      options: { responsive: true, maintainAspectRatio: false, plugins: { legend:{display:false}, tooltip:{enabled:false} }, scales: { x:{display:false}, y:{display:false} } }
+      options: { responsive: true, maintainAspectRatio: false, animation: false, plugins: { legend:{display:false}, tooltip:{enabled:false} }, scales: { x:{display:false}, y:{display:false, beginAtZero:true, suggestedMin:-Math.max(...changes.map(Math.abs)), suggestedMax:Math.max(...changes.map(Math.abs))} } }
     });
   });
 }
