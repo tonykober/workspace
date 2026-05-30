@@ -770,6 +770,9 @@ async function loadWatchlist(sortKey) {
       return;
     }
     empty.style.display = 'none';
+    // Sort rows before rendering
+    if (wlSortKey === 'pct') rows.sort((a,b) => { const pa=parseFloat((a.match(/"([^"]*)"/g)||[])[5])||0; const pb=parseFloat((b.match(/"([^"]*)"/g)||[])[5])||0; return pb-pa; });
+    if (wlSortKey === 'qline') rows.sort((a,b) => { const qa=parseFloat((a.match(/"([^"]*)"/g)||[])[10])||0; const qb=parseFloat((b.match(/"([^"]*)"/g)||[])[10])||0; return qb-qa; });
     container.innerHTML = rows.map((row, i) => {
       const cols = row.match(/"([^"]*)"/g)?.map(s => s.replace(/"/g,'')) || row.split(',');
       const ticker = cols[0] || '';
@@ -837,8 +840,12 @@ async function loadWatchlist(sortKey) {
   }
 }
 
+let wlSortKey = 'default';
 function sortWatchlist(key) {
-  loadWatchlist(key);
+  wlSortKey = key;
+  document.querySelectorAll('#view-watchlist .pill').forEach(p => p.classList.remove('active'));
+  event.target.classList.add('active');
+  loadWatchlist();
 }
 
 function showWlChart(idx) {

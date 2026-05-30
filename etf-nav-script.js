@@ -59,30 +59,38 @@ function fetchNavData() {
 
 // === 自選股 PE/殖利率自動抓取（每日 16:00 跟 fetchNavData 一起跑）===
 function fetchWatchlistData() {
-  var ss = SpreadsheetApp.openById('1GT8LkzWJPo9psHwRIJwjfV2HEoYf7x8eIkI22BhuqIs');
-  var sheet = ss.getSheetByName('watchlist');
+  var ss = SpreadsheetApp.openById("1GT8LkzWJPo9psHwRIJwjfV2HEoYf7x8eIkI22BhuqIs");
+  var sheet = ss.getSheetByName("watchlist");
   if (!sheet) return;
   var lastRow = sheet.getLastRow();
   if (lastRow < 1) return;
-  var tickers = sheet.getRange(1, 1, lastRow, 1).getValues().map(function(r){return r[0].toString().trim()});
-  
-  var twseData = [], tpexData = [];
-  try { twseData = JSON.parse(UrlFetchApp.fetch('https://openapi.twse.com.tw/v1/exchangeReport/BWIBBU_d', {muteHttpExceptions:true}).getContentText()); } catch(e){}
-  try { tpexData = JSON.parse(UrlFetchApp.fetch('https://www.tpex.org.tw/openapi/v1/tpex_mainboard_peratio_analysis', {muteHttpExceptions:true}).getContentText()); } catch(e){}
-  
-  tickers.forEach(function(ticker, idx) {
-    if (!ticker) return;
-    var row = idx + 1;
-    var found = twseData.find(function(d){return d.Code === ticker});
-    if (found) {
-      if (found.PEratio) sheet.getRange(row, 8).setValue(found.PEratio);
-      if (found.DividendYield) sheet.getRange(row, 10).setValue(found.DividendYield);
-    } else {
-      var otc = tpexData.find(function(d){return d.SecuritiesCompanyCode === ticker});
-      if (otc) {
-        if (otc.PriceEarningRatio) sheet.getRange(row, 8).setValue(otc.PriceEarningRatio);
-        if (otc.YieldRatio) sheet.getRange(row, 10).setValue(otc.YieldRatio);
+  var tickers = sheet.getRange(1,1,lastRow,1).getValues().map(function(r){return r[0].toString().trim()});
+  var twseData=[],tpexData=[],twseInfo=[],tpexInfo=[];
+  try{twseData=JSON.parse(UrlFetchApp.fetch("https://openapi.twse.com.tw/v1/exchangeReport/BWIBBU_d",{muteHttpExceptions:true}).getContentText())}catch(e){}
+  try{tpexData=JSON.parse(UrlFetchApp.fetch("https://www.tpex.org.tw/openapi/v1/tpex_mainboard_peratio_analysis",{muteHttpExceptions:true}).getContentText())}catch(e){}
+  try{twseInfo=JSON.parse(UrlFetchApp.fetch("https://openapi.twse.com.tw/v1/opendata/t187ap03_L",{muteHttpExceptions:true}).getContentText())}catch(e){}
+  try{tpexInfo=JSON.parse(UrlFetchApp.fetch("https://www.tpex.org.tw/openapi/v1/mopsfin_t187ap03_O",{muteHttpExceptions:true}).getContentText())}catch(e){}
+  var indMap={"01":"水泥","02":"食品","03":"塑膠","04":"紡織","05":"電機","06":"電器","08":"玻璃","09":"造紙","10":"鋼鐵","11":"橡膠","12":"汽車","14":"建材","15":"航運","16":"觀光","17":"金融","18":"貿易","20":"其他","21":"化學","22":"生技","23":"油電","24":"半導體","25":"電腦週邊","26":"光電","27":"通信","28":"電子零組件","29":"電子通路","30":"資訊服務","31":"其他電子","35":"綠能","36":"數位雲端","37":"運動休閒","38":"居家生活"};
+  tickers.forEach(function(ticker,idx){
+    if(!ticker)return;
+    var row=idx+1;
+    var found=twseData.find(function(d){return d.Code===ticker});
+    if(found){
+      if(found.PEratio)sheet.getRange(row,8).setValue(found.PEratio);
+      if(found.DividendYield)sheet.getRange(row,10).setValue(found.DividendYield);
+      if(found.PBratio)sheet.getRange(row,11).setValue(found.PBratio);
+    }else{
+      var otc=tpexData.find(function(d){return d.SecuritiesCompanyCode===ticker});
+      if(otc){
+        if(otc.PriceEarningRatio)sheet.getRange(row,8).setValue(otc.PriceEarningRatio);
+        if(otc.YieldRatio)sheet.getRange(row,10).setValue(otc.YieldRatio);
       }
+    }
+    var info=twseInfo.find(function(d){return d["公司代號"]===ticker});
+    if(!info)info=tpexInfo.find(function(d){return d.SecuritiesCompanyCode===ticker});
+    if(info){
+      var code=info["產業別"]||info.SecuritiesIndustryCode||"";
+      sheet.getRange(row,9).setValue(indMap[code]||code);
     }
   });
 }
