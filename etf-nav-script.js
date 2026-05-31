@@ -365,10 +365,12 @@ function backfillSparkline() {
         var yData = JSON.parse(yRes.getContentText());
         var closes = yData.chart.result[0].indicators.quote[0].close;
         prices = closes.filter(function(c){return c && c > 0}).map(function(c){return parseFloat(c.toFixed(2))});
+        Logger.log('Yahoo OK for ' + ticker + ': ' + prices.length + ' points');
       } catch(e) { Logger.log('Yahoo chart fallback error ' + ticker + ': ' + e.message); }
     }
     if (prices.length > 60) prices = prices.slice(-60);
-    if (prices.length) appendRowWithTicker(hist, [ticker, prices.join('|')]);
+    if (prices.length) { appendRowWithTicker(hist, [ticker, prices.join('|')]); }
+    else { Logger.log('NO DATA for ' + ticker); }
   });
   Logger.log('backfillSparkline 完成');
 }
