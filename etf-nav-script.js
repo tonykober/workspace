@@ -587,5 +587,23 @@ function doPost(e) {
     return ContentService.createTextOutput('ok');
   }
   
+  if (data.action === 'collapse') {
+    var colSheet = ss.getSheetByName('collapsed');
+    if (!colSheet) { colSheet = ss.insertSheet('collapsed'); colSheet.appendRow(['ticker']); }
+    appendRowWithTicker(colSheet, [data.ticker]);
+    return ContentService.createTextOutput('ok');
+  }
+  
+  if (data.action === 'expand') {
+    var colSheet = ss.getSheetByName('collapsed');
+    if (colSheet) {
+      var rows = colSheet.getDataRange().getValues();
+      for (var i = rows.length-1; i >= 0; i--) {
+        if (rows[i][0].toString().trim() === data.ticker) { colSheet.deleteRow(i+1); break; }
+      }
+    }
+    return ContentService.createTextOutput('ok');
+  }
+  
   return ContentService.createTextOutput('unknown action');
 }

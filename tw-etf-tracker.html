@@ -251,6 +251,7 @@ body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; b
 let ETF_DATA = [];
 let pinnedETFs = [];
 let pinnedWL = [];
+let collapsedTickers = [];
 
 function getPremiumClass(p) {
   if (p < -0.3) return 'cheap';
@@ -282,7 +283,7 @@ function renderCards() {
   const isPinned = pinnedETFs.includes(etf.ticker);
   const origIdx = ETF_DATA.indexOf(etf);
   const hidden = (currentFilter==='etf'&&!etf.isETF)||(currentFilter==='stock'&&etf.isETF)||(currentFilter!=='all'&&currentFilter!=='etf'&&currentFilter!=='stock'&&etf.dividend&&etf.dividend.frequency!==currentFilter);
-  const isCollapsed = (JSON.parse(localStorage.getItem('collapsed')||'[]')).includes(etf.ticker);
+  const isCollapsed = collapsedTickers.includes(etf.ticker);
   return `<div class="card${isPinned?' pinned':''}${isCollapsed?' collapsed':''}" style="position:relative;${hidden?'display:none':''}">
   <span class="card-badge ${etf.isETF?'badge-etf':'badge-stock'}">${etf.isETF?'ETF':'個股'}</span>
   <button class="compare-btn" onclick="toggleCompare(${origIdx})">比較</button>
@@ -689,14 +690,15 @@ function parseCSV(csv) {
 async function loadAllData() {
   const t = Date.now();
   try {
-    const [infoRes, priceRes, secRes, holdRes, navRes, histRes, pinnedRes] = await Promise.all([
+    const [infoRes, priceRes, secRes, holdRes, navRes, histRes, pinnedRes, collapsedRes] = await Promise.all([
       fetch(SHEET_BASE + 'info&t=' + t),
       fetch(SHEET_BASE + 'Sheet1&t=' + t),
       fetch(SHEET_BASE + 'sectors&t=' + t),
       fetch(SHEET_BASE + 'holdings&t=' + t),
       fetch(SHEET_BASE + 'nav_data&t=' + t),
       fetch(SHEET_BASE + 'history&t=' + t),
-      fetch(SHEET_BASE + 'pinned&t=' + t).catch(() => null)
+      fetch(SHEET_BASE + 'pinned&t=' + t).catch(() => null),
+      fetch(SHEET_BASE + 'collapsed&t=' + t).catch(() => null)
     ]);
     const [infoCsv, priceCsv, secCsv, holdCsv, navCsv, histCsv] = await Promise.all([
       infoRes.text(), priceRes.text(), secRes.text(), holdRes.text(), navRes.text(), histRes.text()
@@ -705,6 +707,9 @@ async function loadAllData() {
     const pinnedData = pinnedCsv ? parseCSV(pinnedCsv) : [];
     pinnedETFs = pinnedData.filter(p => p.tab === 'etf').map(p => p.ticker);
     pinnedWL = pinnedData.filter(p => p.tab === 'watchlist').map(p => p.ticker);
+    const collapsedCsv = collapsedRes ? await collapsedRes.text() : '';
+    const collapsedData = collapsedCsv ? parseCSV(collapsedCsv) : [];
+    collapsedTickers = collapsedData.map(c => c.ticker).filter(Boolean);
     
     const infoData = parseCSV(infoCsv);
     const priceData = parseCSV(priceCsv);
@@ -1134,10 +1139,10 @@ function addETF() {
 
 function toggleCollapse(el, ticker) {
   el.classList.toggle('collapsed');
-  const list = JSON.parse(localStorage.getItem('collapsed')||'[]');
-  const idx = list.indexOf(ticker);
-  if (idx >= 0) list.splice(idx, 1); else list.push(ticker);
-  localStorage.setItem('collapsed', JSON.stringify(list));
+  const isCollapsed = el.classList.contains('collapsed');
+  if (isCollapsed) { if (!collapsedTickers.includes(ticker)) collapsedTickers.push(ticker); }
+  else { const idx = collapsedTickers.indexOf(ticker); if (idx>=0) collapsedTickers.splice(idx,1); }
+  fetch(GAS_URL, { method:'POST', mode:'no-cors', headers:{'Content-Type':'text/plain'}, body:JSON.stringify({action: isCollapsed?'collapse':'expand', ticker}) });
 }
 
 function togglePin(ticker, tab) {
