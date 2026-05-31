@@ -231,6 +231,7 @@ body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; b
     <button class="pill" onclick="filterETF('季配')" id="f-季配">季配</button>
     <button class="pill" onclick="filterETF('半年配')" id="f-半年配">半年配</button>
     <button class="div-cal-btn" style="margin-left:auto" onclick="showDivCalendar()">📅 配息日曆</button>
+    <button class="add-btn" style="margin-left:8px" onclick="addETF()">+ 新增</button>
   </div>
   <div class="cards" id="etf-cards"></div>
 </div>
@@ -307,7 +308,7 @@ function renderCards() {
   <div class="card-section" style="border-top:1px solid var(--border);margin-top:8px;padding-top:8px">
     <div class="card-section-title holdings-toggle" onclick="this.parentElement.classList.toggle('open')">產業分布 / 前10大持股</div>
     <div class="holdings-content">
-    <div style="display:flex;gap:12px">
+    ${Object.keys(etf.sectors||{}).length || (etf.topHoldings||[]).length ? `<div style="display:flex;gap:12px">
       <div style="flex:1;min-width:0">
         <div class="sector-area" style="flex-direction:column">
           <div class="sector-chart"><canvas id="sector-${i}"></canvas></div>
@@ -322,7 +323,7 @@ function renderCards() {
       <div style="flex:1;min-width:0">
         ${(etf.topHoldings||[]).map(h => '<div class="holding-bar"><div class="hb-track"><div class="hb-fill" style="width:'+(etf.topHoldings[0]?(h.pct/etf.topHoldings[0].pct*100).toFixed(0):0)+'%"></div><span class="hb-name">'+h.name+'</span><span class="hb-pct">'+h.pct+'%</span></div></div>').join('')}
       </div>
-    </div>
+    </div>` : '<p style="color:var(--muted);font-size:0.85rem;padding:8px 0">資料待補充</p>'}
     </div>
   </div>
 </div>`).join('');
@@ -819,7 +820,10 @@ async function loadWatchlist() {
     const rows = allRows.slice(1);
     wlData = rows.map(row => {
       const cols = row.match(/"([^"]*)"/g)?.map(s => s.replace(/"/g,'')) || row.split(',');
-      return { ticker:cols[0]||'', name:cols[1]||'', price:parseFloat(cols[3])||0, change:parseFloat(cols[4])||0, changePct:parseFloat(cols[5])||0, updated:cols[6]||'', pe:cols[7]||'', sector:cols[8]||'', divYield:cols[9]||'', quarterLine:cols[10]?parseFloat(cols[10]):null, sparkline:cols[11]||'', divRecent:cols[12]||'' };
+      let ticker = cols[0]||'';
+      // Try col[2] as fallback ticker (some sheets store it there for letter codes)
+      if (!ticker && cols[2]) ticker = cols[2];
+      return { ticker, name:cols[1]||'', price:parseFloat(cols[3])||0, change:parseFloat(cols[4])||0, changePct:parseFloat(cols[5])||0, updated:cols[6]||'', pe:cols[7]||'', sector:cols[8]||'', divYield:cols[9]||'', quarterLine:cols[10]?parseFloat(cols[10]):null, sparkline:cols[11]||'', divRecent:cols[12]||'' };
     }).filter(d => d.ticker);
     wlOriginalData = [...wlData];
     renderWatchlistCards();
@@ -1030,15 +1034,27 @@ function renderWlMainChart() {
 }
 
 function addStock() {
-  const ticker = prompt('請輸入股票代號（如 2330）：');
+  const ticker = prompt('請輸入股票代號（如 2330）：\n注意：帶字母的代號（如 00981A）需要在 Sheet 中手動確認格式為純文字');
   if (!ticker || !ticker.trim()) return;
   fetch(GAS_URL, {
     method: 'POST', mode: 'no-cors',
     headers: {'Content-Type':'text/plain'},
-    body: JSON.stringify({action:'add', ticker: ticker.trim()})
+    body: JSON.stringify({action:'add', ticker: ticker.trim().toUpperCase()})
   });
   alert('已新增 ' + ticker.trim() + '，報價將在下次更新時顯示。');
   setTimeout(() => loadWatchlist(), 3000);
+}
+
+function addETF() {
+  const ticker = prompt('請輸入 ETF 代號（如 00878）：');
+  if (!ticker || !ticker.trim()) return;
+  fetch(GAS_URL, {
+    method: 'POST', mode: 'no-cors',
+    headers: {'Content-Type':'text/plain'},
+    body: JSON.stringify({action:'addETF', ticker: ticker.trim()})
+  });
+  alert('已新增 ETF ' + ticker.trim() + '，基本資料將在下次更新時顯示。\n產業分布/持股需手動補充。');
+  setTimeout(() => location.reload(), 3000);
 }
 
 let pendingDelete = null;
