@@ -8,7 +8,7 @@ function fetchNavData() {
   sheet.clear();
   sheet.appendRow(['ticker','nav','premium','ret1m','ret3m','ret6m','ret1y','divYield','divRecent']);
   
-  var tickers = ['0050','0056','00878','00919','00929','00940','006208','00713','00900','00939'];
+  var tickers = ss.getSheetByName('info').getDataRange().getValues().slice(1).map(function(r){return r[0].toString().trim()}).filter(function(t){return t});
   
   tickers.forEach(function(ticker) {
     var nav = '', premium = '', ret1m = '', ret3m = '', ret6m = '', ret1y = '', divYield = '', divRecent = '';
@@ -103,7 +103,7 @@ function checkAndUpdatePrices() {
   if (!updated || (new Date() - new Date(updated)) > 24*60*60*1000) {
     try {
       var data = JSON.parse(UrlFetchApp.fetch('https://openapi.twse.com.tw/v1/exchangeReport/STOCK_DAY_ALL',{muteHttpExceptions:true}).getContentText());
-      var tickers = ['0050','0056','00878','00919','00929','00940','006208','00713','00900','00939'];
+      var tickers = ss.getSheetByName('info').getDataRange().getValues().slice(1).map(function(r){return r[0].toString().trim()}).filter(function(t){return t});
       tickers.forEach(function(ticker, idx) {
         var found = data.find(function(d){return d.Code === ticker});
         if (found) {
@@ -147,4 +147,45 @@ function backfillSparkline() {
     hist.appendRow([ticker, prices.join('|')]);
   });
   Logger.log('backfillSparkline 完成');
+}
+
+// === Web App doPost：處理前端新增 ETF / 自選股 ===
+function doPost(e) {
+  var data = JSON.parse(e.postData.contents);
+  var ss = SpreadsheetApp.openById('1GT8LkzWJPo9psHwRIJwjfV2HEoYf7x8eIkI22BhuqIs');
+  
+  if (data.action === 'addETF') {
+    var info = ss.getSheetByName('info');
+    var ticker = data.ticker;
+    // Check if already exists
+    var existing = info.getDataRange().getValues().some(function(r){return r[0].toString().trim()===ticker});
+    if (existing) return ContentService.createTextOutput('exists');
+    // Try to get name from MoneyDJ
+    var name = ticker;
+    try {
+      var url = 'https://www.moneydj.com/ETF/X/Basic/Basic0004.xdjhtm?etfid=' + ticker + '.TW';
+      var html = UrlFetchApp.fetch(url, {muteHttpExceptions:true}).getContentText();
+      var m = html.match(/<title>(.*?)[-<]/);
+      if (m) name = m[1].trim();
+    } catch(ex) {}
+    info.appendRow([ticker, name, '', '', '', '']);
+    return ContentService.createTextOutput('ok');
+  }
+  
+  if (data.action === 'add') {
+    var wl = ss.getSheetByName('watchlist');
+    wl.appendRow([data.ticker]);
+    return ContentService.createTextOutput('ok');
+  }
+  
+  if (data.action === 'remove') {
+    var wl = ss.getSheetByName('watchlist');
+    var range = wl.getDataRange().getValues();
+    for (var i = 0; i < range.length; i++) {
+      if (range[i][0].toString() === data.ticker) { wl.deleteRow(i+1); break; }
+    }
+    return ContentService.createTextOutput('ok');
+  }
+  
+  return ContentService.createTextOutput('unknown action');
 }
