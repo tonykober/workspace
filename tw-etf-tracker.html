@@ -883,7 +883,8 @@ function renderWatchlistCards() {
         else if (wlFilter === '電子') show = s.includes('電腦') || s.includes('電子');
         else if (wlFilter === '其他') show = !s.includes('半導體') && !s.includes('金融') && !s.includes('電腦') && !s.includes('電子');
       }
-      const wlSpark = d.sparkline ? d.sparkline.split('|').map(Number).filter(n=>n>0) : [];
+      const wlSparkRaw = d.sparkline ? d.sparkline.split('|').map(Number).filter(n=>n>0) : [];
+      const wlSpark = wlSparkRaw.length >= 2 ? wlSparkRaw : (wlHistoryData[d.ticker] || []).slice(-22);
       const divItems = d.divRecent ? d.divRecent.split('|').map(s => { const p=s.split(':'); return {date:p[0],amount:p[1]}; }) : [];
       const q = d.quarterLine;
       const wlSug = q===null?{text:'--',cls:'sug-hold'}:q<-8?{text:'買進',cls:'sug-buy'}:q<=10?{text:'持有',cls:'sug-hold'}:q<=15?{text:'觀望',cls:'sug-wait'}:{text:'減碼',cls:'sug-sell'};
