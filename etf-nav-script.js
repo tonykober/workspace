@@ -105,6 +105,9 @@ function fetchWatchlistData() {
     if(info){
       var code=info["產業別"]||info.SecuritiesIndustryCode||"";
       sheet.getRange(row,9).setValue(indMap[code]||code);
+      // Fill name if empty
+      var curName = sheet.getRange(row,2).getValue();
+      if(!curName || curName===ticker) sheet.getRange(row,2).setValue(info["公司簡稱"]||info.CompanyName||ticker);
     }
   });
 }
@@ -179,10 +182,9 @@ function doPost(e) {
     if (existing) return ContentService.createTextOutput('exists');
     var name = ticker;
     try {
-      var url = 'https://www.moneydj.com/ETF/X/Basic/Basic0004.xdjhtm?etfid=' + ticker + '.TW';
-      var html = UrlFetchApp.fetch(url, {muteHttpExceptions:true}).getContentText();
-      var m = html.match(/<title>(.*?)[-<]/);
-      if (m) name = m[1].trim();
+      var infoData = JSON.parse(UrlFetchApp.fetch("https://openapi.twse.com.tw/v1/opendata/t187ap03_L",{muteHttpExceptions:true}).getContentText());
+      var found = infoData.find(function(d){return d["公司代號"]===ticker});
+      if (found) name = found["公司簡稱"] || ticker;
     } catch(ex) {}
     info.appendRow([ticker, name, '', '', '', '']);
     
