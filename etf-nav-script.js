@@ -204,7 +204,9 @@ function doPost(e) {
       var nf = allStocks.find(function(d){return d.Code===ticker});
       if (nf && nf.Name) name = nf.Name;
     } catch(ex) {}
-    info.appendRow([ticker, name, '', '', '', '']);
+    var newRow = info.getLastRow() + 1;
+    info.getRange(newRow, 1).setNumberFormat('@').setValue(ticker);
+    info.getRange(newRow, 2).setValue(name);
     
     // Immediately fetch NAV/premium/returns/dividend
     var navSheet = ss.getSheetByName('nav_data');
@@ -332,7 +334,13 @@ function doPost(e) {
         price=parseFloat(pf.ClosingPrice);change=parseFloat(pf.Change);var prev=price-change;pct=prev>0?(change/prev*100).toFixed(2):'0';
       }
     } catch(e) {}
-    wl.appendRow([ticker, name, '', price, change, pct, new Date().toLocaleString('zh-TW')]);
+    var wlRow = wl.getLastRow() + 1;
+    wl.getRange(wlRow, 1).setNumberFormat('@').setValue(ticker);
+    wl.getRange(wlRow, 2).setValue(name);
+    wl.getRange(wlRow, 4).setValue(price);
+    wl.getRange(wlRow, 5).setValue(change);
+    wl.getRange(wlRow, 6).setValue(pct);
+    wl.getRange(wlRow, 7).setValue(new Date().toLocaleString('zh-TW'));
     return ContentService.createTextOutput('ok');
   }
   
