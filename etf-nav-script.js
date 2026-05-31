@@ -106,7 +106,7 @@ function fetchFundInfo() {
       var bNums = bHtml.match(/<td class="col\d+">([\d,]+)<\/td>/);
       if (bNums) info.getRange(idx+1, 6).setValue((parseInt(bNums[1].replace(/,/g,'')) / 10000).toFixed(1));
     } catch(e) {}
-    Utilities.sleep(500);
+    Utilities.sleep(2000);
     
     // 2b. Type and frequency from MoneyDJ Basic0004
     try {
@@ -117,7 +117,7 @@ function fetchFundInfo() {
       var tFreq = tHtml.match(/(月配|季配|半年配|年配)/);
       if (tFreq) info.getRange(idx+1, 4).setValue(tFreq[1]);
     } catch(e) {}
-    Utilities.sleep(500);
+    Utilities.sleep(2000);
     
     // 3. Top holdings + 4. Sectors from MoneyDJ Basic0007
     try {
