@@ -279,7 +279,7 @@ function renderCards() {
   <button class="etf-delete" onclick="confirmDeleteETF('${etf.ticker}','${etf.name}')">&times;</button>
   <div class="card-top">
     <div>
-      <div class="card-left"><span class="card-ticker">${etf.ticker}</span><span class="card-type">${etf.type}</span></div>
+      <div class="card-left"><span class="card-ticker">${etf.ticker}</span>${etf.isETF?'<span class="card-type">'+(etf.type||'ETF')+'</span>':'<span class="card-type">'+(etf.sector||'個股')+'</span>'}</div>
       <div class="card-name">${etf.name}</div>
     </div>
     <div class="card-right">
@@ -288,7 +288,7 @@ function renderCards() {
     </div>
   </div>
   <div style="border-top:1px solid var(--border);margin-top:8px;padding-top:8px">
-    <div style="font-size:0.85rem;color:var(--muted);margin-bottom:6px">${etf.isETF ? '基金規模 <b style="color:var(--text)">'+etf.fundSize+'億</b>'+(etf.holders?' ｜ 受益人 <b style="color:var(--text)">'+etf.holders+'萬人</b>':'') : (etf.sector?'<span class="card-type">'+etf.sector+'</span>':'')+(etf.pe?' ｜ 本益比 <b style="color:var(--text)">'+etf.pe+'</b>':'')}</div>
+    <div style="font-size:0.85rem;color:var(--muted);margin-bottom:6px">${etf.isETF ? '基金規模 <b style="color:var(--text)">'+etf.fundSize+'億</b>'+(etf.holders?' ｜ 受益人 <b style="color:var(--text)">'+etf.holders+'萬人</b>':'') : (etf.pe?'本益比 <b style="color:var(--text)">'+etf.pe+'</b>':'')+(etf.divYield?' ｜ 殖利率 <b style="color:var(--yellow)">'+etf.divYield+'%</b>':'')}</div>
     <div class="card-mid">
       <div class="card-mid-left" onclick="showChart(${i})"><canvas id="spark-etf-${i}" height="35"></canvas></div>
       <div class="card-mid-right">
@@ -298,12 +298,12 @@ function renderCards() {
       </div>
     </div>
   </div>
-  <div class="card-section" style="border-top:1px solid var(--border);margin-top:8px;padding-top:8px">
+  ${etf.isETF ? `<div class="card-section" style="border-top:1px solid var(--border);margin-top:8px;padding-top:8px">
     <div class="card-section-title">累積報酬率</div>
     <div class="returns-row">
       ${[['1月','m1'],['3月','m3'],['6月','m6'],['1年','y1']].map(([label,key]) => '<div class="return-item"><div class="return-label">'+label+'</div><div class="return-value '+(etf.returns[key]>=0?'positive':'negative')+'">'+(etf.returns[key]>=0?'+':'')+etf.returns[key]+'%</div></div>').join('')}
     </div>
-  </div>
+  </div>` : ''}
   ${etf.isETF ? `<div class="card-section" style="border-top:1px solid var(--border);margin-top:8px;padding-top:8px">
     <div class="card-section-title">配息資訊</div>
     <div class="dividend-inline">殖利率 <span style="color:var(--yellow)">${etf.dividend.yield}%</span> ｜ ${etf.dividend.frequency} ｜ 年配 <span style="color:var(--yellow)">$${etf.dividend.annual.toFixed?etf.dividend.annual.toFixed(2):etf.dividend.annual}</span></div>
@@ -311,7 +311,7 @@ function renderCards() {
       ${etf.dividend.recent.map(r => '<span class="recent-div-item"><span class="rd-date">'+(r.date||'').substring(0,7)+'</span><span class="rd-amt">$'+r.amount+'</span></span>').join('')}
     </div>
   </div>` : ''}
-  <div class="card-section" style="border-top:1px solid var(--border);margin-top:8px;padding-top:8px">
+  ${etf.isETF ? `<div class="card-section" style="border-top:1px solid var(--border);margin-top:8px;padding-top:8px">
     <div class="card-section-title holdings-toggle" onclick="this.parentElement.classList.toggle('open')">產業分布 / 前10大持股</div>
     <div class="holdings-content">
     ${Object.keys(etf.sectors||{}).length || (etf.topHoldings||[]).length ? `<div style="display:flex;gap:12px">
@@ -331,7 +331,7 @@ function renderCards() {
       </div>
     </div>` : '<p style="color:var(--muted);font-size:0.85rem;padding:8px 0">資料待補充</p>'}
     </div>
-  </div>
+  </div>` : ''}
 </div>`}).join('');
 }
 
