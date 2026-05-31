@@ -246,7 +246,24 @@ function doPost(e) {
         Utilities.sleep(1000);
       });
       if (prices.length > 60) prices = prices.slice(-60);
-      if (prices.length) hist.appendRow([ticker, prices.join('|')]);
+      if (prices.length) {
+        hist.appendRow([ticker, prices.join('|')]);
+        // Write sparkline (last 22 days) and quarterLine to Sheet1
+        var sheet1 = ss.getSheetByName('Sheet1') || ss.getSheets()[0];
+        var s1Rows = sheet1.getDataRange().getValues();
+        var s1Row = -1;
+        for (var ri = 0; ri < s1Rows.length; ri++) { if (s1Rows[ri][0].toString().trim() === ticker) { s1Row = ri+1; break; } }
+        if (s1Row < 0) s1Row = sheet1.getLastRow() + 1;
+        var spark22 = prices.slice(-22).join('|');
+        sheet1.getRange(s1Row, 7).setValue(spark22); // G: sparkline
+        // Calculate quarterLine (deviation from 60-day MA)
+        if (prices.length >= 5) {
+          var ma = prices.reduce(function(s,v){return s+v},0) / prices.length;
+          var latest = prices[prices.length-1];
+          var qLine = ((latest - ma) / ma * 100).toFixed(1);
+          sheet1.getRange(s1Row, 6).setValue(qLine); // F: quarterLine
+        }
+      }
     } catch(ex7) {}
     
     return ContentService.createTextOutput('ok');
