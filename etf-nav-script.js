@@ -134,22 +134,26 @@ function fetchFundInfo() {
       else if (/科技|半導體|5G|AI|電動車/.test(etfName)) type = '主題型';
       info.getRange(idx+1, 3).setValue(type);
       
-      // Frequency: from divRecent
+      // Frequency: based on time span of divRecent entries
       var navSheet = ss.getSheetByName('nav_data');
       if (navSheet) {
         var navRows = navSheet.getDataRange().getValues();
         var navRow = navRows.find(function(r){var t=r[0].toString().trim(); return t===ticker || ticker.endsWith(t) || t===ticker.replace(/^0+/,'');});
-        if (navRow && navRow[8]) {
-          var divDates = navRow[8].toString().split('|').map(function(s){return s.split(':')[0]});
-          if (divDates.length >= 3) {
-            var months = divDates.map(function(d){return parseInt(d.split('/')[1])});
-            var gaps = [];
-            for (var gi=1;gi<months.length;gi++) { var diff=months[gi-1]-months[gi]; if(diff<=0)diff+=12; gaps.push(diff); }
-            var avgGap = gaps.reduce(function(s,v){return s+v},0)/gaps.length;
-            var freq = avgGap <= 2 ? '月配' : avgGap <= 4 ? '季配' : avgGap <= 7 ? '半年配' : '年配';
+        if (navRow && navRow[8] && navRow[8].toString().trim()) {
+          var divEntries = navRow[8].toString().split('|').filter(function(s){return s.indexOf(':')>0});
+          var count = divEntries.length;
+          if (count >= 2) {
+            // Calculate months spanned by all entries
+            var firstMonth = divEntries[divEntries.length-1].split(':')[0]; // oldest
+            var lastMonth = divEntries[0].split(':')[0]; // newest
+            var fy = parseInt(firstMonth.split('/')[0]), fm = parseInt(firstMonth.split('/')[1]);
+            var ly = parseInt(lastMonth.split('/')[0]), lm = parseInt(lastMonth.split('/')[1]);
+            var spanMonths = (ly - fy) * 12 + (lm - fm);
+            var perYear = spanMonths > 0 ? (count / spanMonths * 12) : count;
+            var freq = perYear >= 8 ? '月配' : perYear >= 3 ? '季配' : perYear >= 1.5 ? '半年配' : '年配';
             info.getRange(idx+1, 4).setValue(freq);
-          } else if (divDates.length === 0 || (divDates.length === 1 && divDates[0] === '')) {
-            info.getRange(idx+1, 4).setValue('不配息');
+          } else {
+            info.getRange(idx+1, 4).setValue('年配');
           }
         } else {
           info.getRange(idx+1, 4).setValue('不配息');
