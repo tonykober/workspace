@@ -123,6 +123,9 @@ body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; b
 .card-badge { position:absolute; top:-10px; left:12px; font-size:0.85rem; padding:4px 12px; border-radius:4px; font-weight:600; z-index:2; pointer-events:none; }
 .card-badge.badge-etf { background:var(--accent2); color:#fff; }
 .card-badge.badge-stock { background:var(--green); color:#000; }
+.card-header { cursor:pointer; }
+.card-body { transition:max-height .3s ease, opacity .2s; overflow:hidden; }
+.card.collapsed .card-body { max-height:0; opacity:0; margin:0; padding:0; }
 .etf-delete { position:absolute; top:-8px; right:-8px; background:var(--red); border:none; color:#fff; font-size:0.9rem; cursor:pointer; padding:4px 8px; border-radius:50%; width:24px; height:24px; display:flex; align-items:center; justify-content:center; z-index:2; }
 .etf-delete:hover { opacity:0.8; }
 .compare-panel { position:fixed; bottom:0; left:0; right:0; background:var(--surface); border-top:2px solid var(--accent); max-height:60vh; overflow-y:auto; padding:16px; z-index:200; display:none; }
@@ -239,6 +242,8 @@ body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; b
     <button class="add-btn" style="margin-left:8px" onclick="addETF()">+ 新增</button>
   </div>
   <div class="cards" id="etf-cards"></div>
+  <div style="border-top:2px solid var(--border);margin:24px 0;padding-top:8px"><span style="color:var(--muted);font-size:0.9rem">📈 自選個股</span></div>
+  <div class="cards" id="stock-cards"></div>
 </div>
 </div>
 
@@ -266,13 +271,14 @@ function getSuggestion(etf) {
 }
 
 function renderCards() {
-  const container = document.getElementById('etf-cards');
+  const etfContainer = document.getElementById('etf-cards');
+  const stockContainer = document.getElementById('stock-cards');
   const sorted = [...ETF_DATA].sort((a,b) => {
     const ap = pinnedETFs.includes(a.ticker) ? 0 : 1;
     const bp = pinnedETFs.includes(b.ticker) ? 0 : 1;
     return ap - bp;
   });
-  container.innerHTML = sorted.map((etf, i) => {
+  const allCards = sorted.map((etf, i) => {
   const isPinned = pinnedETFs.includes(etf.ticker);
   const origIdx = ETF_DATA.indexOf(etf);
   const hidden = (currentFilter==='etf'&&!etf.isETF)||(currentFilter==='stock'&&etf.isETF)||(currentFilter!=='all'&&currentFilter!=='etf'&&currentFilter!=='stock'&&etf.dividend&&etf.dividend.frequency!==currentFilter);
@@ -281,6 +287,7 @@ function renderCards() {
   <button class="compare-btn" onclick="toggleCompare(${origIdx})">比較</button>
   <button class="pin-btn${isPinned?' active':''}" onclick="togglePin('${etf.ticker}','etf')">📌</button>
   <button class="etf-delete" onclick="confirmDeleteETF('${etf.ticker}','${etf.name}')">&times;</button>
+  <div class="card-header" onclick="this.parentElement.classList.toggle('collapsed')">
   <div class="card-top">
     <div>
       <div class="card-left"><span class="card-ticker">${etf.ticker}</span>${etf.isETF?'<span class="card-type">'+(etf.type||'ETF')+'</span>':'<span class="card-type">'+(etf.sector||'個股')+'</span>'}</div>
@@ -291,6 +298,8 @@ function renderCards() {
       <span class="card-change ${etf.changePercent>=0?'up':'down'}">${etf.change>=0?'+':''}${etf.change} (${etf.changePercent>=0?'+':''}${etf.changePercent.toFixed(2)}%)</span>
     </div>
   </div>
+  </div>
+  <div class="card-body">
   <div style="border-top:1px solid var(--border);margin-top:8px;padding-top:8px">
     <div style="font-size:0.85rem;color:var(--muted);margin-bottom:6px">${etf.isETF ? '基金規模 <b style="color:var(--text)">'+etf.fundSize+'億</b>'+(etf.holders?' ｜ 受益人 <b style="color:var(--text)">'+etf.holders+'萬人</b>':'') : (etf.pe?'本益比 <b style="color:var(--text)">'+etf.pe+'</b>':'')+(etf.divYield?' ｜ 殖利率 <b style="color:var(--yellow)">'+etf.divYield+'%</b>':'')}</div>
     <div class="card-mid">
@@ -336,7 +345,12 @@ function renderCards() {
     </div>` : '<p style="color:var(--muted);font-size:0.85rem;padding:8px 0">資料待補充</p>'}
     </div>
   </div>` : ''}
+  </div>
 </div>`}).join('');
+  const etfCards = allCards.filter((_,i) => sorted[i].isETF).join('');
+  const stockCards = allCards.filter((_,i) => !sorted[i].isETF).join('');
+  etfContainer.innerHTML = etfCards;
+  stockContainer.innerHTML = stockCards;
 }
 
 let sectorCharts = [];
