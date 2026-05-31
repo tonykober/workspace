@@ -52,7 +52,7 @@ function fetchNavData() {
       if (divRows && divRows.length) {
         var firstMatch = divRows[0].match(/col07">([\d.]+)<.*?col07">([\d.]+)/);
         if (firstMatch) divYield = parseFloat(firstMatch[2]);
-        divRecent = divRows.slice(0,4).map(function(r) {
+        divRecent = divRows.slice(0,6).map(function(r) {
           var m = r.match(/col01">([^<]+)<.*?col07">([\d.]+)/);
           return m ? m[1].substring(0,7)+':'+m[2] : '';
         }).filter(function(s){return s}).join('|');
