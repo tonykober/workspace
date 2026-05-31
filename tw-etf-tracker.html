@@ -346,11 +346,9 @@ function renderCards() {
     </div>
   </div>` : ''}
   </div>
-</div>`}).join('');
-  const etfCards = allCards.filter((_,i) => sorted[i].isETF).join('');
-  const stockCards = allCards.filter((_,i) => !sorted[i].isETF).join('');
-  etfContainer.innerHTML = etfCards;
-  stockContainer.innerHTML = stockCards;
+</div>`});
+  etfContainer.innerHTML = allCards.filter((_,i) => sorted[i].isETF).join('');
+  stockContainer.innerHTML = allCards.filter((_,i) => !sorted[i].isETF).join('');
 }
 
 let sectorCharts = [];
