@@ -125,31 +125,24 @@ function fetchFundInfo() {
         });
         var hRows = holdSheet.getDataRange().getValues();
         var hIdx = hRows.findIndex(function(r){return r[0].toString().trim()===ticker});
-        if (hIdx >= 0) holdSheet.getRange(hIdx+1, 1, 1, hRow.length).setValues([hRow]);
-        else holdSheet.appendRow(hRow);
+        if (hIdx >= 0) { holdSheet.getRange(hIdx+1, 1).setNumberFormat('@'); holdSheet.getRange(hIdx+1, 1, 1, hRow.length).setValues([hRow]); }
+        else { var hr = holdSheet.getLastRow()+1; holdSheet.getRange(hr,1).setNumberFormat('@'); holdSheet.appendRow(hRow); }
       }
       
-      // Sectors - pattern: color div then sector name in next cell, percentage in col03
-      var sMatches = hHtml.match(/background-color:#[A-Fa-f0-9]+;'><\/div>\s*<\/td><td class="col02">(.*?)<\/td><td class="col03">([\d,.]+)\s*([\d.]+)%/g);
-      if (!sMatches) {
-        // Alternative: find sector rows after the holdings section
-        var secPart = hHtml.split('產業類別');
-        if (secPart.length > 1) {
-          sMatches = secPart[1].match(/background-color:#[A-Fa-f0-9]+;'><\/div>[\s\S]*?<\/td><td[^>]*>(.*?)<\/td><td[^>]*>[\d,.]+\s+([\d.]+)%/g);
-        }
-      }
+      // Sectors - pattern: color div, col02=name, col03=amount, col04=percentage
+      var sMatches = hHtml.match(/<td class="col02">(.*?)<\/td><td class="col03">[\d,.]+<\/td><td class="col04">([\d.]+)<\/td>/g);
       if (sMatches && sMatches.length) {
         var sRow = [ticker];
         sMatches.slice(0,6).forEach(function(m) {
           var nm = m.match(/col02">(.*?)<\/td>/);
-          var pc = m.match(/([\d.]+)%/);
+          var pc = m.match(/col04">([\d.]+)/);
           sRow.push(nm ? nm[1].trim() : '');
           sRow.push(pc ? parseFloat(pc[1]) : 0);
         });
         var sRows = secSheet.getDataRange().getValues();
         var sIdx = sRows.findIndex(function(r){return r[0].toString().trim()===ticker});
-        if (sIdx >= 0) secSheet.getRange(sIdx+1, 1, 1, sRow.length).setValues([sRow]);
-        else secSheet.appendRow(sRow);
+        if (sIdx >= 0) { secSheet.getRange(sIdx+1, 1).setNumberFormat('@'); secSheet.getRange(sIdx+1, 1, 1, sRow.length).setValues([sRow]); }
+        else { var sr = secSheet.getLastRow()+1; secSheet.getRange(sr,1).setNumberFormat('@'); secSheet.appendRow(sRow); }
       }
     } catch(e) { Logger.log('Holdings/Sectors error ' + ticker + ': ' + e.message); }
     Utilities.sleep(1000);
@@ -274,7 +267,7 @@ function fixTickerLeadingZeros() {
   var codeMap = {};
   allData.forEach(function(d) { codeMap[d.Code.replace(/^0+/,'')] = d.Code; }); // stripped → full
   
-  var sheets = ['info','Sheet1','nav_data','history','watchlist','pinned','etf_dividend','etf_holdings','etf_detail'];
+  var sheets = ['info','Sheet1','nav_data','history','watchlist','pinned','etf_dividend','etf_holdings','etf_detail','holdings','sectors'];
   sheets.forEach(function(name) {
     var sheet = ss.getSheetByName(name);
     if (!sheet) return;
