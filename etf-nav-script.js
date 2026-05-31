@@ -179,6 +179,39 @@ function checkAndUpdatePrices() {
   }
 }
 
+// === 一次性：修復所有分頁的 ticker 前導零 ===
+function fixTickerLeadingZeros() {
+  var ss = SpreadsheetApp.openById('1GT8LkzWJPo9psHwRIJwjfV2HEoYf7x8eIkI22BhuqIs');
+  // Get correct tickers from TWSE
+  var allData = JSON.parse(UrlFetchApp.fetch("https://openapi.twse.com.tw/v1/exchangeReport/STOCK_DAY_ALL",{muteHttpExceptions:true}).getContentText());
+  var codeMap = {};
+  allData.forEach(function(d) { codeMap[d.Code.replace(/^0+/,'')] = d.Code; }); // stripped → full
+  
+  var sheets = ['info','Sheet1','nav_data','history','watchlist','pinned'];
+  sheets.forEach(function(name) {
+    var sheet = ss.getSheetByName(name);
+    if (!sheet) return;
+    var lastRow = sheet.getLastRow();
+    if (lastRow < 1) return;
+    var range = sheet.getRange(1, 1, lastRow, 1);
+    range.setNumberFormat('@'); // Set entire ticker column to plain text
+    var values = range.getValues();
+    var changed = false;
+    values.forEach(function(row, i) {
+      var val = row[0].toString().trim();
+      if (!val || val === 'ticker') return;
+      // If it's a number without leading zeros, try to find the correct full code
+      var full = codeMap[val] || codeMap[val.replace(/^0+/,'')];
+      if (full && full !== val) {
+        values[i][0] = full;
+        changed = true;
+      }
+    });
+    if (changed) range.setValues(values);
+  });
+  Logger.log('fixTickerLeadingZeros 完成');
+}
+
 // === 一次性：補齊 3 個月歷史 sparkline（寫入獨立分頁 history）===
 function backfillSparkline() {
   var ss = SpreadsheetApp.openById('1GT8LkzWJPo9psHwRIJwjfV2HEoYf7x8eIkI22BhuqIs');
