@@ -187,7 +187,7 @@ function fixTickerLeadingZeros() {
   var codeMap = {};
   allData.forEach(function(d) { codeMap[d.Code.replace(/^0+/,'')] = d.Code; }); // stripped → full
   
-  var sheets = ['info','Sheet1','nav_data','history','watchlist','pinned'];
+  var sheets = ['info','Sheet1','nav_data','history','watchlist','pinned','etf_dividend','etf_holdings','etf_detail'];
   sheets.forEach(function(name) {
     var sheet = ss.getSheetByName(name);
     if (!sheet) return;
