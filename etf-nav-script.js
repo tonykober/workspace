@@ -75,30 +75,45 @@ function fetchNavData() {
   });
 }
 
-// === ETF 基金規模/受益人 自動抓取（Yahoo Finance TW）===
-// === ETF 持股/產業 自動抓取（MoneyDJ）===
+// === ETF 完整資料抓取：規模/受益人/持股/產業 ===
 function fetchFundInfo() {
   var ss = SpreadsheetApp.openById('1GT8LkzWJPo9psHwRIJwjfV2HEoYf7x8eIkI22BhuqIs');
   var info = ss.getSheetByName('info');
   if (!info) return;
   var holdSheet = ss.getSheetByName('holdings');
   if (!holdSheet) { holdSheet = ss.insertSheet('holdings'); holdSheet.appendRow(['ticker','h1','p1','h2','p2','h3','p3','h4','p4','h5','p5','h6','p6','h7','p7','h8','p8','h9','p9','h10','p10']); }
+  var secSheet = ss.getSheetByName('sectors');
+  if (!secSheet) { secSheet = ss.insertSheet('sectors'); secSheet.appendRow(['ticker','s1','p1','s2','p2','s3','p3','s4','p4','s5','p5','s6','p6']); }
   var rows = info.getDataRange().getValues();
   rows.forEach(function(row, idx) {
     if (idx === 0) return;
     var ticker = row[0].toString().trim();
     if (!ticker) return;
-    // Fund size from Yahoo
+    
+    // 1. Fund size from Yahoo
     try {
-      var url = 'https://tw.stock.yahoo.com/quote/' + ticker + '.TW/profile';
-      var html = UrlFetchApp.fetch(url, {muteHttpExceptions:true, headers:{'User-Agent':'Mozilla/5.0'}}).getContentText();
-      var aum = html.match(/"totalAssets":"([\d.]+)"/);
+      var yUrl = 'https://tw.stock.yahoo.com/quote/' + ticker + '.TW/profile';
+      var yHtml = UrlFetchApp.fetch(yUrl, {muteHttpExceptions:true, headers:{'User-Agent':'Mozilla/5.0'}}).getContentText();
+      var aum = yHtml.match(/"totalAssets":"([\d.]+)"/);
       if (aum) info.getRange(idx+1, 5).setValue((parseFloat(aum[1]) / 100000000).toFixed(0));
     } catch(e) {}
-    // Top holdings from MoneyDJ
+    Utilities.sleep(500);
+    
+    // 2. Beneficiary count from MoneyDJ
+    try {
+      var bUrl = 'https://www.moneydj.com/ETF/X/Basic/Basic0019.xdjhtm?etfid=' + ticker + '.TW';
+      var bHtml = UrlFetchApp.fetch(bUrl, {muteHttpExceptions:true}).getContentText();
+      var bNums = bHtml.match(/<td class="col\d+">([\d,]+)<\/td>/);
+      if (bNums) info.getRange(idx+1, 6).setValue((parseInt(bNums[1].replace(/,/g,'')) / 10000).toFixed(1));
+    } catch(e) {}
+    Utilities.sleep(500);
+    
+    // 3. Top holdings + 4. Sectors from MoneyDJ Basic0007
     try {
       var hUrl = 'https://www.moneydj.com/ETF/X/Basic/Basic0007.xdjhtm?etfid=' + ticker + '.TW';
       var hHtml = UrlFetchApp.fetch(hUrl, {muteHttpExceptions:true}).getContentText();
+      
+      // Holdings
       var hMatches = hHtml.match(/<td class="col05"><a[^>]*>([^<]+)<\/a><\/td><td class="col06">([\d.]+)<\/td>/g);
       if (hMatches && hMatches.length) {
         var hRow = [ticker];
@@ -108,14 +123,63 @@ function fetchFundInfo() {
           hRow.push(parts ? parts[1].trim() : '');
           hRow.push(pct ? parseFloat(pct[1]) : 0);
         });
-        // Find or append row in holdings sheet
         var hRows = holdSheet.getDataRange().getValues();
         var hIdx = hRows.findIndex(function(r){return r[0].toString().trim()===ticker});
-        if (hIdx >= 0) { holdSheet.getRange(hIdx+1, 1, 1, hRow.length).setValues([hRow]); }
-        else { holdSheet.appendRow(hRow); }
+        if (hIdx >= 0) holdSheet.getRange(hIdx+1, 1, 1, hRow.length).setValues([hRow]);
+        else holdSheet.appendRow(hRow);
       }
-    } catch(e) { Logger.log('Holdings error ' + ticker + ': ' + e.message); }
-    Utilities.sleep(1500);
+      
+      // Sectors - pattern: color div then sector name in next cell, percentage in col03
+      var sMatches = hHtml.match(/background-color:#[A-Fa-f0-9]+;'><\/div>\s*<\/td><td class="col02">(.*?)<\/td><td class="col03">([\d,.]+)\s*([\d.]+)%/g);
+      if (!sMatches) {
+        // Alternative: find sector rows after the holdings section
+        var secPart = hHtml.split('產業類別');
+        if (secPart.length > 1) {
+          sMatches = secPart[1].match(/background-color:#[A-Fa-f0-9]+;'><\/div>[\s\S]*?<\/td><td[^>]*>(.*?)<\/td><td[^>]*>[\d,.]+\s+([\d.]+)%/g);
+        }
+      }
+      if (sMatches && sMatches.length) {
+        var sRow = [ticker];
+        sMatches.slice(0,6).forEach(function(m) {
+          var nm = m.match(/col02">(.*?)<\/td>/);
+          var pc = m.match(/([\d.]+)%/);
+          sRow.push(nm ? nm[1].trim() : '');
+          sRow.push(pc ? parseFloat(pc[1]) : 0);
+        });
+        var sRows = secSheet.getDataRange().getValues();
+        var sIdx = sRows.findIndex(function(r){return r[0].toString().trim()===ticker});
+        if (sIdx >= 0) secSheet.getRange(sIdx+1, 1, 1, sRow.length).setValues([sRow]);
+        else secSheet.appendRow(sRow);
+      }
+    } catch(e) { Logger.log('Holdings/Sectors error ' + ticker + ': ' + e.message); }
+    Utilities.sleep(1000);
+  });
+  
+  // Also update watchlist quarterLine
+  updateWatchlistQuarterLine(ss);
+}
+
+// === 自選股離季線自動計算 ===
+function updateWatchlistQuarterLine(ss) {
+  if (!ss) ss = SpreadsheetApp.openById('1GT8LkzWJPo9psHwRIJwjfV2HEoYf7x8eIkI22BhuqIs');
+  var wl = ss.getSheetByName('watchlist');
+  var hist = ss.getSheetByName('history');
+  if (!wl || !hist) return;
+  var histRows = hist.getDataRange().getValues();
+  var wlRows = wl.getDataRange().getValues();
+  wlRows.forEach(function(row, idx) {
+    var ticker = row[0].toString().trim();
+    if (!ticker) return;
+    var hRow = histRows.find(function(r){return r[0].toString().trim()===ticker});
+    if (hRow && hRow[1]) {
+      var prices = hRow[1].toString().split('|').map(Number).filter(function(n){return n>0});
+      if (prices.length >= 5) {
+        var ma = prices.reduce(function(s,v){return s+v},0) / prices.length;
+        var latest = prices[prices.length-1];
+        var qLine = ((latest - ma) / ma * 100).toFixed(1);
+        wl.getRange(idx+1, 11).setValue(qLine); // K欄: quarterLine
+      }
+    }
   });
 }
 
@@ -172,6 +236,8 @@ function fetchWatchlistData() {
       if(!curName || curName===ticker) sheet.getRange(row,2).setValue(info["公司簡稱"]||info.CompanyName||ticker);
     }
   });
+  // Update quarterLine for watchlist
+  updateWatchlistQuarterLine(ss);
 }
 
 // === ETF 收盤價備案（超過24小時沒更新就從TWSE抓）===
