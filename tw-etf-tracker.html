@@ -708,8 +708,8 @@ async function loadAllData() {
     pinnedETFs = pinnedData.filter(p => p.tab === 'etf').map(p => p.ticker);
     pinnedWL = pinnedData.filter(p => p.tab === 'watchlist').map(p => p.ticker);
     const collapsedCsv = collapsedRes ? await collapsedRes.text() : '';
-    const collapsedData = collapsedCsv ? parseCSV(collapsedCsv) : [];
-    collapsedTickers = collapsedData.map(c => c.ticker).filter(Boolean);
+    const collapsedLines = collapsedCsv.trim().split('\n').slice(1);
+    collapsedTickers = collapsedLines.map(l => l.replace(/"/g,'').trim()).filter(Boolean);
     
     const infoData = parseCSV(infoCsv);
     const priceData = parseCSV(priceCsv);
