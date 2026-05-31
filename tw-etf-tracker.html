@@ -818,8 +818,8 @@ init();
 function renderSparklines() {
   ETF_DATA.forEach((etf, i) => {
     const canvas = document.getElementById('spark-etf-' + i);
-    if (!canvas || !etf.sparkline || etf.sparkline.length < 2) return;
-    const data = etf.sparkline;
+    const data = etf.sparkline.length >= 2 ? etf.sparkline : (etf.historySparkline.length >= 2 ? etf.historySparkline.slice(-22) : null);
+    if (!canvas || !data) return;
     const changes = data.slice(1).map((v,j) => v - data[j]);
     const colors = changes.map(c => c >= 0 ? '#ef4444' : '#10b981');
     new Chart(canvas, {
