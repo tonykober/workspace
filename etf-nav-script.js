@@ -76,25 +76,46 @@ function fetchNavData() {
 }
 
 // === ETF 基金規模/受益人 自動抓取（Yahoo Finance TW）===
+// === ETF 持股/產業 自動抓取（MoneyDJ）===
 function fetchFundInfo() {
   var ss = SpreadsheetApp.openById('1GT8LkzWJPo9psHwRIJwjfV2HEoYf7x8eIkI22BhuqIs');
   var info = ss.getSheetByName('info');
   if (!info) return;
+  var holdSheet = ss.getSheetByName('holdings');
+  if (!holdSheet) { holdSheet = ss.insertSheet('holdings'); holdSheet.appendRow(['ticker','h1','p1','h2','p2','h3','p3','h4','p4','h5','p5','h6','p6','h7','p7','h8','p8','h9','p9','h10','p10']); }
   var rows = info.getDataRange().getValues();
   rows.forEach(function(row, idx) {
-    if (idx === 0) return; // skip header
+    if (idx === 0) return;
     var ticker = row[0].toString().trim();
     if (!ticker) return;
+    // Fund size from Yahoo
     try {
       var url = 'https://tw.stock.yahoo.com/quote/' + ticker + '.TW/profile';
       var html = UrlFetchApp.fetch(url, {muteHttpExceptions:true, headers:{'User-Agent':'Mozilla/5.0'}}).getContentText();
       var aum = html.match(/"totalAssets":"([\d.]+)"/);
-      if (aum) {
-        var size = (parseFloat(aum[1]) / 100000000).toFixed(0); // 轉為億
-        info.getRange(idx+1, 5).setValue(size); // E欄: fundSize
+      if (aum) info.getRange(idx+1, 5).setValue((parseFloat(aum[1]) / 100000000).toFixed(0));
+    } catch(e) {}
+    // Top holdings from MoneyDJ
+    try {
+      var hUrl = 'https://www.moneydj.com/ETF/X/Basic/Basic0007.xdjhtm?etfid=' + ticker + '.TW';
+      var hHtml = UrlFetchApp.fetch(hUrl, {muteHttpExceptions:true}).getContentText();
+      var hMatches = hHtml.match(/<td class="col05"><a[^>]*>([^<]+)<\/a><\/td><td class="col06">([\d.]+)<\/td>/g);
+      if (hMatches && hMatches.length) {
+        var hRow = [ticker];
+        hMatches.slice(0,10).forEach(function(m) {
+          var parts = m.match(/>([^<(]+)\(/);
+          var pct = m.match(/col06">([\d.]+)/);
+          hRow.push(parts ? parts[1].trim() : '');
+          hRow.push(pct ? parseFloat(pct[1]) : 0);
+        });
+        // Find or append row in holdings sheet
+        var hRows = holdSheet.getDataRange().getValues();
+        var hIdx = hRows.findIndex(function(r){return r[0].toString().trim()===ticker});
+        if (hIdx >= 0) { holdSheet.getRange(hIdx+1, 1, 1, hRow.length).setValues([hRow]); }
+        else { holdSheet.appendRow(hRow); }
       }
-    } catch(e) { Logger.log('FundInfo error ' + ticker + ': ' + e.message); }
-    Utilities.sleep(1000);
+    } catch(e) { Logger.log('Holdings error ' + ticker + ': ' + e.message); }
+    Utilities.sleep(1500);
   });
 }
 
