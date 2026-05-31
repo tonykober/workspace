@@ -299,7 +299,7 @@ function renderCards() {
     </div>
   </div>
   <div style="border-top:1px solid var(--border);margin-top:8px;padding-top:8px">
-    <div style="font-size:0.85rem;color:var(--muted);margin-bottom:6px">基金規模 <b style="color:var(--text)">${etf.fundSize}億</b> ｜ 受益人 <b style="color:var(--text)">${etf.holders}萬人</b></div>
+    <div style="font-size:0.85rem;color:var(--muted);margin-bottom:6px">基金規模 <b style="color:var(--text)">${etf.fundSize}億</b>${etf.holders ? ' ｜ 受益人 <b style="color:var(--text)">'+etf.holders+'萬人</b>' : ''}</div>
     <div class="card-mid">
       <div class="card-mid-left" onclick="showChart(${i})"><canvas id="spark-etf-${i}" height="35"></canvas></div>
       <div class="card-mid-right">

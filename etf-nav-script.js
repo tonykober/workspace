@@ -394,6 +394,14 @@ function doPost(e) {
     var newRow = info.getLastRow() + 1;
     info.getRange(newRow, 1).setNumberFormat('@').setValue(ticker);
     info.getRange(newRow, 2).setValue(name);
+    // Type inference from name
+    var type = '股票型';
+    if (/主動/.test(name)) type = '主動型';
+    else if (/債|公債|投資級/.test(name)) type = '債券型';
+    else if (/高股息|高息|優息|填息/.test(name)) type = '高股息';
+    else if (/50|100|市值|加權|TOP/.test(name) && !/息/.test(name)) type = '市值型';
+    else if (/科技|半導體|5G|AI|電動車/.test(name)) type = '主題型';
+    info.getRange(newRow, 3).setValue(type);
     // Fetch fund size from Yahoo Finance TW
     try {
       var yUrl = 'https://tw.stock.yahoo.com/quote/' + ticker + '.TW/profile';
