@@ -108,6 +108,17 @@ function fetchFundInfo() {
     } catch(e) {}
     Utilities.sleep(500);
     
+    // 2b. Type and frequency from MoneyDJ Basic0004
+    try {
+      var tUrl = 'https://www.moneydj.com/ETF/X/Basic/Basic0004.xdjhtm?etfid=' + ticker + '.TW';
+      var tHtml = UrlFetchApp.fetch(tUrl, {muteHttpExceptions:true}).getContentText();
+      var tType = tHtml.match(/投資標的.*?<td[^>]*>(.*?)<\/td>/s);
+      if (tType) { var tv = tType[1].replace(/<[^>]+>/g,'').trim(); if (tv) info.getRange(idx+1, 3).setValue(tv); }
+      var tFreq = tHtml.match(/(月配|季配|半年配|年配)/);
+      if (tFreq) info.getRange(idx+1, 4).setValue(tFreq[1]);
+    } catch(e) {}
+    Utilities.sleep(500);
+    
     // 3. Top holdings + 4. Sectors from MoneyDJ Basic0007
     try {
       var hUrl = 'https://www.moneydj.com/ETF/X/Basic/Basic0007.xdjhtm?etfid=' + ticker + '.TW';
