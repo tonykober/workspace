@@ -130,7 +130,11 @@ function backfillSparkline() {
   hist.appendRow(['ticker','sparkline']);
   
   var months = ['20260301','20260401','20260501'];
-  var allTickers = ['0050','0056','00878','00919','00929','00940','006208','00713','00900','00939','2330','2892','3293','4938','2421','2615','3093','6191'];
+  // Dynamic: read all tickers from info + watchlist
+  var infoTickers = ss.getSheetByName('info').getDataRange().getValues().slice(1).map(function(r){return r[0].toString().trim()}).filter(function(t){return t});
+  var wlSheet = ss.getSheetByName('watchlist');
+  var wlTickers = wlSheet ? wlSheet.getDataRange().getValues().map(function(r){return r[0].toString().trim()}).filter(function(t){return t}) : [];
+  var allTickers = infoTickers.concat(wlTickers.filter(function(t){return infoTickers.indexOf(t)<0}));
   
   allTickers.forEach(function(ticker) {
     var prices = [];
@@ -211,6 +215,25 @@ function doPost(e) {
         sheet1.getRange(lastRow, 5).setValue(new Date().toLocaleString('zh-TW'));
       }
     } catch(ex5) {}
+    
+    // Fetch 3-month sparkline history and write to history sheet
+    try {
+      var hist = ss.getSheetByName('history');
+      if (!hist) { hist = ss.insertSheet('history'); hist.appendRow(['ticker','sparkline']); }
+      var prices = [];
+      var months = ['20260301','20260401','20260501'];
+      months.forEach(function(m) {
+        try {
+          var hUrl = 'https://www.twse.com.tw/exchangeReport/STOCK_DAY?response=json&date=' + m + '&stockNo=' + ticker;
+          var hRes = UrlFetchApp.fetch(hUrl, {muteHttpExceptions:true});
+          var hd = JSON.parse(hRes.getContentText());
+          if (hd.data) hd.data.forEach(function(row) { prices.push(parseFloat(row[6].replace(/,/g,''))); });
+        } catch(ex6) {}
+        Utilities.sleep(1000);
+      });
+      if (prices.length > 60) prices = prices.slice(-60);
+      if (prices.length) hist.appendRow([ticker, prices.join('|')]);
+    } catch(ex7) {}
     
     return ContentService.createTextOutput('ok');
   }
