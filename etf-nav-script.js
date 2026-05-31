@@ -157,10 +157,8 @@ function doPost(e) {
   if (data.action === 'addETF') {
     var info = ss.getSheetByName('info');
     var ticker = data.ticker;
-    // Check if already exists
     var existing = info.getDataRange().getValues().some(function(r){return r[0].toString().trim()===ticker});
     if (existing) return ContentService.createTextOutput('exists');
-    // Try to get name from MoneyDJ
     var name = ticker;
     try {
       var url = 'https://www.moneydj.com/ETF/X/Basic/Basic0004.xdjhtm?etfid=' + ticker + '.TW';
@@ -169,6 +167,51 @@ function doPost(e) {
       if (m) name = m[1].trim();
     } catch(ex) {}
     info.appendRow([ticker, name, '', '', '', '']);
+    
+    // Immediately fetch NAV/premium/returns/dividend
+    var navSheet = ss.getSheetByName('nav_data');
+    if (navSheet) {
+      var nav='',premium='',ret1m='',ret3m='',ret6m='',ret1y='',divYield='',divRecent='';
+      try {
+        var navUrl='https://www.moneydj.com/ETF/X/Basic/Basic0003.xdjhtm?etfid='+ticker+'.TW';
+        var navHtml=UrlFetchApp.fetch(navUrl,{muteHttpExceptions:true}).getContentText();
+        var nm=navHtml.match(/col07[\s\S]*?(\d{4}\/\d{2}\/\d{2})[\s\S]*?col08[\s\S]*?([\d.]+)[\s\S]*?col09[\s\S]*?([\d.]+)[\s\S]*?col09[\s\S]*?([-\d.]+)/);
+        if(nm){nav=parseFloat(nm[2]);premium=parseFloat(nm[4]);}
+      }catch(ex2){}
+      try {
+        var retUrl='https://www.moneydj.com/ETF/X/Basic/Basic0008.xdjhtm?etfid='+ticker+'.TW';
+        var retHtml=UrlFetchApp.fetch(retUrl,{muteHttpExceptions:true}).getContentText();
+        var rm=retHtml.match(/市價\([\d\/]+\)<\/th>([\s\S]*?)<\/tr>/);
+        if(rm){var nums=rm[1].match(/>([\d.]+)<\/td>/g);if(nums&&nums.length>=6){var v=nums.map(function(n){return parseFloat(n.match(/([\d.]+)/)[1])});ret1m=v[2];ret3m=v[3];ret6m=v[4];ret1y=v[5];}}
+      }catch(ex3){}
+      try {
+        var divUrl='https://www.moneydj.com/ETF/X/Basic/Basic0005.xdjhtm?etfid='+ticker+'.TW';
+        var divHtml=UrlFetchApp.fetch(divUrl,{muteHttpExceptions:true}).getContentText();
+        var dr=divHtml.match(/<td class="col01">\d{4}\/\d{2}\/\d{2}<\/td>.*?<td class="col07">[\d.]+<\/td>.*?<td class="col07">[\d.]+<\/td>/g);
+        if(dr&&dr.length){var fm=dr[0].match(/col07">([\d.]+)<.*?col07">([\d.]+)/);if(fm)divYield=parseFloat(fm[2]);divRecent=dr.slice(0,6).map(function(r){var x=r.match(/col01">([^<]+)<.*?col07">([\d.]+)/);return x?x[1].substring(0,7)+':'+x[2]:''}).filter(function(s){return s}).join('|');}
+      }catch(ex4){}
+      navSheet.appendRow([ticker,nav,premium,ret1m,ret3m,ret6m,ret1y,divYield,divRecent]);
+    }
+    
+    // Try to get current price from TWSE
+    try {
+      var priceData = JSON.parse(UrlFetchApp.fetch('https://openapi.twse.com.tw/v1/exchangeReport/STOCK_DAY_ALL',{muteHttpExceptions:true}).getContentText());
+      var found = priceData.find(function(d){return d.Code === ticker});
+      if (found) {
+        var sheet1 = ss.getSheetByName('Sheet1') || ss.getSheets()[0];
+        var lastRow = sheet1.getLastRow() + 1;
+        var price = parseFloat(found.ClosingPrice);
+        var change = parseFloat(found.Change);
+        var prev = price - change;
+        var pct = prev > 0 ? (change/prev*100).toFixed(2) : 0;
+        sheet1.getRange(lastRow, 1).setValue(ticker);
+        sheet1.getRange(lastRow, 2).setValue(price);
+        sheet1.getRange(lastRow, 3).setValue(change);
+        sheet1.getRange(lastRow, 4).setValue(pct);
+        sheet1.getRange(lastRow, 5).setValue(new Date().toLocaleString('zh-TW'));
+      }
+    } catch(ex5) {}
+    
     return ContentService.createTextOutput('ok');
   }
   
