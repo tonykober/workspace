@@ -30,18 +30,20 @@ function fetchNavData() {
     } catch(e) { Logger.log('NAV error ' + ticker + ': ' + e.message); }
     
     try {
-      // 報酬率
-      var retUrl = 'https://www.moneydj.com/ETF/X/Basic/Basic0008.xdjhtm?etfid=' + ticker + '.TW';
-      var retHtml = UrlFetchApp.fetch(retUrl, {muteHttpExceptions:true}).getContentText();
-      var retMatch = retHtml.match(/一個月[\s\S]*?<tr[^>]*>([\s\S]*?)<\/tr>/);
-      if (retMatch) {
-        var tds = retMatch[1].match(/<td[^>]*>([\d.\-]+)<\/td>/g);
-        if (tds && tds.length >= 6) {
-          var vals = tds.map(function(td) { var m=td.match(/([\d.\-]+)/); return m?parseFloat(m[1]):0; });
-          ret1m = vals[2]; ret3m = vals[3]; ret6m = vals[4]; ret1y = vals[5];
+      // 報酬率 — 從 history 分頁的歷史收盤價計算
+      var histSheet = ss.getSheetByName('history');
+      if (histSheet) {
+        var hRows = histSheet.getDataRange().getValues();
+        var hRow = hRows.find(function(r){var t=r[0].toString().trim(); return t===ticker || ticker.endsWith(t) || t===ticker.replace(/^0+/,'');});
+        if (hRow && hRow[1]) {
+          var hp = hRow[1].toString().split('|').map(Number).filter(function(n){return n>0});
+          var hLen = hp.length;
+          var latest = hp[hLen-1];
+          if (hLen >= 22) ret1m = ((latest - hp[hLen-22]) / hp[hLen-22] * 100).toFixed(2);
+          if (hLen >= 44) ret3m = ((latest - hp[hLen-44]) / hp[hLen-44] * 100).toFixed(2);
+          if (hLen >= 60) ret6m = ((latest - hp[0]) / hp[0] * 100).toFixed(2);
         }
       }
-      Utilities.sleep(500);
     } catch(e) { Logger.log('Returns error ' + ticker + ': ' + e.message); }
     
     try {
@@ -66,24 +68,6 @@ function fetchNavData() {
       }
       Utilities.sleep(500);
     } catch(e) { Logger.log('Dividend error ' + ticker + ': ' + e.message); }
-    
-    // Fallback: if MoneyDJ returns empty, calculate returns from history
-    if (!ret1m && !ret3m) {
-      try {
-        var hist = ss.getSheetByName('history');
-        if (hist) {
-          var hRows = hist.getDataRange().getValues();
-          var hRow = hRows.find(function(r){return r[0].toString().trim()===ticker || r[0].toString().trim()===ticker.replace(/^0+/,'')});
-          if (hRow && hRow[1]) {
-            var prices = hRow[1].toString().split('|').map(Number).filter(function(n){return n>0});
-            var len = prices.length;
-            var latest = prices[len-1];
-            if (len >= 5 && !ret1m) { var p22 = prices[Math.max(0,len-22)]; ret1m = ((latest-p22)/p22*100).toFixed(2); }
-            if (len >= 44 && !ret3m) { var p66 = prices[Math.max(0,len-60)]; ret3m = ((latest-p66)/p66*100).toFixed(2); }
-          }
-        }
-      } catch(e2) {}
-    }
     
     appendRowWithTicker(sheet, [ticker, nav, premium, ret1m, ret3m, ret6m, ret1y, divYield, divRecent]);
   });
@@ -526,16 +510,20 @@ function doPost(e) {
   
   if (data.action === 'removeETF') {
     var ticker = data.ticker;
+    function matchTicker(val) { var t=val.toString().trim(); return t===ticker || ticker.endsWith(t) || t===ticker.replace(/^0+/,''); }
     // Remove from info
     var info = ss.getSheetByName('info');
     var infoRows = info.getDataRange().getValues();
-    for (var i = infoRows.length-1; i >= 0; i--) { if (infoRows[i][0].toString().trim() === ticker) { info.deleteRow(i+1); break; } }
+    for (var i = infoRows.length-1; i >= 0; i--) { if (matchTicker(infoRows[i][0])) { info.deleteRow(i+1); break; } }
     // Remove from nav_data
     var navSheet = ss.getSheetByName('nav_data');
-    if (navSheet) { var nr = navSheet.getDataRange().getValues(); for (var i = nr.length-1; i >= 0; i--) { if (nr[i][0].toString().trim() === ticker) { navSheet.deleteRow(i+1); break; } } }
+    if (navSheet) { var nr = navSheet.getDataRange().getValues(); for (var i = nr.length-1; i >= 0; i--) { if (matchTicker(nr[i][0])) { navSheet.deleteRow(i+1); break; } } }
     // Remove from Sheet1
     var s1 = ss.getSheetByName('Sheet1') || ss.getSheets()[0];
-    var s1r = s1.getDataRange().getValues(); for (var i = s1r.length-1; i >= 0; i--) { if (s1r[i][0].toString().trim() === ticker) { s1.deleteRow(i+1); break; } }
+    var s1r = s1.getDataRange().getValues(); for (var i = s1r.length-1; i >= 0; i--) { if (matchTicker(s1r[i][0])) { s1.deleteRow(i+1); break; } }
+    // Remove from history
+    var hist = ss.getSheetByName('history');
+    if (hist) { var hr = hist.getDataRange().getValues(); for (var i = hr.length-1; i >= 0; i--) { if (matchTicker(hr[i][0])) { hist.deleteRow(i+1); break; } } }
     return ContentService.createTextOutput('ok');
   }
   
