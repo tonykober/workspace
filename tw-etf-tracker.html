@@ -118,8 +118,10 @@ body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; b
 .compare-btn.active { background:var(--green); color:#000; }
 .card.comparing { border-color:var(--accent); box-shadow:0 0 8px rgba(88,166,255,.3); }
 .card.pinned { border-color:#f59e0b; box-shadow:0 0 8px rgba(245,158,11,.2); }
-.pin-btn { position:absolute; top:-8px; right:-8px; background:var(--surface2); border:1px solid var(--border); color:var(--muted); font-size:0.75rem; padding:2px 6px; border-radius:12px; cursor:pointer; z-index:2; }
+.pin-btn { position:absolute; top:-8px; left:calc(50% + 40px); background:var(--surface2); border:1px solid var(--border); color:var(--muted); font-size:0.75rem; padding:2px 6px; border-radius:12px; cursor:pointer; z-index:2; }
 .pin-btn.active { background:#f59e0b; color:#000; border-color:#f59e0b; }
+.etf-delete { position:absolute; top:-8px; right:-8px; background:var(--red); border:none; color:#fff; font-size:0.9rem; cursor:pointer; padding:4px 8px; border-radius:50%; width:24px; height:24px; display:flex; align-items:center; justify-content:center; z-index:2; }
+.etf-delete:hover { opacity:0.8; }
 .compare-panel { position:fixed; bottom:0; left:0; right:0; background:var(--surface); border-top:2px solid var(--accent); max-height:60vh; overflow-y:auto; padding:16px; z-index:200; display:none; }
 .compare-panel.show { display:block; }
 .compare-header { display:flex; justify-content:space-between; align-items:center; margin-bottom:12px; }
@@ -285,6 +287,7 @@ function renderCards() {
   return `<div class="card${isPinned?' pinned':''}" style="position:relative;${currentFilter !== 'all' && etf.dividend && etf.dividend.frequency !== currentFilter ? 'display:none' : ''}">
   <button class="compare-btn" onclick="toggleCompare(${origIdx})">比較</button>
   <button class="pin-btn${isPinned?' active':''}" onclick="togglePin('${etf.ticker}','etf')">📌</button>
+  <button class="etf-delete" onclick="confirmDeleteETF('${etf.ticker}','${etf.name}')">&times;</button>
   <div class="card-top">
     <div>
       <div class="card-left"><span class="card-ticker">${etf.ticker}</span><span class="card-type">${etf.type}</span></div>
@@ -1080,8 +1083,8 @@ function addETF() {
     headers: {'Content-Type':'text/plain'},
     body: JSON.stringify({action:'addETF', ticker: ticker.trim()})
   });
-  alert('已新增 ETF ' + ticker.trim() + '，基本資料將在下次更新時顯示。\n產業分布/持股需手動補充。');
-  setTimeout(() => location.reload(), 3000);
+  alert('已新增 ETF ' + ticker.trim() + '，GAS 正在抓取資料中...\n約 10 秒後自動重新載入。');
+  setTimeout(() => location.reload(), 10000);
 }
 
 function togglePin(ticker, tab) {
@@ -1094,11 +1097,27 @@ function togglePin(ticker, tab) {
   else { renderWatchlistCards(); }
 }
 
+let pendingDeleteETF = null;
+function confirmDeleteETF(ticker, name) {
+  pendingDeleteETF = ticker;
+  document.getElementById('confirm-overlay').style.display = 'flex';
+  document.getElementById('confirm-msg').textContent = `確定要移除 ETF ${ticker} ${name}？`;
+  document.querySelector('.btn-yes').onclick = doDeleteETF;
+}
+function doDeleteETF() {
+  if (!pendingDeleteETF) return;
+  fetch(GAS_URL, { method:'POST', mode:'no-cors', headers:{'Content-Type':'text/plain'}, body:JSON.stringify({action:'removeETF', ticker:pendingDeleteETF}) });
+  pendingDeleteETF = null;
+  document.getElementById('confirm-overlay').style.display = 'none';
+  setTimeout(() => location.reload(), 2000);
+}
+
 let pendingDelete = null;
 function confirmDelete(ticker, name) {
   pendingDelete = ticker;
   document.getElementById('confirm-overlay').style.display = 'flex';
   document.getElementById('confirm-msg').textContent = `確定要移除 ${ticker} ${name}？`;
+  document.querySelector('.btn-yes').onclick = doDelete;
 }
 function doDelete() {
   if (!pendingDelete) return;

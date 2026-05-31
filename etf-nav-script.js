@@ -215,6 +215,21 @@ function doPost(e) {
     return ContentService.createTextOutput('ok');
   }
   
+  if (data.action === 'removeETF') {
+    var ticker = data.ticker;
+    // Remove from info
+    var info = ss.getSheetByName('info');
+    var infoRows = info.getDataRange().getValues();
+    for (var i = infoRows.length-1; i >= 0; i--) { if (infoRows[i][0].toString().trim() === ticker) { info.deleteRow(i+1); break; } }
+    // Remove from nav_data
+    var navSheet = ss.getSheetByName('nav_data');
+    if (navSheet) { var nr = navSheet.getDataRange().getValues(); for (var i = nr.length-1; i >= 0; i--) { if (nr[i][0].toString().trim() === ticker) { navSheet.deleteRow(i+1); break; } } }
+    // Remove from Sheet1
+    var s1 = ss.getSheetByName('Sheet1') || ss.getSheets()[0];
+    var s1r = s1.getDataRange().getValues(); for (var i = s1r.length-1; i >= 0; i--) { if (s1r[i][0].toString().trim() === ticker) { s1.deleteRow(i+1); break; } }
+    return ContentService.createTextOutput('ok');
+  }
+  
   if (data.action === 'add') {
     var wl = ss.getSheetByName('watchlist');
     wl.appendRow([data.ticker]);
