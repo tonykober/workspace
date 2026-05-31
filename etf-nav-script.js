@@ -590,7 +590,8 @@ function doPost(e) {
   if (data.action === 'collapse') {
     var colSheet = ss.getSheetByName('collapsed');
     if (!colSheet) { colSheet = ss.insertSheet('collapsed'); colSheet.appendRow(['ticker']); }
-    appendRowWithTicker(colSheet, [data.ticker]);
+    var existing = colSheet.getDataRange().getValues().some(function(r){return r[0].toString().trim()===data.ticker});
+    if (!existing) appendRowWithTicker(colSheet, [data.ticker]);
     return ContentService.createTextOutput('ok');
   }
   
