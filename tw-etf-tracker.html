@@ -775,6 +775,7 @@ async function loadAllData() {
     originalOrder = [...ETF_DATA];
     // Build wlHistoryData for watchlist chart (store with both raw and zero-padded keys)
     histData.forEach(h => { if(h.ticker && h.sparkline) { const arr = h.sparkline.split('|').map(Number).filter(n=>n>0); wlHistoryData[h.ticker] = arr; wlHistoryData[h.ticker.padStart(4,'0')] = arr; wlHistoryData[h.ticker.padStart(5,'0')] = arr; } });
+    console.log('histData tickers:', histData.map(h=>h.ticker+':'+((h.sparkline||'').length)).join(', '));
     document.getElementById('live-status').textContent = '\u2705 \u8cc7\u6599\u8f09\u5165\u5b8c\u6210 ' + new Date().toLocaleTimeString('zh-TW');
     const priceTime = priceData[0]?.updated || '';
     const ptEl = document.getElementById('price-time');
