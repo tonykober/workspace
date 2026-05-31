@@ -709,13 +709,18 @@ async function loadAllData() {
     // Build ETF_DATA from info as base
     ETF_DATA = infoData.map(info => {
       let ticker = info.ticker || '';
-      // Pad leading zeros (Sheet strips them): 9816 → 009816, 50 → 0050
-      if (ticker && /^\d+$/.test(ticker)) { if (ticker.length <= 4) ticker = ticker.padStart(4,'0'); else if (ticker.length === 5) ticker = ticker.padStart(6,'0'); }
-      const price = priceData.find(p => p.ticker === ticker || p.ticker === info.ticker) || {};
-      const sec = secData.find(s => s.ticker === ticker || s.ticker === info.ticker) || {};
-      const hold = holdData.find(h => h.ticker === ticker || h.ticker === info.ticker) || {};
-      const navRow = navData.find(n => n.ticker === ticker || n.ticker === info.ticker || ticker.endsWith(n.ticker) || n.ticker === ticker.replace(/^0+/,'')) || {};
-      const histRow = histData.find(h => h.ticker === ticker || h.ticker === info.ticker || ticker.endsWith(h.ticker) || h.ticker === ticker.replace(/^0+/,'')) || {};
+      // Pad leading zeros (Sheet strips them)
+      if (ticker && /^\d+$/.test(ticker) && ticker.length < 4) ticker = ticker.padStart(4,'0');
+      // Use longest matching ticker from other sheets for display
+      const matchT = (t) => { const v=t||''; return v===ticker || ticker.endsWith(v) || v.endsWith(ticker) || v===ticker.replace(/^0+/,'') || ticker===v.replace(/^0+/,''); };
+      const price = priceData.find(p => matchT(p.ticker)) || {};
+      const sec = secData.find(s => matchT(s.ticker)) || {};
+      const hold = holdData.find(h => matchT(h.ticker)) || {};
+      const navRow = navData.find(n => matchT(n.ticker)) || {};
+      const histRow = histData.find(h => matchT(h.ticker)) || {};
+      // Prefer the longest ticker found (most complete with leading zeros)
+      const candidates = [ticker, price.ticker, navRow.ticker, histRow.ticker].filter(Boolean);
+      ticker = candidates.reduce((a,b) => b.length > a.length ? b : a, ticker);
       
       // Parse sectors
       const sectors = {};
