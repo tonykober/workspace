@@ -124,7 +124,7 @@ function fetchFundInfo() {
       var navSheet = ss.getSheetByName('nav_data');
       if (navSheet) {
         var navRows = navSheet.getDataRange().getValues();
-        var navRow = navRows.find(function(r){return r[0].toString().trim()===ticker});
+        var navRow = navRows.find(function(r){var t=r[0].toString().trim(); return t===ticker || ticker.endsWith(t) || t===ticker.replace(/^0+/,'');});
         if (navRow && navRow[8]) {
           var divDates = navRow[8].toString().split('|').map(function(s){return s.split(':')[0]});
           if (divDates.length >= 3) {
