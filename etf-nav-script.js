@@ -108,51 +108,45 @@ function fetchFundInfo() {
     } catch(e) {}
     Utilities.sleep(2000);
     
-    // 2b. Type from TWSE ETF list index name + frequency from divRecent
-    if (!row[2] || !row[3]) {
-      try {
-        // Type: infer from TWSE ETF list
-        if (!row[2]) {
-          var etfListUrl = 'https://www.twse.com.tw/rwd/zh/ETF/list?response=json';
-          var etfList = JSON.parse(UrlFetchApp.fetch(etfListUrl, {muteHttpExceptions:true}).getContentText());
-          var etfRow = (etfList.data||[]).find(function(r){return r[1]===ticker});
-          if (etfRow) {
-            var etfName = etfRow[2] || '';
-            var idxName = etfRow[4] || '';
-            var type = '股票型';
-            if (/主動/.test(etfName)) type = '主動型';
-            else if (/債|公債|投資級|收益/.test(idxName)) type = '債券型';
-            else if (/高股息|高息|優息|填息|價值高息/.test(idxName)) type = '高股息';
-            else if (/50|100|加權|市值|TOP/.test(idxName)) type = '市值型';
-            else if (/科技|資訊|半導體|5G|AI|電動車|元宇宙/.test(idxName)) type = '主題型';
-            info.getRange(idx+1, 3).setValue(type);
+    // 2b. Type from TWSE ETF list + frequency from divRecent
+    try {
+      // Type: always update from TWSE ETF list
+      var etfListUrl = 'https://www.twse.com.tw/rwd/zh/ETF/list?response=json';
+      var etfList = JSON.parse(UrlFetchApp.fetch(etfListUrl, {muteHttpExceptions:true}).getContentText());
+      var etfRow = (etfList.data||[]).find(function(r){return r[1]===ticker});
+      if (etfRow) {
+        var etfName = etfRow[2] || '';
+        var idxName = etfRow[4] || '';
+        var type = '股票型';
+        if (/主動/.test(etfName)) type = '主動型';
+        else if (/債|公債|投資級|收益/.test(idxName)) type = '債券型';
+        else if (/高股息|高息|優息|填息|價值高息/.test(idxName)) type = '高股息';
+        else if (/50|100|加權|市值|TOP/.test(idxName)) type = '市值型';
+        else if (/科技|資訊|半導體|5G|AI|電動車|元宇宙/.test(idxName)) type = '主題型';
+        info.getRange(idx+1, 3).setValue(type);
+      }
+      // Frequency: from divRecent
+      var navSheet = ss.getSheetByName('nav_data');
+      if (navSheet) {
+        var navRows = navSheet.getDataRange().getValues();
+        var navRow = navRows.find(function(r){return r[0].toString().trim()===ticker});
+        if (navRow && navRow[8]) {
+          var divDates = navRow[8].toString().split('|').map(function(s){return s.split(':')[0]});
+          if (divDates.length >= 3) {
+            var months = divDates.map(function(d){return parseInt(d.split('/')[1])});
+            var gaps = [];
+            for (var gi=1;gi<months.length;gi++) { var diff=months[gi-1]-months[gi]; if(diff<=0)diff+=12; gaps.push(diff); }
+            var avgGap = gaps.reduce(function(s,v){return s+v},0)/gaps.length;
+            var freq = avgGap <= 1.5 ? '月配' : avgGap <= 4 ? '季配' : avgGap <= 7 ? '半年配' : '年配';
+            info.getRange(idx+1, 4).setValue(freq);
+          } else if (divDates.length === 0 || (divDates.length === 1 && divDates[0] === '')) {
+            info.getRange(idx+1, 4).setValue('不配息');
           }
+        } else {
+          info.getRange(idx+1, 4).setValue('不配息');
         }
-        // Frequency: infer from nav_data divRecent
-        if (!row[3]) {
-          var navSheet = ss.getSheetByName('nav_data');
-          if (navSheet) {
-            var navRows = navSheet.getDataRange().getValues();
-            var navRow = navRows.find(function(r){return r[0].toString().trim()===ticker});
-            if (navRow && navRow[8]) {
-              var divDates = navRow[8].toString().split('|').map(function(s){return s.split(':')[0]});
-              if (divDates.length >= 3) {
-                var months = divDates.map(function(d){return parseInt(d.split('/')[1])});
-                var gaps = [];
-                for (var gi=1;gi<months.length;gi++) { var diff=months[gi-1]-months[gi]; if(diff<=0)diff+=12; gaps.push(diff); }
-                var avgGap = gaps.reduce(function(s,v){return s+v},0)/gaps.length;
-                var freq = avgGap <= 1.5 ? '月配' : avgGap <= 4 ? '季配' : avgGap <= 7 ? '半年配' : '年配';
-                info.getRange(idx+1, 4).setValue(freq);
-              } else if (divDates.length === 0 || (divDates.length === 1 && divDates[0] === '')) {
-                info.getRange(idx+1, 4).setValue('不配息');
-              }
-            } else {
-              info.getRange(idx+1, 4).setValue('不配息');
-            }
-          }
-        }
-      } catch(e) {}
-    }
+      }
+    } catch(e) { Logger.log('Type/Freq error ' + ticker + ': ' + e.message); }
     Utilities.sleep(500);
     
     // 3. Top holdings + 4. Sectors from MoneyDJ Basic0007
