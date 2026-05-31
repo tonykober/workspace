@@ -108,23 +108,18 @@ function fetchFundInfo() {
     } catch(e) {}
     Utilities.sleep(2000);
     
-    // 2b. Type from TWSE ETF list + frequency from divRecent
+    // 2b. Type from ETF name + frequency from divRecent
     try {
-      // Type: always update from TWSE ETF list
-      var etfListUrl = 'https://www.twse.com.tw/rwd/zh/ETF/list?response=json';
-      var etfList = JSON.parse(UrlFetchApp.fetch(etfListUrl, {muteHttpExceptions:true}).getContentText());
-      var etfRow = (etfList.data||[]).find(function(r){return r[1]===ticker});
-      if (etfRow) {
-        var etfName = etfRow[2] || '';
-        var idxName = etfRow[4] || '';
-        var type = '股票型';
-        if (/主動/.test(etfName)) type = '主動型';
-        else if (/債|公債|投資級|收益/.test(idxName)) type = '債券型';
-        else if (/高股息|高息|優息|填息|價值高息/.test(idxName)) type = '高股息';
-        else if (/50|100|加權|市值|TOP/.test(idxName)) type = '市值型';
-        else if (/科技|資訊|半導體|5G|AI|電動車|元宇宙/.test(idxName)) type = '主題型';
-        info.getRange(idx+1, 3).setValue(type);
-      }
+      // Type: infer from ETF name (column B) - no external API needed
+      var etfName = row[1] ? row[1].toString() : '';
+      var type = '股票型';
+      if (/主動/.test(etfName)) type = '主動型';
+      else if (/債|公債|投資級/.test(etfName)) type = '債券型';
+      else if (/高股息|高息|優息|填息/.test(etfName)) type = '高股息';
+      else if (/50|100|市值|加權|TOP/.test(etfName) && !/息/.test(etfName)) type = '市值型';
+      else if (/科技|半導體|5G|AI|電動車/.test(etfName)) type = '主題型';
+      info.getRange(idx+1, 3).setValue(type);
+      
       // Frequency: from divRecent
       var navSheet = ss.getSheetByName('nav_data');
       if (navSheet) {
