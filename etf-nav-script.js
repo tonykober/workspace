@@ -230,5 +230,23 @@ function doPost(e) {
     return ContentService.createTextOutput('ok');
   }
   
+  if (data.action === 'pin') {
+    var pinSheet = ss.getSheetByName('pinned');
+    if (!pinSheet) { pinSheet = ss.insertSheet('pinned'); pinSheet.appendRow(['ticker','tab']); }
+    pinSheet.appendRow([data.ticker, data.tab]);
+    return ContentService.createTextOutput('ok');
+  }
+  
+  if (data.action === 'unpin') {
+    var pinSheet = ss.getSheetByName('pinned');
+    if (pinSheet) {
+      var rows = pinSheet.getDataRange().getValues();
+      for (var i = rows.length-1; i >= 0; i--) {
+        if (rows[i][0].toString() === data.ticker && rows[i][1] === data.tab) { pinSheet.deleteRow(i+1); break; }
+      }
+    }
+    return ContentService.createTextOutput('ok');
+  }
+  
   return ContentService.createTextOutput('unknown action');
 }
