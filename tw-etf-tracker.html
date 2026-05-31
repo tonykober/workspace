@@ -214,10 +214,6 @@ body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; b
 <div class="header">
   <div style="display:flex;align-items:center;gap:8px;flex-wrap:nowrap">
     <h1><span style="cursor:pointer" onclick="refreshAll()">📊 台股 ETF 績效追蹤</span></h1>
-    <div class="main-tabs">
-      <div class="main-tab active" onclick="switchMainTab('etf')">ETF 追蹤</div>
-      <div class="main-tab" onclick="switchMainTab('watchlist')">自選個股</div>
-    </div>
   </div>
   <div class="subtitle">即時數據 · <span id="live-status">載入報價中...</span></div>
   <div class="update-info"><span id="price-time"></span><span>NAV/報酬率：每日 16:00 更新</span></div>
@@ -232,22 +228,14 @@ body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; b
     <button class="pill" onclick="sortETF('premium')">折溢價</button>
     <span class="label" style="margin-left:8px">篩選：</span>
     <button class="pill active" onclick="filterETF('all')" id="f-all">全部</button>
+    <button class="pill" onclick="filterETF('etf')" id="f-etf">ETF</button>
+    <button class="pill" onclick="filterETF('stock')" id="f-stock">個股</button>
     <button class="pill" onclick="filterETF('月配')" id="f-月配">月配</button>
     <button class="pill" onclick="filterETF('季配')" id="f-季配">季配</button>
-    <button class="pill" onclick="filterETF('半年配')" id="f-半年配">半年配</button>
     <button class="div-cal-btn" style="margin-left:auto" onclick="showDivCalendar()">📅 配息日曆</button>
     <button class="add-btn" style="margin-left:8px" onclick="addETF()">+ 新增</button>
   </div>
   <div class="cards" id="etf-cards"></div>
-</div>
-<div id="view-watchlist" style="display:none">
-  <div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:12px">
-    <h3 style="font-size:1rem;color:var(--accent)">自選追蹤清單</h3>
-    <button class="add-btn" onclick="addStock()">+ 新增</button>
-  </div>
-  <div class="filter-bar" style="margin-top:8px"><span class="label">排序：</span><button class="pill active" onclick="sortWatchlist('default')">預設</button><button class="pill" onclick="sortWatchlist('pct')">漲跌幅</button><button class="pill" onclick="sortWatchlist('qline')">離季線</button><span class="label" style="margin-left:8px">篩選：</span><button class="pill active" onclick="filterWatchlist('all')">全部</button><button class="pill" onclick="filterWatchlist('半導體')">半導體</button><button class="pill" onclick="filterWatchlist('金融')">金融</button><button class="pill" onclick="filterWatchlist('電子')">電子</button><button class="pill" onclick="filterWatchlist('其他')">其他</button></div>
-  <div class="cards" id="watchlist-cards"></div>
-  <div id="watchlist-empty" style="text-align:center;color:var(--muted);padding:40px">尚無追蹤個股，點擊「+ 新增」開始</div>
 </div>
 </div>
 
@@ -284,7 +272,8 @@ function renderCards() {
   container.innerHTML = sorted.map((etf, i) => {
   const isPinned = pinnedETFs.includes(etf.ticker);
   const origIdx = ETF_DATA.indexOf(etf);
-  return `<div class="card${isPinned?' pinned':''}" style="position:relative;${currentFilter !== 'all' && etf.dividend && etf.dividend.frequency !== currentFilter ? 'display:none' : ''}">
+  const hidden = (currentFilter==='etf'&&!etf.isETF)||(currentFilter==='stock'&&etf.isETF)||(currentFilter!=='all'&&currentFilter!=='etf'&&currentFilter!=='stock'&&etf.dividend&&etf.dividend.frequency!==currentFilter);
+  return `<div class="card${isPinned?' pinned':''}" style="position:relative;${hidden?'display:none':''}">
   <button class="compare-btn" onclick="toggleCompare(${origIdx})">比較</button>
   <button class="pin-btn${isPinned?' active':''}" onclick="togglePin('${etf.ticker}','etf')">📌</button>
   <button class="etf-delete" onclick="confirmDeleteETF('${etf.ticker}','${etf.name}')">&times;</button>
@@ -299,11 +288,11 @@ function renderCards() {
     </div>
   </div>
   <div style="border-top:1px solid var(--border);margin-top:8px;padding-top:8px">
-    <div style="font-size:0.85rem;color:var(--muted);margin-bottom:6px">基金規模 <b style="color:var(--text)">${etf.fundSize}億</b>${etf.holders ? ' ｜ 受益人 <b style="color:var(--text)">'+etf.holders+'萬人</b>' : ''}</div>
+    <div style="font-size:0.85rem;color:var(--muted);margin-bottom:6px">${etf.isETF ? '基金規模 <b style="color:var(--text)">'+etf.fundSize+'億</b>'+(etf.holders?' ｜ 受益人 <b style="color:var(--text)">'+etf.holders+'萬人</b>':'') : (etf.sector?'<span class="card-type">'+etf.sector+'</span>':'')+(etf.pe?' ｜ 本益比 <b style="color:var(--text)">'+etf.pe+'</b>':'')}</div>
     <div class="card-mid">
       <div class="card-mid-left" onclick="showChart(${i})"><canvas id="spark-etf-${i}" height="35"></canvas></div>
       <div class="card-mid-right">
-        <div class="kpi"><span class="kpi-label">折溢價 ${etf.premium<-0.3?'<span style="color:var(--green);font-size:0.75rem">折價買點</span>':etf.premium>0.3?'<span style="color:var(--red);font-size:0.75rem">溢價偏高</span>':'<span style="color:var(--muted);font-size:0.75rem">正常</span>'}</span><span class="kpi-value premium-value ${getPremiumClass(etf.premium)}">${etf.premium}%</span></div>
+        <div class="kpi">${etf.isETF?'<span class="kpi-label">折溢價 '+(etf.premium<-0.3?'<span style="color:var(--green);font-size:0.75rem">折價買點</span>':etf.premium>0.3?'<span style="color:var(--red);font-size:0.75rem">溢價偏高</span>':'<span style="color:var(--muted);font-size:0.75rem">正常</span>')+'</span><span class="kpi-value premium-value '+getPremiumClass(etf.premium)+'">'+etf.premium+'%</span>':'<span class="kpi-label">殖利率</span><span class="kpi-value" style="color:var(--yellow)">'+(etf.divYield?etf.divYield+'%':'--')+'</span>'}</div>
         <div class="kpi"><span class="kpi-label">離季線 ${etf.quarterLine>15?'<span style="color:var(--red);font-size:0.75rem">過熱</span>':etf.quarterLine>10?'<span style="color:var(--yellow);font-size:0.75rem">偏高</span>':etf.quarterLine<-8?'<span style="color:var(--green);font-size:0.75rem">超跌</span>':'<span style="color:var(--muted);font-size:0.75rem">正常</span>'}</span><span class="kpi-value">${etf.quarterLine != null ? (etf.quarterLine>=0?'+':'')+etf.quarterLine+'%' : '--'}</span></div>
         <div class="kpi"><span class="kpi-label">建議</span><span class="kpi-value"><span class="sug-badge ${getSuggestion(etf).cls}">${getSuggestion(etf).text}</span></span></div>
       </div>
@@ -315,13 +304,13 @@ function renderCards() {
       ${[['1月','m1'],['3月','m3'],['6月','m6'],['1年','y1']].map(([label,key]) => '<div class="return-item"><div class="return-label">'+label+'</div><div class="return-value '+(etf.returns[key]>=0?'positive':'negative')+'">'+(etf.returns[key]>=0?'+':'')+etf.returns[key]+'%</div></div>').join('')}
     </div>
   </div>
-  <div class="card-section" style="border-top:1px solid var(--border);margin-top:8px;padding-top:8px">
+  ${etf.isETF ? `<div class="card-section" style="border-top:1px solid var(--border);margin-top:8px;padding-top:8px">
     <div class="card-section-title">配息資訊</div>
     <div class="dividend-inline">殖利率 <span style="color:var(--yellow)">${etf.dividend.yield}%</span> ｜ ${etf.dividend.frequency} ｜ 年配 <span style="color:var(--yellow)">$${etf.dividend.annual.toFixed?etf.dividend.annual.toFixed(2):etf.dividend.annual}</span></div>
     <div class="recent-div">
       ${etf.dividend.recent.map(r => '<span class="recent-div-item"><span class="rd-date">'+(r.date||'').substring(0,7)+'</span><span class="rd-amt">$'+r.amount+'</span></span>').join('')}
     </div>
-  </div>
+  </div>` : ''}
   <div class="card-section" style="border-top:1px solid var(--border);margin-top:8px;padding-top:8px">
     <div class="card-section-title holdings-toggle" onclick="this.parentElement.classList.toggle('open')">產業分布 / 前10大持股</div>
     <div class="holdings-content">
@@ -750,6 +739,7 @@ async function loadAllData() {
         ticker,
         name: info.name || '',
         type: info.type || '',
+        isETF: true,
         sparkline,
         historySparkline,
         price: parseFloat(price.price) || 0,
@@ -776,6 +766,33 @@ async function loadAllData() {
         topHoldings
       };
     }).filter(e => e.ticker);
+    
+    // Also load watchlist stocks into ETF_DATA
+    try {
+      const wlRes = await fetch(`https://docs.google.com/spreadsheets/d/1GT8LkzWJPo9psHwRIJwjfV2HEoYf7x8eIkI22BhuqIs/gviz/tq?tqx=out:csv&sheet=watchlist&t=${Date.now()}`);
+      const wlCsv = await wlRes.text();
+      const wlRows = wlCsv.trim().split('\n').slice(1);
+      wlRows.forEach(row => {
+        const cols = row.match(/"([^"]*)"/g)?.map(s => s.replace(/"/g,'')) || row.split(',');
+        let ticker = cols[0]||'';
+        if (!ticker && cols[2]) ticker = cols[2];
+        if (!ticker) return;
+        // Skip if already in ETF_DATA
+        if (ETF_DATA.find(e => e.ticker === ticker || ticker.endsWith(e.ticker) || e.ticker.endsWith(ticker))) return;
+        const histArr = wlHistoryData[ticker] || wlHistoryData[ticker.padStart(4,'0')] || wlHistoryData[ticker.padStart(5,'0')] || [];
+        ETF_DATA.push({
+          ticker, name: cols[1]||'', type: '', isETF: false,
+          sparkline: cols[11] ? cols[11].split('|').map(Number).filter(n=>n>0) : [],
+          historySparkline: histArr,
+          price: parseFloat(cols[3])||0, change: parseFloat(cols[4])||0, changePercent: parseFloat(cols[5])||0,
+          returns: {m1:0,m3:0,m6:0,y1:0},
+          dividend: {annual:0, yield:parseFloat(cols[9])||0, frequency:'', recent:[{date:'--',amount:0}]},
+          sectors:{}, fundSize:0, holders:0, nav:0, premium:0,
+          quarterLine: cols[10]?parseFloat(cols[10]):null, topHoldings:[],
+          sector: cols[8]||'', pe: cols[7]||'', divYield: cols[9]||''
+        });
+      });
+    } catch(e) {}
     
     originalOrder = [...ETF_DATA];
     // Build wlHistoryData for watchlist chart (store with both raw and zero-padded keys)
@@ -1084,14 +1101,16 @@ function addStock() {
 }
 
 function addETF() {
-  const ticker = prompt('請輸入 ETF 代號（如 00878）：');
+  const ticker = prompt('請輸入代號（ETF 如 00878，個股如 2330）：');
   if (!ticker || !ticker.trim()) return;
-  const t = ticker.trim();
-  fetch(GAS_URL, { method:'POST', mode:'no-cors', headers:{'Content-Type':'text/plain'}, body:JSON.stringify({action:'addETF', ticker:t}) });
-  ETF_DATA.push({ticker:t, name:'載入中...', type:'', sparkline:[], historySparkline:[], price:0, change:0, changePercent:0, returns:{m1:0,m3:0,m6:0,y1:0}, dividend:{annual:0,yield:0,frequency:'',recent:[{date:'--',amount:0}]}, sectors:{}, fundSize:0, holders:0, nav:0, premium:0, quarterLine:null, topHoldings:[]});
+  const t = ticker.trim().toUpperCase();
+  const isETF = /^0/.test(t) || t.length >= 5;
+  const action = isETF ? 'addETF' : 'add';
+  fetch(GAS_URL, { method:'POST', mode:'no-cors', headers:{'Content-Type':'text/plain'}, body:JSON.stringify({action, ticker:t}) });
+  ETF_DATA.push({ticker:t, name:'載入中...', type:'', isETF, sparkline:[], historySparkline:[], price:0, change:0, changePercent:0, returns:{m1:0,m3:0,m6:0,y1:0}, dividend:{annual:0,yield:0,frequency:'',recent:[{date:'--',amount:0}]}, sectors:{}, fundSize:0, holders:0, nav:0, premium:0, quarterLine:null, topHoldings:[], sector:'', pe:'', divYield:''});
   originalOrder = [...ETF_DATA];
   renderCards(); renderSectorCharts(); renderSparklines();
-  showToast('✅ 已新增 ETF '+t+'，GAS 正在抓取資料...', 'var(--green)');
+  showToast('✅ 已新增 '+t+'，資料抓取中...', 'var(--green)');
   setTimeout(() => loadAllData().then(()=>{renderCards();renderSectorCharts();renderSparklines();}), 12000);
 }
 
