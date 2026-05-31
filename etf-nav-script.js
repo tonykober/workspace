@@ -75,6 +75,29 @@ function fetchNavData() {
   });
 }
 
+// === ETF 基金規模/受益人 自動抓取（Yahoo Finance TW）===
+function fetchFundInfo() {
+  var ss = SpreadsheetApp.openById('1GT8LkzWJPo9psHwRIJwjfV2HEoYf7x8eIkI22BhuqIs');
+  var info = ss.getSheetByName('info');
+  if (!info) return;
+  var rows = info.getDataRange().getValues();
+  rows.forEach(function(row, idx) {
+    if (idx === 0) return; // skip header
+    var ticker = row[0].toString().trim();
+    if (!ticker) return;
+    try {
+      var url = 'https://tw.stock.yahoo.com/quote/' + ticker + '.TW/profile';
+      var html = UrlFetchApp.fetch(url, {muteHttpExceptions:true, headers:{'User-Agent':'Mozilla/5.0'}}).getContentText();
+      var aum = html.match(/"totalAssets":"([\d.]+)"/);
+      if (aum) {
+        var size = (parseFloat(aum[1]) / 100000000).toFixed(0); // 轉為億
+        info.getRange(idx+1, 5).setValue(size); // E欄: fundSize
+      }
+    } catch(e) { Logger.log('FundInfo error ' + ticker + ': ' + e.message); }
+    Utilities.sleep(1000);
+  });
+}
+
 // === 自選股 PE/殖利率自動抓取（每日 16:00 跟 fetchNavData 一起跑）===
 function fetchWatchlistData() {
   var ss = SpreadsheetApp.openById("1GT8LkzWJPo9psHwRIJwjfV2HEoYf7x8eIkI22BhuqIs");
@@ -207,6 +230,13 @@ function doPost(e) {
     var newRow = info.getLastRow() + 1;
     info.getRange(newRow, 1).setNumberFormat('@').setValue(ticker);
     info.getRange(newRow, 2).setValue(name);
+    // Fetch fund size from Yahoo Finance TW
+    try {
+      var yUrl = 'https://tw.stock.yahoo.com/quote/' + ticker + '.TW/profile';
+      var yHtml = UrlFetchApp.fetch(yUrl, {muteHttpExceptions:true, headers:{'User-Agent':'Mozilla/5.0'}}).getContentText();
+      var aum = yHtml.match(/"totalAssets":"([\d.]+)"/);
+      if (aum) info.getRange(newRow, 5).setValue((parseFloat(aum[1]) / 100000000).toFixed(0));
+    } catch(ey) {}
     
     // Immediately fetch NAV/premium/returns/dividend
     var navSheet = ss.getSheetByName('nav_data');
