@@ -1107,9 +1107,11 @@ function confirmDeleteETF(ticker, name) {
 function doDeleteETF() {
   if (!pendingDeleteETF) return;
   fetch(GAS_URL, { method:'POST', mode:'no-cors', headers:{'Content-Type':'text/plain'}, body:JSON.stringify({action:'removeETF', ticker:pendingDeleteETF}) });
+  ETF_DATA = ETF_DATA.filter(e => e.ticker !== pendingDeleteETF);
+  originalOrder = originalOrder.filter(e => e.ticker !== pendingDeleteETF);
   pendingDeleteETF = null;
   document.getElementById('confirm-overlay').style.display = 'none';
-  setTimeout(() => location.reload(), 2000);
+  renderCards(); renderSectorCharts(); renderSparklines();
 }
 
 let pendingDelete = null;
@@ -1126,9 +1128,11 @@ function doDelete() {
     headers: {'Content-Type':'text/plain'},
     body: JSON.stringify({action:'remove', ticker: pendingDelete})
   });
+  wlData = wlData.filter(d => d.ticker !== pendingDelete);
+  wlOriginalData = wlOriginalData.filter(d => d.ticker !== pendingDelete);
   pendingDelete = null;
   document.getElementById('confirm-overlay').style.display = 'none';
-  setTimeout(() => loadWatchlist(), 2000);
+  renderWatchlistCards();
 }
 function cancelDelete() {
   pendingDelete = null;
