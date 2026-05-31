@@ -117,12 +117,14 @@ function fetchFundInfo() {
           var etfList = JSON.parse(UrlFetchApp.fetch(etfListUrl, {muteHttpExceptions:true}).getContentText());
           var etfRow = (etfList.data||[]).find(function(r){return r[1]===ticker});
           if (etfRow) {
+            var etfName = etfRow[2] || '';
             var idxName = etfRow[4] || '';
             var type = '股票型';
-            if (/高股息|高息|優息|填息/.test(idxName)) type = '高股息';
-            else if (/科技|資訊|半導體/.test(idxName)) type = '科技型';
-            else if (/50|100|市值|加權/.test(idxName)) type = '市值型';
-            else if (/債|公債|投資級/.test(idxName)) type = '債券型';
+            if (/主動/.test(etfName)) type = '主動型';
+            else if (/債|公債|投資級|收益/.test(idxName)) type = '債券型';
+            else if (/高股息|高息|優息|填息|價值高息/.test(idxName)) type = '高股息';
+            else if (/50|100|加權|市值|TOP/.test(idxName)) type = '市值型';
+            else if (/科技|資訊|半導體|5G|AI|電動車|元宇宙/.test(idxName)) type = '主題型';
             info.getRange(idx+1, 3).setValue(type);
           }
         }
