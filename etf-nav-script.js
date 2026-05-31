@@ -108,16 +108,46 @@ function fetchFundInfo() {
     } catch(e) {}
     Utilities.sleep(2000);
     
-    // 2b. Type and frequency from MoneyDJ Basic0004
-    try {
-      var tUrl = 'https://www.moneydj.com/ETF/X/Basic/Basic0004.xdjhtm?etfid=' + ticker + '.TW';
-      var tHtml = UrlFetchApp.fetch(tUrl, {muteHttpExceptions:true}).getContentText();
-      var tType = tHtml.match(/投資標的.*?<td[^>]*>(.*?)<\/td>/s);
-      if (tType) { var tv = tType[1].replace(/<[^>]+>/g,'').trim(); if (tv && tv.length < 10 && !/getD|會員|script/i.test(tv)) info.getRange(idx+1, 3).setValue(tv); }
-      var tFreq = tHtml.match(/(月配|季配|半年配|年配)/);
-      if (tFreq) info.getRange(idx+1, 4).setValue(tFreq[1]);
-    } catch(e) {}
-    Utilities.sleep(2000);
+    // 2b. Type from TWSE ETF list index name + frequency from divRecent
+    if (!row[2] || !row[3]) {
+      try {
+        // Type: infer from TWSE ETF list
+        if (!row[2]) {
+          var etfListUrl = 'https://www.twse.com.tw/rwd/zh/ETF/list?response=json';
+          var etfList = JSON.parse(UrlFetchApp.fetch(etfListUrl, {muteHttpExceptions:true}).getContentText());
+          var etfRow = (etfList.data||[]).find(function(r){return r[1]===ticker});
+          if (etfRow) {
+            var idxName = etfRow[4] || '';
+            var type = '股票型';
+            if (/高股息|高息|優息|填息/.test(idxName)) type = '高股息';
+            else if (/科技|資訊|半導體/.test(idxName)) type = '科技型';
+            else if (/50|100|市值|加權/.test(idxName)) type = '市值型';
+            else if (/債|公債|投資級/.test(idxName)) type = '債券型';
+            info.getRange(idx+1, 3).setValue(type);
+          }
+        }
+        // Frequency: infer from nav_data divRecent
+        if (!row[3]) {
+          var navSheet = ss.getSheetByName('nav_data');
+          if (navSheet) {
+            var navRows = navSheet.getDataRange().getValues();
+            var navRow = navRows.find(function(r){return r[0].toString().trim()===ticker});
+            if (navRow && navRow[8]) {
+              var divDates = navRow[8].toString().split('|').map(function(s){return s.split(':')[0]});
+              if (divDates.length >= 3) {
+                var months = divDates.map(function(d){return parseInt(d.split('/')[1])});
+                var gaps = [];
+                for (var gi=1;gi<months.length;gi++) { var diff=months[gi-1]-months[gi]; if(diff<=0)diff+=12; gaps.push(diff); }
+                var avgGap = gaps.reduce(function(s,v){return s+v},0)/gaps.length;
+                var freq = avgGap <= 1.5 ? '月配' : avgGap <= 4 ? '季配' : avgGap <= 7 ? '半年配' : '年配';
+                info.getRange(idx+1, 4).setValue(freq);
+              }
+            }
+          }
+        }
+      } catch(e) {}
+    }
+    Utilities.sleep(500);
     
     // 3. Top holdings + 4. Sectors from MoneyDJ Basic0007
     try {
