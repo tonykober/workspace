@@ -363,6 +363,7 @@ function backfillSparkline() {
   
   allTickers.forEach(function(ticker) {
     var prices = [];
+    // Try TWSE first
     months.forEach(function(m) {
       try {
         var url = 'https://www.twse.com.tw/exchangeReport/STOCK_DAY?response=json&date=' + m + '&stockNo=' + ticker;
@@ -372,8 +373,18 @@ function backfillSparkline() {
       } catch(e) {}
       Utilities.sleep(1000);
     });
+    // Fallback: Yahoo Finance chart API
+    if (prices.length < 5) {
+      try {
+        var yUrl = 'https://query2.finance.yahoo.com/v8/finance/chart/' + ticker + '.TW?interval=1d&range=3mo';
+        var yRes = UrlFetchApp.fetch(yUrl, {muteHttpExceptions:true, headers:{'User-Agent':'Mozilla/5.0'}});
+        var yData = JSON.parse(yRes.getContentText());
+        var closes = yData.chart.result[0].indicators.quote[0].close;
+        prices = closes.filter(function(c){return c && c > 0}).map(function(c){return parseFloat(c.toFixed(2))});
+      } catch(e) { Logger.log('Yahoo chart fallback error ' + ticker + ': ' + e.message); }
+    }
     if (prices.length > 60) prices = prices.slice(-60);
-    appendRowWithTicker(hist, [ticker, prices.join('|')]);
+    if (prices.length) appendRowWithTicker(hist, [ticker, prices.join('|')]);
   });
   Logger.log('backfillSparkline 完成');
 }
@@ -464,6 +475,16 @@ function doPost(e) {
         } catch(ex6) {}
         Utilities.sleep(1000);
       });
+      // Fallback: Yahoo Finance chart API
+      if (prices.length < 5) {
+        try {
+          var yUrl = 'https://query2.finance.yahoo.com/v8/finance/chart/' + ticker + '.TW?interval=1d&range=3mo';
+          var yRes = UrlFetchApp.fetch(yUrl, {muteHttpExceptions:true, headers:{'User-Agent':'Mozilla/5.0'}});
+          var yData = JSON.parse(yRes.getContentText());
+          var closes = yData.chart.result[0].indicators.quote[0].close;
+          prices = closes.filter(function(c){return c && c > 0}).map(function(c){return parseFloat(c.toFixed(2))});
+        } catch(ex6b) {}
+      }
       if (prices.length > 60) prices = prices.slice(-60);
       if (prices.length) {
         appendRowWithTicker(hist, [ticker, prices.join('|')]);
