@@ -182,9 +182,9 @@ function doPost(e) {
     if (existing) return ContentService.createTextOutput('exists');
     var name = ticker;
     try {
-      var infoData = JSON.parse(UrlFetchApp.fetch("https://openapi.twse.com.tw/v1/opendata/t187ap03_L",{muteHttpExceptions:true}).getContentText());
-      var found = infoData.find(function(d){return d["公司代號"]===ticker});
-      if (found) name = found["公司簡稱"] || ticker;
+      var allStocks = JSON.parse(UrlFetchApp.fetch("https://openapi.twse.com.tw/v1/exchangeReport/STOCK_DAY_ALL",{muteHttpExceptions:true}).getContentText());
+      var nf = allStocks.find(function(d){return d.Code===ticker});
+      if (nf && nf.Name) name = nf.Name;
     } catch(ex) {}
     info.appendRow([ticker, name, '', '', '', '']);
     
@@ -289,19 +289,15 @@ function doPost(e) {
   if (data.action === 'add') {
     var wl = ss.getSheetByName('watchlist');
     var ticker = data.ticker;
-    // Get stock name from TWSE
     var name = ticker;
-    try {
-      var infoData = JSON.parse(UrlFetchApp.fetch("https://openapi.twse.com.tw/v1/opendata/t187ap03_L",{muteHttpExceptions:true}).getContentText());
-      var found = infoData.find(function(d){return d["公司代號"]===ticker});
-      if (found) name = found["公司簡稱"] || ticker;
-    } catch(e) {}
-    // Get price
     var price=0,change=0,pct=0;
     try {
       var pd = JSON.parse(UrlFetchApp.fetch("https://openapi.twse.com.tw/v1/exchangeReport/STOCK_DAY_ALL",{muteHttpExceptions:true}).getContentText());
       var pf = pd.find(function(d){return d.Code===ticker});
-      if(pf){price=parseFloat(pf.ClosingPrice);change=parseFloat(pf.Change);var prev=price-change;pct=prev>0?(change/prev*100).toFixed(2):'0';}
+      if(pf){
+        if(pf.Name) name = pf.Name;
+        price=parseFloat(pf.ClosingPrice);change=parseFloat(pf.Change);var prev=price-change;pct=prev>0?(change/prev*100).toFixed(2):'0';
+      }
     } catch(e) {}
     wl.appendRow([ticker, name, '', price, change, pct, new Date().toLocaleString('zh-TW')]);
     return ContentService.createTextOutput('ok');
