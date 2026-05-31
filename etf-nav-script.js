@@ -53,6 +53,24 @@ function fetchNavData() {
       Utilities.sleep(500);
     } catch(e) { Logger.log('Dividend error ' + ticker + ': ' + e.message); }
     
+    // Fallback: if MoneyDJ returns empty, calculate returns from history
+    if (!ret1m && !ret3m) {
+      try {
+        var hist = ss.getSheetByName('history');
+        if (hist) {
+          var hRows = hist.getDataRange().getValues();
+          var hRow = hRows.find(function(r){return r[0].toString().trim()===ticker || r[0].toString().trim()===ticker.replace(/^0+/,'')});
+          if (hRow && hRow[1]) {
+            var prices = hRow[1].toString().split('|').map(Number).filter(function(n){return n>0});
+            var len = prices.length;
+            var latest = prices[len-1];
+            if (len >= 5 && !ret1m) { var p22 = prices[Math.max(0,len-22)]; ret1m = ((latest-p22)/p22*100).toFixed(2); }
+            if (len >= 44 && !ret3m) { var p66 = prices[Math.max(0,len-60)]; ret3m = ((latest-p66)/p66*100).toFixed(2); }
+          }
+        }
+      } catch(e2) {}
+    }
+    
     sheet.appendRow([ticker, nav, premium, ret1m, ret3m, ret6m, ret1y, divYield, divRecent]);
   });
 }
@@ -210,7 +228,7 @@ function doPost(e) {
         var dr=divHtml.match(/<td class="col01">\d{4}\/\d{2}\/\d{2}<\/td>.*?<td class="col07">[\d.]+<\/td>.*?<td class="col07">[\d.]+<\/td>/g);
         if(dr&&dr.length){var fm=dr[0].match(/col07">([\d.]+)<.*?col07">([\d.]+)/);if(fm)divYield=parseFloat(fm[2]);divRecent=dr.slice(0,6).map(function(r){var x=r.match(/col01">([^<]+)<.*?col07">([\d.]+)/);return x?x[1].substring(0,7)+':'+x[2]:''}).filter(function(s){return s}).join('|');}
       }catch(ex4){}
-      navSheet.appendRow([ticker,nav,premium,ret1m,ret3m,ret6m,ret1y,divYield,divRecent]);
+      navSheet.appendRow([ticker,nav,premium,ret1m||'',ret3m||'',ret6m||'',ret1y||'',divYield,divRecent]);
     }
     
     // Try to get current price from TWSE
@@ -264,6 +282,21 @@ function doPost(e) {
           var latest = prices[prices.length-1];
           var qLine = ((latest - ma) / ma * 100).toFixed(1);
           sheet1.getRange(s1Row, 6).setValue(qLine); // F: quarterLine
+        }
+        // Fallback: calculate returns from history if MoneyDJ failed
+        var navSheet2 = ss.getSheetByName('nav_data');
+        if (navSheet2 && prices.length >= 22) {
+          var len = prices.length;
+          var lat = prices[len-1];
+          var navRows = navSheet2.getDataRange().getValues();
+          for (var ni = 0; ni < navRows.length; ni++) {
+            if (navRows[ni][0].toString().trim() === ticker) {
+              if (!navRows[ni][3]) navSheet2.getRange(ni+1,4).setValue(((lat-prices[Math.max(0,len-22)])/prices[Math.max(0,len-22)]*100).toFixed(2));
+              if (!navRows[ni][4] && len>=44) navSheet2.getRange(ni+1,5).setValue(((lat-prices[Math.max(0,len-44)])/prices[Math.max(0,len-44)]*100).toFixed(2));
+              if (!navRows[ni][5] && len>=60) navSheet2.getRange(ni+1,6).setValue(((lat-prices[0])/prices[0]*100).toFixed(2));
+              break;
+            }
+          }
         }
       }
     } catch(ex7) {}
