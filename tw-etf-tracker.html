@@ -1066,25 +1066,24 @@ function renderWlMainChart() {
 function addStock() {
   const ticker = prompt('請輸入股票代號（如 2330）：\n注意：帶字母的代號（如 00981A）需要在 Sheet 中手動確認格式為純文字');
   if (!ticker || !ticker.trim()) return;
-  fetch(GAS_URL, {
-    method: 'POST', mode: 'no-cors',
-    headers: {'Content-Type':'text/plain'},
-    body: JSON.stringify({action:'add', ticker: ticker.trim().toUpperCase()})
-  });
-  alert('已新增 ' + ticker.trim() + '，報價將在下次更新時顯示。');
-  setTimeout(() => loadWatchlist(), 3000);
+  const t = ticker.trim().toUpperCase();
+  fetch(GAS_URL, { method:'POST', mode:'no-cors', headers:{'Content-Type':'text/plain'}, body:JSON.stringify({action:'add', ticker:t}) });
+  wlData.push({ticker:t, name:'載入中...', price:0, change:0, changePct:0, pe:'', sector:'', divYield:'', quarterLine:null, sparkline:'', divRecent:''});
+  wlOriginalData = [...wlData];
+  renderWatchlistCards();
+  showToast('✅ 已新增 '+t+'，資料稍後更新', 'var(--green)');
 }
 
 function addETF() {
   const ticker = prompt('請輸入 ETF 代號（如 00878）：');
   if (!ticker || !ticker.trim()) return;
-  fetch(GAS_URL, {
-    method: 'POST', mode: 'no-cors',
-    headers: {'Content-Type':'text/plain'},
-    body: JSON.stringify({action:'addETF', ticker: ticker.trim()})
-  });
-  alert('已新增 ETF ' + ticker.trim() + '，GAS 正在抓取資料中...\n約 10 秒後自動重新載入。');
-  setTimeout(() => location.reload(), 10000);
+  const t = ticker.trim();
+  fetch(GAS_URL, { method:'POST', mode:'no-cors', headers:{'Content-Type':'text/plain'}, body:JSON.stringify({action:'addETF', ticker:t}) });
+  ETF_DATA.push({ticker:t, name:'載入中...', type:'', sparkline:[], historySparkline:[], price:0, change:0, changePercent:0, returns:{m1:0,m3:0,m6:0,y1:0}, dividend:{annual:0,yield:0,frequency:'',recent:[{date:'--',amount:0}]}, sectors:{}, fundSize:0, holders:0, nav:0, premium:0, quarterLine:null, topHoldings:[]});
+  originalOrder = [...ETF_DATA];
+  renderCards(); renderSectorCharts(); renderSparklines();
+  showToast('✅ 已新增 ETF '+t+'，GAS 正在抓取資料...', 'var(--green)');
+  setTimeout(() => loadAllData().then(()=>{renderCards();renderSectorCharts();renderSparklines();}), 12000);
 }
 
 function togglePin(ticker, tab) {
