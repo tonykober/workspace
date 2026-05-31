@@ -235,7 +235,7 @@ function fetchWatchlistData() {
   try{twseInfo=JSON.parse(UrlFetchApp.fetch("https://openapi.twse.com.tw/v1/opendata/t187ap03_L",{muteHttpExceptions:true}).getContentText())}catch(e){}
   try{tpexInfo=JSON.parse(UrlFetchApp.fetch("https://www.tpex.org.tw/openapi/v1/mopsfin_t187ap03_O",{muteHttpExceptions:true}).getContentText())}catch(e){}
   try{priceData=JSON.parse(UrlFetchApp.fetch("https://openapi.twse.com.tw/v1/exchangeReport/STOCK_DAY_ALL",{muteHttpExceptions:true}).getContentText())}catch(e){}
-  var indMap={"01":"水泥","02":"食品","03":"塑膠","04":"紡織","05":"電機","06":"電器","08":"玻璃","09":"造紙","10":"鋼鐵","11":"橡膠","12":"汽車","14":"建材","15":"航運","16":"觀光","17":"金融","18":"貿易","20":"其他","21":"化學","22":"生技","23":"油電","24":"半導體","25":"電腦週邊","26":"光電","27":"通信","28":"電子零組件","29":"電子通路","30":"資訊服務","31":"其他電子","35":"綠能","36":"數位雲端","37":"運動休閒","38":"居家生活"};
+  var indMap={"01":"水泥","02":"食品","03":"塑膠","04":"紡織","05":"電機","06":"電器","08":"玻璃","09":"造紙","10":"鋼鐵","11":"橡膠","12":"汽車","14":"建材","15":"航運","16":"觀光","17":"金融","18":"貿易","20":"其他","21":"化學","22":"生技","23":"油電","24":"半導體","25":"電腦週邊","26":"光電","27":"通信","28":"電子零組件","29":"電子通路","30":"資訊服務","31":"其他電子","32":"文化創意","33":"農業科技","34":"電子商務","35":"綠能","36":"數位雲端","37":"運動休閒","38":"居家生活","91":"存託憑證"};
   tickers.forEach(function(ticker,idx){
     if(!ticker)return;
     var row=idx+1;
