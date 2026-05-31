@@ -1,6 +1,13 @@
 // ETF NAV/報酬率/配息 自動抓取 - 寫入獨立分頁 nav_data
 // 每日 16:00 觸發
 
+// Helper: append row with ticker as plain text (preserves leading zeros)
+function appendRowWithTicker(sheet, rowData) {
+  var newRow = sheet.getLastRow() + 1;
+  sheet.appendRow(rowData);
+  sheet.getRange(newRow, 1).setNumberFormat('@').setValue(rowData[0]);
+}
+
 function fetchNavData() {
   var ss = SpreadsheetApp.openById('1GT8LkzWJPo9psHwRIJwjfV2HEoYf7x8eIkI22BhuqIs');
   var sheet = ss.getSheetByName('nav_data');
@@ -71,7 +78,7 @@ function fetchNavData() {
       } catch(e2) {}
     }
     
-    sheet.appendRow([ticker, nav, premium, ret1m, ret3m, ret6m, ret1y, divYield, divRecent]);
+    appendRowWithTicker(sheet, [ticker, nav, premium, ret1m, ret3m, ret6m, ret1y, divYield, divRecent]);
   });
 }
 
@@ -355,7 +362,7 @@ function backfillSparkline() {
       Utilities.sleep(1000);
     });
     if (prices.length > 60) prices = prices.slice(-60);
-    hist.appendRow([ticker, prices.join('|')]);
+    appendRowWithTicker(hist, [ticker, prices.join('|')]);
   });
   Logger.log('backfillSparkline 完成');
 }
@@ -409,7 +416,7 @@ function doPost(e) {
         var dr=divHtml.match(/<td class="col01">\d{4}\/\d{2}\/\d{2}<\/td>.*?<td class="col07">[\d.]+<\/td>.*?<td class="col07">[\d.]+<\/td>/g);
         if(dr&&dr.length){var fm=dr[0].match(/col07">([\d.]+)<.*?col07">([\d.]+)/);if(fm)divYield=parseFloat(fm[2]);divRecent=dr.slice(0,6).map(function(r){var x=r.match(/col01">([^<]+)<.*?col07">([\d.]+)/);return x?x[1].substring(0,7)+':'+x[2]:''}).filter(function(s){return s}).join('|');}
       }catch(ex4){}
-      navSheet.appendRow([ticker,nav,premium,ret1m||'',ret3m||'',ret6m||'',ret1y||'',divYield,divRecent]);
+      appendRowWithTicker(navSheet, [ticker,nav,premium,ret1m||'',ret3m||'',ret6m||'',ret1y||'',divYield,divRecent]);
     }
     
     // Try to get current price from TWSE
@@ -448,7 +455,7 @@ function doPost(e) {
       });
       if (prices.length > 60) prices = prices.slice(-60);
       if (prices.length) {
-        hist.appendRow([ticker, prices.join('|')]);
+        appendRowWithTicker(hist, [ticker, prices.join('|')]);
         // Write sparkline (last 22 days) and quarterLine to Sheet1
         var sheet1 = ss.getSheetByName('Sheet1') || ss.getSheets()[0];
         var s1Rows = sheet1.getDataRange().getValues();
@@ -535,7 +542,7 @@ function doPost(e) {
   if (data.action === 'pin') {
     var pinSheet = ss.getSheetByName('pinned');
     if (!pinSheet) { pinSheet = ss.insertSheet('pinned'); pinSheet.appendRow(['ticker','tab']); }
-    pinSheet.appendRow([data.ticker, data.tab]);
+    appendRowWithTicker(pinSheet, [data.ticker, data.tab]);
     return ContentService.createTextOutput('ok');
   }
   
