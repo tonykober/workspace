@@ -146,7 +146,7 @@ function fetchFundInfo() {
             var gaps = [];
             for (var gi=1;gi<months.length;gi++) { var diff=months[gi-1]-months[gi]; if(diff<=0)diff+=12; gaps.push(diff); }
             var avgGap = gaps.reduce(function(s,v){return s+v},0)/gaps.length;
-            var freq = avgGap <= 1.5 ? '月配' : avgGap <= 4 ? '季配' : avgGap <= 7 ? '半年配' : '年配';
+            var freq = avgGap <= 2 ? '月配' : avgGap <= 4 ? '季配' : avgGap <= 7 ? '半年配' : '年配';
             info.getRange(idx+1, 4).setValue(freq);
           } else if (divDates.length === 0 || (divDates.length === 1 && divDates[0] === '')) {
             info.getRange(idx+1, 4).setValue('不配息');
