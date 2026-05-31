@@ -141,7 +141,11 @@ function fetchFundInfo() {
                 var avgGap = gaps.reduce(function(s,v){return s+v},0)/gaps.length;
                 var freq = avgGap <= 1.5 ? '月配' : avgGap <= 4 ? '季配' : avgGap <= 7 ? '半年配' : '年配';
                 info.getRange(idx+1, 4).setValue(freq);
+              } else if (divDates.length === 0 || (divDates.length === 1 && divDates[0] === '')) {
+                info.getRange(idx+1, 4).setValue('不配息');
               }
+            } else {
+              info.getRange(idx+1, 4).setValue('不配息');
             }
           }
         }
