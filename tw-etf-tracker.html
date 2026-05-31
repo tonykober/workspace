@@ -282,12 +282,13 @@ function renderCards() {
   const isPinned = pinnedETFs.includes(etf.ticker);
   const origIdx = ETF_DATA.indexOf(etf);
   const hidden = (currentFilter==='etf'&&!etf.isETF)||(currentFilter==='stock'&&etf.isETF)||(currentFilter!=='all'&&currentFilter!=='etf'&&currentFilter!=='stock'&&etf.dividend&&etf.dividend.frequency!==currentFilter);
-  return `<div class="card${isPinned?' pinned':''}" style="position:relative;${hidden?'display:none':''}">
+  const isCollapsed = (JSON.parse(localStorage.getItem('collapsed')||'[]')).includes(etf.ticker);
+  return `<div class="card${isPinned?' pinned':''}${isCollapsed?' collapsed':''}" style="position:relative;${hidden?'display:none':''}">
   <span class="card-badge ${etf.isETF?'badge-etf':'badge-stock'}">${etf.isETF?'ETF':'個股'}</span>
   <button class="compare-btn" onclick="toggleCompare(${origIdx})">比較</button>
   <button class="pin-btn${isPinned?' active':''}" onclick="togglePin('${etf.ticker}','etf')">📌</button>
   <button class="etf-delete" onclick="confirmDeleteETF('${etf.ticker}','${etf.name}')">&times;</button>
-  <div class="card-header" onclick="this.parentElement.classList.toggle('collapsed')">
+  <div class="card-header" onclick="toggleCollapse(this.parentElement,'${etf.ticker}')">
   <div class="card-top">
     <div>
       <div class="card-left"><span class="card-ticker">${etf.ticker}</span>${etf.isETF?'<span class="card-type">'+(etf.type||'ETF')+'</span>':'<span class="card-type">'+(etf.sector||'個股')+'</span>'}</div>
@@ -493,10 +494,11 @@ function showChart(idx) {
     '<button class="pill active"'+dis22+' onclick="setChartRange(22)">月線</button>' +
     '<button class="pill"'+dis60+' onclick="setChartRange(60)">季線</button>';
   
-  // Comparison buttons (bottom)
+  // Comparison buttons (bottom) - only same type
   chartOverlays = [idx];
+  const sameType = etf.isETF;
   const actionsHtml = ETF_DATA.map((e, i) => {
-    if (i === idx) return '';
+    if (i === idx || e.isETF !== sameType) return '';
     return '<button onclick="toggleOverlay('+i+')" id="overlay-btn-'+i+'">'+e.ticker+'</button>';
   }).join('');
   document.getElementById('chart-actions-bottom').innerHTML = '<span style="font-size:0.8rem;color:var(--muted)">疊加比較：</span>' + actionsHtml;
@@ -755,7 +757,7 @@ async function loadAllData() {
         ticker,
         name: info.name || '',
         type: info.type || '',
-        isETF: true,
+        isETF: /^00/.test(ticker) || ticker === '0050' || ticker === '0056',
         sparkline,
         historySparkline,
         price: parseFloat(price.price) || 0,
@@ -1128,6 +1130,14 @@ function addETF() {
   renderCards(); renderSectorCharts(); renderSparklines();
   showToast('✅ 已新增 '+t+'，資料抓取中...', 'var(--green)');
   setTimeout(() => loadAllData().then(()=>{renderCards();renderSectorCharts();renderSparklines();}), 12000);
+}
+
+function toggleCollapse(el, ticker) {
+  el.classList.toggle('collapsed');
+  const list = JSON.parse(localStorage.getItem('collapsed')||'[]');
+  const idx = list.indexOf(ticker);
+  if (idx >= 0) list.splice(idx, 1); else list.push(ticker);
+  localStorage.setItem('collapsed', JSON.stringify(list));
 }
 
 function togglePin(ticker, tab) {
