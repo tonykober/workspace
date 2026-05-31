@@ -274,7 +274,7 @@ function doPost(e) {
         var change = parseFloat(found.Change);
         var prev = price - change;
         var pct = prev > 0 ? (change/prev*100).toFixed(2) : 0;
-        sheet1.getRange(lastRow, 1).setValue(ticker);
+        sheet1.getRange(lastRow, 1).setNumberFormat('@').setValue(ticker);
         sheet1.getRange(lastRow, 2).setValue(price);
         sheet1.getRange(lastRow, 3).setValue(change);
         sheet1.getRange(lastRow, 4).setValue(pct);
