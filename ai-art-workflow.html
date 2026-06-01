@@ -1,0 +1,157 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>AI 美術工作流 — 能做與不能做</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{background:#1a1a2e;color:#e0e0e0;font-family:'Segoe UI',sans-serif;min-height:100vh}
+.header{background:#16213e;padding:20px;text-align:center;border-bottom:2px solid #0f3460}
+.header h1{color:#4fc3f7;font-size:1.5em}
+.header p{color:#90a4ae;margin-top:5px;font-size:0.9em}
+.tabs{display:flex;flex-wrap:wrap;background:#0f3460;padding:5px 10px;gap:5px}
+.tab{padding:8px 16px;background:#1a1a2e;color:#90a4ae;border:none;border-radius:5px 5px 0 0;cursor:pointer;font-size:0.85em}
+.tab.active{background:#1a1a2e;color:#4fc3f7;border-bottom:2px solid #4fc3f7}
+.content{padding:20px;max-width:900px;margin:0 auto}
+.section{display:none}
+.section.active{display:block}
+h2{color:#4fc3f7;margin:15px 0 10px;font-size:1.2em}
+h3{color:#81d4fa;margin:12px 0 8px;font-size:1em}
+.card{background:#16213e;border-radius:8px;padding:15px;margin:10px 0;border-left:3px solid #4fc3f7}
+.card.warn{border-left-color:#ff7043}
+.card.ok{border-left-color:#66bb6a}
+.stat{display:inline-block;background:#0f3460;padding:5px 12px;border-radius:15px;margin:3px;font-size:0.85em}
+ul{padding-left:20px;margin:8px 0}
+li{margin:5px 0;line-height:1.5}
+.tag{display:inline-block;background:#4fc3f7;color:#1a1a2e;padding:2px 8px;border-radius:3px;font-size:0.75em;margin-right:5px}
+.conclusion{background:#1b5e20;border-radius:8px;padding:15px;margin:15px 0}
+table{width:100%;border-collapse:collapse;margin:10px 0}
+th,td{padding:8px 12px;text-align:left;border-bottom:1px solid #0f3460}
+th{background:#0f3460;color:#4fc3f7}
+@media(max-width:600px){.tabs{flex-wrap:wrap}.tab{font-size:0.75em;padding:6px 10px}}
+</style>
+</head>
+<body>
+<div class="header">
+<h1>🎨 遊戲開發美術工作流中 AI 能做到與做不到的事</h1>
+<p>2026 產業現況整理</p>
+</div>
+<div class="tabs">
+<button class="tab active" onclick="show(0)">📊 產業現況</button>
+<button class="tab" onclick="show(1)">✅ AI 能做到</button>
+<button class="tab" onclick="show(2)">❌ AI 做不到</button>
+<button class="tab" onclick="show(3)">💡 結論與建議</button>
+</div>
+<div class="content">
+
+<div class="section active">
+<h2>📊 產業現況（2026）</h2>
+<div class="card">
+<span class="stat">88% 工作室已使用或計劃使用 AI</span>
+<span class="stat">36% 從業者每日使用生成式 AI</span>
+<span class="stat">僅 5% AI 試點進入量產</span>
+</div>
+<div class="card">
+<h3>代表性案例</h3>
+<ul>
+<li><strong>Sony</strong> — QA、3D 建模、動畫中使用 AI 自動化</li>
+<li><strong>GTA 6</strong> — 零生成式 AI（$10-15億開發）</li>
+<li><strong>GDC 2026</strong> — AI 工具使用率大幅上升</li>
+</ul>
+</div>
+</div>
+
+<div class="section">
+<h2>✅ AI 能做到的（6 大領域）</h2>
+<div class="card ok">
+<h3>1. 概念設計 / 發想</h3>
+<p><span class="tag">Midjourney</span><span class="tag">Stable Diffusion</span><span class="tag">DALL-E</span></p>
+<p>數天 → 數小時。大量概念圖快速迭代。</p>
+</div>
+<div class="card ok">
+<h3>2. 貼圖 / 材質生成</h3>
+<p><span class="tag">Substance 3D Sampler</span><span class="tag">Poly</span><span class="tag">Meshy</span></p>
+<p>PBR 材質自動生成，照片轉材質。</p>
+</div>
+<div class="card ok">
+<h3>3. 3D 模型快速原型</h3>
+<p><span class="tag">Meshy</span><span class="tag">Tripo AI</span><span class="tag">Kaedim</span></p>
+<p>文字/圖片 → 3D 粗模，加速前期驗證。</p>
+</div>
+<div class="card ok">
+<h3>4. 動畫 / 動作</h3>
+<p><span class="tag">Cascadeur</span><span class="tag">DeepMotion</span><span class="tag">NVIDIA Kimodo</span></p>
+<p>影片轉動捕、AI 補幀、通用動作生成。</p>
+</div>
+<div class="card ok">
+<h3>5. 背景 / 環境填充</h3>
+<p>大量重複性資產、地形生成、天空盒。</p>
+</div>
+<div class="card ok">
+<h3>6. UI / 圖標設計</h3>
+<p>批量產出風格統一的 UI 元素。</p>
+</div>
+</div>
+
+<div class="section">
+<h2>❌ AI 做不到 / 做不好的（7 個面向）</h2>
+<div class="card warn">
+<h3>1. 量產級 3D 模型</h3>
+<p>拓撲混亂、面數不可控、需人工 retopo。</p>
+</div>
+<div class="card warn">
+<h3>2. 角色 Rigging</h3>
+<p>骨架綁定、權重繪製仍需手動。</p>
+</div>
+<div class="card warn">
+<h3>3. 風格一致性控制</h3>
+<p>每次生成不同，需 LoRA / ControlNet 約束。</p>
+</div>
+<div class="card warn">
+<h3>4. 精確設計意圖傳達</h3>
+<p>角色個性、情感表達需人工把關。</p>
+</div>
+<div class="card warn">
+<h3>5. 動畫表演層次</h3>
+<p>通用動作可以，個性化表演不行。</p>
+</div>
+<div class="card warn">
+<h3>6. 技術美術工作</h3>
+<p>Shader、粒子特效、LOD、光照烘焙。</p>
+</div>
+<div class="card warn">
+<h3>7. 最終品質把關</h3>
+<p>最後 20% 仍是人的工作。</p>
+</div>
+</div>
+
+<div class="section">
+<h2>💡 結論與建議</h2>
+<div class="conclusion">
+<h3>AI 的定位</h3>
+<p><strong>AI = 加速前期發想 + 處理重複性工作</strong></p>
+<p><strong>人 = 最終品質、風格統一、技術實作</strong></p>
+</div>
+<div class="card">
+<h3>建議工作流</h3>
+<table>
+<tr><th>階段</th><th>AI 角色</th><th>人的角色</th></tr>
+<tr><td>概念期</td><td>大量生成參考</td><td>篩選、定調</td></tr>
+<tr><td>原型期</td><td>快速出粗模/動作</td><td>確認方向</td></tr>
+<tr><td>製作期</td><td>材質/背景填充</td><td>精修、Rig、特效</td></tr>
+<tr><td>收尾期</td><td>輔助 QA</td><td>最終品質把關</td></tr>
+</table>
+</div>
+</div>
+
+</div>
+<script src="nav.js"></script>
+<script>
+function show(i){
+  document.querySelectorAll('.section').forEach((s,idx)=>{s.classList.toggle('active',idx===i)});
+  document.querySelectorAll('.tab').forEach((t,idx)=>{t.classList.toggle('active',idx===i)});
+}
+</script>
+</body>
+</html>
