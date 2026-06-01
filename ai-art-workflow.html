@@ -11,7 +11,7 @@ body{background:#1a1a2e;color:#e0e0e0;font-family:'Segoe UI',sans-serif;min-heig
 .header h1{color:#4fc3f7;font-size:1.5em}
 .header p{color:#90a4ae;margin-top:5px;font-size:0.9em}
 .tabs{display:flex;flex-wrap:wrap;background:#0f3460;padding:5px 10px;gap:5px}
-.tab{padding:8px 16px;background:#1a1a2e;color:#90a4ae;border:none;border-radius:5px 5px 0 0;cursor:pointer;font-size:0.85em}
+.tab{padding:8px 14px;background:#1a1a2e;color:#90a4ae;border:none;border-radius:5px 5px 0 0;cursor:pointer;font-size:0.82em}
 .tab.active{background:#1a1a2e;color:#4fc3f7;border-bottom:2px solid #4fc3f7}
 .content{padding:20px;max-width:900px;margin:0 auto}
 .section{display:none}
@@ -29,118 +29,283 @@ li{margin:5px 0;line-height:1.5}
 table{width:100%;border-collapse:collapse;margin:10px 0}
 th,td{padding:8px 12px;text-align:left;border-bottom:1px solid #0f3460}
 th{background:#0f3460;color:#4fc3f7}
-@media(max-width:600px){.tabs{flex-wrap:wrap}.tab{font-size:0.75em;padding:6px 10px}}
+.efficiency{color:#66bb6a;font-style:italic;font-size:0.9em}
+@media(max-width:600px){.tabs{flex-wrap:wrap}.tab{font-size:0.72em;padding:6px 8px}}
 </style>
 </head>
 <body>
 <div class="header">
 <h1>🎨 遊戲開發美術工作流中 AI 能做到與做不到的事</h1>
-<p>2026 產業現況整理</p>
+<p>2026 產業現況完整整理</p>
 </div>
 <div class="tabs">
 <button class="tab active" onclick="show(0)">📊 產業現況</button>
-<button class="tab" onclick="show(1)">✅ AI 能做到</button>
-<button class="tab" onclick="show(2)">❌ AI 做不到</button>
-<button class="tab" onclick="show(3)">💡 結論與建議</button>
+<button class="tab" onclick="show(1)">✅ 前期製作</button>
+<button class="tab" onclick="show(2)">🔧 後期優化</button>
+<button class="tab" onclick="show(3)">❌ AI 做不到</button>
+<button class="tab" onclick="show(4)">💡 結論建議</button>
 </div>
 <div class="content">
 
+<!-- 分頁1：產業現況 -->
 <div class="section active">
 <h2>📊 產業現況（2026）</h2>
 <div class="card">
+<h3>關鍵數據</h3>
 <span class="stat">88% 工作室已使用或計劃使用 AI</span>
 <span class="stat">36% 從業者每日使用生成式 AI</span>
 <span class="stat">僅 5% AI 試點進入量產</span>
+<span class="stat">超過半數報告生產力提升 20%+</span>
 </div>
 <div class="card">
-<h3>代表性案例</h3>
+<h3>產業觀察</h3>
 <ul>
-<li><strong>Sony</strong> — QA、3D 建模、動畫中使用 AI 自動化</li>
-<li><strong>GTA 6</strong> — 零生成式 AI（$10-15億開發）</li>
-<li><strong>GDC 2026</strong> — AI 工具使用率大幅上升</li>
+<li><strong>Sony</strong> — 已在 QA、3D 建模、動畫中使用 AI 自動化重複工作</li>
+<li><strong>GTA 6</strong> — 零生成式 AI（$10-15億開發），代表頂級品質仍靠人工</li>
+<li><strong>GDC 2026 調查</strong> — AI 工具使用率大幅上升</li>
+<li>原本需要<strong>數週</strong>的角色概念設計、3D 建模、動畫，現在可在<strong>數天</strong>內完成</li>
 </ul>
 </div>
 </div>
 
+<!-- 分頁2：AI能做到（前期） -->
 <div class="section">
-<h2>✅ AI 能做到的（6 大領域）</h2>
+<h2>✅ AI 能做到的（前期製作）</h2>
+
 <div class="card ok">
 <h3>1. 概念設計 / 發想</h3>
 <p><span class="tag">Midjourney</span><span class="tag">Stable Diffusion</span><span class="tag">DALL-E</span></p>
-<p>數天 → 數小時。大量概念圖快速迭代。</p>
+<ul>
+<li>快速生成大量概念圖（角色、場景、道具）</li>
+<li>風格探索（一次產出多種風格方向）</li>
+<li>配色方案、構圖參考</li>
+</ul>
+<p class="efficiency">⚡ 效率提升：數天 → 數小時</p>
 </div>
+
 <div class="card ok">
 <h3>2. 貼圖 / 材質生成</h3>
 <p><span class="tag">Substance 3D Sampler</span><span class="tag">Poly</span><span class="tag">Meshy</span></p>
-<p>PBR 材質自動生成，照片轉材質。</p>
+<ul>
+<li>PBR 材質自動生成（金屬、木頭、石頭等）</li>
+<li>照片轉無縫貼圖</li>
+<li>AI 超解析度放大（低解析度 → 高解析度）</li>
+</ul>
+<p class="efficiency">⚡ 重複性材質製作大幅加速</p>
 </div>
+
 <div class="card ok">
 <h3>3. 3D 模型快速原型</h3>
 <p><span class="tag">Meshy</span><span class="tag">Tripo AI</span><span class="tag">Kaedim</span></p>
-<p>文字/圖片 → 3D 粗模，加速前期驗證。</p>
+<ul>
+<li>文字/圖片 → 3D 模型（粗模）</li>
+<li>快速產出大量變體供挑選</li>
+</ul>
+<p class="efficiency">⚡ 概念到粗模：數天 → 數分鐘</p>
 </div>
+
 <div class="card ok">
 <h3>4. 動畫 / 動作</h3>
 <p><span class="tag">Cascadeur</span><span class="tag">DeepMotion</span><span class="tag">NVIDIA Kimodo</span></p>
-<p>影片轉動捕、AI 補幀、通用動作生成。</p>
+<ul>
+<li>影片轉動捕（手機拍攝即可）</li>
+<li>AI 補幀（關鍵幀之間自動補間，最多 120 幀）</li>
+<li>文字描述生成動作</li>
+</ul>
+<p class="efficiency">⚡ 不需動捕棚，手機即可產出動作資料</p>
 </div>
+
 <div class="card ok">
 <h3>5. 背景 / 環境填充</h3>
-<p>大量重複性資產、地形生成、天空盒。</p>
+<ul>
+<li>大量重複性資產生成（樹木、石頭、建築變體）</li>
+<li>地形自動生成</li>
+<li>天空盒 / HDR 環境圖</li>
+</ul>
+<p class="efficiency">⚡ 環境資產批量產出</p>
 </div>
+
 <div class="card ok">
 <h3>6. UI / 圖標設計</h3>
-<p>批量產出風格統一的 UI 元素。</p>
+<ul>
+<li>快速生成圖標變體</li>
+<li>風格統一的 UI 元素批量產出</li>
+</ul>
+<p class="efficiency">⚡ 圖標設計：逐一繪製 → 批量生成</p>
 </div>
 </div>
 
+<!-- 分頁3：AI能做到（後期） -->
 <div class="section">
-<h2>❌ AI 做不到 / 做不好的（7 個面向）</h2>
+<h2>🔧 AI 能做到的（後期修改優化）</h2>
+
+<div class="card ok">
+<h3>1. 貼圖升級與修改</h3>
+<p><span class="tag">Topaz Gigapixel</span><span class="tag">Stable Diffusion img2img</span><span class="tag">Adobe Firefly</span></p>
+<ul>
+<li>低解析度貼圖 AI 放大（如 512→2048，保持清晰）</li>
+<li>現有貼圖風格轉換（寫實→卡通、日系→歐美）</li>
+<li>批量調色 / 統一色調</li>
+<li>破損/缺失貼圖的 AI 修補（inpainting）</li>
+</ul>
+</div>
+
+<div class="card ok">
+<h3>2. 材質重新生成（Retexture）</h3>
+<p><span class="tag">Meshy Retexture</span><span class="tag">Tripo Retexture</span></p>
+<ul>
+<li>對現有 3D 模型重新上材質（不改模型）</li>
+<li>文字描述換皮膚（如「把木頭材質改成金屬」）</li>
+<li>批量生成同模型的多種配色/材質變體</li>
+</ul>
+</div>
+
+<div class="card ok">
+<h3>3. 模型減面 / LOD 生成</h3>
+<p><span class="tag">InstaLOD</span><span class="tag">Simplygon</span></p>
+<ul>
+<li>高模自動生成低模（用於遠景/手機版）</li>
+<li>AI 輔助判斷哪些細節可以省略</li>
+</ul>
+</div>
+
+<div class="card ok">
+<h3>4. Normal Map / 細節烘焙</h3>
+<p><span class="tag">Materialize</span><span class="tag">xNormal + AI</span></p>
+<ul>
+<li>高模細節自動烘焙到低模的法線貼圖</li>
+<li>AI 從照片/2D 圖生成 Normal Map</li>
+</ul>
+</div>
+
+<div class="card ok">
+<h3>5. 動畫微調與重定向</h3>
+<p><span class="tag">Cascadeur</span><span class="tag">Rokoko Retarget</span></p>
+<ul>
+<li>現有動作重定向到不同體型角色</li>
+<li>AI 補幀讓動畫更流暢（如 24fps→60fps）</li>
+<li>動作風格轉換（寫實→誇張卡通）</li>
+</ul>
+</div>
+
+<div class="card ok">
+<h3>6. 批量處理與變體生成</h3>
+<p><span class="tag">Scenario API</span></p>
+<ul>
+<li>同一資產批量產出顏色/紋理變體</li>
+<li>場景物件批量替換材質</li>
+<li>自動生成 sprite sheet 不同角度</li>
+<li>Scenario API 每日可生成 10 萬張圖</li>
+</ul>
+</div>
+
+<div class="card ok">
+<h3>7. 即時渲染優化（Runtime）</h3>
+<p><span class="tag">NVIDIA DLSS</span></p>
+<ul>
+<li>AI 即時超解析度（低解析度渲染→高解析度輸出）</li>
+<li>AI 降噪（光線追蹤降噪）</li>
+<li>幀生成（AI 插幀提升 FPS）</li>
+</ul>
+</div>
+</div>
+
+<!-- 分頁4：AI做不到 -->
+<div class="section">
+<h2>❌ AI 做不到 / 做不好的</h2>
+
+<h3>前期限制</h3>
 <div class="card warn">
 <h3>1. 量產級 3D 模型</h3>
-<p>拓撲混亂、面數不可控、需人工 retopo。</p>
+<p>AI 生成的拓撲混亂（「義大利麵幾何」），面數不可控，需人工 retopo，UV 展開品質差。</p>
 </div>
 <div class="card warn">
 <h3>2. 角色 Rigging</h3>
-<p>骨架綁定、權重繪製仍需手動。</p>
+<p>骨架綁定、權重繪製仍需手動，特殊體型更難自動化。</p>
 </div>
 <div class="card warn">
 <h3>3. 風格一致性控制</h3>
-<p>每次生成不同，需 LoRA / ControlNet 約束。</p>
+<p>每次生成結果不同，需大量 LoRA/ControlNet 約束。「差不多但不完全一樣」是最大痛點。</p>
 </div>
 <div class="card warn">
 <h3>4. 精確設計意圖傳達</h3>
-<p>角色個性、情感表達需人工把關。</p>
+<p>AI 無法理解角色個性與情感，越具體的需求越難精準達成。</p>
 </div>
 <div class="card warn">
 <h3>5. 動畫表演層次</h3>
-<p>通用動作可以，個性化表演不行。</p>
+<p>通用動作可以，但「帶個性的走路」「情緒轉折」做不到。</p>
 </div>
 <div class="card warn">
 <h3>6. 技術美術工作</h3>
-<p>Shader、粒子特效、LOD、光照烘焙。</p>
+<p>Shader 編寫、粒子特效、LOD 優化、光照烘焙設定。</p>
 </div>
 <div class="card warn">
 <h3>7. 最終品質把關</h3>
-<p>最後 20% 仍是人的工作。</p>
+<p>AI 產出需人工審核修正，「最後 20% 的品質」仍是人的工作。</p>
+</div>
+
+<h3 style="margin-top:20px">後期限制</h3>
+<div class="card warn">
+<h3>1. 精確局部模型修改</h3>
+<p>「手臂加粗 10%」AI 無法精確控制，改模型 = 重新生成不是編輯。</p>
+</div>
+<div class="card warn">
+<h3>2. 自動 Retopology 品質不夠</h3>
+<p>關節處、臉部等需精確佈線的區域仍需手動。</p>
+</div>
+<div class="card warn">
+<h3>3. UV 展開優化</h3>
+<p>接縫位置、空間利用率不如手動，不懂動畫變形需求。</p>
+</div>
+<div class="card warn">
+<h3>4. 骨架權重修正</h3>
+<p>穿模修正是極度依賴經驗的手動工作。</p>
+</div>
+<div class="card warn">
+<h3>5. 風格一致的局部修改</h3>
+<p>AI 傾向重新生成整體，難以只改局部且保持一致。</p>
+</div>
+<div class="card warn">
+<h3>6. Shader / 特效調整</h3>
+<p>粒子參數、Shader 節點調整 AI 無法代勞。</p>
+</div>
+<div class="card warn">
+<h3>7. 動畫情感微調</h3>
+<p>表演層次的細微調整仍需動畫師手感。</p>
 </div>
 </div>
 
+<!-- 分頁5：結論 -->
 <div class="section">
 <h2>💡 結論與建議</h2>
 <div class="conclusion">
 <h3>AI 的定位</h3>
-<p><strong>AI = 加速前期發想 + 處理重複性工作</strong></p>
-<p><strong>人 = 最終品質、風格統一、技術實作</strong></p>
+<ul>
+<li><strong>前期 AI 強在「從無到有」</strong>— 加速發想、快速原型</li>
+<li><strong>後期 AI 強在「批量變體 + 升級品質」</strong>— 換色、放大、LOD</li>
+<li><strong>人不可取代的</strong> =「精確編輯 + 細節打磨 + 技術實作」</li>
+<li>AI 是很強的「助手」，但還不是能獨立交付的「美術師」</li>
+</ul>
 </div>
+
 <div class="card">
-<h3>建議工作流</h3>
+<h3>針對街機專案建議</h3>
+<table>
+<tr><th>階段</th><th>用 AI</th><th>仍需人工</th></tr>
+<tr><td>前期</td><td>快速產出角色概念圖、場景設計、材質貼圖、動作參考</td><td>篩選定調、設計意圖</td></tr>
+<tr><td>後期</td><td>角色換色批量生成、地圖材質變體、動畫補幀、貼圖放大</td><td>最終 3D 模型、骨架綁定、誇張化動畫、特效、Shader</td></tr>
+</table>
+</div>
+
+<div class="card">
+<h3>工作流建議</h3>
 <table>
 <tr><th>階段</th><th>AI 角色</th><th>人的角色</th></tr>
 <tr><td>概念期</td><td>大量生成參考</td><td>篩選、定調</td></tr>
 <tr><td>原型期</td><td>快速出粗模/動作</td><td>確認方向</td></tr>
 <tr><td>製作期</td><td>材質/背景填充</td><td>精修、Rig、特效</td></tr>
-<tr><td>收尾期</td><td>輔助 QA</td><td>最終品質把關</td></tr>
+<tr><td>優化期</td><td>LOD、放大、補幀</td><td>權重修正、Shader</td></tr>
+<tr><td>收尾期</td><td>輔助 QA、批量變體</td><td>最終品質把關</td></tr>
 </table>
 </div>
 </div>
