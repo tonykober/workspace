@@ -277,7 +277,18 @@ function updateLivePrices() {
   var ss = SpreadsheetApp.openById('1GT8LkzWJPo9psHwRIJwjfV2HEoYf7x8eIkI22BhuqIs');
   try {
     var data = JSON.parse(UrlFetchApp.fetch('https://openapi.twse.com.tw/v1/exchangeReport/STOCK_DAY_ALL',{muteHttpExceptions:true}).getContentText());
+    // Also fetch OTC (TPEX) data
+    var otcData = [];
+    try { otcData = JSON.parse(UrlFetchApp.fetch('https://www.tpex.org.tw/openapi/v1/tpex_mainboard_quotes',{muteHttpExceptions:true}).getContentText()); } catch(e) {}
     var now = new Date().toLocaleString('zh-TW');
+    
+    function findPrice(ticker) {
+      var f = data.find(function(d){return d.Code===ticker});
+      if (f) return {price:parseFloat(f.ClosingPrice),change:parseFloat(f.Change)};
+      var o = otcData.find(function(d){return d.SecuritiesCompanyCode===ticker});
+      if (o) return {price:parseFloat(o.Close),change:parseFloat(o.Change)};
+      return null;
+    }
     
     // Update Sheet1 (ETF)
     var sheet = ss.getSheetByName('Sheet1') || ss.getSheets()[0];
@@ -285,14 +296,12 @@ function updateLivePrices() {
     for (var i = 1; i < s1Rows.length; i++) {
       var ticker = s1Rows[i][0].toString().trim();
       if (!ticker) continue;
-      var found = data.find(function(d){return d.Code === ticker});
-      if (found) {
-        var price = parseFloat(found.ClosingPrice);
-        var change = parseFloat(found.Change);
-        var prev = price - change;
-        var pct = prev > 0 ? (change/prev*100).toFixed(2) : 0;
-        sheet.getRange(i+1, 2).setValue(price);
-        sheet.getRange(i+1, 3).setValue(change);
+      var result = findPrice(ticker);
+      if (result) {
+        var prev = result.price - result.change;
+        var pct = prev > 0 ? (result.change/prev*100).toFixed(2) : 0;
+        sheet.getRange(i+1, 2).setValue(result.price);
+        sheet.getRange(i+1, 3).setValue(result.change);
         sheet.getRange(i+1, 4).setValue(pct);
         sheet.getRange(i+1, 5).setValue(now);
       }
@@ -305,14 +314,12 @@ function updateLivePrices() {
       for (var j = 0; j < wlRows.length; j++) {
         var wTicker = wlRows[j][0].toString().trim();
         if (!wTicker) continue;
-        var wFound = data.find(function(d){return d.Code === wTicker});
-        if (wFound) {
-          var wPrice = parseFloat(wFound.ClosingPrice);
-          var wChange = parseFloat(wFound.Change);
-          var wPrev = wPrice - wChange;
-          var wPct = wPrev > 0 ? (wChange/wPrev*100).toFixed(2) : 0;
-          wl.getRange(j+1, 4).setValue(wPrice);
-          wl.getRange(j+1, 5).setValue(wChange);
+        var wResult = findPrice(wTicker);
+        if (wResult) {
+          var wPrev = wResult.price - wResult.change;
+          var wPct = wPrev > 0 ? (wResult.change/wPrev*100).toFixed(2) : 0;
+          wl.getRange(j+1, 4).setValue(wResult.price);
+          wl.getRange(j+1, 5).setValue(wResult.change);
           wl.getRange(j+1, 6).setValue(wPct);
           wl.getRange(j+1, 7).setValue(now);
         }
