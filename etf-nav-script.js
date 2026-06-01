@@ -487,7 +487,6 @@ function doPost(e) {
           } catch(ex6b) {}
         }
       }
-      }
       if (prices.length > 250) prices = prices.slice(-250);
       if (prices.length) {
         appendRowWithTicker(hist, [ticker, prices.join('|')]);
