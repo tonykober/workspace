@@ -45,6 +45,7 @@ th{background:#0f3460;color:#4fc3f7}
 <button class="tab" onclick="show(3)">💡 結論建議</button>
 <button class="tab" onclick="show(4)">🏭 Pipeline評估</button>
 <button class="tab" onclick="show(5)">⚠️ 實戰問題</button>
+<button class="tab" onclick="show(6)">🔬 實測案例</button>
 </div>
 <div class="content">
 
@@ -579,6 +580,99 @@ th{background:#0f3460;color:#4fc3f7}
 <li>AI 目前只適合做「不影響拓撲的表面工作」（換色、換材質）</li>
 <li>任何涉及「改變頂點結構」的操作 → 後續工作全部重來</li>
 <li>貼圖放大只適合「獨立的 2D 素材」，不適合「已綁定 UV 的角色貼圖」</li>
+</ul>
+</div>
+</div>
+
+<!-- 分頁7：實測案例 -->
+<div class="section">
+<h2>🔬 實測案例分析</h2>
+<div class="card">
+<p>以下為實際使用 AI 3D 工具的測試結果，以同一個盔甲角色為測試對象，驗證 AI 在各環節的真實表現。</p>
+</div>
+
+<div class="card" style="border-left-color:#ff9800">
+<h3>案例 1：AI 生成高模 — 3D Studio</h3>
+<ul>
+<li><strong>結果：</strong>面數 2,802,484（三角面），頂點 1,401,352</li>
+<li><strong>問題：</strong>面數是遊戲需求的 35-560 倍（手遊 5K-15K / 主機 30K-80K）</li>
+<li>全是均勻密度三角面，無 edge loop</li>
+<li>外觀形狀正確，但拓撲完全不可用</li>
+</ul>
+<p><strong>結論：</strong>只能當雕塑參考，100% 需要重新拓撲。<strong>可用度：0%</strong></p>
+</div>
+
+<div class="card warn">
+<h3>案例 2：AI 自動降面 — 3D Studio</h3>
+<ul>
+<li><strong>結果：</strong>面數降至 21,984（四邊面），頂點 11,493</li>
+<li><strong>問題：</strong>造型嚴重走樣（頭盔變形、身體比例失真）</li>
+<li>細節全部丟失</li>
+<li>面的分佈不合理，關節處無 edge loop</li>
+<li>面數對手遊仍偏高，對主機又缺乏細節</li>
+</ul>
+<p><strong>結論：</strong>AI 自動降面比不用還糟，不如從零建模。<strong>可用度：0%</strong></p>
+</div>
+
+<div class="card ok">
+<h3>案例 3：AI vs 人工拓撲對比</h3>
+<table>
+<tr><th></th><th>AI 產出（左）</th><th>人工重製（右）</th></tr>
+<tr><td>面數</td><td>1,499,445 面 / 749,673 頂點</td><td>6,807 面 / 6,236 頂點</td></tr>
+<tr><td>UV</td><td>完全混亂碎片化（像打碎的玻璃）</td><td>整齊有序，部件清晰分離</td></tr>
+<tr><td>佈線</td><td>無 edge loop</td><td>關節處有正確 edge loop</td></tr>
+</table>
+<p style="margin-top:8px"><strong>面數差距：AI 150 萬面 vs 人工 6,807 面（差 220 倍）</strong></p>
+<p><strong>結論：</strong>從 AI 產出到可用，需要完整人工重製流程</p>
+</div>
+
+<div class="card" style="border-left-color:#ff9800">
+<h3>案例 4：AI 紋理生成 — Tripo AI</h3>
+<ul>
+<li><strong>結果：</strong>整體配色方案尚可（紫金色系）</li>
+<li><strong>問題：</strong></li>
+<li>紋理與模型邊緣不對齊（金色邊條歪斜）</li>
+<li>接縫處明顯斷裂</li>
+<li>細節位置錯誤（花紋出現在不該出現的地方）</li>
+<li>手部紋理錯誤（皮膚色與盔甲色混雜）</li>
+<li>AI 不理解「這條邊是盔甲的金邊裝飾」</li>
+</ul>
+<p><strong>結論：</strong>遠看勉強，近看完全不可用。<strong>可用度：5-10%</strong></p>
+</div>
+
+<div class="card warn">
+<h3>案例 5：AI 紋理生成 — 混元 AI</h3>
+<ul>
+<li><strong>結果：</strong>品質比 Tripo 更差</li>
+<li><strong>問題：</strong></li>
+<li>紋理完全無視模型凹凸結構</li>
+<li>盔甲凸起邊緣上畫了凹陷紋路（物理矛盾）</li>
+<li>鎖子甲紋理與實際幾何不匹配</li>
+<li>肩甲紋理方向與模型曲面衝突</li>
+<li>手臂處明顯接縫斷裂</li>
+</ul>
+<p><strong>結論：</strong>完全不可用於量產。<strong>可用度：0-5%</strong></p>
+</div>
+
+<div class="card" style="border-left-color:#9c27b0">
+<h3>📊 綜合結論</h3>
+<table>
+<tr><th>步驟</th><th>工具</th><th>AI 產出結果</th><th>可用度</th></tr>
+<tr><td>高模生成</td><td>3D Studio</td><td>形狀 OK，280 萬面</td><td>僅供參考 0%</td></tr>
+<tr><td>AI 降面</td><td>3D Studio</td><td>造型走樣，面數仍高</td><td>不可用 0%</td></tr>
+<tr><td>人工重製</td><td>手動</td><td>6,807 面，佈線正確</td><td>量產標準 ✅</td></tr>
+<tr><td>紋理生成</td><td>Tripo AI</td><td>配色尚可，對齊失敗</td><td>5-10%</td></tr>
+<tr><td>紋理生成</td><td>混元 AI</td><td>凹凸矛盾，接縫斷裂</td><td>0-5%</td></tr>
+</table>
+</div>
+
+<div class="conclusion">
+<h3>最終結論</h3>
+<ul>
+<li><strong>AI 3D 生成：</strong>形狀參考價值 ≈ 30%，直接可用度 ≈ 0%</li>
+<li><strong>AI 自動降面：</strong>比不用還糟</li>
+<li><strong>AI 紋理生成（對低模）：</strong>遠看 20-30%，近看 0-5%</li>
+<li><strong>從 AI 產出到量產：</strong>仍需 80-100% 的人工工作量</li>
 </ul>
 </div>
 </div>
