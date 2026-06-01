@@ -612,8 +612,11 @@ th{background:#0f3460;color:#4fc3f7}
 <li>細節全部丟失</li>
 <li>面的分佈不合理，關節處無 edge loop</li>
 <li>面數對手遊仍偏高，對主機又缺乏細節</li>
+<li>AI 降面以「單一物件」處理，不會區分內外面</li>
+<li>看不到的地方（模型內部）仍然保留面，導致面數怎麼降都過高</li>
+<li>硬降到很低時，造型輪廓已經與原本完全不同</li>
 </ul>
-<p><strong>結論：</strong>AI 自動降面比不用還糟，不如從零建模。<strong>可用度：0%</strong></p>
+<p><strong>結論：</strong>AI 自動降面比不用還糟，不如從零建模。AI 不懂「哪些面是內部不需要的」，也不懂「哪些輪廓必須保留」，所以低模拓撲還是要手動來。<strong>可用度：0%</strong></p>
 </div>
 
 <div class="card ok">
@@ -621,11 +624,11 @@ th{background:#0f3460;color:#4fc3f7}
 <img src="images/ai-test/3_0.jpg" style="width:100%;border-radius:8px;margin:12px 0">
 <table>
 <tr><th></th><th>AI 產出（左）</th><th>人工重製（右）</th></tr>
-<tr><td>面數</td><td>1,499,445 面 / 749,673 頂點</td><td>6,807 面 / 6,236 頂點</td></tr>
+<tr><td>面數</td><td>1,499,445 面 / 749,673 頂點</td><td>12,074 面 / 6,236 頂點</td></tr>
 <tr><td>UV</td><td>完全混亂碎片化（像打碎的玻璃）</td><td>整齊有序，部件清晰分離</td></tr>
 <tr><td>佈線</td><td>無 edge loop</td><td>關節處有正確 edge loop</td></tr>
 </table>
-<p style="margin-top:8px"><strong>面數差距：AI 150 萬面 vs 人工 6,807 面（差 220 倍）</strong></p>
+<p style="margin-top:8px"><strong>面數差距：AI 150 萬面 vs 人工 12,074 面（差 124 倍）</strong></p>
 <p><strong>結論：</strong>從 AI 產出到可用，需要完整人工重製流程</p>
 </div>
 
@@ -665,7 +668,7 @@ th{background:#0f3460;color:#4fc3f7}
 <tr><th>步驟</th><th>工具</th><th>AI 產出結果</th><th>可用度</th></tr>
 <tr><td>高模生成</td><td>3D Studio</td><td>形狀 OK，280 萬面</td><td>僅供參考 0%</td></tr>
 <tr><td>AI 降面</td><td>3D Studio</td><td>造型走樣，面數仍高</td><td>不可用 0%</td></tr>
-<tr><td>人工重製</td><td>手動</td><td>6,807 面，佈線正確</td><td>量產標準 ✅</td></tr>
+<tr><td>人工重製</td><td>手動</td><td>12,074 面，佈線正確</td><td>量產標準 ✅</td></tr>
 <tr><td>紋理生成</td><td>Tripo AI</td><td>配色尚可，對齊失敗</td><td>5-10%</td></tr>
 <tr><td>紋理生成</td><td>混元 AI</td><td>凹凸矛盾，接縫斷裂</td><td>0-5%</td></tr>
 </table>
