@@ -284,7 +284,7 @@ function renderCards() {
   const origIdx = ETF_DATA.indexOf(etf);
   const hidden = (currentFilter==='etf'&&!etf.isETF)||(currentFilter==='stock'&&etf.isETF)||(currentFilter!=='all'&&currentFilter!=='etf'&&currentFilter!=='stock'&&etf.dividend&&etf.dividend.frequency!==currentFilter);
   const isCollapsed = collapsedTickers.includes(etf.ticker);
-  return `<div class="card${isPinned?' pinned':''}${isCollapsed?' collapsed':''}" style="position:relative;${hidden?'display:none':''}">
+  return `<div class="card${isPinned?' pinned':''}${isCollapsed?' collapsed':''}" data-idx="${origIdx}" style="position:relative;${hidden?'display:none':''}">
   <span class="card-badge ${etf.isETF?'badge-etf':'badge-stock'}">${etf.isETF?'ETF':'個股'}</span>
   <button class="compare-btn" onclick="toggleCompare(${origIdx})">比較</button>
   <button class="pin-btn${isPinned?' active':''}" onclick="togglePin('${etf.ticker}','etf')">📌</button>
@@ -351,6 +351,7 @@ function renderCards() {
 </div>`});
   etfContainer.innerHTML = allCards.filter((_,i) => sorted[i].isETF).join('');
   stockContainer.innerHTML = allCards.filter((_,i) => !sorted[i].isETF).join('');
+  if (compareList.length) updateCompareUI();
 }
 
 let sectorCharts = [];
@@ -603,10 +604,11 @@ function toggleCompare(idx) {
 
 function updateCompareUI() {
   const compareType = compareList.length > 0 ? ETF_DATA[compareList[0]].isETF : null;
-  document.querySelectorAll('#etf-cards .card, #stock-cards .card').forEach((card, i) => {
+  document.querySelectorAll('#etf-cards .card, #stock-cards .card').forEach(card => {
+    const idx = parseInt(card.dataset.idx);
     const btn = card.querySelector('.compare-btn');
-    const isSelected = compareList.includes(i);
-    const disabled = compareType !== null && ETF_DATA[i] && ETF_DATA[i].isETF !== compareType && !isSelected;
+    const isSelected = compareList.includes(idx);
+    const disabled = compareType !== null && ETF_DATA[idx] && ETF_DATA[idx].isETF !== compareType && !isSelected;
     card.classList.toggle('comparing', isSelected);
     if (btn) {
       btn.classList.toggle('active', isSelected);
