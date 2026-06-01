@@ -272,30 +272,53 @@ function fetchWatchlistData() {
   updateWatchlistQuarterLine(ss);
 }
 
-// === ETF 收盤價備案（超過24小時沒更新就從TWSE抓）===
-function checkAndUpdatePrices() {
+// === 即時股價更新（盤中每5分鐘觸發）===
+function updateLivePrices() {
   var ss = SpreadsheetApp.openById('1GT8LkzWJPo9psHwRIJwjfV2HEoYf7x8eIkI22BhuqIs');
-  var sheet = ss.getSheetByName('Sheet1') || ss.getSheets()[0];
-  var updated = sheet.getRange(2, 5).getValue();
-  if (!updated || (new Date() - new Date(updated)) > 24*60*60*1000) {
-    try {
-      var data = JSON.parse(UrlFetchApp.fetch('https://openapi.twse.com.tw/v1/exchangeReport/STOCK_DAY_ALL',{muteHttpExceptions:true}).getContentText());
-      var tickers = ss.getSheetByName('info').getDataRange().getValues().slice(1).map(function(r){return r[0].toString().trim()}).filter(function(t){return t});
-      tickers.forEach(function(ticker, idx) {
-        var found = data.find(function(d){return d.Code === ticker});
-        if (found) {
-          var price = parseFloat(found.ClosingPrice);
-          var change = parseFloat(found.Change);
-          var prev = price - change;
-          var pct = prev > 0 ? (change/prev*100).toFixed(2) : 0;
-          sheet.getRange(idx+2, 2).setValue(price);
-          sheet.getRange(idx+2, 3).setValue(change);
-          sheet.getRange(idx+2, 4).setValue(pct);
-          sheet.getRange(idx+2, 5).setValue(new Date().toLocaleString('zh-TW'));
+  try {
+    var data = JSON.parse(UrlFetchApp.fetch('https://openapi.twse.com.tw/v1/exchangeReport/STOCK_DAY_ALL',{muteHttpExceptions:true}).getContentText());
+    var now = new Date().toLocaleString('zh-TW');
+    
+    // Update Sheet1 (ETF)
+    var sheet = ss.getSheetByName('Sheet1') || ss.getSheets()[0];
+    var s1Rows = sheet.getDataRange().getValues();
+    for (var i = 1; i < s1Rows.length; i++) {
+      var ticker = s1Rows[i][0].toString().trim();
+      if (!ticker) continue;
+      var found = data.find(function(d){return d.Code === ticker});
+      if (found) {
+        var price = parseFloat(found.ClosingPrice);
+        var change = parseFloat(found.Change);
+        var prev = price - change;
+        var pct = prev > 0 ? (change/prev*100).toFixed(2) : 0;
+        sheet.getRange(i+1, 2).setValue(price);
+        sheet.getRange(i+1, 3).setValue(change);
+        sheet.getRange(i+1, 4).setValue(pct);
+        sheet.getRange(i+1, 5).setValue(now);
+      }
+    }
+    
+    // Update watchlist
+    var wl = ss.getSheetByName('watchlist');
+    if (wl && wl.getLastRow() > 0) {
+      var wlRows = wl.getDataRange().getValues();
+      for (var j = 0; j < wlRows.length; j++) {
+        var wTicker = wlRows[j][0].toString().trim();
+        if (!wTicker) continue;
+        var wFound = data.find(function(d){return d.Code === wTicker});
+        if (wFound) {
+          var wPrice = parseFloat(wFound.ClosingPrice);
+          var wChange = parseFloat(wFound.Change);
+          var wPrev = wPrice - wChange;
+          var wPct = wPrev > 0 ? (wChange/wPrev*100).toFixed(2) : 0;
+          wl.getRange(j+1, 4).setValue(wPrice);
+          wl.getRange(j+1, 5).setValue(wChange);
+          wl.getRange(j+1, 6).setValue(wPct);
+          wl.getRange(j+1, 7).setValue(now);
         }
-      });
-    } catch(e) { Logger.log('Price backup error: ' + e.message); }
-  }
+      }
+    }
+  } catch(e) { Logger.log('updateLivePrices error: ' + e.message); }
 }
 
 // === 一次性：修復所有分頁的 ticker 前導零 ===
