@@ -275,57 +275,61 @@ function fetchWatchlistData() {
 // === 即時股價更新（盤中每5分鐘觸發）===
 function updateLivePrices() {
   var ss = SpreadsheetApp.openById('1GT8LkzWJPo9psHwRIJwjfV2HEoYf7x8eIkI22BhuqIs');
-  try {
-    var data = JSON.parse(UrlFetchApp.fetch('https://openapi.twse.com.tw/v1/exchangeReport/STOCK_DAY_ALL',{muteHttpExceptions:true}).getContentText());
-    // Also fetch OTC (TPEX) data
-    var otcData = [];
-    try { otcData = JSON.parse(UrlFetchApp.fetch('https://www.tpex.org.tw/openapi/v1/tpex_mainboard_quotes',{muteHttpExceptions:true}).getContentText()); } catch(e) {}
-    var now = new Date().toLocaleString('zh-TW');
-    
-    function findPrice(ticker) {
-      var f = data.find(function(d){return d.Code===ticker});
-      if (f) return {price:parseFloat(f.ClosingPrice),change:parseFloat(f.Change)};
-      var o = otcData.find(function(d){return d.SecuritiesCompanyCode===ticker});
-      if (o) return {price:parseFloat(o.Close),change:parseFloat(o.Change)};
-      return null;
+  var now = new Date().toLocaleString('zh-TW');
+  
+  // Collect all tickers from Sheet1 + watchlist
+  var sheet = ss.getSheetByName('Sheet1') || ss.getSheets()[0];
+  var s1Rows = sheet.getDataRange().getValues();
+  var wl = ss.getSheetByName('watchlist');
+  var wlRows = wl ? wl.getDataRange().getValues() : [];
+  
+  // Update Sheet1
+  for (var i = 1; i < s1Rows.length; i++) {
+    var ticker = s1Rows[i][0].toString().trim();
+    if (!ticker) continue;
+    var result = getYahooPrice(ticker);
+    if (result) {
+      sheet.getRange(i+1, 2).setValue(result.price);
+      sheet.getRange(i+1, 3).setValue(result.change);
+      sheet.getRange(i+1, 4).setValue(result.pct);
+      sheet.getRange(i+1, 5).setValue(now);
     }
-    
-    // Update Sheet1 (ETF)
-    var sheet = ss.getSheetByName('Sheet1') || ss.getSheets()[0];
-    var s1Rows = sheet.getDataRange().getValues();
-    for (var i = 1; i < s1Rows.length; i++) {
-      var ticker = s1Rows[i][0].toString().trim();
-      if (!ticker) continue;
-      var result = findPrice(ticker);
-      if (result) {
-        var prev = result.price - result.change;
-        var pct = prev > 0 ? (result.change/prev*100).toFixed(2) : 0;
-        sheet.getRange(i+1, 2).setValue(result.price);
-        sheet.getRange(i+1, 3).setValue(result.change);
-        sheet.getRange(i+1, 4).setValue(pct);
-        sheet.getRange(i+1, 5).setValue(now);
+    Utilities.sleep(300);
+  }
+  
+  // Update watchlist
+  for (var j = 0; j < wlRows.length; j++) {
+    var wTicker = wlRows[j][0].toString().trim();
+    if (!wTicker) continue;
+    var wResult = getYahooPrice(wTicker);
+    if (wResult) {
+      wl.getRange(j+1, 4).setValue(wResult.price);
+      wl.getRange(j+1, 5).setValue(wResult.change);
+      wl.getRange(j+1, 6).setValue(wResult.pct);
+      wl.getRange(j+1, 7).setValue(now);
+    }
+    Utilities.sleep(300);
+  }
+}
+
+function getYahooPrice(ticker) {
+  var suffixes = ['.TW', '.TWO'];
+  for (var i = 0; i < suffixes.length; i++) {
+    try {
+      var url = 'https://query2.finance.yahoo.com/v8/finance/chart/' + ticker + suffixes[i] + '?interval=1m&range=1d';
+      var res = UrlFetchApp.fetch(url, {muteHttpExceptions:true, headers:{'User-Agent':'Mozilla/5.0'}});
+      var data = JSON.parse(res.getContentText());
+      var meta = data.chart.result[0].meta;
+      var price = meta.regularMarketPrice;
+      var prev = meta.previousClose || meta.chartPreviousClose;
+      if (price && prev) {
+        var change = parseFloat((price - prev).toFixed(2));
+        var pct = parseFloat((change / prev * 100).toFixed(2));
+        return {price: price, change: change, pct: pct};
       }
-    }
-    
-    // Update watchlist
-    var wl = ss.getSheetByName('watchlist');
-    if (wl && wl.getLastRow() > 0) {
-      var wlRows = wl.getDataRange().getValues();
-      for (var j = 0; j < wlRows.length; j++) {
-        var wTicker = wlRows[j][0].toString().trim();
-        if (!wTicker) continue;
-        var wResult = findPrice(wTicker);
-        if (wResult) {
-          var wPrev = wResult.price - wResult.change;
-          var wPct = wPrev > 0 ? (wResult.change/wPrev*100).toFixed(2) : 0;
-          wl.getRange(j+1, 4).setValue(wResult.price);
-          wl.getRange(j+1, 5).setValue(wResult.change);
-          wl.getRange(j+1, 6).setValue(wPct);
-          wl.getRange(j+1, 7).setValue(now);
-        }
-      }
-    }
-  } catch(e) { Logger.log('updateLivePrices error: ' + e.message); }
+    } catch(e) {}
+  }
+  return null;
 }
 
 // === 一次性：修復所有分頁的 ticker 前導零 ===
