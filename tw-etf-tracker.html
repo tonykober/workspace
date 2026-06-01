@@ -618,6 +618,9 @@ function updateCompareUI() {
       btn.textContent = isSelected ? '✓ 已選' : '比較';
       btn.style.opacity = disabled ? '0.3' : '';
       btn.style.pointerEvents = disabled ? 'none' : '';
+      btn.style.background = disabled ? 'var(--surface2)' : '';
+      btn.style.color = disabled ? 'var(--muted)' : '';
+      btn.style.borderColor = disabled ? 'var(--surface2)' : '';
     }
   });
   if (compareList.length >= 2) { renderCompare(); document.getElementById('compare-panel').classList.add('show'); }
