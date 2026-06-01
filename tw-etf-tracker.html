@@ -1216,36 +1216,32 @@ const PRICE_SHEET_ID = "1GT8LkzWJPo9psHwRIJwjfV2HEoYf7x8eIkI22BhuqIs";
 
 async function fetchLivePrices() {
   try {
-    const tickers = ETF_DATA.map(e => e.ticker).filter(Boolean);
-    const query = tickers.map(t => {
-      const isOTC = !t.startsWith('0') && t.length === 4;
-      return (isOTC ? 'otc_' : 'tse_') + t + '.tw';
-    }).join('|');
-    
-    const url = 'https://mis.twse.com.tw/stock/api/getStockInfo.jsp?ex_ch=' + query + '&json=1&delay=0&_=' + Date.now();
-    const res = await fetch('https://corsproxy.io/?' + encodeURIComponent(url));
-    const data = await res.json();
-    
-    if (!data.msgArray || !data.msgArray.length) throw new Error('No data');
+    // Read latest prices from Sheet1 (updated by GAS trigger or external script)
+    const res = await fetch(`https://docs.google.com/spreadsheets/d/${WL_SHEET_ID}/gviz/tq?tqx=out:csv&sheet=Sheet1&t=${Date.now()}`);
+    if (!res.ok) throw new Error('Sheet fetch failed');
+    const csv = await res.text();
+    const rows = csv.trim().split('\n').slice(1);
     let updated = 0;
-    data.msgArray.forEach(d => {
-      const ticker = d.c;
-      const price = parseFloat(d.z) || parseFloat(d.h) || 0;
-      const yesterday = parseFloat(d.y) || 0;
-      if (!price || !yesterday) return;
-      const change = parseFloat((price - yesterday).toFixed(2));
-      const changePct = parseFloat((change / yesterday * 100).toFixed(2));
-      const etf = ETF_DATA.find(e => e.ticker === ticker);
+    rows.forEach(row => {
+      const cols = row.match(/"([^"]*)"/g)?.map(s => s.replace(/"/g,'')) || [];
+      const ticker = cols[0];
+      const price = parseFloat(cols[1]);
+      const change = parseFloat(cols[2]);
+      const changePct = parseFloat(cols[3]);
+      const updateTime = cols[4] || '';
+      if (!ticker || !price) return;
+      const etf = ETF_DATA.find(e => e.ticker === ticker || ticker.endsWith(e.ticker) || e.ticker.endsWith(ticker));
       if (etf) { etf.price = price; etf.change = change; etf.changePercent = changePct; updated++; }
     });
     if (updated > 0) {
       renderCards(); renderSectorCharts(); renderSparklines();
       const statusEl = document.getElementById("live-status");
-      if (statusEl) statusEl.textContent = `✅ 即時報價（${updated}檔）${new Date().toLocaleTimeString('zh-TW')}`;
+      const time = rows[0]?.match(/"([^"]*)"/g)?.[4]?.replace(/"/g,'') || '';
+      if (statusEl) statusEl.textContent = `✅ 報價更新（${updated}檔）${time}`;
     }
   } catch(e) {
     const statusEl = document.getElementById("live-status");
-    if (statusEl) statusEl.textContent = "⚠️ 即時報價載入失敗，顯示靜態資料";
+    if (statusEl) statusEl.textContent = "⚠️ 報價載入失敗";
   }
 }
 // Auto refresh every 5min during market hours (Mon-Fri 9:00-13:30)
