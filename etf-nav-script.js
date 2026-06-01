@@ -40,8 +40,9 @@ function fetchNavData() {
           var hLen = hp.length;
           var latest = hp[hLen-1];
           if (hLen >= 22) ret1m = ((latest - hp[hLen-22]) / hp[hLen-22] * 100).toFixed(2);
-          if (hLen >= 44) ret3m = ((latest - hp[hLen-44]) / hp[hLen-44] * 100).toFixed(2);
-          if (hLen >= 60) ret6m = ((latest - hp[0]) / hp[0] * 100).toFixed(2);
+          if (hLen >= 66) ret3m = ((latest - hp[hLen-66]) / hp[hLen-66] * 100).toFixed(2);
+          if (hLen >= 132) ret6m = ((latest - hp[hLen-132]) / hp[hLen-132] * 100).toFixed(2);
+          if (hLen >= 244) ret1y = ((latest - hp[hLen-244]) / hp[hLen-244] * 100).toFixed(2);
         }
       }
     } catch(e) { Logger.log('Returns error ' + ticker + ': ' + e.message); }
@@ -338,7 +339,7 @@ function backfillSparkline() {
   hist.clear();
   hist.appendRow(['ticker','sparkline']);
   
-  var months = ['20260301','20260401','20260501'];
+  var months = ['20250601','20250701','20250801','20250901','20251001','20251101','20251201','20260101','20260201','20260301','20260401','20260501'];
   // Dynamic: read all tickers from info + watchlist
   var infoTickers = ss.getSheetByName('info').getDataRange().getValues().slice(1).map(function(r){return r[0].toString().trim()}).filter(function(t){return t});
   var wlSheet = ss.getSheetByName('watchlist');
@@ -357,18 +358,22 @@ function backfillSparkline() {
       } catch(e) {}
       Utilities.sleep(1000);
     });
-    // Fallback: Yahoo Finance chart API
+    // Fallback: Yahoo Finance chart API (.TW then .TWO for OTC)
     if (prices.length < 5) {
-      try {
-        var yUrl = 'https://query2.finance.yahoo.com/v8/finance/chart/' + ticker + '.TW?interval=1d&range=3mo';
-        var yRes = UrlFetchApp.fetch(yUrl, {muteHttpExceptions:true, headers:{'User-Agent':'Mozilla/5.0'}});
-        var yData = JSON.parse(yRes.getContentText());
-        var closes = yData.chart.result[0].indicators.quote[0].close;
-        prices = closes.filter(function(c){return c && c > 0}).map(function(c){return parseFloat(c.toFixed(2))});
-        Logger.log('Yahoo OK for ' + ticker + ': ' + prices.length + ' points');
-      } catch(e) { Logger.log('Yahoo chart fallback error ' + ticker + ': ' + e.message); }
+      var suffixes = ['.TW', '.TWO'];
+      for (var si = 0; si < suffixes.length && prices.length < 5; si++) {
+        try {
+          var yUrl = 'https://query2.finance.yahoo.com/v8/finance/chart/' + ticker + suffixes[si] + '?interval=1d&range=1y';
+          var yRes = UrlFetchApp.fetch(yUrl, {muteHttpExceptions:true, headers:{'User-Agent':'Mozilla/5.0'}});
+          var yData = JSON.parse(yRes.getContentText());
+          var closes = yData.chart.result[0].indicators.quote[0].close;
+          prices = closes.filter(function(c){return c && c > 0}).map(function(c){return parseFloat(c.toFixed(2))});
+          if (prices.length >= 5) Logger.log('Yahoo OK for ' + ticker + suffixes[si] + ': ' + prices.length + ' points');
+        } catch(e) {}
+      }
+      if (prices.length < 5) Logger.log('NO DATA for ' + ticker);
     }
-    if (prices.length > 60) prices = prices.slice(-60);
+    if (prices.length > 250) prices = prices.slice(-250);
     if (prices.length) { appendRowWithTicker(hist, [ticker, prices.join('|')]); }
     else { Logger.log('NO DATA for ' + ticker); }
   });
@@ -459,7 +464,7 @@ function doPost(e) {
       var hist = ss.getSheetByName('history');
       if (!hist) { hist = ss.insertSheet('history'); hist.appendRow(['ticker','sparkline']); }
       var prices = [];
-      var months = ['20260301','20260401','20260501'];
+      var months = ['20250601','20250701','20250801','20250901','20251001','20251101','20251201','20260101','20260201','20260301','20260401','20260501'];
       months.forEach(function(m) {
         try {
           var hUrl = 'https://www.twse.com.tw/exchangeReport/STOCK_DAY?response=json&date=' + m + '&stockNo=' + ticker;
@@ -469,17 +474,21 @@ function doPost(e) {
         } catch(ex6) {}
         Utilities.sleep(1000);
       });
-      // Fallback: Yahoo Finance chart API
+      // Fallback: Yahoo Finance chart API (.TW then .TWO)
       if (prices.length < 5) {
-        try {
-          var yUrl = 'https://query2.finance.yahoo.com/v8/finance/chart/' + ticker + '.TW?interval=1d&range=3mo';
-          var yRes = UrlFetchApp.fetch(yUrl, {muteHttpExceptions:true, headers:{'User-Agent':'Mozilla/5.0'}});
-          var yData = JSON.parse(yRes.getContentText());
-          var closes = yData.chart.result[0].indicators.quote[0].close;
-          prices = closes.filter(function(c){return c && c > 0}).map(function(c){return parseFloat(c.toFixed(2))});
-        } catch(ex6b) {}
+        var suffixes = ['.TW', '.TWO'];
+        for (var si = 0; si < suffixes.length && prices.length < 5; si++) {
+          try {
+            var yUrl = 'https://query2.finance.yahoo.com/v8/finance/chart/' + ticker + suffixes[si] + '?interval=1d&range=1y';
+            var yRes = UrlFetchApp.fetch(yUrl, {muteHttpExceptions:true, headers:{'User-Agent':'Mozilla/5.0'}});
+            var yData = JSON.parse(yRes.getContentText());
+            var closes = yData.chart.result[0].indicators.quote[0].close;
+            prices = closes.filter(function(c){return c && c > 0}).map(function(c){return parseFloat(c.toFixed(2))});
+          } catch(ex6b) {}
+        }
       }
-      if (prices.length > 60) prices = prices.slice(-60);
+      }
+      if (prices.length > 250) prices = prices.slice(-250);
       if (prices.length) {
         appendRowWithTicker(hist, [ticker, prices.join('|')]);
         // Write sparkline (last 22 days) and quarterLine to Sheet1
@@ -506,8 +515,9 @@ function doPost(e) {
           for (var ni = 0; ni < navRows.length; ni++) {
             if (navRows[ni][0].toString().trim() === ticker) {
               if (!navRows[ni][3]) navSheet2.getRange(ni+1,4).setValue(((lat-prices[Math.max(0,len-22)])/prices[Math.max(0,len-22)]*100).toFixed(2));
-              if (!navRows[ni][4] && len>=44) navSheet2.getRange(ni+1,5).setValue(((lat-prices[Math.max(0,len-44)])/prices[Math.max(0,len-44)]*100).toFixed(2));
-              if (!navRows[ni][5] && len>=60) navSheet2.getRange(ni+1,6).setValue(((lat-prices[0])/prices[0]*100).toFixed(2));
+              if (!navRows[ni][4] && len>=66) navSheet2.getRange(ni+1,5).setValue(((lat-prices[Math.max(0,len-66)])/prices[Math.max(0,len-66)]*100).toFixed(2));
+              if (!navRows[ni][5] && len>=132) navSheet2.getRange(ni+1,6).setValue(((lat-prices[Math.max(0,len-132)])/prices[Math.max(0,len-132)]*100).toFixed(2));
+              if (!navRows[ni][6] && len>=244) navSheet2.getRange(ni+1,7).setValue(((lat-prices[Math.max(0,len-244)])/prices[Math.max(0,len-244)]*100).toFixed(2));
               break;
             }
           }

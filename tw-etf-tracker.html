@@ -592,17 +592,28 @@ const COMPARE_COLORS = ['#58a6ff','#f0883e','#3fb950'];
 function toggleCompare(idx) {
   const i = compareList.indexOf(idx);
   if (i >= 0) { compareList.splice(i, 1); }
-  else if (compareList.length < 3) { compareList.push(idx); }
+  else if (compareList.length < 3) {
+    // Only allow same type
+    if (compareList.length > 0 && ETF_DATA[compareList[0]].isETF !== ETF_DATA[idx].isETF) return;
+    compareList.push(idx);
+  }
   else { return; }
   updateCompareUI();
 }
 
 function updateCompareUI() {
-  document.querySelectorAll('#view-etf .card').forEach((card, i) => {
+  const compareType = compareList.length > 0 ? ETF_DATA[compareList[0]].isETF : null;
+  document.querySelectorAll('#etf-cards .card, #stock-cards .card').forEach((card, i) => {
     const btn = card.querySelector('.compare-btn');
     const isSelected = compareList.includes(i);
+    const disabled = compareType !== null && ETF_DATA[i] && ETF_DATA[i].isETF !== compareType && !isSelected;
     card.classList.toggle('comparing', isSelected);
-    if (btn) { btn.classList.toggle('active', isSelected); btn.textContent = isSelected ? '✓ 已選' : '比較'; }
+    if (btn) {
+      btn.classList.toggle('active', isSelected);
+      btn.textContent = isSelected ? '✓ 已選' : '比較';
+      btn.style.opacity = disabled ? '0.3' : '';
+      btn.style.pointerEvents = disabled ? 'none' : '';
+    }
   });
   if (compareList.length >= 2) { renderCompare(); document.getElementById('compare-panel').classList.add('show'); }
   else { document.getElementById('compare-panel').classList.remove('show'); }
