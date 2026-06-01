@@ -1216,33 +1216,35 @@ const PRICE_SHEET_ID = "1GT8LkzWJPo9psHwRIJwjfV2HEoYf7x8eIkI22BhuqIs";
 
 async function fetchLivePrices() {
   try {
-    // Build query string for all tickers
     const tickers = ETF_DATA.map(e => e.ticker).filter(Boolean);
     const query = tickers.map(t => {
-      // OTC stocks use otc_ prefix, listed use tse_
-      const isOTC = !t.startsWith('0') && !t.startsWith('00') && t.length === 4;
+      const isOTC = !t.startsWith('0') && t.length === 4;
       return (isOTC ? 'otc_' : 'tse_') + t + '.tw';
     }).join('|');
     
-    const res = await fetch('https://mis.twse.com.tw/stock/api/getStockInfo.jsp?ex_ch=' + query);
-    const data = await res.json();
-    if (!data.msgArray || !data.msgArray.length) throw new Error('No data');
+    // Use JSONP to bypass CORS
+    const data = await new Promise((resolve, reject) => {
+      const cb = '_twseCallback' + Date.now();
+      window[cb] = function(d) { resolve(d); delete window[cb]; document.getElementById('jsonp-script')?.remove(); };
+      const s = document.createElement('script');
+      s.id = 'jsonp-script';
+      s.src = 'https://mis.twse.com.tw/stock/api/getStockInfo.jsp?ex_ch=' + query + '&json=1&delay=0&callback=' + cb + '&_=' + Date.now();
+      s.onerror = () => { reject(new Error('JSONP failed')); delete window[cb]; s.remove(); };
+      document.head.appendChild(s);
+      setTimeout(() => { if(window[cb]) { reject(new Error('timeout')); delete window[cb]; s.remove(); } }, 10000);
+    });
     
+    if (!data.msgArray || !data.msgArray.length) throw new Error('No data');
     let updated = 0;
     data.msgArray.forEach(d => {
       const ticker = d.c;
-      const price = parseFloat(d.z) || parseFloat(d.h) || 0; // z=成交價, h=最高(fallback)
+      const price = parseFloat(d.z) || parseFloat(d.h) || 0;
       const yesterday = parseFloat(d.y) || 0;
       if (!price || !yesterday) return;
       const change = parseFloat((price - yesterday).toFixed(2));
       const changePct = parseFloat((change / yesterday * 100).toFixed(2));
       const etf = ETF_DATA.find(e => e.ticker === ticker);
-      if (etf) {
-        etf.price = price;
-        etf.change = change;
-        etf.changePercent = changePct;
-        updated++;
-      }
+      if (etf) { etf.price = price; etf.change = change; etf.changePercent = changePct; updated++; }
     });
     if (updated > 0) {
       renderCards(); renderSectorCharts(); renderSparklines();
