@@ -44,7 +44,8 @@ th{background:#0f3460;color:#4fc3f7}
 <button class="tab" onclick="show(2)">❌ AI 做不到</button>
 <button class="tab" onclick="show(3)">💡 結論建議</button>
 <button class="tab" onclick="show(4)">🏭 Pipeline評估</button>
-<button class="tab" onclick="show(5)">⚠️ 實戰問題</button>
+<button class="tab" onclick="show(5)">📊 AI參與度</button>
+<button class="tab" onclick="show(6)">⚠️ 實戰問題</button>
 </div>
 <div class="content">
 
@@ -450,7 +451,146 @@ th{background:#0f3460;color:#4fc3f7}
 </div>
 </div>
 
-<!-- 分頁6：實戰問題 -->
+<!-- 分頁6：AI參與度評估 -->
+<div class="section">
+<h2>📊 AI 實際參與程度評估</h2>
+<div class="card">
+<p>以下數據基於實際工作室使用經驗、工具評測、產業報告整理。AI 工具不是標示能做就能 100% 完美達成，以下是每個環節的<strong>實際完成度</strong>。</p>
+</div>
+
+<h3>【前期製作】</h3>
+
+<div class="card ok">
+<h3>1. 概念設計/發想</h3>
+<ul>
+<li>Midjourney：AI 完成度 <strong>70-80%</strong>，需 20-30% 人工篩選修圖</li>
+<li>Stable Diffusion：<strong>60-70%</strong>，需更多 prompt 調整</li>
+<li>產出約 40% 可直接用作參考</li>
+<li>需生成 10-20 張才挑到 1-2 張滿意</li>
+<li>風格一致性（系列角色）僅 <strong>30-40%</strong></li>
+</ul>
+</div>
+
+<div class="card ok">
+<h3>2. 貼圖/材質生成</h3>
+<ul>
+<li>通用材質（石頭、木頭、金屬）：<strong>80-90%</strong></li>
+<li>角色專屬貼圖：<strong>40-50%</strong>（風格常偏離）</li>
+<li>無縫貼圖：<strong>85%</strong> 可直接用</li>
+<li>已有 UV 的角色貼圖放大：<strong>50-60%</strong>（接縫問題）</li>
+</ul>
+</div>
+
+<div class="card ok">
+<h3>3. 3D 模型快速原型</h3>
+<ul>
+<li>Meshy：<strong>30-40%</strong> 完成度（需大量 retopo）</li>
+<li>Tripo Smart Mesh：<strong>50-60%</strong>（低模拓撲改善中）</li>
+<li>作為形狀參考：<strong>90%</strong> 有用</li>
+<li>直接用於遊戲引擎：<strong>5-10%</strong></li>
+<li>每個 AI 模型平均需 2-4 小時手動清理</li>
+</ul>
+</div>
+
+<div class="card ok">
+<h3>4. 動畫/動作</h3>
+<ul>
+<li>Cascadeur AI 補幀：<strong>70-80%</strong></li>
+<li>DeepMotion 影片轉動捕：<strong>55-65%</strong></li>
+<li>通用走跑跳：<strong>70-80%</strong></li>
+<li>特定表演動作：<strong>20-30%</strong></li>
+<li>風格化誇張動作：<strong>10-15%</strong></li>
+</ul>
+</div>
+
+<div class="card ok">
+<h3>5. 背景/環境填充</h3>
+<ul>
+<li>AI 資產生成：<strong>50-60%</strong></li>
+<li>地形生成：<strong>70-80%</strong></li>
+<li>天空盒/HDR：<strong>85-90%</strong></li>
+</ul>
+</div>
+
+<div class="card ok">
+<h3>6. UI/圖標設計</h3>
+<ul>
+<li>單個圖標：<strong>70%</strong> 可用</li>
+<li>整套風格統一圖標組：<strong>30-40%</strong></li>
+</ul>
+</div>
+
+<h3 style="margin-top:25px">【後期修改優化】</h3>
+
+<div class="card ok">
+<h3>7. 貼圖升級</h3>
+<ul>
+<li>獨立 2D 素材放大：<strong>85-90%</strong></li>
+<li>已綁 UV 角色貼圖放大：<strong>50-60%</strong></li>
+<li>批量調色：<strong>90-95%</strong></li>
+</ul>
+</div>
+
+<div class="card ok">
+<h3>8. 材質重新生成</h3>
+<ul>
+<li>簡單物件換材質：<strong>75-85%</strong></li>
+<li>角色換色/換皮膚：<strong>70-80%</strong></li>
+<li>複雜角色完整 retexture：<strong>40-50%</strong></li>
+</ul>
+</div>
+
+<div class="card ok">
+<h3>9. 模型減面/LOD</h3>
+<ul>
+<li>自動 LOD（遠景用）：<strong>70-80%</strong></li>
+<li>保持輪廓品質：<strong>50-60%</strong></li>
+<li>動畫友善減面：<strong>30-40%</strong></li>
+</ul>
+</div>
+
+<div class="card ok">
+<h3>10. 動畫補幀與重定向</h3>
+<ul>
+<li>補幀 24→60fps：<strong>75-85%</strong></li>
+<li>相似體型重定向：<strong>70-80%</strong></li>
+<li>差異大體型重定向：<strong>40-50%</strong></li>
+<li>風格轉換（寫實→卡通）：<strong>20-30%</strong></li>
+</ul>
+</div>
+
+<div class="card" style="border-left-color:#9c27b0">
+<h3>📊 總覽表格</h3>
+<table>
+<tr><th>環節</th><th>AI 完成度</th><th>人工介入</th></tr>
+<tr><td>概念設計</td><td>70-80%</td><td>篩選+修圖</td></tr>
+<tr><td>通用材質</td><td>80-90%</td><td>參數微調</td></tr>
+<tr><td>角色貼圖</td><td>40-50%</td><td>風格修正</td></tr>
+<tr><td>3D 粗模</td><td>30-40%</td><td>完整 retopo</td></tr>
+<tr><td>通用動作</td><td>70-80%</td><td>抖動修正</td></tr>
+<tr><td>表演動作</td><td>20-30%</td><td>大量手動</td></tr>
+<tr><td>背景環境</td><td>50-60%</td><td>風格統一</td></tr>
+<tr><td>UI 圖標</td><td>50-60%</td><td>向量化+統一</td></tr>
+<tr><td>貼圖放大(2D)</td><td>85-90%</td><td>幾乎不用</td></tr>
+<tr><td>貼圖放大(UV)</td><td>50-60%</td><td>接縫修補</td></tr>
+<tr><td>換色/換皮</td><td>70-80%</td><td>品質審核</td></tr>
+<tr><td>LOD 生成</td><td>70-80%</td><td>遠景可用</td></tr>
+<tr><td>動畫補幀</td><td>75-85%</td><td>品質審核</td></tr>
+</table>
+</div>
+
+<div class="conclusion">
+<h3>🔑 關鍵數據</h3>
+<ul>
+<li>產業統計：僅 <strong>5%</strong> 的 AI 試點專案真正進入量產</li>
+<li>Midjourney 概念圖：約 <strong>40%</strong> 買入率</li>
+<li>AI 3D 模型：<strong>100%</strong> 需要手動清理才能用於遊戲</li>
+<li>整體評估：AI 平均完成 <strong>50-60%</strong> 的工作量，剩下 40-50% 仍需人工</li>
+</ul>
+</div>
+</div>
+
+<!-- 分頁7：實戰問題 -->
 <div class="section">
 <h2>⚠️ AI 修改既有模型的實戰問題</h2>
 <div class="card">
