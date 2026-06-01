@@ -696,6 +696,7 @@ th{background:#0f3460;color:#4fc3f7}
 function show(i){
   document.querySelectorAll('.section').forEach((s,idx)=>{s.classList.toggle('active',idx===i)});
   document.querySelectorAll('.tab').forEach((t,idx)=>{t.classList.toggle('active',idx===i)});
+  document.querySelector('.content').scrollTop=0;window.scrollTo(0,0);
 }
 </script>
 </body>
