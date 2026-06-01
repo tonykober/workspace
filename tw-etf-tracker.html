@@ -847,7 +847,7 @@ async function loadAllData() {
 // Refresh with toast
 async function refreshAll() {
   try {
-    await fetchLivePrices(); loadWatchlist(); renderCards(); renderSectorCharts(); renderSparklines();
+    await fetchLivePrices(); renderCards(); renderSectorCharts(); renderSparklines();
     showToast('✅ 資料已更新', 'var(--green)');
   } catch(e) { showToast('⚠️ 更新失敗，顯示快取資料', 'var(--yellow)'); }
 }
@@ -911,7 +911,7 @@ async function loadWatchlist() {
     wlOriginalData = [...wlData];
     renderWatchlistCards();
   } catch(e) {
-    document.getElementById('watchlist-cards').innerHTML = '<p style="color:var(--muted)">載入失敗</p>';
+    console.log('loadWatchlist error:', e);
   }
 }
 
@@ -1223,7 +1223,7 @@ async function fetchLivePrices() {
     }).join('|');
     
     const url = 'https://mis.twse.com.tw/stock/api/getStockInfo.jsp?ex_ch=' + query + '&json=1&delay=0&_=' + Date.now();
-    const res = await fetch('https://api.allorigins.win/raw?url=' + encodeURIComponent(url));
+    const res = await fetch('https://corsproxy.io/?' + encodeURIComponent(url));
     const data = await res.json();
     
     if (!data.msgArray || !data.msgArray.length) throw new Error('No data');
