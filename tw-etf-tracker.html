@@ -284,9 +284,9 @@ function renderCards() {
   const origIdx = ETF_DATA.indexOf(etf);
   const hidden = (currentFilter==='etf'&&!etf.isETF)||(currentFilter==='stock'&&etf.isETF)||(currentFilter!=='all'&&currentFilter!=='etf'&&currentFilter!=='stock'&&etf.dividend&&etf.dividend.frequency!==currentFilter);
   const isCollapsed = collapsedTickers.includes(etf.ticker);
-  return `<div class="card${isPinned?' pinned':''}${isCollapsed?' collapsed':''}" data-idx="${origIdx}" style="position:relative;${hidden?'display:none':''}">
+  return `<div class="card${isPinned?' pinned':''}${isCollapsed?' collapsed':''}" data-ticker="${etf.ticker}" style="position:relative;${hidden?'display:none':''}">
   <span class="card-badge ${etf.isETF?'badge-etf':'badge-stock'}">${etf.isETF?'ETF':'個股'}</span>
-  <button class="compare-btn" onclick="toggleCompare(${origIdx})">比較</button>
+  <button class="compare-btn" onclick="toggleCompare('${etf.ticker}')">比較</button>
   <button class="pin-btn${isPinned?' active':''}" onclick="togglePin('${etf.ticker}','etf')">📌</button>
   <button class="etf-delete" onclick="confirmDeleteETF('${etf.ticker}','${etf.name}')">&times;</button>
   <div class="card-header" onclick="toggleCollapse(this.parentElement,'${etf.ticker}')">
@@ -590,25 +590,28 @@ function renderMainChart() {
 let compareList = [];
 const COMPARE_COLORS = ['#58a6ff','#f0883e','#3fb950'];
 
-function toggleCompare(idx) {
-  const i = compareList.indexOf(idx);
+function toggleCompare(ticker) {
+  const i = compareList.indexOf(ticker);
   if (i >= 0) { compareList.splice(i, 1); }
   else if (compareList.length < 3) {
-    // Only allow same type
-    if (compareList.length > 0 && ETF_DATA[compareList[0]].isETF !== ETF_DATA[idx].isETF) return;
-    compareList.push(idx);
+    const etf = ETF_DATA.find(e => e.ticker === ticker);
+    const first = ETF_DATA.find(e => e.ticker === compareList[0]);
+    if (compareList.length > 0 && first && etf && first.isETF !== etf.isETF) return;
+    compareList.push(ticker);
   }
   else { return; }
   updateCompareUI();
 }
 
 function updateCompareUI() {
-  const compareType = compareList.length > 0 ? ETF_DATA[compareList[0]].isETF : null;
+  const firstETF = compareList.length > 0 ? ETF_DATA.find(e => e.ticker === compareList[0]) : null;
+  const compareType = firstETF ? firstETF.isETF : null;
   document.querySelectorAll('#etf-cards .card, #stock-cards .card').forEach(card => {
-    const idx = parseInt(card.dataset.idx);
+    const ticker = card.dataset.ticker;
+    const etf = ETF_DATA.find(e => e.ticker === ticker);
     const btn = card.querySelector('.compare-btn');
-    const isSelected = compareList.includes(idx);
-    const disabled = compareType !== null && ETF_DATA[idx] && ETF_DATA[idx].isETF !== compareType && !isSelected;
+    const isSelected = compareList.includes(ticker);
+    const disabled = compareType !== null && etf && etf.isETF !== compareType && !isSelected;
     card.classList.toggle('comparing', isSelected);
     if (btn) {
       btn.classList.toggle('active', isSelected);
@@ -623,18 +626,12 @@ function updateCompareUI() {
 
 function closeCompare() {
   compareList = [];
-  wlCompareList = [];
   updateCompareUI();
-  document.querySelectorAll('#view-watchlist .card').forEach(card => {
-    card.classList.remove('comparing');
-    const btn = card.querySelector('.compare-btn');
-    if (btn) { btn.classList.remove('active'); btn.textContent = '比較'; }
-  });
   document.getElementById('compare-panel').classList.remove('show');
 }
 
 function renderCompare() {
-  const etfs = compareList.map(i => ETF_DATA[i]);
+  const etfs = compareList.map(t => ETF_DATA.find(e => e.ticker === t)).filter(Boolean);
   const container = document.getElementById('compare-content');
   let html = '';
   
