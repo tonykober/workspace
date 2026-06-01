@@ -44,6 +44,7 @@ th{background:#0f3460;color:#4fc3f7}
 <button class="tab" onclick="show(2)">❌ AI 做不到</button>
 <button class="tab" onclick="show(3)">💡 結論建議</button>
 <button class="tab" onclick="show(4)">🏭 Pipeline評估</button>
+<button class="tab" onclick="show(5)">⚠️ 實戰問題</button>
 </div>
 <div class="content">
 
@@ -446,6 +447,92 @@ th{background:#0f3460;color:#4fc3f7}
 <div class="conclusion">
 <h3>最終結論</h3>
 <p>AI 是「加速器」不是「替代者」。它能讓 <strong>1 個人做到原本 2 個人的產出</strong>，但不能讓 <strong>0 個人做到 1 個人的品質</strong>。</p>
+</div>
+</div>
+
+<!-- 分頁6：實戰問題 -->
+<div class="section">
+<h2>⚠️ AI 修改既有模型的實戰問題</h2>
+<div class="card">
+<p>以下是實際使用 AI 工具修改既有美術資產時遇到的結構性問題。這些不是「AI 還不夠好」，而是<strong>目前技術架構的根本性限制</strong>。</p>
+</div>
+
+<div class="card warn">
+<h3>問題 1：面數分配極度浪費（無法精準優化）</h3>
+<ul>
+<li><strong>現象：</strong>AI 將整個模型「全面均勻切割加倍」，平坦區域多出幾萬個無用多邊形</li>
+<li><strong>人類做法：</strong>臉部/曲面高密度，平坦處低密度，按需分配</li>
+<li><strong>AI 做法：</strong>全部均勻切，不懂「哪裡需要細節」</li>
+<li><strong>根因：</strong>3D 生成架構無語意理解能力，不知道「這是臉」「這是裝甲板」</li>
+<li><strong>後果：</strong>暴增硬體負載，引發嚴重掉幀與卡頓</li>
+<li><strong>解法：</strong>AI 產出只當形狀參考，人工用 retopo 工具重新佈線</li>
+</ul>
+</div>
+
+<div class="card warn">
+<h3>問題 2：摧毀動畫佈線（Topology 混亂）</h3>
+<ul>
+<li><strong>現象：</strong>AI 產生的模型由無規則三角面（Triangle Soup）組成，缺乏 Edge Loops</li>
+<li><strong>根因：</strong>AI mesh 從點雲/體素轉換而來，沒有「邊循環」概念</li>
+<li><strong>後果：</strong>手肘/膝蓋彎曲時嚴重網格交錯與破圖</li>
+<li><strong>解法：</strong>完全重新拓撲，AI 模型只能當「雕塑參考」</li>
+<li><strong>短期能解決？</strong>有改善但離量產還遠</li>
+</ul>
+</div>
+
+<div class="card warn">
+<h3>問題 3：破壞骨架綁定（Skin Weights 失效）</h3>
+<ul>
+<li><strong>現象：</strong>AI 修改模型後，重組頂點數量，原本綁好的骨架權重直接作廢</li>
+<li><strong>根因：</strong>Skin Weights 是每個頂點對應每根骨骼的影響值，頂點重組 = 映射斷裂</li>
+<li><strong>後果：</strong>播動畫時手腳留在原地，或產生恐怖拉扯</li>
+<li><strong>解法：</strong>頂點數改變 = 必須重新綁定 + 重新刷權重</li>
+<li><strong>結論：</strong>AI 修改模型 = 後續綁定工作全部重來</li>
+</ul>
+</div>
+
+<div class="card" style="border-left-color:#ff9800">
+<h3>問題 4：撕裂貼圖接縫（UV Seams 斷層）</h3>
+<ul>
+<li><strong>現象：</strong>AI 放大貼圖後，UV island 邊界處顏色/細節對不上，出現明顯十字接縫線</li>
+<li><strong>根因：</strong>AI 超解析度在 2D 空間處理，不知道這張圖是展開的 3D 表面</li>
+<li><strong>後果：</strong>套回模型後接縫處明顯斷裂</li>
+<li><strong>解法：</strong>用 3D 感知工具（Substance Painter）或手動修補接縫</li>
+<li><strong>結論：</strong>純 2D AI 放大不適合有複雜 UV 的角色貼圖</li>
+</ul>
+</div>
+
+<div class="card" style="border-left-color:#ff9800">
+<h3>問題 5：貼圖盲目腦補錯誤細節（語意誤判）</h3>
+<ul>
+<li><strong>現象：</strong>AI 把模糊的螺絲釘算成花朵，把污漬變成奇怪符號</li>
+<li><strong>根因：</strong>AI「幻覺」問題 — 根據訓練資料猜測，不知道原始設計意圖</li>
+<li><strong>後果：</strong>產生完全不符合角色設定的錯誤材質</li>
+<li><strong>解法：</strong>用 ControlNet + 原始設計圖約束，或美術手動重繪</li>
+<li><strong>結論：</strong>AI 缺乏設計意圖理解，這是根本性限制</li>
+</ul>
+</div>
+
+<div class="card" style="border-left-color:#9c27b0">
+<h3>📊 問題總結</h3>
+<table>
+<tr><th>問題</th><th>根因</th><th>短期能解決？</th></tr>
+<tr><td>均勻面數</td><td>生成架構無語意理解</td><td>❌ 需要全新架構</td></tr>
+<tr><td>Triangle Soup</td><td>點雲→mesh 轉換本質</td><td>⚠️ 有改善但離量產遠</td></tr>
+<tr><td>權重失效</td><td>頂點重組破壞映射</td><td>❌ 結構性問題</td></tr>
+<tr><td>UV 接縫</td><td>2D 處理不懂 3D 空間</td><td>⚠️ 需要 3D-aware 工具</td></tr>
+<tr><td>語意誤判</td><td>AI 幻覺/缺乏設計意圖</td><td>❌ 根本性限制</td></tr>
+</table>
+</div>
+
+<div class="conclusion">
+<h3>最終結論</h3>
+<p><strong>AI 修改既有模型 = 拆房子重蓋，不是裝修。</strong></p>
+<ul>
+<li>AI 目前只適合做「不影響拓撲的表面工作」（換色、換材質）</li>
+<li>任何涉及「改變頂點結構」的操作 → 後續工作全部重來</li>
+<li>貼圖放大只適合「獨立的 2D 素材」，不適合「已綁定 UV 的角色貼圖」</li>
+</ul>
 </div>
 </div>
 
