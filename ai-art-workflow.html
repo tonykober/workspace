@@ -86,7 +86,7 @@ th{background:#0f3460;color:#4fc3f7}
 <li>風格探索（一次產出多種風格方向）</li>
 <li>配色方案、構圖參考</li>
 </ul>
-<p class="efficiency">⚡ 效率提升：數天 → 數小時</p>
+<p class="efficiency">⚡ 效率提升：數天 → 數小時（含篩選修圖時間）</p>
 <p><strong>📊 實際完成度：</strong>Midjourney 70-80%、SD 60-70%。產出約 40% 可直接用；需生成 10-20 張挑 1-2 張；風格一致性僅 30-40%</p>
 </div>
 
@@ -96,9 +96,9 @@ th{background:#0f3460;color:#4fc3f7}
 <ul>
 <li>PBR 材質自動生成（金屬、木頭、石頭等）</li>
 <li>照片轉無縫貼圖</li>
-<li>AI 超解析度放大（低解析度 → 高解析度）</li>
+<li>AI 超解析度放大（低解析度 → 高解析度）（限獨立 2D 素材，角色 UV 貼圖效果差，有接縫問題）</li>
 </ul>
-<p class="efficiency">⚡ 重複性材質製作大幅加速</p>
+<p class="efficiency">⚡ 通用材質加速明顯，角色材質仍需人工</p>
 <p><strong>📊 實際完成度：</strong>通用材質 80-90%、角色專屬 40-50%、無縫貼圖 85%、已有UV放大 50-60%</p>
 </div>
 
@@ -109,7 +109,7 @@ th{background:#0f3460;color:#4fc3f7}
 <li>文字/圖片 → 3D 模型（粗模）</li>
 <li>快速產出大量變體供挑選</li>
 </ul>
-<p class="efficiency">⚡ 概念到粗模：數天 → 數分鐘</p>
+<p class="efficiency">⚡ 概念到粗模：數天 → 數分鐘（產出初版速度，達量產品質仍需人工精修）</p>
 <p><strong>📊 實際完成度：</strong>Meshy 30-40%、Tripo 50-60%、形狀參考 90%、直接用於引擎 5-10%。每個需 2-4 小時手動清理</p>
 </div>
 
@@ -333,7 +333,7 @@ th{background:#0f3460;color:#4fc3f7}
 <h3>AI 的定位</h3>
 <ul>
 <li><strong>前期 AI 強在「從無到有」</strong>— 加速發想、快速原型</li>
-<li><strong>後期 AI 強在「批量變體 + 升級品質」</strong>— 換色、放大、LOD</li>
+<li><strong>後期 AI 強在「批量變體 + 加速產出初版」</strong>— 換色、放大、LOD</li>
 <li><strong>人不可取代的</strong> =「精確編輯 + 細節打磨 + 技術實作」</li>
 <li>AI 是很強的「助手」，但還不是能獨立交付的「美術師」</li>
 </ul>
@@ -354,7 +354,7 @@ th{background:#0f3460;color:#4fc3f7}
 <tr><th>階段</th><th>AI 角色</th><th>人的角色</th></tr>
 <tr><td>概念期</td><td>大量生成參考</td><td>篩選、定調</td></tr>
 <tr><td>原型期</td><td>快速出粗模/動作</td><td>確認方向</td></tr>
-<tr><td>製作期</td><td>材質/背景填充</td><td>精修、Rig、特效</td></tr>
+<tr><td>製作期</td><td>通用材質/背景填充（角色材質仍需人工）</td><td>精修、Rig、特效</td></tr>
 <tr><td>優化期</td><td>LOD、放大、補幀</td><td>權重修正、Shader</td></tr>
 <tr><td>收尾期</td><td>輔助 QA、批量變體</td><td>最終品質把關</td></tr>
 </table>
@@ -388,14 +388,14 @@ th{background:#0f3460;color:#4fc3f7}
 <p><strong>結論：</strong>仍需美術手動處理</p>
 </div>
 
-<div class="card ok">
-<h3>3️⃣ 貼圖生成 | ✅ 能做</h3>
+<div class="card" style="border-left-color:#ff9800">
+<h3>3️⃣ 貼圖生成 | ⚠️ 部分可做</h3>
 <ul>
 <li>可根據模型自動生成 PBR 貼圖</li>
-<li>Retexture 功能成熟（Meshy、Tripo）</li>
+<li>Retexture 功能可用於簡單物件，複雜角色效果差</li>
 <li>但風格一致性需要 LoRA 訓練約束</li>
 </ul>
-<p><strong>結論：</strong>能做，但需人工審核品質</p>
+<p><strong>結論：</strong>簡單物件/通用材質可用，複雜角色需大量人工修正</p>
 </div>
 
 <div class="card" style="border-left-color:#ff9800">
@@ -467,11 +467,11 @@ th{background:#0f3460;color:#4fc3f7}
 <h3>📊 總結評估</h3>
 <table>
 <tr><th>類別</th><th>數量</th><th>步驟</th></tr>
-<tr><td style="color:#66bb6a">✅ AI 能獨立完成</td><td>1 個</td><td>貼圖生成</td></tr>
-<tr><td style="color:#ff9800">⚠️ AI 能輔助需人工</td><td>4 個</td><td>圖片→模型、綁定、動作、效能</td></tr>
+<tr><td style="color:#66bb6a">✅ AI 能獨立完成</td><td>0 個</td><td>—</td></tr>
+<tr><td style="color:#ff9800">⚠️ AI 能輔助需人工</td><td>5 個</td><td>圖片→模型、貼圖、綁定、動作、效能</td></tr>
 <tr><td style="color:#ff7043">❌ AI 做不到</td><td>5 個</td><td>UV、權重、上材質、打燈、主管修改</td></tr>
 </table>
-<p style="margin-top:10px"><strong>自動化程度：約 15-25%</strong>（以品質達標為前提）</p>
+<p style="margin-top:10px"><strong>自動化程度：約 10-20%</strong>（以品質達標為前提）</p>
 </div>
 
 <div class="card ok">
