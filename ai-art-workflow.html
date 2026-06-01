@@ -220,21 +220,28 @@ th{background:#0f3460;color:#4fc3f7}
 
 <div class="card" style="border-left-color:#9c27b0">
 <h3>📊 AI 參與度總覽</h3>
+<p style="margin-bottom:10px;color:#81d4fa"><strong>百分比說明：</strong></p>
+<ul>
+<li><strong>AI 產出品質</strong> = AI 直接產出後，成品的可用程度</li>
+<li><strong>人工修正量</strong> = 人還需要花多少工作量去修正才能達到量產標準</li>
+<li><strong>實際省時</strong> = 相比完全人工製作，使用 AI 輔助後實際節省的時間比例</li>
+</ul>
+<p style="margin-top:8px;font-size:0.85em;color:#90a4ae">三者關係：AI 產出品質高不代表不需要人工，人工修正量才是真正的成本。實際省時 = 最終效益。</p>
 <table>
-<tr><th>環節</th><th>AI 完成度</th><th>人工介入</th></tr>
-<tr><td>概念設計</td><td>70-80%</td><td>篩選+修圖</td></tr>
-<tr><td>通用材質</td><td>80-90%</td><td>參數微調</td></tr>
-<tr><td>角色貼圖</td><td>40-50%</td><td>風格修正</td></tr>
-<tr><td>3D 粗模</td><td>30-40%</td><td>完整 retopo</td></tr>
-<tr><td>通用動作</td><td>70-80%</td><td>抖動修正</td></tr>
-<tr><td>表演動作</td><td>20-30%</td><td>大量手動</td></tr>
-<tr><td>背景環境</td><td>50-60%</td><td>風格統一</td></tr>
-<tr><td>UI 圖標</td><td>50-60%</td><td>向量化+統一</td></tr>
-<tr><td>貼圖放大(2D)</td><td>85-90%</td><td>幾乎不用</td></tr>
-<tr><td>貼圖放大(UV)</td><td>50-60%</td><td>接縫修補</td></tr>
-<tr><td>換色/換皮</td><td>70-80%</td><td>品質審核</td></tr>
-<tr><td>LOD 生成</td><td>70-80%</td><td>遠景可用</td></tr>
-<tr><td>動畫補幀</td><td>75-85%</td><td>品質審核</td></tr>
+<tr><th>環節</th><th>AI 產出品質</th><th>人工修正量</th><th>實際省時</th></tr>
+<tr><td>概念設計</td><td>70-80%</td><td>20-30% 篩選修圖</td><td>省 50-60%</td></tr>
+<tr><td>通用材質</td><td>80-90%</td><td>10-15% 參數微調</td><td>省 70-80%</td></tr>
+<tr><td>角色貼圖</td><td>40-50%</td><td>50-60% 風格修正</td><td>省 20-30%</td></tr>
+<tr><td>3D 粗模</td><td>30-40%</td><td>60-70% 完整 retopo</td><td>省 30-40%</td></tr>
+<tr><td>通用動作</td><td>70-80%</td><td>20-30% 抖動修正</td><td>省 50-60%</td></tr>
+<tr><td>表演動作</td><td>20-30%</td><td>70-80% 大量手動</td><td>省 10-15%</td></tr>
+<tr><td>背景環境</td><td>50-60%</td><td>40-50% 風格統一</td><td>省 30-40%</td></tr>
+<tr><td>UI 圖標</td><td>50-60%</td><td>40-50% 向量化統一</td><td>省 30-40%</td></tr>
+<tr><td>貼圖放大(2D)</td><td>85-90%</td><td>5-10% 微調</td><td>省 80-85%</td></tr>
+<tr><td>貼圖放大(UV)</td><td>50-60%</td><td>40-50% 接縫修補</td><td>省 20-30%</td></tr>
+<tr><td>換色/換皮</td><td>70-80%</td><td>20-30% 品質審核</td><td>省 60-70%</td></tr>
+<tr><td>LOD 生成</td><td>70-80%</td><td>20-30% 品質確認</td><td>省 60-70%</td></tr>
+<tr><td>動畫補幀</td><td>75-85%</td><td>15-20% 品質審核</td><td>省 60-70%</td></tr>
 </table>
 </div>
 
@@ -244,7 +251,7 @@ th{background:#0f3460;color:#4fc3f7}
 <li>產業統計：僅 <strong>5%</strong> 的 AI 試點專案真正進入量產</li>
 <li>Midjourney 概念圖：約 <strong>40%</strong> 買入率</li>
 <li>AI 3D 模型：<strong>100%</strong> 需要手動清理才能用於遊戲</li>
-<li>整體評估：AI 平均完成 <strong>50-60%</strong> 的工作量，剩下 40-50% 仍需人工</li>
+<li>整體評估：AI 平均產出品質 <strong>50-60%</strong>，人工仍需介入 40-50%，實際省時約 <strong>30-40%</strong></li>
 </ul>
 </div>
 </div>
