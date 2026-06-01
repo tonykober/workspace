@@ -7,10 +7,11 @@
 <style>
 *{margin:0;padding:0;box-sizing:border-box}
 body{background:#1a1a2e;color:#e0e0e0;font-family:'Segoe UI',sans-serif;min-height:100vh;overflow-y:scroll}
-.header{background:#16213e;padding:20px;text-align:center;border-bottom:2px solid #0f3460;position:sticky;top:0;z-index:10}
+.header{background:#16213e;padding:12px 20px;text-align:center}
 .header h1{color:#4fc3f7;font-size:1.5em}
 .header p{color:#90a4ae;margin-top:5px;font-size:0.9em}
-.tabs{display:flex;flex-wrap:wrap;background:#0f3460;padding:5px 10px;gap:5px;position:sticky;top:72px;z-index:10}
+.tabs{display:flex;flex-wrap:wrap;background:#0f3460;padding:5px 10px;gap:5px}
+.top-bar{position:sticky;top:0;z-index:10}
 .tab{padding:8px 14px;background:#1a1a2e;color:#90a4ae;border:none;border-radius:5px 5px 0 0;cursor:pointer;font-size:0.82em}
 .tab.active{background:#1a1a2e;color:#4fc3f7;border-bottom:2px solid #4fc3f7}
 .content{padding:20px;max-width:900px;margin:0 auto}
@@ -34,9 +35,9 @@ th{background:#0f3460;color:#4fc3f7}
 </style>
 </head>
 <body>
+<div class="top-bar">
 <div class="header">
 <h1>🎨 遊戲開發美術工作流中 AI 能做到與做不到的事</h1>
-<p>2026 產業現況完整整理</p>
 </div>
 <div class="tabs">
 <button class="tab active" onclick="show(0)">📊 產業現況</button>
@@ -46,6 +47,7 @@ th{background:#0f3460;color:#4fc3f7}
 <button class="tab" onclick="show(4)">🏭 Pipeline評估</button>
 <button class="tab" onclick="show(5)">⚠️ 實戰問題</button>
 <button class="tab" onclick="show(6)">🔬 實測案例</button>
+</div>
 </div>
 <div class="content">
 
