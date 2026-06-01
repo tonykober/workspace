@@ -167,7 +167,7 @@ th{background:#0f3460;color:#4fc3f7}
 <li>文字描述換皮膚（如「把木頭材質改成金屬」）</li>
 <li>批量生成同模型的多種配色/材質變體</li>
 </ul>
-<p><strong>📊 實際完成度：</strong>簡單物件 75-85%、換色換皮 70-80%、複雜角色 40-50%</p>
+<p><strong>📊 實際完成度：</strong>簡單物件 75-85%、換色換皮 70-80%、複雜角色 5-15%</p>
 </div>
 
 <div class="card ok">
@@ -178,6 +178,7 @@ th{background:#0f3460;color:#4fc3f7}
 <li>AI 輔助判斷哪些細節可以省略</li>
 </ul>
 <p><strong>📊 實際完成度：</strong>自動LOD 70-80%、保持輪廓 50-60%、動畫友善減面 30-40%</p>
+<p style="font-size:0.85em;color:#ff9800">※ 指專業 LOD 工具（InstaLOD/Simplygon）的演算法減面，非 AI 生成工具的重建式降面。AI 生成工具的降面功能實測可用度為 0%。</p>
 </div>
 
 <div class="card ok">
@@ -234,7 +235,7 @@ th{background:#0f3460;color:#4fc3f7}
 <tr><th>環節</th><th>AI 產出品質</th><th>人工修正量</th><th>實際省時</th></tr>
 <tr><td>概念設計</td><td>70-80%</td><td>20-30% 篩選修圖</td><td>省 50-60%</td></tr>
 <tr><td>通用材質</td><td>80-90%</td><td>10-15% 參數微調</td><td>省 70-80%</td></tr>
-<tr><td>角色貼圖</td><td>40-50%</td><td>50-60% 風格修正</td><td>省 20-30%</td></tr>
+<tr><td>角色貼圖</td><td>20-30%</td><td>50-60% 風格修正</td><td>省 10-15%</td></tr>
 <tr><td>3D 粗模</td><td>30-40%</td><td>60-70% 完整 retopo</td><td>省 30-40%</td></tr>
 <tr><td>通用動作</td><td>70-80%</td><td>20-30% 抖動修正</td><td>省 50-60%</td></tr>
 <tr><td>表演動作</td><td>20-30%</td><td>70-80% 大量手動</td><td>省 10-15%</td></tr>
@@ -243,9 +244,10 @@ th{background:#0f3460;color:#4fc3f7}
 <tr><td>貼圖放大(2D)</td><td>85-90%</td><td>5-10% 微調</td><td>省 80-85%</td></tr>
 <tr><td>貼圖放大(UV)</td><td>50-60%</td><td>40-50% 接縫修補</td><td>省 20-30%</td></tr>
 <tr><td>換色/換皮</td><td>70-80%</td><td>20-30% 品質審核</td><td>省 60-70%</td></tr>
-<tr><td>LOD 生成</td><td>70-80%</td><td>20-30% 品質確認</td><td>省 60-70%</td></tr>
+<tr><td>LOD 生成（限專業工具，AI生成工具0%）</td><td>70-80%</td><td>20-30% 品質確認</td><td>省 60-70%</td></tr>
 <tr><td>動畫補幀</td><td>75-85%</td><td>15-20% 品質審核</td><td>省 60-70%</td></tr>
 </table>
+<p style="font-size:0.82em;color:#90a4ae;margin-top:10px">※ 省時計算基準：相比完全從零開始的總工時。AI 提供起點/參考可省去前期摸索時間，但後續精修仍需大量人工。以 3D 模型為例：從零建模 8 小時，用 AI 粗模為基礎 retopo 約 5-6 小時，省時約 30%，但人工仍佔 5-6 小時。</p>
 </div>
 
 <div class="conclusion">
@@ -254,7 +256,7 @@ th{background:#0f3460;color:#4fc3f7}
 <li>產業統計：僅 <strong>5%</strong> 的 AI 試點專案真正進入量產</li>
 <li>Midjourney 概念圖：約 <strong>40%</strong> 買入率</li>
 <li>AI 3D 模型：<strong>100%</strong> 需要手動清理才能用於遊戲</li>
-<li>整體評估：AI 平均產出品質 <strong>50-60%</strong>，人工仍需介入 40-50%，實際省時約 <strong>30-40%</strong></li>
+<li>整體評估：AI 平均產出品質 <strong>50-60%</strong>，人工仍需介入 40-50%，實際省時約 <strong>30-40%</strong>（基於提供起點減少從零摸索的時間，非減少精修工作量）</li>
 </ul>
 </div>
 </div>
