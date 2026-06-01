@@ -847,9 +847,10 @@ async function loadAllData() {
 // Refresh with toast
 async function refreshAll() {
   try {
-    await fetchLivePrices(); renderCards(); renderSectorCharts(); renderSparklines();
+    await loadAllData();
+    renderCards(); renderSectorCharts(); renderSparklines();
     showToast('✅ 資料已更新', 'var(--green)');
-  } catch(e) { showToast('⚠️ 更新失敗，顯示快取資料', 'var(--yellow)'); }
+  } catch(e) { showToast('⚠️ 更新失敗', 'var(--yellow)'); }
 }
 function showToast(msg, color) {
   let t = document.getElementById('toast');
