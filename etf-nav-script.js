@@ -338,8 +338,6 @@ function backfillSparkline() {
   if (!hist) { hist = ss.insertSheet('history'); }
   hist.clear();
   hist.appendRow(['ticker','sparkline']);
-  
-  var months = ['20250601','20250701','20250801','20250901','20251001','20251101','20251201','20260101','20260201','20260301','20260401','20260501'];
   // Dynamic: read all tickers from info + watchlist
   var infoTickers = ss.getSheetByName('info').getDataRange().getValues().slice(1).map(function(r){return r[0].toString().trim()}).filter(function(t){return t});
   var wlSheet = ss.getSheetByName('watchlist');
@@ -348,34 +346,22 @@ function backfillSparkline() {
   
   allTickers.forEach(function(ticker) {
     var prices = [];
-    // Try TWSE first
-    months.forEach(function(m) {
+    // Yahoo Finance chart API (.TW then .TWO for OTC)
+    var suffixes = ['.TW', '.TWO'];
+    for (var si = 0; si < suffixes.length && prices.length < 5; si++) {
       try {
-        var url = 'https://www.twse.com.tw/exchangeReport/STOCK_DAY?response=json&date=' + m + '&stockNo=' + ticker;
-        var res = UrlFetchApp.fetch(url, {muteHttpExceptions:true});
-        var d = JSON.parse(res.getContentText());
-        if (d.data) d.data.forEach(function(row) { prices.push(parseFloat(row[6].replace(/,/g,''))); });
+        var yUrl = 'https://query2.finance.yahoo.com/v8/finance/chart/' + ticker + suffixes[si] + '?interval=1d&range=1y';
+        var yRes = UrlFetchApp.fetch(yUrl, {muteHttpExceptions:true, headers:{'User-Agent':'Mozilla/5.0'}});
+        var yData = JSON.parse(yRes.getContentText());
+        var closes = yData.chart.result[0].indicators.quote[0].close;
+        prices = closes.filter(function(c){return c && c > 0}).map(function(c){return parseFloat(c.toFixed(2))});
+        if (prices.length >= 5) Logger.log('Yahoo OK for ' + ticker + suffixes[si] + ': ' + prices.length + ' points');
       } catch(e) {}
-      Utilities.sleep(1000);
-    });
-    // Fallback: Yahoo Finance chart API (.TW then .TWO for OTC)
-    if (prices.length < 5) {
-      var suffixes = ['.TW', '.TWO'];
-      for (var si = 0; si < suffixes.length && prices.length < 5; si++) {
-        try {
-          var yUrl = 'https://query2.finance.yahoo.com/v8/finance/chart/' + ticker + suffixes[si] + '?interval=1d&range=1y';
-          var yRes = UrlFetchApp.fetch(yUrl, {muteHttpExceptions:true, headers:{'User-Agent':'Mozilla/5.0'}});
-          var yData = JSON.parse(yRes.getContentText());
-          var closes = yData.chart.result[0].indicators.quote[0].close;
-          prices = closes.filter(function(c){return c && c > 0}).map(function(c){return parseFloat(c.toFixed(2))});
-          if (prices.length >= 5) Logger.log('Yahoo OK for ' + ticker + suffixes[si] + ': ' + prices.length + ' points');
-        } catch(e) {}
-      }
-      if (prices.length < 5) Logger.log('NO DATA for ' + ticker);
     }
     if (prices.length > 250) prices = prices.slice(-250);
     if (prices.length) { appendRowWithTicker(hist, [ticker, prices.join('|')]); }
     else { Logger.log('NO DATA for ' + ticker); }
+    Utilities.sleep(500);
   });
   Logger.log('backfillSparkline 完成');
 }
