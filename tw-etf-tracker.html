@@ -1222,17 +1222,9 @@ async function fetchLivePrices() {
       return (isOTC ? 'otc_' : 'tse_') + t + '.tw';
     }).join('|');
     
-    // Use JSONP to bypass CORS
-    const data = await new Promise((resolve, reject) => {
-      const cb = '_twseCallback' + Date.now();
-      window[cb] = function(d) { resolve(d); delete window[cb]; document.getElementById('jsonp-script')?.remove(); };
-      const s = document.createElement('script');
-      s.id = 'jsonp-script';
-      s.src = 'https://mis.twse.com.tw/stock/api/getStockInfo.jsp?ex_ch=' + query + '&json=1&delay=0&callback=' + cb + '&_=' + Date.now();
-      s.onerror = () => { reject(new Error('JSONP failed')); delete window[cb]; s.remove(); };
-      document.head.appendChild(s);
-      setTimeout(() => { if(window[cb]) { reject(new Error('timeout')); delete window[cb]; s.remove(); } }, 10000);
-    });
+    const url = 'https://mis.twse.com.tw/stock/api/getStockInfo.jsp?ex_ch=' + query + '&json=1&delay=0&_=' + Date.now();
+    const res = await fetch('https://api.allorigins.win/raw?url=' + encodeURIComponent(url));
+    const data = await res.json();
     
     if (!data.msgArray || !data.msgArray.length) throw new Error('No data');
     let updated = 0;
