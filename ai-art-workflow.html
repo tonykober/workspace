@@ -196,6 +196,8 @@ th{background:#0f3460;color:#4fc3f7}
 <li>高模細節自動烘焙到低模的法線貼圖</li>
 <li>AI 從照片/2D 圖生成 Normal Map</li>
 </ul>
+<p><strong>📊 完成可用度：70-80%</strong></p>
+<p style="font-size:0.85em;color:#90a4ae">依據：高模→低模法線烘焙是成熟技術（xNormal、Substance），AI 從照片生成 Normal Map 品質穩定；主要限制是需人工確認烘焙方向和修正邊緣瑕疵。</p>
 </div>
 
 <div class="card ok">
@@ -219,6 +221,8 @@ th{background:#0f3460;color:#4fc3f7}
 <li>自動生成 sprite sheet 不同角度</li>
 <li>Scenario API 每日可生成 10 萬張圖</li>
 </ul>
+<p><strong>📊 完成可用度：65-75%</strong></p>
+<p style="font-size:0.85em;color:#90a4ae">依據：同一資產的顏色/紋理變體是 AI 最擅長的工作；簡單換色幾乎可直接用，涉及多部件配色協調時仍需人工審核。</p>
 </div>
 
 <div class="card ok">
@@ -229,6 +233,8 @@ th{background:#0f3460;color:#4fc3f7}
 <li>AI 降噪（光線追蹤降噪）</li>
 <li>幀生成（AI 插幀提升 FPS）</li>
 </ul>
+<p><strong>📊 完成可用度：85-95%</strong></p>
+<p style="font-size:0.85em;color:#90a4ae">依據：NVIDIA DLSS 已被數百款遊戲採用，AI 超解析度、降噪、幀生成在支援硬體上幾乎無需人工介入，直接啟用即可。</p>
 </div>
 
 <div class="card" style="border-left-color:#9c27b0">
@@ -254,6 +260,9 @@ th{background:#0f3460;color:#4fc3f7}
 <tr><td>換色/換皮</td><td>60-70%</td><td>簡單換色可用</td></tr>
 <tr><td>LOD 生成</td><td>60-70%</td><td>限專業工具，AI生成0%</td></tr>
 <tr><td>動畫補幀</td><td>60-70%</td><td>大部分流暢，少數需修</td></tr>
+<tr><td>Normal Map 烘焙</td><td>70-80%</td><td>成熟技術，需確認方向</td></tr>
+<tr><td>批量變體生成</td><td>65-75%</td><td>簡單換色可用，多部件需審核</td></tr>
+<tr><td>即時渲染(DLSS)</td><td>85-95%</td><td>最成熟AI應用，直接啟用</td></tr>
 </table>
 <p style="font-size:0.82em;color:#90a4ae;margin-top:10px">※ 省時計算基準：相比完全從零開始的總工時。AI 提供起點/參考可省去前期摸索時間，但後續精修仍需大量人工。以 3D 模型為例：從零建模 8 小時，用 AI 粗模為基礎 retopo 約 5-6 小時，省時約 30%，但人工仍佔 5-6 小時。</p>
 </div>
