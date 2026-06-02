@@ -1,0 +1,259 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>陀螺機甲遊戲 — 美術開發製程分析</title>
+<style>
+:root{--bg:#0d1117;--surface:#161b22;--border:#30363d;--text:#e6edf3;--muted:#8b949e;--accent:#58a6ff;--green:#3fb950;--yellow:#d29922;--purple:#a371f7;--orange:#f0883e;--red:#f85149;--section-color:#a371f7}
+*{margin:0;padding:0;box-sizing:border-box}
+body{background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;line-height:1.7;padding:20px 16px}
+.container{max-width:900px;margin:0 auto}
+h1{color:var(--section-color);font-size:1.5rem;text-align:center;margin-bottom:4px}
+.subtitle{text-align:center;color:var(--muted);font-size:0.9rem;margin-bottom:30px}
+h2{color:var(--accent);font-size:1.2rem;margin:28px 0 12px;padding-bottom:6px;border-bottom:1px solid var(--border)}
+h3{color:var(--purple);font-size:1.05rem;margin:18px 0 8px}
+h4{color:var(--orange);font-size:0.95rem;margin:14px 0 6px}
+p,li{font-size:0.95rem;margin-bottom:8px}
+ul{padding-left:20px}
+.card{background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:14px;margin:12px 0}
+.card.highlight{border-left:3px solid var(--section-color)}
+.card.warning{border-left:3px solid var(--yellow)}
+.table-wrap{overflow-x:auto;margin:10px 0}
+table{width:100%;border-collapse:collapse;font-size:0.88rem}
+th,td{border:1px solid var(--border);padding:8px 10px;text-align:left}
+th{background:var(--surface);color:var(--accent);font-weight:500}
+strong{color:var(--text)}
+.tag{display:inline-block;padding:2px 8px;border-radius:4px;font-size:0.8rem;font-weight:600}
+.tag-green{background:rgba(63,185,80,.15);color:var(--green);border:1px solid var(--green)}
+.tag-yellow{background:rgba(210,153,34,.15);color:var(--yellow);border:1px solid var(--yellow)}
+.tag-red{background:rgba(248,81,73,.15);color:var(--red);border:1px solid var(--red)}
+.tag-purple{background:rgba(163,113,247,.15);color:var(--purple);border:1px solid var(--purple)}
+img{max-width:100%;height:auto}
+@media(max-width:500px){
+  h1{font-size:1.3rem}
+  .container{padding:0}
+  table{font-size:0.82rem}
+  th,td{padding:6px 8px}
+}
+</style>
+</head>
+<body>
+<div class="container">
+
+<h1>🌀 陀螺機甲遊戲 — 美術開發製程分析</h1>
+<p class="subtitle">基於「桑比槍台調整方向_ASI」企劃，沿用現有素材與人力評估</p>
+
+<h2>一、新遊戲美術需求總覽</h2>
+
+<div class="card highlight">
+<strong>遊戲類型：多人陀螺戰鬥街機（1~4P）</strong><br>
+玩家操控陀螺機甲，在俯視角場地中碰撞殭屍敵人和對手陀螺。2 分鐘限時積分制，支持合作與對戰。獨創陀螺型實體控制器。
+</div>
+
+<h3>遊戲概念參考</h3>
+<div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin:12px 0">
+<img src="spinning-assets/image7.png" style="width:100%;border-radius:6px;border:1px solid var(--border)" alt="遊戲概念圖1">
+<img src="spinning-assets/image8.png" style="width:100%;border-radius:6px;border:1px solid var(--border)" alt="遊戲概念圖2">
+</div>
+
+<h3>需製作的美術素材清單</h3>
+<div class="table-wrap"><table>
+<tr><th>類別</th><th>項目</th><th>數量</th><th>工作性質</th></tr>
+<tr><td rowspan="4">角色</td><td>陀螺機甲（可玩角色）</td><td>4~6 隻</td><td><span class="tag tag-red">全新設計</span></td></tr>
+<tr><td>機甲駕駛員</td><td>4~6 隻</td><td><span class="tag tag-red">全新設計</span></td></tr>
+<tr><td>殭屍敵人/場景角色</td><td>12~16 隻</td><td><span class="tag tag-green">沿用改造</span></td></tr>
+<tr><td>BOSS</td><td>3 隻</td><td><span class="tag tag-yellow">沿用+重度改造</span></td></tr>
+<tr><td rowspan="3">場景</td><td>戰鬥場地圖（俯視角）</td><td>3 張</td><td><span class="tag tag-red">全新製作</span></td></tr>
+<tr><td>場景機關/障礙物</td><td>每張 5~8 種</td><td><span class="tag tag-red">全新製作</span></td></tr>
+<tr><td>場景道具（強化/召喚）</td><td>8~10 種</td><td><span class="tag tag-red">全新製作</span></td></tr>
+<tr><td rowspan="3">特效</td><td>陀螺移動/碰撞特效</td><td>10~15 種</td><td><span class="tag tag-red">全新製作</span></td></tr>
+<tr><td>超級技能特效</td><td>16~24 種（4角色×4技能）</td><td><span class="tag tag-red">全新製作</span></td></tr>
+<tr><td>場景/UI 特效</td><td>10~15 種</td><td><span class="tag tag-red">全新製作</span></td></tr>
+<tr><td>UI</td><td>全套介面</td><td>~10 頁面</td><td><span class="tag tag-red">全新設計</span></td></tr>
+<tr><td>機台</td><td>框體外觀+控制器造型</td><td>1 套</td><td><span class="tag tag-red">全新設計</span></td></tr>
+<tr><td>音樂/音效</td><td>BGM + SFX</td><td>3 首 + 60~80 個</td><td><span class="tag tag-red">全新外包</span></td></tr>
+</table></div>
+
+<h2>二、現有素材沿用分析</h2>
+
+<h3>角色素材配置（20 隻現有角色）</h3>
+
+<div class="card highlight">
+<strong>現有 20 隻角色全部用於：殭屍敵人、BOSS、場景裝飾性/功能性角色。</strong><br>
+玩家操控的角色（駕駛員 + 陀螺機甲）完全沒有現成資源，需全新設計製作。
+</div>
+
+<div class="table-wrap"><table>
+<tr><th>用途</th><th>沿用方式</th><th>數量</th><th>改造程度</th></tr>
+<tr><td>殭屍敵人（場上障礙）</td><td>直接沿用調色</td><td>10~12 隻</td><td><span class="tag tag-green">輕度</span> 調色+去血腥+加搞笑元素</td></tr>
+<tr><td>BOSS</td><td>放大改造現有角色</td><td>3 隻</td><td><span class="tag tag-red">重度</span> 大幅改造+新配件+新動畫</td></tr>
+<tr><td>裝飾性角色（觀眾/背景）</td><td>沿用調色+簡單動畫</td><td>3~4 隻</td><td><span class="tag tag-green">輕度</span> 調色+加觀眾配件</td></tr>
+<tr><td>功能性角色（NPC/提示）</td><td>沿用改造</td><td>2~3 隻</td><td><span class="tag tag-yellow">中度</span> 改造+加職業標誌</td></tr>
+<tr><td>備用/後續更新</td><td>—</td><td>1~2 隻</td><td>—</td></tr>
+</table></div>
+
+<h3>玩家角色（全新製作）</h3>
+
+<div class="card warning">
+<strong>⚠️ 玩家操控的角色完全沒有現成資源</strong>
+<ul>
+<li><strong>陀螺機甲 ×4~6</strong> — 全新概念設計、3D 建模、骨架綁定、材質、動畫。科幻造型搭載駕駛員。</li>
+<li><strong>機甲駕駛員 ×4~6</strong> — 全新角色設計（非沿用舊角色），需要有個性化外觀。</li>
+<li><strong>搭乘演出動畫</strong> — 角色登入機甲的帥氣演出。</li>
+</ul>
+</div>
+
+<h3>陀螺機甲概念參考</h3>
+<div style="display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin:12px 0">
+<img src="spinning-assets/image19.png" style="width:100%;border-radius:6px;border:1px solid var(--border)" alt="陀螺機甲概念1">
+<img src="spinning-assets/image20.png" style="width:100%;border-radius:6px;border:1px solid var(--border)" alt="陀螺機甲概念2">
+<img src="spinning-assets/image21.png" style="width:100%;border-radius:6px;border:1px solid var(--border)" alt="陀螺機甲概念3">
+</div>
+
+<h3>場景素材沿用</h3>
+<div class="table-wrap"><table>
+<tr><th>項目</th><th>沿用性</th><th>說明</th></tr>
+<tr><td>場景模型</td><td>❌ 無法沿用</td><td>舊場景是插片模型（固定視角射擊用），新遊戲需要俯視角 3D 碰撞場地</td></tr>
+<tr><td>材質貼圖</td><td>⭐⭐ 部分可用</td><td>金屬/石材/地面材質調色後可用，省 15~25% 貼圖工時</td></tr>
+<tr><td>主題概念</td><td>⭐⭐ 部分可用</td><td>「末日城市」「黑暗莊園」可延伸自舊場景概念</td></tr>
+<tr><td>模組化邏輯</td><td>⭐⭐⭐ 可用</td><td>場景拆分方式直接參考</td></tr>
+</table></div>
+
+<h3>場景與敵人概念參考</h3>
+<div style="display:grid;grid-template-columns:repeat(3,1fr);gap:8px;margin:12px 0">
+<img src="spinning-assets/image28.png" style="width:100%;border-radius:6px;border:1px solid var(--border)" alt="場景概念1">
+<img src="spinning-assets/image29.png" style="width:100%;border-radius:6px;border:1px solid var(--border)" alt="場景概念2">
+<img src="spinning-assets/image30.png" style="width:100%;border-radius:6px;border:1px solid var(--border)" alt="場景概念3">
+</div>
+
+<h3>特效/UI 素材</h3>
+<div class="table-wrap"><table>
+<tr><th>項目</th><th>沿用性</th><th>說明</th></tr>
+<tr><td>特效</td><td>❌ 無法沿用</td><td>陀螺旋轉/碰撞/技能演出全為新概念，需全新製作</td></tr>
+<tr><td>UI</td><td>❌ 無法沿用</td><td>全新互動模式（陀螺選擇/技能HUD/積分面板），需全新設計</td></tr>
+</table></div>
+
+<h3>沿用效益總結</h3>
+<div class="table-wrap"><table>
+<tr><th>項目</th><th>全重做方案</th><th>沿用優先方案</th><th>節省</th></tr>
+<tr><td>敵人/BOSS/裝飾角色</td><td>18~22 隻全新</td><td>沿用 20 隻改造</td><td>60~70%</td></tr>
+<tr><td>敵人骨架綁定</td><td>全新綁定</td><td>沿用現有骨架</td><td>100%</td></tr>
+<tr><td>場景貼圖</td><td>全新繪製</td><td>部分沿用調色</td><td>15~25%</td></tr>
+<tr><td>玩家角色（駕駛員+機甲）</td><td>全新</td><td>全新（無現有資源）</td><td>0%</td></tr>
+<tr><td>特效/UI</td><td>全新</td><td>全新（無現有資源）</td><td>0%</td></tr>
+</table></div>
+
+<h2>三、缺乏的素材（需全新製作）</h2>
+
+<div class="card warning">
+<h4>🔴 高優先（核心玩法必需）</h4>
+<ul>
+<li><strong>陀螺機甲 ×4~6</strong> — 全新概念設計、3D 建模、骨架綁定、材質。遊戲核心視覺。</li>
+<li><strong>機甲駕駛員 ×4~6</strong> — 全新角色設計，有個性化外觀與搭乘演出。</li>
+<li><strong>超級技能特效 ×16~24</strong> — 擴散型+移動型攻擊演出，每角色 4 種以上。</li>
+<li><strong>俯視角戰鬥場地 ×3</strong> — 全新建模，需支援碰撞、機關互動。</li>
+<li><strong>控制器造型設計 ×1</strong> — 實體陀螺控制器的外觀設計（配合機構工程）。</li>
+</ul>
+</div>
+
+<div class="card">
+<h4>🟡 中優先（完整體驗需要）</h4>
+<ul>
+<li>場景機關/障礙物（15~24 種）</li>
+<li>場景道具模型（8~10 種）</li>
+<li>碰撞/移動特效（10~15 種）</li>
+<li>UI 全套（角色選擇、機甲搭乘演出、戰鬥HUD、結算畫面）</li>
+<li>BOSS 重度改造（3 隻）</li>
+<li>搭乘演出動畫（角色登入機甲的帥氣演出）</li>
+</ul>
+</div>
+
+<div class="card">
+<h4>🟢 低優先（可後續補充）</h4>
+<ul>
+<li>框體外觀設計（配合機構確認後）</li>
+<li>音樂 BGM（3 首）</li>
+<li>音效 SFX（60~80 個）</li>
+<li>額外陀螺機甲造型（後續更新用）</li>
+</ul>
+</div>
+
+<h2>四、人力與時程評估</h2>
+
+<h3>機台框體參考</h3>
+<div style="display:grid;grid-template-columns:1fr 1fr;gap:8px;margin:12px 0">
+<img src="spinning-assets/image13.png" style="width:100%;border-radius:6px;border:1px solid var(--border)" alt="框體主方案">
+<img src="spinning-assets/image14.png" style="width:100%;border-radius:6px;border:1px solid var(--border)" alt="框體替代方案">
+</div>
+
+<h3>團隊配置（現有 3 人）</h3>
+<div class="table-wrap"><table>
+<tr><th>人員</th><th>本案主要職責</th><th>預估工時</th></tr>
+<tr><td>美術負責人</td><td>陀螺機甲概念設計、駕駛員角色設計、風格定義、外包監修、控制器造型</td><td>75~100 天</td></tr>
+<tr><td>3D 美術</td><td>陀螺機甲建模、敵人角色改造、3 張場景建模</td><td>85~115 天</td></tr>
+<tr><td>2D 美術</td><td>UI 設計+監修、材質繪製、框體平面設計</td><td>65~90 天</td></tr>
+</table></div>
+
+<h3>預估總時程</h3>
+<div class="card highlight">
+<strong>建議開發週期：7~8 個月</strong><br><br>
+主因：玩家角色（駕駛員+陀螺機甲）全新設計，從概念→建模→綁定→動畫需要充足的前期開發時間。
+</div>
+
+<div class="table-wrap"><table>
+<tr><th>月份</th><th>里程碑</th></tr>
+<tr><td>M1</td><td>陀螺機甲概念設計 + 駕駛員角色設計 + 風格定義 + 控制器造型初稿</td></tr>
+<tr><td>M2</td><td>機甲建模完成 + 駕駛員建模 + 敵人角色改造開始 + 場景1開工 + 外包發包</td></tr>
+<tr><td>M3</td><td>敵人改造完成 + 場景1完成 + 機甲綁定+動畫 + 技能特效開始</td></tr>
+<tr><td>M4</td><td>場景2完成 + 技能特效大量交付 + UI 主流程 + 搭乘演出</td></tr>
+<tr><td>M5</td><td>場景3完成 + 所有特效完成 + BOSS 完成</td></tr>
+<tr><td>M6</td><td>品質打磨 + 效能優化 + 整合測試</td></tr>
+<tr><td>M7</td><td>機台上機調色 + 控制器整合 + 版本封存</td></tr>
+<tr><td>M8</td><td>緩衝期 / 額外打磨</td></tr>
+</table></div>
+
+<h3>外包預算估算</h3>
+<div class="table-wrap"><table>
+<tr><th>項目</th><th>數量</th><th>預估費用（NT$）</th></tr>
+<tr><td>陀螺機甲綁定+動畫</td><td>4~6 隻 × 8~10 組動作</td><td>300K~500K</td></tr>
+<tr><td>駕駛員角色綁定+搭乘動畫</td><td>4~6 隻</td><td>80K~150K</td></tr>
+<tr><td>敵人/BOSS 動畫</td><td>20~30 組</td><td>100K~180K</td></tr>
+<tr><td>超級技能特效</td><td>16~24 種</td><td>200K~360K</td></tr>
+<tr><td>碰撞/場景特效</td><td>20~30 種</td><td>150K~250K</td></tr>
+<tr><td>UI 設計+製作（80%外包）</td><td>10 頁面+動態</td><td>200K~350K</td></tr>
+<tr><td>音樂 BGM</td><td>3 首</td><td>60K~100K</td></tr>
+<tr><td>音效 SFX</td><td>60~80 個</td><td>50K~100K</td></tr>
+<tr><td><strong>總計</strong></td><td></td><td><strong>1,140K~1,990K</strong></td></tr>
+</table></div>
+
+<h2>五、風險評估</h2>
+
+<div class="table-wrap"><table>
+<tr><th>風險項目</th><th>等級</th><th>說明</th><th>緩解方式</th></tr>
+<tr><td>陀螺機甲設計迭代</td><td><span class="tag tag-red">高</span></td><td>全新概念，可能需多次修改確定造型</td><td>M1 快速出 3~5 個概念方案選擇</td></tr>
+<tr><td>駕駛員角色設計</td><td><span class="tag tag-yellow">中</span></td><td>全新角色需要建立風格統一性</td><td>先確定一隻作為基準再擴展</td></tr>
+<tr><td>俯視角場景複雜度</td><td><span class="tag tag-yellow">中</span></td><td>需支援碰撞+機關互動</td><td>減少場景數量（3張），聚焦品質</td></tr>
+<tr><td>技能特效數量龐大</td><td><span class="tag tag-yellow">中</span></td><td>16~24 種技能特效是最大外包量</td><td>建立特效模板，部分技能共用基底</td></tr>
+<tr><td>控制器造型配合機構</td><td><span class="tag tag-yellow">中</span></td><td>外觀設計需配合內部機構尺寸</td><td>機構先行確認尺寸，美術在限制內設計</td></tr>
+<tr><td>3D 美術工時吃緊</td><td><span class="tag tag-red">高</span></td><td>機甲建模+場景共 85~115 天</td><td>機甲建模可部分外包</td></tr>
+</table></div>
+
+<h2>六、結論</h2>
+
+<div class="card highlight">
+<strong>整體評估</strong>
+<ul>
+<li>✅ 現有 20 隻角色全部可用於殭屍敵人/BOSS/場景角色（節省 60~70% 敵方角色工時）</li>
+<li>✅ 場景數量控制在 3 張，降低場景壓力</li>
+<li>⚠️ 玩家角色（駕駛員+陀螺機甲）完全無現有資源，需全新設計製作</li>
+<li>⚠️ 特效量大（36~54 種），外包預算需充足</li>
+<li>⚠️ 建議開發週期 7~8 個月</li>
+<li>⚠️ 外包總預算約 114~199 萬</li>
+</ul>
+</div>
+
+</div>
+<script src="nav.js"></script>
+</body>
+</html>
