@@ -1,0 +1,1297 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+<meta charset="UTF-8">
+<link rel="icon" href="data:,">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>台股 ETF 績效追蹤</title>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.1/dist/chart.umd.min.js"></script>
+<style>
+:root {
+  --bg: #0a0e1a;
+  --surface: #131829;
+  --surface2: #1a2035;
+  --border: #2a3050;
+  --text: #e8ecf4;
+  --muted: #7a8599;
+  --accent: #00d4ff;
+  --accent2: #7c3aed;
+  --green: #10b981;
+  --red: #ef4444;
+  --yellow: #f59e0b;
+  --radius: 12px;
+}
+* { margin:0; padding:0; box-sizing:border-box; }
+body { font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', sans-serif; background:var(--bg); color:var(--text); min-height:100vh; padding-bottom:80px; }
+
+.header { background: linear-gradient(135deg, var(--surface) 0%, var(--surface2) 100%); border-bottom:1px solid var(--border); padding:16px 20px; position:sticky; top:0; z-index:100; backdrop-filter:blur(10px); }
+.header h1 { font-size:clamp(0.9rem, 4vw, 1.3rem); background:linear-gradient(90deg, var(--accent), var(--accent2)); -webkit-background-clip:text; -webkit-text-fill-color:transparent; }
+.header .subtitle { font-size:0.9rem; color:var(--muted); margin-top:2px; }
+
+.container { max-width:1200px; margin:0 auto; padding:16px; }
+
+.cards { display:grid; grid-template-columns:1fr; gap:16px; padding-top:12px; align-items:start; }
+
+.card { background:var(--surface); border:1px solid var(--border); border-radius:var(--radius); padding:16px; min-width:0; transition:transform .2s, box-shadow .2s; }
+.card:hover { transform:translateY(-2px); box-shadow:0 8px 24px rgba(0,212,255,.08); }
+
+.card-top { display:flex; justify-content:space-between; align-items:flex-start; margin-bottom:12px; }
+.card-left { display:flex; align-items:center; gap:8px; }
+.card-ticker { font-size:1.7rem; font-weight:700; color:var(--accent); }
+.card-name { font-size:0.9rem; color:var(--muted); }
+.card-type { font-size:0.9rem; padding:2px 6px; border-radius:4px; background:var(--accent2); color:#fff; font-weight:500; white-space:nowrap; }
+.card-right { text-align:right; }
+.card-price { font-size:1.4rem; font-weight:700; }
+.card-change { font-size:0.9rem; font-weight:600; padding:2px 6px; border-radius:5px; display:inline-block; margin-top:2px; }
+.card-change.up { color:var(--red); background:rgba(239,68,68,.12); }
+.card-change.down { color:var(--green); background:rgba(16,185,129,.12); }
+
+.fund-info-row { display:grid; grid-template-columns:repeat(auto-fit, minmax(60px, 1fr)); gap:6px; margin-top:10px; padding-top:10px; border-top:2px solid var(--border); }
+.fund-info-row .fi-item { text-align:center; position:relative; }
+.fund-info-row .fi-label { font-size:0.9rem; color:var(--muted); }
+.fund-info-row .fi-value { font-size:0.9rem; font-weight:700; margin-top:1px; white-space:nowrap; }
+.premium-value.cheap { color:var(--green); }
+.premium-value.expensive { color:var(--red); }
+.premium-value.normal { color:var(--muted); }
+.sug-badge { display:inline-block; padding:2px 8px; border-radius:4px; font-size:0.9rem; font-weight:600; }
+.sug-buy { background:rgba(16,185,129,.15); color:#10b981; }
+.sug-hold { background:rgba(88,166,255,.15); color:#58a6ff; }
+.sug-wait { background:rgba(234,179,8,.15); color:#eab308; }
+.sug-sell { background:rgba(239,68,68,.15); color:#ef4444; }
+.dividend-inline { font-size:0.9rem; color:var(--text); margin-bottom:8px; }
+
+.card-section { padding-top:10px; margin-top:10px; border-top:2px solid var(--border); }
+.card-section-title { font-size:0.9rem; color:var(--muted); margin-bottom:6px; font-weight:600; }
+
+.holdings-toggle { cursor:pointer; user-select:none; }
+.holdings-toggle::after { content:' ▼'; display:inline; font-size:0.9rem; transition:transform .3s; }
+.card-section.open .holdings-toggle::after { content:' ▲'; }
+.holdings-content { max-height:0; overflow:hidden; transition:max-height .3s ease; }
+.card-section.open .holdings-content { max-height:400px; }
+.holding-bar { display:flex; align-items:center; margin-bottom:4px; font-size:0.9rem; }
+.holding-bar .hb-track { flex:1; height:18px; background:var(--surface2); border-radius:3px; overflow:hidden; position:relative; }
+.holding-bar .hb-fill { height:100%; background:linear-gradient(90deg, rgba(0,212,255,0.4), rgba(0,212,255,0.15)); border-radius:3px; }
+.holding-bar .hb-name { position:absolute; left:4px; top:50%; transform:translateY(-50%); color:#fff; font-size:0.75rem; font-weight:600; white-space:nowrap; z-index:1; }
+.holding-bar .hb-pct { position:absolute; right:4px; top:50%; transform:translateY(-50%); font-weight:600; font-size:0.9rem; color:var(--text); text-shadow:0 0 3px var(--bg); }
+
+.returns-row { display:grid; grid-template-columns:repeat(4,1fr); gap:6px; }
+.return-item { text-align:center; }
+.return-label { font-size:0.9rem; color:var(--muted); }
+.return-value { font-size:0.9rem; font-weight:700; margin-top:2px; }
+.return-value.positive { color:var(--red); }
+.return-value.negative { color:var(--green); }
+
+.dividend-row { display:grid; grid-template-columns:1fr 1fr 1fr; gap:6px; margin-bottom:8px; }
+.div-item-label { font-size:0.9rem; color:var(--muted); }
+.div-item-value { font-size:0.9rem; font-weight:700; margin-top:1px; }
+
+.recent-div { display:grid; grid-template-columns:repeat(3, 1fr); gap:6px; }
+.recent-div-item { font-size:0.9rem; background:var(--surface2); border:1px solid var(--border); border-radius:4px; padding:3px 6px;  }
+.recent-div-item .rd-date { color:var(--muted); }
+.recent-div-item .rd-amt { color:var(--yellow); font-weight:600; margin-left:4px; }
+
+.sector-area { display:flex; align-items:center; gap:12px; }
+.sector-chart { width:100px; height:100px; flex-shrink:0; }
+.sector-legend { flex:1; }
+.sector-legend-item { display:flex; align-items:center; gap:4px; font-size:0.9rem; margin-bottom:2px; }
+.sector-legend-item .dot { width:7px; height:7px; border-radius:50%; flex-shrink:0; }
+.sector-legend-item .sl-name { color:var(--muted); }
+.sector-legend-item .sl-pct { margin-left:auto; font-weight:600; }
+
+@media (min-width:768px) {
+  .container { padding:24px; }
+  .cards { grid-template-columns:repeat(3, 1fr); gap:16px; }
+  .header { padding:20px 32px; }
+  .header h1 { font-size:1.6rem; }
+}
+
+/* Scrollbar */
+::-webkit-scrollbar { width:6px; }
+::-webkit-scrollbar-track { background:var(--bg); }
+::-webkit-scrollbar-thumb { background:var(--border); border-radius:3px; }
+
+.sparkline-wrap { margin-top:8px; height:40px; border:1px solid var(--border); border-radius:6px; padding:4px; }
+.sparkline-wrap canvas { width:100% !important; }
+
+.compare-btn { position:absolute; top:-8px; left:50%; transform:translateX(-50%); background:var(--accent); border:none; color:#000; font-size:0.75rem; padding:4px 8px; border-radius:12px; cursor:pointer; z-index:2; font-weight:600; }
+.compare-btn:hover { opacity:0.8; }
+.compare-btn.active { background:var(--green); color:#000; }
+.card.comparing { border-color:var(--accent); box-shadow:0 0 8px rgba(88,166,255,.3); }
+.card.pinned { border-color:#f59e0b; box-shadow:0 0 8px rgba(245,158,11,.2); }
+.pin-btn { position:absolute; top:-8px; left:calc(50% + 40px); background:var(--surface2); border:1px solid var(--border); color:var(--muted); font-size:0.75rem; padding:2px 6px; border-radius:12px; cursor:pointer; z-index:2; }
+.pin-btn.active { background:#f59e0b; color:#000; border-color:#f59e0b; }
+.card-badge { position:absolute; top:-10px; left:12px; font-size:0.85rem; padding:4px 12px; border-radius:4px; font-weight:600; z-index:2; pointer-events:none; }
+.card-badge.badge-etf { background:var(--accent2); color:#fff; }
+.card-badge.badge-stock { background:var(--green); color:#000; }
+.card-header { cursor:pointer; }
+.card-body { transition:max-height .3s ease, opacity .2s; overflow:hidden; }
+.card.collapsed .card-body { max-height:0; opacity:0; margin:0; padding:0; }
+.etf-delete { position:absolute; top:-8px; right:-8px; background:var(--red); border:none; color:#fff; font-size:0.9rem; cursor:pointer; padding:4px 8px; border-radius:50%; width:24px; height:24px; display:flex; align-items:center; justify-content:center; z-index:2; }
+.etf-delete:hover { opacity:0.8; }
+.compare-panel { position:fixed; bottom:0; left:0; right:0; background:var(--surface); border-top:2px solid var(--accent); max-height:60vh; overflow-y:auto; padding:16px; z-index:200; display:none; }
+.compare-panel.show { display:block; }
+.compare-header { display:flex; justify-content:space-between; align-items:center; margin-bottom:12px; }
+.compare-header h3 { color:var(--accent); font-size:1rem; }
+.compare-close { background:none; border:none; color:var(--muted); font-size:1.5rem; cursor:pointer; }
+.compare-grid { display:grid; grid-template-columns:repeat(auto-fit, minmax(280px, 1fr)); gap:12px; }
+.compare-section { margin-bottom:16px; }
+.compare-section h4 { color:var(--purple); font-size:0.9rem; margin-bottom:8px; }
+.compare-bar-row { display:flex; align-items:center; gap:8px; margin-bottom:6px; font-size:0.85rem; }
+.compare-bar-label { width:50px; color:var(--muted); text-align:right; flex-shrink:0; }
+.compare-bar-track { flex:1; height:16px; background:var(--surface2); border-radius:3px; overflow:hidden; display:flex; }
+.compare-bar-fill { height:100%; border-radius:3px; }
+.compare-bar-val { width:50px; font-weight:600; flex-shrink:0; }
+.compare-overlap { font-size:0.85rem; }
+.compare-overlap li { margin-bottom:4px; color:var(--muted); }
+@media(max-width:768px) { .compare-panel { max-height:80vh; } }
+
+.main-tabs { display:flex; gap:4px; }
+.main-tab { padding:4px 10px; border-radius:20px; font-size:clamp(0.9rem, 2.5vw, 0.85rem); white-space:nowrap; cursor:pointer; color:var(--muted); border:1px solid var(--border); transition:all .2s; }
+.main-tab.active { background:var(--accent); color:#000; border-color:var(--accent); font-weight:600; }
+.add-btn { background:var(--accent); color:#000; border:none; padding:6px 14px; border-radius:6px; font-size:0.9rem; font-weight:600; cursor:pointer; }
+.add-btn:hover { opacity:0.8; }
+.wl-card { background:var(--surface); border:1px solid var(--border); border-radius:12px; padding:14px; position:relative; }
+.wl-card .wl-top { display:flex; justify-content:space-between; align-items:flex-start; }
+.wl-card .wl-ticker { font-size:1.4rem; font-weight:700; color:var(--accent); }
+.wl-card .wl-name { font-size:0.9rem; color:var(--muted); }
+.wl-card .wl-price { font-size:1.2rem; font-weight:700; }
+.wl-card .wl-change { font-size:0.9rem; padding:2px 8px; border-radius:4px; }
+.wl-card .wl-change.up { color:var(--red); background:rgba(239,68,68,.12); }
+.wl-card .wl-change.down { color:var(--green); background:rgba(16,185,129,.12); }
+.wl-delete { position:absolute; top:-8px; right:-8px; background:var(--red); border:none; color:#fff; font-size:0.9rem; cursor:pointer; padding:4px 8px; border-radius:50%; width:24px; height:24px; display:flex; align-items:center; justify-content:center; }
+.wl-delete:hover { opacity:0.8; }
+.confirm-overlay { position:fixed; top:0; left:0; right:0; bottom:0; background:rgba(0,0,0,.7); display:none; align-items:center; justify-content:center; z-index:999; }
+.confirm-box { background:var(--surface); border:1px solid var(--border); border-radius:10px; padding:24px; max-width:300px; text-align:center; }
+.confirm-box p { margin-bottom:16px; color:var(--text); }
+.confirm-box .btns { display:flex; gap:10px; justify-content:center; }
+.confirm-box button { padding:8px 20px; border-radius:6px; border:none; cursor:pointer; font-size:14px; }
+.confirm-box .btn-yes { background:var(--red); color:#fff; }
+.confirm-box .btn-no { background:var(--border); color:var(--text); }
+
+.chart-modal { position:fixed; top:0; left:0; right:0; bottom:0; background:rgba(0,0,0,.85); z-index:300; display:none; align-items:center; justify-content:center; padding:16px; }
+.chart-modal.show { display:flex; }
+.chart-box { background:var(--surface); border:1px solid var(--border); border-radius:12px; padding:20px; width:100%; max-width:800px; max-height:90vh; overflow-y:auto; }
+.chart-box h3 { color:var(--accent); margin-bottom:4px; font-size:1rem; }
+.chart-box .chart-info { display:flex; gap:16px; font-size:0.85rem; color:var(--muted); margin-bottom:12px; flex-wrap:wrap; }
+.chart-box .chart-info span b { color:var(--text); }
+.chart-box canvas { width:100% !important; height:250px !important; }
+.chart-box .chart-actions { display:flex; gap:8px; margin-top:12px; flex-wrap:wrap; }
+.chart-box .chart-actions button { background:var(--surface2); border:1px solid var(--border); color:var(--muted); padding:4px 10px; border-radius:4px; font-size:0.8rem; cursor:pointer; }
+.chart-box .chart-actions button:hover { border-color:var(--accent); color:var(--accent); }
+.chart-box .chart-actions button.active { background:var(--accent); color:#000; border-color:var(--accent); }
+.chart-close { position:absolute; top:12px; right:16px; background:none; border:none; color:var(--muted); font-size:1.5rem; cursor:pointer; }
+.div-cal-btn { background:var(--surface2); border:1px solid var(--border); color:var(--muted); padding:6px 12px; border-radius:6px; font-size:0.85rem; cursor:pointer; margin-left:8px; }
+.div-cal-btn:hover { border-color:var(--accent); color:var(--accent); }
+.cal-modal { position:fixed; top:0; left:0; right:0; bottom:0; background:rgba(0,0,0,.85); z-index:300; display:none; align-items:center; justify-content:center; padding:16px; overflow-y:auto; }
+.cal-modal.show { display:flex; }
+.cal-box { background:var(--surface); border:1px solid var(--border); border-radius:12px; padding:20px; width:100%; max-width:900px; max-height:90vh; overflow-y:auto; position:relative; }
+.cal-box h3 { color:var(--accent); margin-bottom:12px; }
+.cal-close { position:absolute; top:12px; right:16px; background:none; border:none; color:var(--muted); font-size:1.5rem; cursor:pointer; }
+.cal-timeline { display:grid; grid-template-columns:repeat(12, 1fr); gap:4px; }
+.cal-month { background:var(--surface2); border-radius:6px; padding:8px 4px; min-height:80px; }
+.cal-month-label { font-size:0.75rem; color:var(--muted); text-align:center; margin-bottom:6px; font-weight:600; }
+.cal-item { font-size:0.7rem; padding:2px 4px; border-radius:3px; margin-bottom:3px; text-align:center; }
+.cal-empty { color:var(--muted); font-size:0.7rem; text-align:center; font-style:italic; }
+.cal-summary { margin-top:16px; padding-top:12px; border-top:1px solid var(--border); }
+.cal-summary h4 { color:var(--purple); font-size:0.9rem; margin-bottom:8px; }
+.cal-summary-grid { display:grid; grid-template-columns:repeat(12, 1fr); gap:4px; text-align:center; font-size:0.8rem; }
+.cal-summary-item { padding:6px 2px; border-radius:4px; }
+.cal-summary-item.has { background:rgba(59,185,80,.1); color:var(--green); }
+.cal-summary-item.empty { background:rgba(248,81,73,.1); color:var(--red); }
+@media(max-width:768px) { .cal-timeline { grid-template-columns:repeat(4, 1fr); } .cal-summary-grid { grid-template-columns:repeat(4, 1fr); } }
+.filter-bar { display:flex; gap:6px; flex-wrap:wrap; margin-bottom:12px; align-items:center; }
+.filter-bar .label { font-size:0.8rem; color:var(--muted); margin-right:4px; }
+.pill { padding:4px 10px; border-radius:16px; font-size:0.8rem; cursor:pointer; border:1px solid var(--border); color:var(--muted); background:transparent; transition:all .2s; }
+.pill:hover { border-color:var(--accent); color:var(--accent); }
+.pill.active { background:var(--accent); color:#000; border-color:var(--accent); font-weight:600; }
+.update-info { font-size:0.8rem; color:var(--muted); margin-top:2px; }
+.update-info span { margin-right:12px; }
+.card-mid { display:flex; gap:12px; margin:10px 0; align-items:stretch; }
+.card-mid-left { flex:1; cursor:pointer; border:1px solid var(--border); border-radius:6px; padding:4px; display:flex; flex-direction:column; justify-content:center; }
+.card-mid-left canvas { width:100% !important; height:35px !important; }
+.card-mid-right { flex:1; display:flex; flex-direction:column; justify-content:center; gap:4px; font-size:0.9rem; }
+.card-mid-right .kpi { display:flex; justify-content:space-between; align-items:center; }
+.card-mid-right .kpi-label { color:var(--muted); }
+.card-mid-right .kpi-value { font-weight:600; }
+</style>
+</head>
+<body>
+
+<div class="header">
+  <div style="display:flex;align-items:center;gap:8px;flex-wrap:nowrap">
+    <h1><span style="cursor:pointer" onclick="refreshAll()">📊 台股 ETF 績效追蹤</span></h1>
+  </div>
+  <div class="subtitle">即時數據 · <span id="live-status">載入報價中...</span></div>
+  <div class="update-info"><span id="price-time"></span><span>NAV/報酬率：每日 16:00 更新</span></div>
+</div>
+
+<div class="container">
+<div id="view-etf">
+  <div class="filter-bar">
+    <span class="label">排序：</span><button class="pill active" onclick="sortETF('default')">預設</button>
+    <button class="pill" onclick="sortETF('yield')">殖利率</button>
+    <button class="pill" onclick="sortETF('ret1m')">1月報酬</button>
+    <button class="pill" onclick="sortETF('premium')">折溢價</button>
+    <span class="label" style="margin-left:8px">篩選：</span>
+    <button class="pill active" onclick="filterETF('all')" id="f-all">全部</button>
+    <button class="pill" onclick="filterETF('etf')" id="f-etf">ETF</button>
+    <button class="pill" onclick="filterETF('stock')" id="f-stock">個股</button>
+    <button class="pill" onclick="filterETF('月配')" id="f-月配">月配</button>
+    <button class="pill" onclick="filterETF('季配')" id="f-季配">季配</button>
+    <button class="div-cal-btn" style="margin-left:auto" onclick="showDivCalendar()">📅 配息日曆</button>
+    <button class="add-btn" style="margin-left:8px" onclick="addETF()">+ 新增</button>
+  </div>
+  <div class="cards" id="etf-cards"></div>
+  <div style="border-top:2px solid var(--border);margin:24px 0;padding-top:8px"><span style="color:var(--muted);font-size:0.9rem">📈 自選個股</span></div>
+  <div class="cards" id="stock-cards"></div>
+</div>
+</div>
+
+<script>
+let ETF_DATA = [];
+let pinnedETFs = [];
+let pinnedWL = [];
+let collapsedTickers = [];
+
+function getPremiumClass(p) {
+  if (p < -0.3) return 'cheap';
+  if (p > 0.3) return 'expensive';
+  return 'normal';
+}
+function getSuggestion(etf) {
+  const q = etf.quarterLine || 0;
+  const p = etf.premium || 0;
+  let text, cls, reason;
+  if (q < -8 && p <= 0) { text='買進'; cls='sug-buy'; reason='離季線'+q+'% 超跌+折價'; }
+  else if (q < -8) { text='觀望'; cls='sug-wait'; reason='離季線'+q+'% 超跌但溢價'; }
+  else if (q <= 10 && p < -0.3) { text='加碼'; cls='sug-buy'; reason='正常範圍+折價'+p+'%'; }
+  else if (q <= 10) { text='持有'; cls='sug-hold'; reason='離季線'+q+'% 正常範圍'; }
+  else if (q <= 15) { text='觀望'; cls='sug-wait'; reason='離季線'+q+'% 偏高'; }
+  else { text='減碼'; cls='sug-sell'; reason='離季線'+q+'% 過熱'; }
+  return {text, cls, reason};
+}
+
+function renderCards() {
+  const etfContainer = document.getElementById('etf-cards');
+  const stockContainer = document.getElementById('stock-cards');
+  const sorted = [...ETF_DATA].sort((a,b) => {
+    const ap = pinnedETFs.includes(a.ticker) ? 0 : 1;
+    const bp = pinnedETFs.includes(b.ticker) ? 0 : 1;
+    return ap - bp;
+  });
+  const allCards = sorted.map((etf, i) => {
+  const isPinned = pinnedETFs.includes(etf.ticker);
+  const origIdx = ETF_DATA.indexOf(etf);
+  const hidden = (currentFilter==='etf'&&!etf.isETF)||(currentFilter==='stock'&&etf.isETF)||(currentFilter!=='all'&&currentFilter!=='etf'&&currentFilter!=='stock'&&etf.dividend&&etf.dividend.frequency!==currentFilter);
+  const isCollapsed = collapsedTickers.includes(etf.ticker);
+  return `<div class="card${isPinned?' pinned':''}${isCollapsed?' collapsed':''}" data-ticker="${etf.ticker}" style="position:relative;${hidden?'display:none':''}">
+  <span class="card-badge ${etf.isETF?'badge-etf':'badge-stock'}">${etf.isETF?'ETF':'個股'}</span>
+  <button class="compare-btn" onclick="toggleCompare('${etf.ticker}')">比較</button>
+  <button class="pin-btn${isPinned?' active':''}" onclick="togglePin('${etf.ticker}','etf')">📌</button>
+  <button class="etf-delete" onclick="confirmDeleteETF('${etf.ticker}','${etf.name}')">&times;</button>
+  <div class="card-header" onclick="toggleCollapse(this.parentElement,'${etf.ticker}')">
+  <div class="card-top">
+    <div>
+      <div class="card-left"><span class="card-ticker">${etf.ticker}</span>${etf.isETF?'<span class="card-type">'+(etf.type||'ETF')+'</span>':'<span class="card-type">'+(etf.sector||'個股')+'</span>'}</div>
+      <div class="card-name">${etf.name}</div>
+    </div>
+    <div class="card-right">
+      <div class="card-price">${etf.price ? '$'+etf.price.toFixed(2) : '--'}</div>
+      <span class="card-change ${etf.changePercent>=0?'up':'down'}">${etf.change>=0?'+':''}${etf.change} (${etf.changePercent>=0?'+':''}${etf.changePercent.toFixed(2)}%)</span>
+    </div>
+  </div>
+  </div>
+  <div class="card-body">
+  <div style="border-top:1px solid var(--border);margin-top:8px;padding-top:8px">
+    <div style="font-size:0.85rem;color:var(--muted);margin-bottom:6px">${etf.isETF ? '基金規模 <b style="color:var(--text)">'+etf.fundSize+'億</b>'+(etf.holders?' ｜ 受益人 <b style="color:var(--text)">'+etf.holders+'萬人</b>':'') : (etf.pe?'本益比 <b style="color:var(--text)">'+etf.pe+'</b>':'')+(etf.divYield?' ｜ 殖利率 <b style="color:var(--yellow)">'+etf.divYield+'%</b>':'')}</div>
+    <div class="card-mid">
+      <div class="card-mid-left" onclick="showChart(${i})"><canvas id="spark-etf-${i}" height="35"></canvas></div>
+      <div class="card-mid-right">
+        <div class="kpi">${etf.isETF?'<span class="kpi-label">折溢價 '+(etf.premium<-0.3?'<span style="color:var(--green);font-size:0.75rem">折價買點</span>':etf.premium>0.3?'<span style="color:var(--red);font-size:0.75rem">溢價偏高</span>':'<span style="color:var(--muted);font-size:0.75rem">正常</span>')+'</span><span class="kpi-value premium-value '+getPremiumClass(etf.premium)+'">'+etf.premium+'%</span>':'<span class="kpi-label">殖利率</span><span class="kpi-value" style="color:var(--yellow)">'+(etf.divYield?etf.divYield+'%':'--')+'</span>'}</div>
+        <div class="kpi"><span class="kpi-label">離季線 ${etf.quarterLine>15?'<span style="color:var(--red);font-size:0.75rem">過熱</span>':etf.quarterLine>10?'<span style="color:var(--yellow);font-size:0.75rem">偏高</span>':etf.quarterLine<-8?'<span style="color:var(--green);font-size:0.75rem">超跌</span>':'<span style="color:var(--muted);font-size:0.75rem">正常</span>'}</span><span class="kpi-value">${etf.quarterLine != null ? (etf.quarterLine>=0?'+':'')+etf.quarterLine+'%' : '--'}</span></div>
+        <div class="kpi"><span class="kpi-label">建議</span><span class="kpi-value"><span class="sug-badge ${getSuggestion(etf).cls}">${getSuggestion(etf).text}</span></span></div>
+      </div>
+    </div>
+  </div>
+  ${etf.isETF ? `<div class="card-section" style="border-top:1px solid var(--border);margin-top:8px;padding-top:8px">
+    <div class="card-section-title">累積報酬率</div>
+    <div class="returns-row">
+      ${[['1月','m1'],['3月','m3'],['6月','m6'],['1年','y1']].map(([label,key]) => '<div class="return-item"><div class="return-label">'+label+'</div><div class="return-value '+(etf.returns[key]>=0?'positive':'negative')+'">'+(etf.returns[key]>=0?'+':'')+etf.returns[key]+'%</div></div>').join('')}
+    </div>
+  </div>` : ''}
+  ${etf.isETF ? `<div class="card-section" style="border-top:1px solid var(--border);margin-top:8px;padding-top:8px">
+    <div class="card-section-title">配息資訊</div>
+    <div class="dividend-inline">殖利率 <span style="color:var(--yellow)">${etf.dividend.yield}%</span> ｜ ${etf.dividend.frequency} ｜ 年配 <span style="color:var(--yellow)">$${etf.dividend.annual.toFixed?etf.dividend.annual.toFixed(2):etf.dividend.annual}</span></div>
+    <div class="recent-div">
+      ${etf.dividend.recent.map(r => '<span class="recent-div-item"><span class="rd-date">'+(r.date||'').substring(0,7)+'</span><span class="rd-amt">$'+r.amount+'</span></span>').join('')}
+    </div>
+  </div>` : ''}
+  ${etf.isETF ? `<div class="card-section" style="border-top:1px solid var(--border);margin-top:8px;padding-top:8px">
+    <div class="card-section-title holdings-toggle" onclick="this.parentElement.classList.toggle('open')">產業分布 / 前10大持股</div>
+    <div class="holdings-content">
+    ${Object.keys(etf.sectors||{}).length || (etf.topHoldings||[]).length ? `<div style="display:flex;gap:12px">
+      <div style="flex:1;min-width:0">
+        <div class="sector-area" style="flex-direction:column">
+          <div class="sector-chart"><canvas id="sector-${i}"></canvas></div>
+          <div class="sector-legend">
+            ${Object.entries(etf.sectors||{}).map(([k,v],j) => {
+              const colors = ['#00d4ff','#7c3aed','#10b981','#f59e0b','#ef4444','#6366f1','#ec4899','#14b8a6'];
+              return '<div class="sector-legend-item"><span class="dot" style="background:'+colors[j]+'"></span><span class="sl-name">'+k+'</span><span class="sl-pct">'+v+'%</span></div>';
+            }).join('')}
+          </div>
+        </div>
+      </div>
+      <div style="flex:1;min-width:0">
+        ${(etf.topHoldings||[]).map(h => '<div class="holding-bar"><div class="hb-track"><div class="hb-fill" style="width:'+(etf.topHoldings[0]?(h.pct/etf.topHoldings[0].pct*100).toFixed(0):0)+'%"></div><span class="hb-name">'+h.name+'</span><span class="hb-pct">'+h.pct+'%</span></div></div>').join('')}
+      </div>
+    </div>` : '<p style="color:var(--muted);font-size:0.85rem;padding:8px 0">資料待補充</p>'}
+    </div>
+  </div>` : ''}
+  </div>
+</div>`});
+  etfContainer.innerHTML = allCards.filter((_,i) => sorted[i].isETF).join('');
+  stockContainer.innerHTML = allCards.filter((_,i) => !sorted[i].isETF).join('');
+  if (compareList.length) updateCompareUI();
+}
+
+let sectorCharts = [];
+function renderSectorCharts() {
+  const colors = ['#00d4ff','#7c3aed','#10b981','#f59e0b','#ef4444','#6366f1','#ec4899','#14b8a6'];
+  sectorCharts.forEach(c => c.destroy());
+  sectorCharts = [];
+  ETF_DATA.forEach((etf, i) => {
+    const canvas = document.getElementById(`sector-${i}`);
+    if (!canvas) return;
+    const labels = Object.keys(etf.sectors);
+    const data = Object.values(etf.sectors);
+    const chart = new Chart(canvas, {
+      type: 'doughnut',
+      data: { labels, datasets: [{ data, backgroundColor: colors.slice(0, data.length), borderWidth: 0 }] },
+      options: { responsive: true, maintainAspectRatio: true, plugins: { legend: { display: false }, tooltip: { enabled: false } }, cutout: '55%',
+        onClick: (evt, elements) => {
+          if (!elements.length) return;
+          const idx = elements[0].index;
+          const legendItems = canvas.closest('.sector-area').querySelectorAll('.sector-legend-item');
+          legendItems.forEach((item, j) => {
+            item.style.background = j === idx ? 'rgba(88,166,255,.15)' : ''; item.style.border = j === idx ? '1px dashed #58a6ff' : 'none'; item.style.padding = j === idx ? '2px 4px' : '';
+            item.style.borderRadius = '4px';
+          });
+        }
+      }
+    });
+    sectorCharts.push(chart);
+  });
+}
+
+// === Sort & Filter ===
+let currentFilter = 'all';
+
+let originalOrder = [];
+function sortETF(key) {
+  document.querySelectorAll('#view-etf .filter-bar .pill').forEach((p,i) => { if(i<4) p.classList.toggle('active', p.textContent==={default:'預設',yield:'殖利率',ret1m:'1月報酬',premium:'折溢價'}[key]); });
+  if (key === 'default') { if (originalOrder.length) ETF_DATA = [...originalOrder]; renderCards(); renderSectorCharts(); renderSparklines(); return; }
+  if (key === 'yield') ETF_DATA.sort((a,b) => b.dividend.yield - a.dividend.yield);
+  else if (key === 'ret1m') ETF_DATA.sort((a,b) => b.returns.m1 - a.returns.m1);
+  else if (key === 'premium') ETF_DATA.sort((a,b) => a.premium - b.premium);
+  renderCards(); renderSectorCharts(); renderSparklines();
+}
+
+function filterETF(freq) {
+  currentFilter = freq;
+  document.querySelectorAll('[id^="f-"]').forEach(p => p.classList.remove('active'));
+  document.getElementById('f-' + freq)?.classList.add('active');
+  renderCards(); renderSectorCharts(); renderSparklines();
+}
+
+// === Dividend Calendar ===
+const DIV_COLORS = ['#58a6ff','#f0883e','#3fb950','#a371f7','#d29922','#f85149','#ec4899','#14b8a6','#6366f1','#00d4ff'];
+
+function showDivCalendar() {
+  const now = new Date();
+  const months = [];
+  for (let i = 11; i >= 0; i--) {
+    const d = new Date(now.getFullYear(), now.getMonth() - i, 1);
+    months.push({ year: d.getFullYear(), month: d.getMonth() + 1, label: (d.getMonth()+1) + '月', items: [] });
+  }
+  
+  ETF_DATA.forEach((etf, ei) => {
+    (etf.dividend.recent || []).forEach(r => {
+      const parts = r.date.split('/');
+      const y = parseInt(parts[0]), m = parseInt(parts[1]);
+      const mo = months.find(x => x.year === y && x.month === m);
+      if (mo) mo.items.push({ ticker: etf.ticker, amount: r.amount, color: DIV_COLORS[ei % DIV_COLORS.length] });
+    });
+  });
+  
+  let html = '<div class="cal-timeline">';
+  months.forEach(mo => {
+    html += '<div class="cal-month"><div class="cal-month-label">' + mo.label + '</div>';
+    if (mo.items.length) {
+      mo.items.forEach(item => {
+        html += '<div class="cal-item" style="background:' + item.color + '22;color:' + item.color + ';border:1px solid ' + item.color + '44">' + item.ticker + '<br>$' + item.amount + '</div>';
+      });
+    } else {
+      html += '<div class="cal-empty">無</div>';
+    }
+    html += '</div>';
+  });
+  html += '</div>';
+  
+  html += '<div class="cal-summary"><h4>💰 月月配組合建議（假設各持有 1 張）</h4>';
+  html += '<div class="cal-summary-grid">';
+  months.forEach(mo => {
+    const total = mo.items.reduce((s, i) => s + i.amount, 0);
+    const hasDiv = total > 0;
+    html += '<div class="cal-summary-item ' + (hasDiv ? 'has' : 'empty') + '">';
+    html += '<div style="font-size:0.7rem">' + mo.label + '</div>';
+    html += '<div style="font-weight:700">' + (hasDiv ? '$' + total.toFixed(2) : '—') + '</div>';
+    html += '</div>';
+  });
+  html += '</div>';
+  
+  const gaps = months.filter(m => m.items.length === 0).map(m => m.label);
+  if (gaps.length) {
+    html += '<p style="margin-top:8px;font-size:0.85rem;color:var(--red)">⚠️ 未覆蓋月份：' + gaps.join('、') + '</p>';
+  } else {
+    html += '<p style="margin-top:8px;font-size:0.85rem;color:var(--green)">✅ 每月都有配息覆蓋！</p>';
+  }
+  html += '</div>';
+  
+  document.getElementById('cal-content').innerHTML = html;
+  document.getElementById('cal-modal').classList.add('show');
+}
+
+function closeDivCalendar() {
+  document.getElementById('cal-modal').classList.remove('show');
+}
+
+// === Historical Chart ===
+let mainChart = null;
+let chartOverlays = [];
+let chartRange = 22; // default 1M
+
+function showChart(idx) {
+  const etf = ETF_DATA[idx];
+  if (!etf.sparkline || etf.sparkline.length < 2) return;
+  chartRange = 22;
+  const fullData = etf.historySparkline && etf.historySparkline.length ? etf.historySparkline : etf.sparkline;
+  const len = fullData.length;
+  const latest = fullData[fullData.length-1];
+  const high = Math.max(...fullData);
+  const low = Math.min(...fullData);
+  
+  document.getElementById('chart-title').textContent = etf.ticker + ' ' + etf.name + ' — 走勢圖';
+  document.getElementById('chart-info').innerHTML = 
+    '<span>最高 <b style="color:var(--red)">$'+high.toFixed(2)+'</b></span>' +
+    '<span>最低 <b style="color:var(--green)">$'+low.toFixed(2)+'</b></span>' +
+    '<span>最新 <b>$'+latest.toFixed(2)+'</b></span>';
+  
+  // Range buttons (top) with disabled state
+  const dis5 = len < 5 ? ' style="opacity:0.4;pointer-events:none"' : '';
+  const dis22 = len < 22 ? ' style="opacity:0.4;pointer-events:none"' : '';
+  const dis60 = len < 40 ? ' style="opacity:0.4;pointer-events:none"' : '';
+  document.getElementById('chart-actions').innerHTML =
+    '<span style="font-size:0.8rem;color:var(--muted)">區間：</span>' +
+    '<button class="pill"'+dis5+' onclick="setChartRange(5)">週線</button>' +
+    '<button class="pill active"'+dis22+' onclick="setChartRange(22)">月線</button>' +
+    '<button class="pill"'+dis60+' onclick="setChartRange(60)">季線</button>';
+  
+  // Comparison buttons (bottom) - only same type
+  chartOverlays = [idx];
+  const sameType = etf.isETF;
+  const actionsHtml = ETF_DATA.map((e, i) => {
+    if (i === idx || e.isETF !== sameType) return '';
+    return '<button onclick="toggleOverlay('+i+')" id="overlay-btn-'+i+'">'+e.ticker+'</button>';
+  }).join('');
+  document.getElementById('chart-actions-bottom').innerHTML = '<span style="font-size:0.8rem;color:var(--muted)">疊加比較：</span>' + actionsHtml;
+  
+  renderMainChart();
+  document.getElementById('chart-modal').classList.add('show');
+}
+
+function setChartRange(n) {
+  chartRange = n;
+  document.querySelectorAll('#chart-actions .pill').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('#chart-actions .pill').forEach(p => { if((n===5&&p.textContent==='週線')||(n===22&&p.textContent==='月線')||(n===60&&p.textContent==='季線')) p.classList.add('active'); });
+  renderMainChart();
+}
+
+function closeChart() {
+  document.getElementById('chart-modal').classList.remove('show');
+  if (mainChart) { mainChart.destroy(); mainChart = null; }
+  document.getElementById('chart-actions-bottom').innerHTML = '';
+}
+
+function toggleOverlay(idx) {
+  const i = chartOverlays.indexOf(idx);
+  if (i >= 0) chartOverlays.splice(i, 1);
+  else chartOverlays.push(idx);
+  const btn = document.getElementById('overlay-btn-'+idx);
+  if (btn) { btn.classList.toggle('active'); updateOverlayBtnColors(); }
+  renderMainChart();
+}
+
+function updateOverlayBtnColors() {
+  const colors = ["#00d4ff","#ff6b6b","#3fb950","#ffd93d","#a371f7","#ff8b94","#00c9a7","#f0883e","#6366f1","#ec4899"];
+  chartOverlays.forEach((idx, ci) => {
+    const btn = document.getElementById("overlay-btn-"+idx);
+    if (btn) { btn.style.background = colors[ci % colors.length]; btn.style.color = "#000"; btn.style.borderColor = colors[ci % colors.length]; }
+  });
+  ETF_DATA.forEach((_, i) => {
+    if (!chartOverlays.includes(i)) { const btn = document.getElementById("overlay-btn-"+i); if (btn) { btn.style.background = ""; btn.style.color = ""; btn.style.borderColor = ""; } }
+  });
+}
+
+function renderMainChart() {
+  const canvas = document.getElementById('chart-main');
+  if (mainChart) mainChart.destroy();
+  
+  const colors = ["#00d4ff","#ff6b6b","#3fb950","#ffd93d","#a371f7","#ff8b94","#00c9a7","#f0883e","#6366f1","#ec4899"];
+  const datasets = chartOverlays.map((idx, ci) => {
+    const etf = ETF_DATA[idx];
+    const fullData = etf.historySparkline.length ? etf.historySparkline : (etf.sparkline || []);
+    const data = fullData.slice(-chartRange);
+    // Normalize to % change from first day
+    const base = data[0] || 1;
+    const normalized = data.map(v => ((v - base) / base * 100).toFixed(2));
+    return {
+      label: etf.ticker,
+      data: chartOverlays.length > 1 ? normalized : data,
+      borderColor: colors[ci % colors.length],
+      backgroundColor: colors[ci % colors.length] + '20',
+      borderWidth: 2,
+      pointRadius: 0,
+      pointHoverRadius: 4,
+      fill: chartOverlays.length === 1,
+      tension: 0.3
+    };
+  });
+  
+  mainChart = new Chart(canvas, {
+    type: 'line',
+    data: { labels: datasets[0].data.map((_, i) => 'D'+(i+1)), datasets },
+    options: {
+      responsive: true,
+      maintainAspectRatio: false, animation: false,
+      interaction: { mode: 'index', intersect: false },
+      plugins: {
+        legend: { display: false },
+        tooltip: { enabled: true, callbacks: { label: ctx => ctx.dataset.label + ': ' + (chartOverlays.length > 1 ? parseFloat(ctx.parsed.y).toFixed(2) + '%' : '$' + parseFloat(ctx.parsed.y).toFixed(2)) } }
+      },
+      scales: {
+        x: { display: true, grid: { color: '#30363d' }, ticks: { color: '#8b949e', font: { size: 13 } } },
+        y: { display: true, grid: { color: '#30363d' }, ticks: { color: '#8b949e', font: { size: 13 }, callback: v => chartOverlays.length > 1 ? parseFloat(v).toFixed(1)+'%' : '$'+parseFloat(v).toFixed(2) } }
+      }
+    }
+  });
+}
+
+// === ETF Compare ===
+let compareList = [];
+const COMPARE_COLORS = ['#58a6ff','#f0883e','#3fb950'];
+
+function toggleCompare(ticker) {
+  const i = compareList.indexOf(ticker);
+  if (i >= 0) { compareList.splice(i, 1); }
+  else if (compareList.length < 3) {
+    const etf = ETF_DATA.find(e => e.ticker === ticker);
+    const first = ETF_DATA.find(e => e.ticker === compareList[0]);
+    if (compareList.length > 0 && first && etf && first.isETF !== etf.isETF) return;
+    compareList.push(ticker);
+  }
+  else { return; }
+  updateCompareUI();
+}
+
+function updateCompareUI() {
+  const firstETF = compareList.length > 0 ? ETF_DATA.find(e => e.ticker === compareList[0]) : null;
+  const compareType = firstETF ? firstETF.isETF : null;
+  document.querySelectorAll('#etf-cards .card, #stock-cards .card').forEach(card => {
+    const ticker = card.dataset.ticker;
+    const etf = ETF_DATA.find(e => e.ticker === ticker);
+    const btn = card.querySelector('.compare-btn');
+    const isSelected = compareList.includes(ticker);
+    const disabled = compareType !== null && etf && etf.isETF !== compareType && !isSelected;
+    card.classList.toggle('comparing', isSelected);
+    if (btn) {
+      btn.classList.toggle('active', isSelected);
+      btn.textContent = isSelected ? '✓ 已選' : '比較';
+      btn.style.opacity = disabled ? '0.3' : '';
+      btn.style.pointerEvents = disabled ? 'none' : '';
+      btn.style.background = disabled ? 'var(--surface2)' : '';
+      btn.style.color = disabled ? 'var(--muted)' : '';
+      btn.style.borderColor = disabled ? 'var(--surface2)' : '';
+    }
+  });
+  if (compareList.length >= 2) { renderCompare(); document.getElementById('compare-panel').classList.add('show'); }
+  else { document.getElementById('compare-panel').classList.remove('show'); }
+}
+
+function closeCompare() {
+  compareList = [];
+  updateCompareUI();
+  document.getElementById('compare-panel').classList.remove('show');
+}
+
+function renderCompare() {
+  const etfs = compareList.map(t => ETF_DATA.find(e => e.ticker === t)).filter(Boolean);
+  const container = document.getElementById('compare-content');
+  let html = '';
+  
+  // Returns comparison
+  html += '<div class="compare-section"><h4>報酬率對比</h4>';
+  ['m1','m3','m6','y1'].forEach((key, ki) => {
+    const labels = ['1月','3月','6月','1年'];
+    const maxVal = Math.max(...etfs.map(e => Math.abs(e.returns[key])));
+    html += '<div class="compare-bar-row"><span class="compare-bar-label">' + labels[ki] + '</span><div class="compare-bar-track">';
+    etfs.forEach((e, ei) => {
+      const w = maxVal ? (Math.abs(e.returns[key]) / maxVal * 100) : 0;
+      html += '<div class="compare-bar-fill" style="width:'+w.toFixed(0)+'%;background:'+COMPARE_COLORS[ei]+';opacity:0.8"></div>';
+    });
+    html += '</div>';
+    etfs.forEach((e, ei) => { html += '<span class="compare-bar-val" style="color:'+COMPARE_COLORS[ei]+'">'+e.returns[key]+'%</span>'; });
+    html += '</div>';
+  });
+  html += '</div>';
+  
+  // Yield & Premium
+  html += '<div class="compare-section"><h4>殖利率 / 折溢價</h4><div style="display:grid;grid-template-columns:repeat('+etfs.length+',1fr);gap:8px;text-align:center">';
+  etfs.forEach((e, ei) => {
+    html += '<div style="border:1px solid '+COMPARE_COLORS[ei]+';border-radius:8px;padding:8px"><div style="color:'+COMPARE_COLORS[ei]+';font-weight:700">'+e.ticker+'</div><div style="font-size:0.85rem;margin-top:4px">殖利率 <b style="color:var(--yellow)">'+e.dividend.yield+'%</b></div><div style="font-size:0.85rem">折溢價 <b>'+e.premium+'%</b></div></div>';
+  });
+  html += '</div></div>';
+  
+  // Common holdings
+  html += '<div class="compare-section"><h4>前10大持股重疊度</h4>';
+  if (etfs[0].topHoldings) {
+    const allNames = etfs.map(e => (e.topHoldings||[]).map(h => h.name));
+    const common = allNames[0].filter(n => allNames.every(names => names.includes(n)));
+    if (common.length) {
+      html += '<ul class="compare-overlap">';
+      common.forEach(name => {
+        html += '<li><b style="color:var(--text)">'+name+'</b> — ';
+        etfs.forEach((e,ei) => { const h=(e.topHoldings||[]).find(x=>x.name===name); html += '<span style="color:'+COMPARE_COLORS[ei]+'">'+e.ticker+' '+(h?h.pct:'-')+'%</span> '; });
+        html += '</li>';
+      });
+      html += '</ul>';
+    } else { html += '<p style="color:var(--muted)">無共同持股</p>'; }
+  }
+  html += '</div>';
+  
+  // Legend
+  html += '<div style="display:flex;gap:12px;font-size:0.8rem;margin-top:8px">';
+  etfs.forEach((e,ei) => { html += '<span style="color:'+COMPARE_COLORS[ei]+'">\u25cf '+e.ticker+' '+e.name+'</span>'; });
+  html += '</div>';
+  
+  container.innerHTML = html;
+}
+
+const SHEET_BASE = 'https://docs.google.com/spreadsheets/d/1GT8LkzWJPo9psHwRIJwjfV2HEoYf7x8eIkI22BhuqIs/gviz/tq?tqx=out:csv&sheet=';
+
+function parseCSV(csv) {
+  const lines = csv.trim().split('\n');
+  if (lines.length < 2) return [];
+  const headers = lines[0].match(/"([^"]*)"/g)?.map(s=>s.replace(/"/g,'')) || lines[0].split(',');
+  return lines.slice(1).map(line => {
+    const cols = line.match(/"([^"]*)"/g)?.map(s=>s.replace(/"/g,'')) || line.split(',');
+    const obj = {};
+    headers.forEach((h,i) => obj[h] = cols[i] || '');
+    return obj;
+  });
+}
+
+async function loadAllData() {
+  const t = Date.now();
+  try {
+    const [infoRes, priceRes, secRes, holdRes, navRes, histRes, pinnedRes, collapsedRes] = await Promise.all([
+      fetch(SHEET_BASE + 'info&t=' + t),
+      fetch(SHEET_BASE + 'Sheet1&t=' + t),
+      fetch(SHEET_BASE + 'sectors&t=' + t),
+      fetch(SHEET_BASE + 'holdings&t=' + t),
+      fetch(SHEET_BASE + 'nav_data&t=' + t),
+      fetch(SHEET_BASE + 'history&t=' + t),
+      fetch(SHEET_BASE + 'pinned&t=' + t).catch(() => null),
+      fetch(SHEET_BASE + 'collapsed&t=' + t).catch(() => null)
+    ]);
+    const [infoCsv, priceCsv, secCsv, holdCsv, navCsv, histCsv] = await Promise.all([
+      infoRes.text(), priceRes.text(), secRes.text(), holdRes.text(), navRes.text(), histRes.text()
+    ]);
+    const pinnedCsv = pinnedRes ? await pinnedRes.text() : '';
+    const pinnedData = pinnedCsv ? parseCSV(pinnedCsv) : [];
+    pinnedETFs = pinnedData.filter(p => p.tab === 'etf').map(p => p.ticker);
+    pinnedWL = pinnedData.filter(p => p.tab === 'watchlist').map(p => p.ticker);
+    const collapsedCsv = collapsedRes ? await collapsedRes.text() : '';
+    const collapsedLines = collapsedCsv.trim().split('\n').slice(1);
+    collapsedTickers = collapsedLines.map(l => l.replace(/"/g,'').trim()).filter(Boolean);
+    
+    const infoData = parseCSV(infoCsv);
+    const priceData = parseCSV(priceCsv);
+    const secData = parseCSV(secCsv);
+    const holdData = parseCSV(holdCsv);
+    const navData = parseCSV(navCsv);
+    const histData = parseCSV(histCsv);
+    
+    // Build ETF_DATA from info as base
+    ETF_DATA = infoData.map(info => {
+      let ticker = info.ticker || '';
+      // Pad leading zeros (Sheet strips them)
+      if (ticker && /^\d+$/.test(ticker) && ticker.length < 4) ticker = ticker.padStart(4,'0');
+      // Use longest matching ticker from other sheets for display
+      const matchT = (t) => { const v=t||''; return v===ticker || ticker.endsWith(v) || v.endsWith(ticker) || v===ticker.replace(/^0+/,'') || ticker===v.replace(/^0+/,''); };
+      const price = priceData.find(p => matchT(p.ticker)) || {};
+      const sec = secData.find(s => matchT(s.ticker)) || {};
+      const hold = holdData.find(h => matchT(h.ticker)) || {};
+      const navRow = navData.find(n => matchT(n.ticker)) || {};
+      const histRow = histData.find(h => matchT(h.ticker)) || {};
+      // Prefer the longest ticker found (most complete with leading zeros)
+      const candidates = [ticker, price.ticker, navRow.ticker, histRow.ticker].filter(Boolean);
+      ticker = candidates.reduce((a,b) => b.length > a.length ? b : a, ticker);
+      
+      // Parse sectors
+      const sectors = {};
+      for (let i = 1; i <= 6; i++) {
+        if (sec['s'+i] && sec['p'+i]) sectors[sec['s'+i]] = parseFloat(sec['p'+i]) || 0;
+      }
+      
+      // Parse holdings
+      const topHoldings = [];
+      for (let i = 1; i <= 10; i++) {
+        if (hold['h'+i] && hold['p'+i]) topHoldings.push({name: hold['h'+i], pct: parseFloat(hold['p'+i]) || 0});
+      }
+      
+      // Parse sparkline (Sheet1 for card preview)
+      const sparkRaw = price.sparkline || '';
+      const sparkline = sparkRaw ? sparkRaw.split('|').map(Number).filter(n=>n>0) : [];
+      
+      // Parse history sparkline (60 days for chart modal)
+      const histRaw = histRow.sparkline || '';
+      const historySparkline = histRaw ? histRaw.split('|').map(Number).filter(n=>n>0) : [];
+      
+      // Parse dividend recent
+      const divRecentRaw = navRow.divRecent || '';
+      const recent = divRecentRaw ? divRecentRaw.split('|').map(s => { const p=s.split(':'); return {date:p[0],amount:parseFloat(p[1])||0}; }) : [];
+      
+      return {
+        ticker,
+        name: info.name || '',
+        type: info.type || '',
+        isETF: /^00/.test(ticker) || ticker === '0050' || ticker === '0056',
+        sparkline,
+        historySparkline,
+        price: parseFloat(price.price) || 0,
+        change: parseFloat(price.change) || 0,
+        changePercent: parseFloat(price.changePct) || 0,
+        returns: {
+          m1: parseFloat(navRow.ret1m) || 0,
+          m3: parseFloat(navRow.ret3m) || 0,
+          m6: parseFloat(navRow.ret6m) || 0,
+          y1: parseFloat(navRow.ret1y) || 0
+        },
+        dividend: {
+          annual: recent.slice(0,4).reduce((s,r)=>s+r.amount, 0),
+          yield: parseFloat(navRow.divYield) || 0,
+          frequency: info.frequency || '',
+          recent: recent.length ? recent : [{date:'--',amount:0}]
+        },
+        sectors,
+        fundSize: parseFloat(info.fundSize) || 0,
+        holders: parseFloat(info.holders) || 0,
+        nav: parseFloat(navRow.nav) || 0,
+        premium: parseFloat(navRow.premium) || 0,
+        quarterLine: parseFloat(price.quarterLine) || null,
+        topHoldings
+      };
+    }).filter(e => e.ticker);
+    
+    // Also load watchlist stocks into ETF_DATA
+    try {
+      const wlRes = await fetch(`https://docs.google.com/spreadsheets/d/1GT8LkzWJPo9psHwRIJwjfV2HEoYf7x8eIkI22BhuqIs/gviz/tq?tqx=out:csv&sheet=watchlist&t=${Date.now()}`);
+      const wlCsv = await wlRes.text();
+      const wlRows = wlCsv.trim().split('\n').slice(1);
+      wlRows.forEach(row => {
+        const cols = row.match(/"([^"]*)"/g)?.map(s => s.replace(/"/g,'')) || row.split(',');
+        let ticker = cols[0]||'';
+        if (!ticker && cols[2]) ticker = cols[2];
+        if (!ticker) return;
+        // Skip if already in ETF_DATA
+        if (ETF_DATA.find(e => e.ticker === ticker || ticker.endsWith(e.ticker) || e.ticker.endsWith(ticker))) return;
+        const histArr = wlHistoryData[ticker] || wlHistoryData[ticker.padStart(4,'0')] || wlHistoryData[ticker.padStart(5,'0')] || [];
+        ETF_DATA.push({
+          ticker, name: cols[1]||'', type: '', isETF: false,
+          sparkline: cols[11] ? cols[11].split('|').map(Number).filter(n=>n>0) : [],
+          historySparkline: histArr,
+          price: parseFloat(cols[3])||0, change: parseFloat(cols[4])||0, changePercent: parseFloat(cols[5])||0,
+          returns: {m1:0,m3:0,m6:0,y1:0},
+          dividend: {annual:0, yield:parseFloat(cols[9])||0, frequency:'', recent:[{date:'--',amount:0}]},
+          sectors:{}, fundSize:0, holders:0, nav:0, premium:0,
+          quarterLine: cols[10]?parseFloat(cols[10]):null, topHoldings:[],
+          sector: cols[8]||'', pe: cols[7]||'', divYield: cols[9]||''
+        });
+      });
+    } catch(e) {}
+    
+    originalOrder = [...ETF_DATA];
+    // Build wlHistoryData for watchlist chart (store with both raw and zero-padded keys)
+    histData.forEach(h => { if(h.ticker && h.sparkline) { const arr = h.sparkline.split('|').map(Number).filter(n=>n>0); wlHistoryData[h.ticker] = arr; wlHistoryData[h.ticker.padStart(4,'0')] = arr; wlHistoryData[h.ticker.padStart(5,'0')] = arr; } });
+    console.log('histData tickers:', histData.map(h=>h.ticker+':'+((h.sparkline||'').length)).join(', '));
+    document.getElementById('live-status').textContent = '\u2705 \u8cc7\u6599\u8f09\u5165\u5b8c\u6210 ' + new Date().toLocaleTimeString('zh-TW');
+    const priceTime = priceData[0]?.updated || '';
+    const ptEl = document.getElementById('price-time');
+    if (ptEl) ptEl.textContent = '股價：' + priceTime + ' 更新 · ';
+  } catch(e) {
+    console.error('loadAllData error:', e);
+    originalOrder = [...ETF_DATA]; document.getElementById('live-status').textContent = '\u26a0\ufe0f \u8cc7\u6599\u8f09\u5165\u5931\u6557';
+  }
+}
+
+// Refresh with toast
+async function refreshAll() {
+  try {
+    await loadAllData();
+    renderCards(); renderSectorCharts(); renderSparklines();
+    showToast('✅ 資料已更新', 'var(--green)');
+  } catch(e) { showToast('⚠️ 更新失敗', 'var(--yellow)'); }
+}
+function showToast(msg, color) {
+  let t = document.getElementById('toast');
+  if (!t) { t=document.createElement('div'); t.id='toast'; t.style.cssText='position:fixed;top:60px;left:50%;transform:translateX(-50%);padding:8px 16px;border-radius:6px;font-size:0.85rem;z-index:999;transition:opacity .5s'; document.body.appendChild(t); }
+  t.style.background=color; t.style.color='#000'; t.style.opacity='1'; t.textContent=msg;
+  setTimeout(()=>{t.style.opacity='0'},3000);
+}
+
+// Init
+async function init() {
+  await loadAllData();
+  renderCards();
+  renderSectorCharts();
+  renderSparklines();
+  fetchHoldingsAndDividends();
+}
+init();
+
+function renderSparklines() {
+  ETF_DATA.forEach((etf, i) => {
+    const canvas = document.getElementById('spark-etf-' + i);
+    const data = etf.sparkline.length >= 2 ? etf.sparkline : (etf.historySparkline.length >= 2 ? etf.historySparkline.slice(-22) : null);
+    if (!canvas || !data) return;
+    const changes = data.slice(1).map((v,j) => v - data[j]);
+    const colors = changes.map(c => c >= 0 ? '#ef4444' : '#10b981');
+    new Chart(canvas, {
+      type: 'bar',
+      data: { labels: changes.map(()=>''), datasets: [{ data: changes, backgroundColor: colors, borderWidth: 0 }] },
+      options: { responsive: true, maintainAspectRatio: false, animation: false, plugins: { legend:{display:false}, tooltip:{enabled:false} }, scales: { x:{display:false}, y:{display:false} } }
+    });
+  });
+}
+
+// === Watchlist Functions ===
+const GAS_URL = 'https://script.google.com/macros/s/AKfycbysuZCTSlBxk1FA-zvgt-vE1so2m3fOCUZQxdSRq0k-hU_dh4MBiKRZhF4pOrog8jXK/exec';
+const WL_SHEET_ID = '1GT8LkzWJPo9psHwRIJwjfV2HEoYf7x8eIkI22BhuqIs';
+
+function switchMainTab(tab) {
+  document.querySelectorAll('.main-tab').forEach(t => t.classList.remove('active'));
+  document.querySelector(`.main-tab[onclick*="${tab}"]`).classList.add('active');
+  document.getElementById('view-etf').style.display = tab === 'etf' ? 'block' : 'none';
+  document.getElementById('view-watchlist').style.display = tab === 'watchlist' ? 'block' : 'none';
+  if (tab === 'watchlist') loadWatchlist();
+}
+
+async function loadWatchlist() {
+  try {
+    const res = await fetch(`https://docs.google.com/spreadsheets/d/${WL_SHEET_ID}/gviz/tq?tqx=out:csv&sheet=watchlist&t=${Date.now()}`);
+    const csv = await res.text();
+    const allRows = csv.trim().split('\n').filter(r => r);
+    const rows = allRows.slice(1);
+    wlData = rows.map(row => {
+      const cols = row.match(/"([^"]*)"/g)?.map(s => s.replace(/"/g,'')) || row.split(',');
+      let ticker = cols[0]||'';
+      // Try col[2] as fallback ticker (some sheets store it there for letter codes)
+      if (!ticker && cols[2]) ticker = cols[2];
+      return { ticker, name:cols[1]||'', price:parseFloat(cols[3])||0, change:parseFloat(cols[4])||0, changePct:parseFloat(cols[5])||0, updated:cols[6]||'', pe:cols[7]||'', sector:cols[8]||'', divYield:cols[9]||'', quarterLine:cols[10]?parseFloat(cols[10]):null, sparkline:cols[11]||'', divRecent:cols[12]||'' };
+    }).filter(d => d.ticker);
+    wlOriginalData = [...wlData];
+    renderWatchlistCards();
+  } catch(e) {
+    console.log('loadWatchlist error:', e);
+  }
+}
+
+function renderWatchlistCards() {
+    const container = document.getElementById('watchlist-cards');
+    const empty = document.getElementById('watchlist-empty');
+    if (!wlData.length) { container.innerHTML = ''; empty.style.display = 'block'; return; }
+    empty.style.display = 'none';
+    const sorted = [...wlData].sort((a,b) => {
+      const ap = pinnedWL.includes(a.ticker) ? 0 : 1;
+      const bp = pinnedWL.includes(b.ticker) ? 0 : 1;
+      return ap - bp;
+    });
+    container.innerHTML = sorted.map((d, i) => {
+      const isPinned = pinnedWL.includes(d.ticker);
+      // Filter logic
+      let show = true;
+      if (wlFilter !== 'all') {
+        const s = d.sector || '';
+        if (wlFilter === '半導體') show = s.includes('半導體');
+        else if (wlFilter === '金融') show = s.includes('金融');
+        else if (wlFilter === '電子') show = s.includes('電腦') || s.includes('電子');
+        else if (wlFilter === '其他') show = !s.includes('半導體') && !s.includes('金融') && !s.includes('電腦') && !s.includes('電子');
+      }
+      const wlSparkRaw = d.sparkline ? d.sparkline.split('|').map(Number).filter(n=>n>0) : [];
+      const wlSpark = wlSparkRaw.length >= 2 ? wlSparkRaw : (wlHistoryData[d.ticker] || []).slice(-22);
+      const divItems = d.divRecent ? d.divRecent.split('|').map(s => { const p=s.split(':'); return {date:p[0],amount:p[1]}; }) : [];
+      const q = d.quarterLine;
+      const wlSug = q===null?{text:'--',cls:'sug-hold'}:q<-8?{text:'買進',cls:'sug-buy'}:q<=10?{text:'持有',cls:'sug-hold'}:q<=15?{text:'觀望',cls:'sug-wait'}:{text:'減碼',cls:'sug-sell'};
+      const origIdx = wlData.indexOf(d);
+      return `<div class="card${isPinned?' pinned':''}" style="position:relative;${show?'':'display:none'}">
+        <button class="wl-delete" onclick="confirmDelete('${d.ticker}','${d.name}')">&times;</button>
+        <button class="compare-btn" onclick="toggleWlCompare(${origIdx})">比較</button>
+        <button class="pin-btn${isPinned?' active':''}" onclick="togglePin('${d.ticker}','watchlist')">📌</button>
+        <div class="card-top">
+          <div>
+            <div class="card-left"><span class="card-ticker">${d.ticker}</span>${d.sector?'<span class="card-type">'+d.sector+'</span>':''}</div>
+            <div class="card-name">${d.name}</div>
+          </div>
+          <div class="card-right">
+            <div class="card-price">${d.price?'$'+d.price.toFixed(2):'--'}</div>
+            <span class="card-change ${d.changePct>=0?'up':'down'}">${d.change>=0?'+':''}${d.change} (${d.changePct>=0?'+':''}${d.changePct}%)</span>
+          </div>
+        </div>
+        <div style="border-top:1px solid var(--border);margin-top:8px;padding-top:8px">
+          <div class="card-mid">
+            <div class="card-mid-left" onclick="showWlChart(${i})"><canvas id="spark-wl-${i}" height="35" data-spark="${wlSpark.join('|')}"></canvas></div>
+            <div class="card-mid-right">
+              <div class="kpi"><span class="kpi-label">離季線 ${q>15?'<span style="color:var(--red);font-size:0.75rem">過熱</span>':q>10?'<span style="color:var(--yellow);font-size:0.75rem">偏高</span>':q<-8?'<span style="color:var(--green);font-size:0.75rem">超跌</span>':'<span style="color:var(--muted);font-size:0.75rem">正常</span>'}</span><span class="kpi-value">${q!==null?(q>=0?'+':'')+q+'%':'--'}</span></div>
+              <div class="kpi"><span class="kpi-label">本益比</span><span class="kpi-value">${d.pe||'--'}</span></div>
+              <div class="kpi"><span class="kpi-label">殖利率</span><span class="kpi-value" style="color:var(--yellow)">${d.divYield?d.divYield+'%':'--'}</span></div>
+              <div class="kpi"><span class="kpi-label">建議</span><span class="kpi-value"><span class="sug-badge ${wlSug.cls}">${wlSug.text}</span></span></div>
+            </div>
+          </div>
+        </div>
+        ${divItems.length?`<div style="border-top:1px solid var(--border);margin-top:8px;padding-top:8px"><div style="font-size:0.85rem;color:var(--muted);margin-bottom:4px">配息 殖利率 <span style="color:var(--yellow)">${d.divYield}%</span></div><div class="recent-div">${divItems.map(r=>'<span class="recent-div-item"><span class="rd-date">'+r.date+'</span><span class="rd-amt">$'+r.amount+'</span></span>').join('')}</div></div>`:''}
+      </div>`;
+    }).join('');
+    // Render watchlist sparklines
+    document.querySelectorAll('[id^="spark-wl-"]').forEach(canvas => {
+      const raw = canvas.dataset.spark;
+      if (!raw) return;
+      const data = raw.split('|').map(Number).filter(n=>n>0);
+      if (data.length < 2) return;
+      const changes = data.slice(1).map((v,j) => v - data[j]);
+      const colors = changes.map(c => c >= 0 ? '#ef4444' : '#10b981');
+      new Chart(canvas, {
+        type:'bar',
+        data:{labels:data.map(()=>''),datasets:[{data:changes,backgroundColor:colors,borderWidth:0}]},
+        options:{responsive:true,maintainAspectRatio:false,plugins:{legend:{display:false},tooltip:{enabled:false}},scales:{x:{display:false},y:{display:false}}}
+      });
+    });
+}
+
+let wlSortKey = 'default';
+let wlData = [];
+let wlOriginalData = [];
+let wlCompareList = [];
+function toggleWlCompare(idx) {
+  const i = wlCompareList.indexOf(idx);
+  if (i >= 0) wlCompareList.splice(i, 1);
+  else if (wlCompareList.length < 3) wlCompareList.push(idx);
+  else return;
+  document.querySelectorAll('#view-watchlist .card').forEach((card, ci) => {
+    const btn = card.querySelector('.compare-btn');
+    const sel = wlCompareList.includes(ci);
+    card.classList.toggle('comparing', sel);
+    if (btn) { btn.classList.toggle('active', sel); btn.textContent = sel ? '✓ 已選' : '比較'; }
+  });
+  if (wlCompareList.length >= 2) renderWlCompare();
+  else document.getElementById('compare-panel').classList.remove('show');
+}
+function renderWlCompare() {
+  const cards = document.querySelectorAll('#view-watchlist .card');
+  const colors = ['#00d4ff','#ff6b6b','#3fb950'];
+  const items = wlCompareList.map((idx, ci) => {
+    const card = cards[idx];
+    const ticker = card?.querySelector('.card-ticker')?.textContent || '';
+    const name = card?.querySelector('.card-name')?.textContent || '';
+    const pctText = card?.querySelector('.card-change')?.textContent || '0';
+    const pct = parseFloat(pctText.match(/([-\d.]+)%/)?.[1]) || 0;
+    const qText = card?.querySelectorAll('.kpi-value')?.[0]?.textContent || '0';
+    const q = parseFloat(qText) || 0;
+    const peText = card?.querySelectorAll('.kpi-value')?.[1]?.textContent || '--';
+    const yieldText = card?.querySelectorAll('.kpi-value')?.[2]?.textContent || '--';
+    return {ticker, name, pct, q, pe:peText, yield:yieldText, color:colors[ci]};
+  });
+  let html = '<div class="compare-section" style="overflow-x:auto"><table style="width:fit-content;margin:0 auto;border-collapse:collapse;font-size:0.85rem"><tr><th style="text-align:left;padding:6px;color:var(--muted)">指標</th>';
+  items.forEach(it => { html += '<th style="padding:6px 16px;color:'+it.color+';text-align:center">'+it.name+'<br>'+it.ticker+'</th>'; });
+  html += '</tr>';
+  [['漲跌幅','pct'],['離季線','q'],['本益比','pe'],['殖利率','yield']].forEach(([label,key]) => {
+    html += '<tr><td style="padding:6px;color:var(--muted)">'+label+'</td>';
+    items.forEach(it => { const v=key==='pct'?it.pct+'%':key==='q'?it.q+'%':it[key]; html += '<td style="padding:6px;font-weight:600;text-align:center">'+v+'</td>'; });
+    html += '</tr>';
+  });
+  html += '</table></div>';
+  document.getElementById('compare-content').innerHTML = html;
+  document.getElementById('compare-panel').classList.add('show');
+}
+let wlFilter = 'all';
+function sortWatchlist(key) {
+  wlSortKey = key;
+  // Only toggle sort buttons (first 3 pills after label)
+  const pills = document.querySelectorAll('#view-watchlist .filter-bar .pill');
+  pills.forEach((p,i) => { if(i<3) p.classList.toggle('active', p.textContent==={default:'預設',pct:'漲跌幅',qline:'離季線'}[key]); });
+  if (key === 'default') { wlData = [...wlOriginalData]; }
+  else if (key === 'pct') { wlData.sort((a,b) => b.changePct - a.changePct); }
+  else if (key === 'qline') { wlData.sort((a,b) => (b.quarterLine||0) - (a.quarterLine||0)); }
+  renderWatchlistCards();
+}
+
+function filterWatchlist(f) {
+  wlFilter = f;
+  const pills = document.querySelectorAll('#view-watchlist .filter-bar .pill');
+  pills.forEach((p,i) => { if(i>=3) p.classList.toggle('active', p.textContent==={all:'全部','半導體':'半導體','金融':'金融','電子':'電子','其他':'其他'}[f]); });
+  renderWatchlistCards();
+}
+
+let wlHistoryData = {};
+
+function showWlChart(idx) {
+  const d = wlData[idx];
+  if (!d) return;
+  const shortData = d.sparkline ? d.sparkline.split('|').map(Number).filter(n=>n>0) : [];
+  const histData = wlHistoryData[d.ticker] || shortData;
+  const fullData = histData.length > shortData.length ? histData : shortData;
+  if (fullData.length < 2) return;
+  chartRange = 22;
+  wlChartIdx = idx;
+  wlChartOverlays = [idx];
+  
+  document.getElementById('chart-title').textContent = d.ticker + ' ' + d.name + ' — 走勢圖';
+  const high = Math.max(...fullData), low = Math.min(...fullData), latest = fullData[fullData.length-1];
+  document.getElementById('chart-info').innerHTML = '<span>最高 <b style="color:var(--red)">$'+high.toFixed(2)+'</b></span><span>最低 <b style="color:var(--green)">$'+low.toFixed(2)+'</b></span><span>最新 <b>$'+latest.toFixed(2)+'</b></span>';
+  
+  const len = fullData.length;
+  const dis5 = len < 5 ? ' style="opacity:0.4;pointer-events:none"' : '';
+  const dis22 = len < 22 ? ' style="opacity:0.4;pointer-events:none"' : '';
+  const dis60 = len < 40 ? ' style="opacity:0.4;pointer-events:none"' : '';
+  document.getElementById('chart-actions').innerHTML =
+    '<span style="font-size:0.8rem;color:var(--muted)">區間：</span>' +
+    '<button class="pill"'+dis5+' onclick="setWlChartRange(5)">週線</button>' +
+    '<button class="pill active"'+dis22+' onclick="setWlChartRange(22)">月線</button>' +
+    '<button class="pill"'+dis60+' onclick="setWlChartRange(60)">季線</button>';
+  
+  // Comparison buttons (bottom)
+  const actionsHtml = wlData.map((e, i) => {
+    if (i === idx) return '';
+    return '<button onclick="toggleWlOverlay('+i+')" id="wl-overlay-btn-'+i+'">'+e.ticker+'</button>';
+  }).join('');
+  document.getElementById('chart-actions-bottom').innerHTML = '<span style="font-size:0.8rem;color:var(--muted)">疊加比較：</span>' + actionsHtml;
+  
+  renderWlMainChart();
+  document.getElementById('chart-modal').classList.add('show');
+}
+
+let wlChartIdx = 0;
+let wlChartOverlays = [];
+function toggleWlOverlay(idx) {
+  const i = wlChartOverlays.indexOf(idx);
+  if (i >= 0) wlChartOverlays.splice(i, 1);
+  else wlChartOverlays.push(idx);
+  const btn = document.getElementById('wl-overlay-btn-'+idx);
+  if (btn) btn.classList.toggle('active');
+  renderWlMainChart();
+}
+
+function setWlChartRange(n) {
+  chartRange = n;
+  document.querySelectorAll('#chart-actions .pill').forEach(p => p.classList.remove('active'));
+  document.querySelectorAll('#chart-actions .pill').forEach(p => { if((n===5&&p.textContent==='週線')||(n===22&&p.textContent==='月線')||(n===60&&p.textContent==='季線')) p.classList.add('active'); });
+  renderWlMainChart();
+}
+
+function renderWlMainChart() {
+  if (mainChart) mainChart.destroy();
+  const colors = ["#58a6ff","#ff6b6b","#3fb950","#ffd93d","#a371f7","#ff8b94","#00c9a7","#f0883e","#6366f1","#ec4899"];
+  const multi = wlChartOverlays.length > 1;
+  const datasets = wlChartOverlays.map((oi, ci) => {
+    const d = wlData[oi];
+    const shortData = d.sparkline ? d.sparkline.split('|').map(Number).filter(n=>n>0) : [];
+    const histData = wlHistoryData[d.ticker] || shortData;
+    const fullData = (histData.length > shortData.length ? histData : shortData).slice(-chartRange);
+    const base = fullData[0] || 1;
+    const normalized = fullData.map(v => ((v - base) / base * 100));
+    return { label: d.ticker, data: multi ? normalized : fullData, borderColor: colors[ci % colors.length], backgroundColor: colors[ci % colors.length]+'20', borderWidth: 2, pointRadius: 0, pointHoverRadius: 4, fill: !multi, tension: 0.3 };
+  });
+  mainChart = new Chart(document.getElementById('chart-main'), {
+    type:'line', data:{labels:datasets[0].data.map((_,i)=>'D'+(i+1)), datasets},
+    options:{responsive:true, maintainAspectRatio:false, animation:false, interaction:{mode:'index',intersect:false}, plugins:{legend:{display:false}, tooltip:{enabled:true, callbacks:{label:ctx=>ctx.dataset.label+': '+(multi?parseFloat(ctx.parsed.y).toFixed(2)+'%':'$'+parseFloat(ctx.parsed.y).toFixed(2))}}}, scales:{x:{display:true,grid:{color:'#30363d'},ticks:{color:'#8b949e',font:{size:13}}}, y:{display:true,grid:{color:'#30363d'},ticks:{color:'#8b949e',font:{size:13},callback:v=>multi?v.toFixed(1)+'%':'$'+v}}}}
+  });
+}
+
+function addStock() {
+  const ticker = prompt('請輸入股票代號（如 2330）：\n注意：帶字母的代號（如 00981A）需要在 Sheet 中手動確認格式為純文字');
+  if (!ticker || !ticker.trim()) return;
+  const t = ticker.trim().toUpperCase();
+  fetch(GAS_URL, { method:'POST', mode:'no-cors', headers:{'Content-Type':'text/plain'}, body:JSON.stringify({action:'add', ticker:t}) });
+  wlData.push({ticker:t, name:'載入中...', price:0, change:0, changePct:0, pe:'', sector:'', divYield:'', quarterLine:null, sparkline:'', divRecent:''});
+  wlOriginalData = [...wlData];
+  renderWatchlistCards();
+  showToast('✅ 已新增 '+t+'，資料稍後更新', 'var(--green)');
+}
+
+function addETF() {
+  const ticker = prompt('請輸入代號（ETF 如 00878，個股如 2330）：');
+  if (!ticker || !ticker.trim()) return;
+  const t = ticker.trim().toUpperCase();
+  const isETF = /^0/.test(t) || t.length >= 5;
+  const action = isETF ? 'addETF' : 'add';
+  fetch(GAS_URL, { method:'POST', mode:'no-cors', headers:{'Content-Type':'text/plain'}, body:JSON.stringify({action, ticker:t}) });
+  ETF_DATA.push({ticker:t, name:'載入中...', type:'', isETF, sparkline:[], historySparkline:[], price:0, change:0, changePercent:0, returns:{m1:0,m3:0,m6:0,y1:0}, dividend:{annual:0,yield:0,frequency:'',recent:[{date:'--',amount:0}]}, sectors:{}, fundSize:0, holders:0, nav:0, premium:0, quarterLine:null, topHoldings:[], sector:'', pe:'', divYield:''});
+  originalOrder = [...ETF_DATA];
+  renderCards(); renderSectorCharts(); renderSparklines();
+  showToast('✅ 已新增 '+t+'，資料抓取中...', 'var(--green)');
+  setTimeout(() => loadAllData().then(()=>{renderCards();renderSectorCharts();renderSparklines();}), 12000);
+}
+
+function toggleCollapse(el, ticker) {
+  el.classList.toggle('collapsed');
+  const isCollapsed = el.classList.contains('collapsed');
+  if (isCollapsed) { if (!collapsedTickers.includes(ticker)) collapsedTickers.push(ticker); }
+  else { const idx = collapsedTickers.indexOf(ticker); if (idx>=0) collapsedTickers.splice(idx,1); }
+  fetch(GAS_URL, { method:'POST', mode:'no-cors', headers:{'Content-Type':'text/plain'}, body:JSON.stringify({action: isCollapsed?'collapse':'expand', ticker}) });
+}
+
+function togglePin(ticker, tab) {
+  const arr = tab === 'etf' ? pinnedETFs : pinnedWL;
+  const idx = arr.indexOf(ticker);
+  const action = idx >= 0 ? 'unpin' : 'pin';
+  if (idx >= 0) arr.splice(idx, 1); else arr.push(ticker);
+  fetch(GAS_URL, { method:'POST', mode:'no-cors', headers:{'Content-Type':'text/plain'}, body:JSON.stringify({action, ticker, tab}) });
+  if (tab === 'etf') { renderCards(); renderSectorCharts(); renderSparklines(); }
+  else { renderWatchlistCards(); }
+}
+
+let pendingDeleteETF = null;
+function confirmDeleteETF(ticker, name) {
+  pendingDeleteETF = ticker;
+  document.getElementById('confirm-overlay').style.display = 'flex';
+  document.getElementById('confirm-msg').textContent = `確定要移除 ETF ${ticker} ${name}？`;
+  document.querySelector('.btn-yes').onclick = doDeleteETF;
+}
+function doDeleteETF() {
+  if (!pendingDeleteETF) return;
+  fetch(GAS_URL, { method:'POST', mode:'no-cors', headers:{'Content-Type':'text/plain'}, body:JSON.stringify({action:'removeETF', ticker:pendingDeleteETF}) });
+  ETF_DATA = ETF_DATA.filter(e => e.ticker !== pendingDeleteETF);
+  originalOrder = originalOrder.filter(e => e.ticker !== pendingDeleteETF);
+  pendingDeleteETF = null;
+  document.getElementById('confirm-overlay').style.display = 'none';
+  renderCards(); renderSectorCharts(); renderSparklines();
+}
+
+let pendingDelete = null;
+function confirmDelete(ticker, name) {
+  pendingDelete = ticker;
+  document.getElementById('confirm-overlay').style.display = 'flex';
+  document.getElementById('confirm-msg').textContent = `確定要移除 ${ticker} ${name}？`;
+  document.querySelector('.btn-yes').onclick = doDelete;
+}
+function doDelete() {
+  if (!pendingDelete) return;
+  fetch(GAS_URL, {
+    method: 'POST', mode: 'no-cors',
+    headers: {'Content-Type':'text/plain'},
+    body: JSON.stringify({action:'remove', ticker: pendingDelete})
+  });
+  wlData = wlData.filter(d => d.ticker !== pendingDelete);
+  wlOriginalData = wlOriginalData.filter(d => d.ticker !== pendingDelete);
+  pendingDelete = null;
+  document.getElementById('confirm-overlay').style.display = 'none';
+  renderWatchlistCards();
+}
+function cancelDelete() {
+  pendingDelete = null;
+  document.getElementById('confirm-overlay').style.display = 'none';
+}
+
+// === Live Price Fetch (from Google Sheet, updated every 5 min by Apps Script) ===
+const TICKERS_LIVE = ["0050","0056","00878","00919","00929","00940","006208","00713","00900","00939"];
+const PRICE_SHEET_ID = "1GT8LkzWJPo9psHwRIJwjfV2HEoYf7x8eIkI22BhuqIs";
+
+async function fetchLivePrices() {
+  try {
+    // Read latest prices from Sheet1 (updated by GAS trigger or external script)
+    const res = await fetch(`https://docs.google.com/spreadsheets/d/${WL_SHEET_ID}/gviz/tq?tqx=out:csv&sheet=Sheet1&t=${Date.now()}`);
+    if (!res.ok) throw new Error('Sheet fetch failed');
+    const csv = await res.text();
+    const rows = csv.trim().split('\n').slice(1);
+    let updated = 0;
+    rows.forEach(row => {
+      const cols = row.match(/"([^"]*)"/g)?.map(s => s.replace(/"/g,'')) || [];
+      const ticker = cols[0];
+      const price = parseFloat(cols[1]);
+      const change = parseFloat(cols[2]);
+      const changePct = parseFloat(cols[3]);
+      const updateTime = cols[4] || '';
+      if (!ticker || !price) return;
+      const etf = ETF_DATA.find(e => e.ticker === ticker || ticker.endsWith(e.ticker) || e.ticker.endsWith(ticker));
+      if (etf) { etf.price = price; etf.change = change; etf.changePercent = changePct; updated++; }
+    });
+    if (updated > 0) {
+      renderCards(); renderSectorCharts(); renderSparklines();
+      const statusEl = document.getElementById("live-status");
+      const time = rows[0]?.match(/"([^"]*)"/g)?.[4]?.replace(/"/g,'') || '';
+      if (statusEl) statusEl.textContent = `✅ 報價更新（${updated}檔）${time}`;
+    }
+  } catch(e) {
+    const statusEl = document.getElementById("live-status");
+    if (statusEl) statusEl.textContent = "⚠️ 報價載入失敗";
+  }
+}
+// Auto refresh every 5min during market hours (Mon-Fri 9:00-13:30)
+function shouldFetch() {
+  const now = new Date();
+  const h = now.getHours(), m = now.getMinutes(), day = now.getDay();
+  return day >= 1 && day <= 5 && ((h === 9) || (h >= 10 && h <= 12) || (h === 13 && m <= 30));
+}
+
+async function fetchHoldingsAndDividends() {}
+
+// Auto-refresh during market hours
+fetchLivePrices();
+setInterval(() => { if(shouldFetch()) fetchLivePrices(); }, 300000);
+</script>
+<div class="cal-modal" id="cal-modal" onclick="if(event.target===this)closeDivCalendar()">
+  <div class="cal-box">
+    <button class="cal-close" onclick="closeDivCalendar()">&times;</button>
+    <h3>📅 配息日曆 — 近 12 個月配息分布</h3>
+    <div id="cal-content"></div>
+  </div>
+</div>
+<div class="chart-modal" id="chart-modal" onclick="if(event.target===this)closeChart()">
+  <div class="chart-box" style="position:relative">
+    <button class="chart-close" onclick="closeChart()">&times;</button>
+    <h3 id="chart-title"></h3>
+    <div class="chart-info" id="chart-info"></div>
+    <div class="chart-actions" id="chart-actions"></div>
+    <canvas id="chart-main"></canvas>
+    <div class="chart-actions" id="chart-actions-bottom"></div>
+  </div>
+</div>
+<div class="compare-panel" id="compare-panel">
+  <div class="compare-header">
+    <h3>🔍 ETF 比較</h3>
+    <button class="compare-close" onclick="closeCompare()">&times;</button>
+  </div>
+  <div id="compare-content"></div>
+</div>
+<p style="text-align:center;font-size:0.9rem;color:var(--muted);padding:20px 16px 0">本頁資訊僅供參考，不構成投資建議</p>
+<div class="confirm-overlay" id="confirm-overlay">
+  <div class="confirm-box">
+    <p id="confirm-msg"></p>
+    <div class="btns">
+      <button class="btn-yes" onclick="doDelete()">確定移除</button>
+      <button class="btn-no" onclick="cancelDelete()">取消</button>
+    </div>
+  </div>
+</div>
+<script src="nav.js"></script>
+</body>
+</html>

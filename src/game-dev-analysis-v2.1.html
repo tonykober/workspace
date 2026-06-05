@@ -1,0 +1,66 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>🎨 街機遊戲 — 美術開發製程分析（v2.1）</title>
+<style>
+:root{--bg:#0d1117;--surface:#161b22;--border:#30363d;--text:#e6edf3;--muted:#8b949e;--accent:#58a6ff;--green:#3fb950;--yellow:#d29922;--purple:#a371f7;--orange:#f0883e;--red:#f85149}
+*{margin:0;padding:0;box-sizing:border-box}
+html,body{overflow-x:hidden}*{word-wrap:break-word}body{background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;line-height:1.6;padding:2rem}
+.container{max-width:900px;margin:0 auto}
+h1{font-size:2rem;margin-bottom:.5rem}
+.subtitle{color:var(--muted);font-size:1.1rem;margin-bottom:2.5rem}
+.cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:1.5rem;margin-bottom:3rem}
+.card{background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:1.5rem;text-decoration:none;color:var(--text);transition:transform .2s,border-color .2s}
+.card:hover{transform:translateY(-3px)}
+.card h2{font-size:1.3rem;margin-bottom:.5rem}
+.card p{color:var(--muted);font-size:.9rem}
+.card-a{border-left:4px solid #58a6ff}
+.card-a:hover{border-color:#58a6ff}
+.card-b{border-left:4px solid #f0883e}
+.card-b:hover{border-color:#f0883e}
+.card-c{border-left:4px solid #3fb950}
+.card-c:hover{border-color:#3fb950}
+.card-a h2{color:#58a6ff}
+.card-b h2{color:#f0883e}
+.card-c h2{color:#3fb950}
+.guide{background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:1.5rem;margin-bottom:2rem}
+.guide h3{margin-bottom:.8rem;font-size:1.1rem}
+.guide table{display:block;overflow-x:auto;-webkit-overflow-scrolling:touch;width:100%;border-collapse:collapse}
+.guide th{text-align:left;padding:.5rem;color:var(--accent);border-bottom:1px solid var(--border)}
+.guide td{padding:.5rem;border-bottom:1px solid var(--border)}
+</style>
+</head>
+<body>
+<div class="container">
+<h1>🎨 街機遊戲 — 美術開發製程分析（v2.1）</h1>
+<p class="subtitle">獨立三區塊：現況盤點 · 製作規劃 · 執行規範</p>
+
+<div class="cards">
+<a href="game-dev-analysis-v2.1-a.html" class="card card-a">
+<h2>A 區：現況盤點</h2>
+<p>現有美術資源的狀態、能力與限制盤點，不涉及新專案規劃。</p>
+</a>
+<a href="game-dev-analysis-v2.1-b.html" class="card card-b">
+<h2>B 區：製作規劃</h2>
+<p>新遊戲視覺目標、風格轉換分析、人力配置與工時排程。</p>
+</a>
+<a href="game-dev-analysis-v2.1-c.html" class="card card-c">
+<h2>C 區：執行規範</h2>
+<p>美術風格指南、資產規格表、交付流程與驗收標準。</p>
+</a>
+</div>
+
+<div class="guide">
+<h3>📌 你是誰？</h3>
+<table>
+<tr><th>角色</th><th>建議閱讀</th></tr>
+<tr><td>決策者（主管/PM）</td><td>看 <a href="game-dev-analysis-v2.1-a.html" style="color:#58a6ff">A 區</a> + <a href="game-dev-analysis-v2.1-b.html" style="color:#f0883e">B 區</a></td></tr>
+<tr><td>美術執行（美術/外包）</td><td>看 <a href="game-dev-analysis-v2.1-c.html" style="color:#3fb950">C 區</a></td></tr>
+</table>
+</div>
+</div>
+<script src="nav.js"></script>
+</body>
+</html>

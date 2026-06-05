@@ -1,68 +1,8 @@
 <!DOCTYPE html>
-<html lang="zh-TW">
-<head>
-<meta charset="UTF-8">
-<meta name="viewport" content="width=device-width,initial-scale=1">
-<title>🎨 街機遊戲 — 美術開發製程分析（v2.1）</title>
-<style>
-:root{--bg:#0d1117;--surface:#161b22;--border:#30363d;--text:#e6edf3;--muted:#8b949e;--accent:#58a6ff;--green:#3fb950;--yellow:#d29922;--purple:#a371f7;--orange:#f0883e;--red:#f85149}
-*{margin:0;padding:0;box-sizing:border-box}
-html,body{overflow-x:hidden}*{word-wrap:break-word}body{background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;line-height:1.6;padding:2rem}
-.container{max-width:900px;margin:0 auto}
-h1{font-size:2rem;margin-bottom:.5rem}
-.subtitle{color:var(--muted);font-size:1.1rem;margin-bottom:2.5rem}
-.cards{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:1.5rem;margin-bottom:3rem}
-.card{background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:1.5rem;text-decoration:none;color:var(--text);transition:transform .2s,border-color .2s}
-.card:hover{transform:translateY(-3px)}
-.card h2{font-size:1.3rem;margin-bottom:.5rem}
-.card p{color:var(--muted);font-size:.9rem}
-.card-a{border-left:4px solid #58a6ff}
-.card-a:hover{border-color:#58a6ff}
-.card-b{border-left:4px solid #f0883e}
-.card-b:hover{border-color:#f0883e}
-.card-c{border-left:4px solid #3fb950}
-.card-c:hover{border-color:#3fb950}
-.card-a h2{color:#58a6ff}
-.card-b h2{color:#f0883e}
-.card-c h2{color:#3fb950}
-.guide{background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:1.5rem;margin-bottom:2rem}
-.guide h3{margin-bottom:.8rem;font-size:1.1rem}
-.guide table{display:block;overflow-x:auto;-webkit-overflow-scrolling:touch;width:100%;border-collapse:collapse}
-.guide th{text-align:left;padding:.5rem;color:var(--accent);border-bottom:1px solid var(--border)}
-.guide td{padding:.5rem;border-bottom:1px solid var(--border)}
-</style>
-</head>
-<body>
-<div id="auth-gate" style="position:fixed;top:0;left:0;right:0;bottom:0;background:#0a0e1a;z-index:9999;display:flex;align-items:center;justify-content:center"><div style="text-align:center"><h2 style="color:#fff;margin-bottom:16px">🔒 請輸入密碼</h2><input type="password" id="pw-input" style="padding:8px 16px;font-size:16px;border-radius:6px;border:none" onkeydown="if(event.key==='Enter')checkPw()"><button onclick="checkPw()" style="margin-left:8px;padding:8px 16px;border-radius:6px;border:none;background:#00d4ff;font-weight:bold;cursor:pointer">進入</button><p id="pw-err" style="color:red;margin-top:8px;display:none">密碼錯誤</p></div></div>
-<script>function checkPw(){crypto.subtle.digest("SHA-256",new TextEncoder().encode(document.getElementById("pw-input").value)).then(function(b){var h=Array.from(new Uint8Array(b)).map(function(x){return x.toString(16).padStart(2,"0")}).join("");if(h==="6f81cd8fb76f16c04e033d33b3a68095ef5a93a1e135198b3ab2526cd53bc780"){document.getElementById("auth-gate").remove();sessionStorage.setItem("ws-auth","1")}else{document.getElementById("pw-err").style.display="block"}})}if(sessionStorage.getItem("ws-auth")==="1"&&document.getElementById("auth-gate"))document.getElementById("auth-gate").remove();</script>
-<div class="container">
-<h1>🎨 街機遊戲 — 美術開發製程分析（v2.1）</h1>
-<p class="subtitle">獨立三區塊：現況盤點 · 製作規劃 · 執行規範</p>
-
-<div class="cards">
-<a href="game-dev-analysis-v2.1-a.html" class="card card-a">
-<h2>A 區：現況盤點</h2>
-<p>現有美術資源的狀態、能力與限制盤點，不涉及新專案規劃。</p>
-</a>
-<a href="game-dev-analysis-v2.1-b.html" class="card card-b">
-<h2>B 區：製作規劃</h2>
-<p>新遊戲視覺目標、風格轉換分析、人力配置與工時排程。</p>
-</a>
-<a href="game-dev-analysis-v2.1-c.html" class="card card-c">
-<h2>C 區：執行規範</h2>
-<p>美術風格指南、資產規格表、交付流程與驗收標準。</p>
-</a>
-</div>
-
-<div class="guide">
-<h3>📌 你是誰？</h3>
-<table>
-<tr><th>角色</th><th>建議閱讀</th></tr>
-<tr><td>決策者（主管/PM）</td><td>看 <a href="game-dev-analysis-v2.1-a.html" style="color:#58a6ff">A 區</a> + <a href="game-dev-analysis-v2.1-b.html" style="color:#f0883e">B 區</a></td></tr>
-<tr><td>美術執行（美術/外包）</td><td>看 <a href="game-dev-analysis-v2.1-c.html" style="color:#3fb950">C 區</a></td></tr>
-</table>
-</div>
-</div>
-<script src="nav.js"></script>
-</body>
-</html>
+<html><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>🔒</title><style>*{margin:0;padding:0;box-sizing:border-box}body{background:#0a0e1a;color:#e8ecf4;font-family:-apple-system,sans-serif;min-height:100vh;display:flex;align-items:center;justify-content:center}.lock{text-align:center}.lock h2{margin-bottom:16px;color:#00d4ff}.lock input{padding:10px 16px;font-size:16px;border-radius:6px;border:1px solid #2a3050;background:#131829;color:#fff;width:200px;text-align:center}.lock button{margin-left:8px;padding:10px 20px;border-radius:6px;border:none;background:#00d4ff;color:#000;font-weight:bold;cursor:pointer}.lock .err{color:#ef4444;margin-top:8px;display:none;font-size:13px}</style></head>
+<body><div class="lock" id="lock"><h2>🔒 請輸入密碼</h2><input type="password" id="pw" onkeydown="if(event.key==='Enter')go()"><button onclick="go()">進入</button><p class="err" id="err">密碼錯誤</p></div>
+<script>
+var E={"s":"fBh4GxzOiHKOAz1t9y6V+g==","iv":"j95oLOkz3oXXqnl4","t":"ku5PGUQ1LIwZZ3pdDQe1Ew==","d":"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"};
+async function go(){var p=document.getElementById('pw').value;try{var s=Uint8Array.from(atob(E.s),c=>c.charCodeAt(0));var iv=Uint8Array.from(atob(E.iv),c=>c.charCodeAt(0));var t=Uint8Array.from(atob(E.t),c=>c.charCodeAt(0));var d=Uint8Array.from(atob(E.d),c=>c.charCodeAt(0));var key=await crypto.subtle.importKey('raw',await crypto.subtle.deriveBits({name:'PBKDF2',salt:s,iterations:100000,hash:'SHA-256'},await crypto.subtle.importKey('raw',new TextEncoder().encode(p),'PBKDF2',false,['deriveBits']),256),'AES-GCM',false,['decrypt']);var ct=new Uint8Array(d.length+t.length);ct.set(d);ct.set(t,d.length);var dec=await crypto.subtle.decrypt({name:'AES-GCM',iv:iv},key,ct);document.open();document.write(new TextDecoder().decode(dec));document.close();}catch(e){document.getElementById('err').style.display='block';}}
+</script></body></html>

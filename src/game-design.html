@@ -1,0 +1,756 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>🎮 大型街機遊戲 — 設計發想文件</title>
+<style>
+:root{--bg:#0d1117;--surface:#161b22;--border:#30363d;--text:#e6edf3;--muted:#8b949e;--accent:#58a6ff;--green:#3fb950;--yellow:#d29922;--purple:#a371f7;--orange:#f0883e;--red:#f85149}
+*{margin:0;padding:0;box-sizing:border-box}
+html,body{overflow-x:hidden}body{background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;padding:30px 20px;line-height:1.7}
+h1{text-align:center;font-size:22px;color:var(--accent);margin-bottom:8px}
+.subtitle{text-align:center;color:var(--muted);font-size:14px;margin-bottom:20px}
+.tabs{display:flex;justify-content:center;gap:4px;margin-bottom:30px;border-bottom:1px solid var(--border);flex-wrap:wrap}
+.tab{padding:8px 14px;cursor:pointer;color:var(--muted);font-size:13px;border-bottom:2px solid transparent;transition:all .2s;white-space:nowrap}
+.tab:hover{color:var(--text)}
+.tab.active{color:var(--accent);border-bottom-color:var(--accent)}
+.page{display:none;max-width:1000px;margin:0 auto}
+.page.active{display:block}
+h2{font-size:1.2rem;color:var(--purple);margin:2rem 0 1rem;border-left:4px solid var(--purple);padding-left:12px}
+h3{font-size:1rem;margin:1.2rem 0 0.6rem}
+p{color:var(--muted);margin-bottom:0.8rem}
+.card{background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:1.2rem;margin:1rem 0}
+.card.highlight{border-left:4px solid var(--accent)}
+.card.warning{border-left:4px solid var(--yellow)}
+.card.green{border-left:4px solid var(--green)}
+.card.orange{border-left:4px solid var(--orange)}
+.card.red{border-left:4px solid var(--red)}
+table{width:100%;border-collapse:collapse;font-size:0.85rem;margin:0.8rem 0}
+th,td{padding:8px 10px;text-align:left;border-bottom:1px solid var(--border)}
+th{background:var(--surface);color:var(--accent);font-weight:600}
+ul,ol{margin:0.5rem 0 1rem 1.5rem;color:var(--muted)}
+li{margin-bottom:0.4rem}
+code{background:var(--surface);padding:2px 6px;border-radius:4px;font-size:0.85rem;color:var(--green)}
+.table-wrap{overflow-x:auto;-webkit-overflow-scrolling:touch}
+.badge{display:inline-block;padding:2px 8px;border-radius:12px;font-size:11px;font-weight:600}
+.badge.done{background:#1a3a2a;color:var(--green)}
+.badge.pending{background:#2a2000;color:var(--yellow)}
+.stars{color:var(--yellow)}
+</style>
+</head>
+<body>
+<h1>🎮 大型街機遊戲 — 設計發想文件</h1>
+<p class="subtitle">市場研究 · 玩法提案 · 設計方向</p>
+<div class="tabs">
+<div class="tab active" onclick="sw('overview')">📋 概述</div>
+<div class="tab" onclick="sw('research')">📊 市場研究</div>
+<div class="tab" onclick="sw('design')">🎯 玩法方向</div>
+<div class="tab" onclick="sw('art')">🎨 美術風格</div>
+<div class="tab" onclick="sw('gdd')">📖 GDD</div>
+<div class="tab" onclick="sw('controls')">🕹️ 操作配置</div>
+<div class="tab" onclick="sw('coin')">🎰 投幣與營收</div>
+</div>
+
+
+<!-- 概述 -->
+<div class="page active" id="p-overview">
+<h2>專案目標</h2>
+<div class="card highlight">
+<p>設計一款<strong style="color:var(--text)">大型街機台遊戲作品</strong>，在已飽和的市場中找到差異化定位。</p>
+</div>
+
+<h2>核心訴求</h2>
+<div class="card">
+<ul>
+<li>🎯 目標年齡層：6～12 歲兒童 + 陪同家長（25~45 歲）</li>
+<li>❌ 避開已飽和玩法（尤其 FPS）</li>
+<li>🎮 操作不複雜（搖桿 + 2~3 按鈕）</li>
+<li>👤 可以單人遊玩</li>
+<li>👥 多人玩更好玩（最多 4 人）</li>
+<li>😎 有趣味，風格要「酷」不要幼稚</li>
+<li>⏱️ 每局體驗時間不長（2~5 分鐘）</li>
+<li>👨‍👧 親子共玩：家長願意一起玩，不只是在旁邊等</li>
+</ul>
+</div>
+
+<h2>設計原則</h2>
+<div class="card green">
+<ol>
+<li><strong style="color:var(--text)">Easy to learn, hard to master</strong> — 30 秒內理解規則</li>
+<li><strong style="color:var(--text)">單局短</strong> — 2~5 分鐘，重複遊玩慾望強</li>
+<li><strong style="color:var(--text)">多人化學反應</strong> — 多人加入時產生新互動，而非單純加人</li>
+<li><strong style="color:var(--text)">視覺爆炸感</strong> — 得分、連擊、特效回饋強烈</li>
+<li><strong style="color:var(--text)">圍觀吸引力</strong> — 路人看了想投幣</li>
+<li><strong style="color:var(--text)">親子友善</strong> — 大人小孩都能享受，隱性平衡不讓任一方挫敗</li>
+</ol>
+</div>
+
+<h2>文件進度</h2>
+<div class="table-wrap"><table>
+<tr><th>分頁</th><th>狀態</th><th>說明</th></tr>
+<tr><td>市場研究</td><td><span class="badge done">✅ 完成</span></td><td>多人遊戲品類分析、趨勢整理</td></tr>
+<tr><td>玩法方向</td><td><span class="badge done">✅ 完成</span></td><td>5 個玩法方向提案與分析</td></tr>
+<tr><td>美術風格設計</td><td><span class="badge done">✅ 完成</span></td><td>風格方向、設計要點、玩法搭配</td></tr>
+<tr><td>GDD 框架</td><td><span class="badge done">✅ 完成</span></td><td>物理亂鬥 + 3D 風格化完整規格</td></tr>
+<tr><td>操作配置</td><td><span class="badge done">✅ 完成</span></td><td>硬體規格、操作表、框體設計</td></tr>
+<tr><td>投幣機制與營收模型</td><td><span class="badge done">✅ 完成</span></td><td>投幣設定、營收預估、回本分析</td></tr>
+</table></div>
+</div>
+
+
+<!-- 市場研究 -->
+<div class="page" id="p-research">
+<h2>主流多人遊戲品類</h2>
+
+<h3>1. Battle Royale（大逃殺）</h3>
+<div class="card">
+<p>60-150 人空降，拾取裝備，縮圈淘汰，最後存活者獲勝。</p>
+<ul>
+<li><strong style="color:var(--text)">Fortnite</strong> — 跨平台霸主，月活數千萬</li>
+<li><strong style="color:var(--text)">Apex Legends</strong> — 月活 2000-2200 萬，累計營收 34 億美元</li>
+<li><strong style="color:var(--text)">Warzone</strong> — 日活 100-300 萬，月活 3000-5000 萬</li>
+</ul>
+<p>趨勢：品類成熟，頭部壟斷，新進者難突圍。</p>
+</div>
+
+<h3>2. MOBA</h3>
+<div class="card">
+<p>5v5 選英雄，三線推塔團戰，摧毀對方基地。</p>
+<ul>
+<li><strong style="color:var(--text)">League of Legends</strong> — 全球電競龍頭</li>
+<li><strong style="color:var(--text)">Honor of Kings</strong> — 中國月活破億</li>
+</ul>
+<p>趨勢：穩定但新品難入，PC 端雙雄壟斷。</p>
+</div>
+
+<h3>3. Hero / Team Shooter</h3>
+<div class="card">
+<p>團隊制英雄技能射擊，強調角色搭配與協作。</p>
+<ul>
+<li><strong style="color:var(--text)">Valorant</strong> — 月活 1830 萬</li>
+<li><strong style="color:var(--text)">Overwatch 2</strong> — 月活 1640 萬</li>
+<li><strong style="color:var(--text)">Counter-Strike 2</strong> — Steam 同時在線常居第一</li>
+</ul>
+</div>
+
+<h3>4. Extraction Shooter（撤離射擊）🔥</h3>
+<div class="card warning">
+<p>帶裝備進入地圖，搜刮後安全撤離，死亡永久失去裝備。</p>
+<ul>
+<li><strong style="color:var(--text)">Escape from Tarkov</strong> — 品類開創者</li>
+<li><strong style="color:var(--text)">ARC Raiders</strong> — 2025 年度最佳</li>
+<li><strong style="color:var(--text)">Delta Force: Hawk Ops</strong></li>
+</ul>
+<p>趨勢：<strong style="color:var(--yellow)">2025-2026 最火爆新興品類</strong>，從硬核走向大眾化。</p>
+</div>
+
+<h3>5. Co-op PvE（合作闖關）</h3>
+<div class="card green">
+<p>2-4 人組隊對抗 AI，強調團隊配合。</p>
+<ul>
+<li><strong style="color:var(--text)">Helldivers 2</strong> — 現象級爆款</li>
+<li><strong style="color:var(--text)">Monster Hunter Wilds</strong> — 2025 年 4 人合作狩獵</li>
+<li><strong style="color:var(--text)">Warframe</strong> — 日活數百萬</li>
+</ul>
+<p>趨勢：<strong style="color:var(--green)">PvE 合作需求持續增長</strong>，不需 PvP 壓力也能爆紅。</p>
+</div>
+
+<h3>6. Survival / Crafting</h3>
+<div class="card">
+<p>開放世界採集建造，對抗環境或玩家。</p>
+<ul>
+<li><strong style="color:var(--text)">Rust</strong> / <strong style="color:var(--text)">Valheim</strong> / <strong style="color:var(--text)">Palworld</strong></li>
+</ul>
+</div>
+
+<h3>7. Party / Social Deduction</h3>
+<div class="card">
+<p>低門檻社交推理，直播友善。</p>
+<ul>
+<li><strong style="color:var(--text)">Among Us</strong> / <strong style="color:var(--text)">Lethal Company</strong> / <strong style="color:var(--text)">R.E.P.O.</strong></li>
+</ul>
+</div>
+
+<h2>符合「短局、互助、亂鬥、4人」的遊戲</h2>
+<div class="table-wrap"><table>
+<tr><th>遊戲</th><th>每局</th><th>類型</th><th>混亂度</th></tr>
+<tr><td>Overcooked 2</td><td>3-5分</td><td>合作</td><td class="stars">★★★★★</td></tr>
+<tr><td>Gang Beasts</td><td>1-3分</td><td>對抗</td><td class="stars">★★★★★</td></tr>
+<tr><td>Party Animals</td><td>5-10分</td><td>混合</td><td class="stars">★★★★★</td></tr>
+<tr><td>Bopl Battle</td><td>1-2分</td><td>對抗</td><td class="stars">★★★★★</td></tr>
+<tr><td>Stick Fight</td><td>30秒-2分</td><td>對抗</td><td class="stars">★★★★★</td></tr>
+<tr><td>R.E.P.O.</td><td>10-15分</td><td>合作</td><td class="stars">★★★★</td></tr>
+<tr><td>Lethal Company</td><td>10-15分</td><td>合作</td><td class="stars">★★★★</td></tr>
+<tr><td>Lovers in a Dangerous Spacetime</td><td>10-15分</td><td>合作</td><td class="stars">★★★★</td></tr>
+<tr><td>Nightreign</td><td>20-30分</td><td>合作</td><td class="stars">★★★</td></tr>
+</table></div>
+
+<h2>2025-2026 總趨勢</h2>
+<div class="card highlight">
+<ul>
+<li>🔥 撤離射擊崛起 — 最大新興品類</li>
+<li>🤝 PvE 合作需求增長 — 不需 PvP 也能爆紅</li>
+<li>🎮 跨平台成標配</li>
+<li>🔄 混合玩法創新 — 品類融合為突破口</li>
+<li>💰 F2P + Battle Pass 為主流商業模式</li>
+</ul>
+</div>
+</div>
+
+
+<!-- 玩法方向 -->
+<div class="page" id="p-design">
+<h2>推薦排序</h2>
+<div class="table-wrap"><table>
+<tr><th>排名</th><th>方向</th><th>理由</th></tr>
+<tr><td>1️⃣</td><td>B 物理亂鬥</td><td>開發可控、圍觀效果最強、街機最適配</td></tr>
+<tr><td>2️⃣</td><td>A 合作載具</td><td>差異化最大、多人體驗獨特</td></tr>
+<tr><td>3️⃣</td><td>E 追逐破壞</td><td>直覺好懂、節奏快、投幣率高</td></tr>
+<tr><td>4️⃣</td><td>C Roguelike</td><td>深度好但需控制時間</td></tr>
+<tr><td>5️⃣</td><td>D 節奏動作</td><td>吸引力強但開發成本高</td></tr>
+</table></div>
+
+<h2>方向 A：合作操控載具 — 分工混亂型</h2>
+<div class="card highlight">
+<h3>概念</h3>
+<p>2-4 人共同操控一台載具（太空船/潛水艇/飛行器），每人負責不同部位（武器、引擎、護盾、方向），需要溝通與跑位。</p>
+<h3>參考</h3>
+<ul>
+<li><strong style="color:var(--text)">Lovers in a Dangerous Spacetime</strong> — 1-4 人操控太空船各站位</li>
+<li><strong style="color:var(--text)">Overcooked 系列</strong> — 分工合作的混亂感</li>
+</ul>
+<h3>街機化設計</h3>
+<ul>
+<li>每人一支搖桿，在船內「跑位」切換站位</li>
+<li>單人時有 AI 夥伴輔助，多人時 AI 退場</li>
+<li>波次制敵人，Boss 戰需要完美配合</li>
+<li>視覺上載具佔據大螢幕中央，適合圍觀</li>
+</ul>
+<p>適合度：<span class="stars">★★★★★</span></p>
+</div>
+
+<h2>方向 B：物理亂鬥競技場 — 歡樂對抗型</h2>
+<div class="card green">
+<h3>概念</h3>
+<p>物理引擎驅動的角色在競技場中互推/互摔/搶奪目標，操作簡單但物理碰撞產生不可預測的搞笑結果。</p>
+<h3>參考</h3>
+<ul>
+<li><strong style="color:var(--text)">Gang Beasts</strong> — 軟體動物互摔</li>
+<li><strong style="color:var(--text)">Party Animals</strong> — 可愛動物亂鬥</li>
+<li><strong style="color:var(--text)">Bopl Battle</strong> — 技能組合 + 物理破壞</li>
+</ul>
+<h3>街機化設計</h3>
+<ul>
+<li>搖桿移動 + 2 鍵（抓/攻擊）</li>
+<li>地圖有機關（傳送帶、彈射器、陷阱）</li>
+<li>多種模式：搶旗、佔點、生存、山丘之王</li>
+<li>每回合 60-90 秒，3 回合定勝負</li>
+<li>單人 vs AI，多人 vs 真人</li>
+</ul>
+<p>適合度：<span class="stars">★★★★★</span>（🏆 最推薦）</p>
+</div>
+
+<h2>方向 C：合作 Roguelike 闖關 — 漸進挑戰型</h2>
+<div class="card">
+<h3>概念</h3>
+<p>1-4 人合作闖隨機生成的關卡，每層選擇升級/道具，越深越難。死亡即結束，追求最高層數。</p>
+<h3>參考</h3>
+<ul>
+<li><strong style="color:var(--text)">Elden Ring: Nightreign</strong> — 3 人合作 roguelike</li>
+<li><strong style="color:var(--text)">Deep Rock Galactic</strong> — 合作挖礦射擊</li>
+</ul>
+<h3>街機化設計</h3>
+<ul>
+<li>俯視角或側捲軸，搖桿 + 攻擊/閃避/技能 3 鍵</li>
+<li>每層 60 秒限時，打完 Boss 進下一層</li>
+<li>層間選擇強化（類似 Balatro 的選擇感）</li>
+<li>排行榜系統驅動重玩</li>
+</ul>
+<p>適合度：<span class="stars">★★★★</span></p>
+</div>
+
+<h2>方向 D：節奏動作混合 — 打擊爽快型</h2>
+<div class="card">
+<h3>概念</h3>
+<p>結合節奏遊戲的「按拍」與動作遊戲的「打擊」，踩準節拍傷害加倍。</p>
+<h3>參考</h3>
+<ul>
+<li><strong style="color:var(--text)">Crypt of the NecroDancer</strong> — 節奏 + roguelike</li>
+<li><strong style="color:var(--text)">Hi-Fi Rush</strong> — 節奏動作</li>
+</ul>
+<h3>街機化設計</h3>
+<ul>
+<li>搖桿移動 + 攻擊鍵，踩 beat 有加成</li>
+<li>多人共享節奏，合作連擊</li>
+<li>視覺特效隨 combo 爆炸</li>
+<li>音樂本身吸引路人</li>
+</ul>
+<p>適合度：<span class="stars">★★★★</span></p>
+</div>
+
+<h2>方向 E：競速 + 破壞 — 追逐混亂型</h2>
+<div class="card orange">
+<h3>概念</h3>
+<p>非傳統賽車，在立體場景中追逐/逃跑，破壞環境、設陷阱、互相干擾。</p>
+<h3>參考</h3>
+<ul>
+<li><strong style="color:var(--text)">Rubber Bandits</strong> — 搶劫 + 逃跑 + 亂鬥</li>
+<li><strong style="color:var(--text)">Fall Guys</strong> — 障礙賽淘汰</li>
+<li><strong style="color:var(--text)">Crossy Road</strong>（街機版已成功）</li>
+</ul>
+<h3>街機化設計</h3>
+<ul>
+<li>搖桿方向 + 跳躍/道具 2 鍵</li>
+<li>場景不斷崩塌/變化，製造緊張感</li>
+<li>單人追求最遠距離，多人互相陷害</li>
+<li>每局 2-3 分鐘</li>
+</ul>
+<p>適合度：<span class="stars">★★★★</span></p>
+</div>
+
+<h2>建議避開的方向</h2>
+<div class="card red">
+<ul>
+<li>❌ FPS / TPS — 街機操作不適合</li>
+<li>❌ 傳統格鬥 — 門檻高、新手挫敗感強</li>
+<li>❌ MOBA / 卡牌 — 單局太長</li>
+<li>❌ 純音遊按鍵 — 太鼓/maimai 已飽和</li>
+<li>❌ 賽車模擬 — 方向盤硬體成本高</li>
+</ul>
+</div>
+
+<h2>追加研究：替代方向</h2>
+<div class="table-wrap"><table>
+<tr><th>方向</th><th>概念</th><th>市場數據</th><th>適合度</th></tr>
+<tr><td>F 障礙闖關</td><td>Fall Guys 街機版，跑障礙賽道</td><td>Fall Guys 5000萬玩家；Stumble Guys 下載5億</td><td class="stars">★★★★★</td></tr>
+<tr><td>G 合作兌獎</td><td>合作闖關+出票獎勵</td><td>Redemption 佔 FEC 收入 60-70%</td><td class="stars">★★★★</td></tr>
+<tr><td>H 體感AR</td><td>大螢幕+體感偵測</td><td>35%新街機整合AR/VR</td><td class="stars">★★★★</td></tr>
+<tr><td>I 迷你合集</td><td>每回合隨機小遊戲</td><td>Mario Party 累計7000萬銷量</td><td class="stars">★★★★</td></tr>
+<tr><td>J 道具競速</td><td>卡通競速+道具互炸</td><td>Mario Kart 累計1.87億；街機賽車市場13億美元</td><td class="stars">★★★★</td></tr>
+</table></div>
+
+<h2>⭐ 最終選定：混合方案</h2>
+<div class="card green">
+<p><strong style="color:var(--text)">核心概念：</strong>以物理亂鬥為核心引擎，結合多模式輪替設計。每回合隨機切換不同玩法模式。</p>
+<h3>為何選擇混合方案</h3>
+<ol>
+<li>重玩性最強 — 每局體驗都不同</li>
+<li>保留物理引擎投資 — 核心技術不浪費</li>
+<li>涵蓋多種樂趣 — 不同模式吸引不同偏好</li>
+<li>可持續擴充 — 後續可新增模式</li>
+<li>市場已驗證 — Fall Guys 證明多模式輪替成功</li>
+</ol>
+</div>
+<div class="card highlight">
+<h3>模式列表</h3>
+<div class="table-wrap"><table>
+<tr><th>模式</th><th>類型</th><th>規則</th><th>時間</th></tr>
+<tr><td>互推淘汰</td><td>物理亂鬥</td><td>推出場外即淘汰</td><td>60~90秒</td></tr>
+<tr><td>障礙賽跑</td><td>闖關競速</td><td>跑到終點，最後者淘汰</td><td>45~60秒</td></tr>
+<tr><td>搶旗混戰</td><td>搶奪持有</td><td>持旗累積秒數</td><td>60秒</td></tr>
+<tr><td>山丘之王</td><td>佔領區域</td><td>站在區域累積分數</td><td>60秒</td></tr>
+<tr><td>躲避球風暴</td><td>閃躲生存</td><td>被砲彈擊中即淘汰</td><td>45~60秒</td></tr>
+<tr><td>收集狂熱</td><td>搶奪收集</td><td>搶收金幣，最多者勝</td><td>45秒</td></tr>
+<tr><td>親子搬運賽</td><td>2v2 合作</td><td>兩人合力搬大物件到終點</td><td>45~60秒</td></tr>
+<tr><td>護送模式</td><td>2v2 合作</td><td>一人護送目標、一人開路清障</td><td>60秒</td></tr>
+</table></div>
+<p style="color:var(--text);font-family:monospace;font-size:0.85rem">每局流程：投幣 → 選角色 → 回合1(模式A) → 回合2(模式B) → 回合3(模式C) → 總分結算</p>
+</div>
+</div>
+
+
+<!-- 美術風格 -->
+<div class="page" id="p-art">
+<h2>目標年齡層</h2>
+<div class="card highlight">
+<p><strong style="color:var(--text)">6～12 歲</strong> — 讓 6 歲覺得好玩，12 歲覺得不丟臉。</p>
+</div>
+
+<h2>推薦風格方向</h2>
+
+<h3>⭐ 推薦 1：3D 風格化卡通（Stylized 3D）</h3>
+<div class="card green">
+<p>圓潤造型 + 鮮豔配色 + 誇張比例</p>
+<ul>
+<li>參考：<strong style="color:var(--text)">Fall Guys</strong>、<strong style="color:var(--text)">Stumble Guys</strong>、<strong style="color:var(--text)">Brawl Stars</strong>、<strong style="color:var(--text)">Splatoon</strong></li>
+<li>6~12 歲最熟悉的視覺語言（Roblox/Fortnite 世代）</li>
+<li>角色辨識度高，遠距離也看得清</li>
+<li>街機大螢幕上視覺衝擊力強</li>
+<li>不會太幼稚，大人也能接受</li>
+</ul>
+</div>
+
+<h3>推薦 2：2.5D 厚塗卡通（Thick-line Cartoon）</h3>
+<div class="card">
+<p>粗線條 + 飽和色塊 + 動態誇張</p>
+<ul>
+<li>參考：<strong style="color:var(--text)">Brawl Stars</strong>、<strong style="color:var(--text)">Cuphead</strong>、<strong style="color:var(--text)">Skullgirls</strong></li>
+<li>製作成本比全 3D 低</li>
+<li>動畫表現力強，有「潮」感</li>
+</ul>
+</div>
+
+<h3>推薦 3：軟 Q 果凍體（Blob / Jelly）</h3>
+<div class="card">
+<p>軟體動物/果凍質感角色 + 物理變形</p>
+<ul>
+<li>參考：<strong style="color:var(--text)">Gang Beasts</strong>、<strong style="color:var(--text)">Fall Guys</strong> 的 bean 造型</li>
+<li>完美搭配物理亂鬥玩法</li>
+<li>碰撞變形本身就是視覺笑料</li>
+<li>極度容易辨識，無文化障礙</li>
+</ul>
+</div>
+
+<h2>設計要點</h2>
+
+<div class="card">
+<h3>1. 角色剪影辨識度</h3>
+<ul>
+<li>每個角色在純黑剪影下也能一眼分辨</li>
+<li>街機螢幕距離 1-2 公尺，細節看不到，輪廓最重要</li>
+</ul>
+</div>
+
+<div class="card">
+<h3>2. 配色策略</h3>
+<ul>
+<li>高飽和 + 高對比（避免灰階/暗色調）</li>
+<li>每個角色有專屬主色，方便分辨陣營</li>
+<li>背景偏冷/暗，角色偏暖/亮 → 主體突出</li>
+</ul>
+</div>
+
+<div class="card">
+<h3>3. 表情與動態誇張化</h3>
+<ul>
+<li>大眼睛、誇張表情（squash & stretch）</li>
+<li>打擊時加速度線、星星、爆炸特效</li>
+</ul>
+</div>
+
+<div class="card red">
+<h3>4. 避免的元素</h3>
+<ul>
+<li>❌ 寫實血腥 / 太暗色調 / 太嬰幼兒風格</li>
+<li>❌ 過於複雜的紋理細節</li>
+</ul>
+</div>
+
+<div class="card warning">
+<h3>5. 「酷」的平衡點</h3>
+<ul>
+<li>參考 Splatoon：色彩繽紛 + 街頭潮流感</li>
+<li>參考 Fortnite：卡通但有酷炫皮膚系統</li>
+</ul>
+</div>
+</div>
+
+<!-- GDD -->
+<div class="page" id="p-gdd">
+<h2>遊戲概述</h2>
+<div class="card highlight">
+<p><strong style="color:var(--text)">一句話描述：</strong>1~4 人 3D 物理亂鬥街機遊戲，以物理引擎為核心，每回合隨機切換不同玩法模式（互推淘汰、障礙賽跑、搶旗混戰等），製造不可預測的歡樂混亂。</p>
+</div>
+<div class="table-wrap"><table>
+<tr><th>項目</th><th>內容</th></tr>
+<tr><td>類型</td><td>物理亂鬥 / 多模式派對（混合方案）</td></tr>
+<tr><td>平台</td><td>大型街機台（自製框體）</td></tr>
+<tr><td>玩家數</td><td>1~4 人</td></tr>
+<tr><td>目標年齡</td><td>6~12 歲</td></tr>
+<tr><td>單局時間</td><td>2~3 分鐘（含結算）</td></tr>
+<tr><td>美術風格</td><td>3D 風格化卡通</td></tr>
+<tr><td>操作</td><td>搖桿 + 2 按鈕</td></tr>
+</table></div>
+
+<h2>核心玩法循環</h2>
+<div class="card">
+<p style="color:var(--text);font-family:monospace;font-size:0.85rem">投幣 → 選角色(8秒) → 回合1(隨機模式A) → 回合2(隨機模式B) → 回合3(隨機模式C) → 總分結算</p>
+</div>
+<div class="card green">
+<h3>模式列表（每回合隨機抽選，不重複）</h3>
+<div class="table-wrap"><table>
+<tr><th>模式</th><th>類型</th><th>規則</th><th>時間</th></tr>
+<tr><td>互推淘汰</td><td>物理亂鬥</td><td>推出場外即淘汰</td><td>60~90秒</td></tr>
+<tr><td>障礙賽跑</td><td>闖關競速</td><td>跑到終點，最後者淘汰</td><td>45~60秒</td></tr>
+<tr><td>搶旗混戰</td><td>搶奪持有</td><td>持旗累積秒數</td><td>60秒</td></tr>
+<tr><td>山丘之王</td><td>佔領區域</td><td>站在區域累積分數</td><td>60秒</td></tr>
+<tr><td>躲避球風暴</td><td>閃躲生存</td><td>被砲彈擊中即淘汰</td><td>45~60秒</td></tr>
+<tr><td>收集狂熱</td><td>搶奪收集</td><td>搶收金幣，最多者勝</td><td>45秒</td></tr>
+<tr><td>親子搬運賽</td><td>2v2 合作</td><td>兩人合力搬大物件到終點</td><td>45~60秒</td></tr>
+<tr><td>護送模式</td><td>2v2 合作</td><td>一人護送目標、一人開路清障</td><td>60秒</td></tr>
+</table></div>
+</div>
+<div class="card">
+<h3>計分系統</h3>
+<ul>
+<li>每回合：1名=3分、2名=2分、3名=1分、4名=0分</li>
+<li>3 回合總分決定最終排名</li>
+<li>平手以最後一回合排名決勝</li>
+</ul>
+</div>
+
+<h2>角色設計（8 角色）</h2>
+<div class="table-wrap"><table>
+<tr><th>#</th><th>代號</th><th>體型</th><th>視覺特徵</th></tr>
+<tr><td>1</td><td>圓胖子</td><td>矮胖球形</td><td>彈力最視覺化</td></tr>
+<tr><td>2</td><td>長條人</td><td>高瘦</td><td>搖晃幅度大</td></tr>
+<tr><td>3</td><td>方塊頭</td><td>中等方正</td><td>穩重感</td></tr>
+<tr><td>4</td><td>果凍怪</td><td>軟Q不定形</td><td>變形最誇張</td></tr>
+<tr><td>5</td><td>彈簧腿</td><td>小身體長腿</td><td>跳躍動態突出</td></tr>
+<tr><td>6</td><td>鐵球仔</td><td>小而重</td><td>撞擊力視覺感強</td></tr>
+<tr><td>7</td><td>氣球人</td><td>大而輕</td><td>容易被彈飛</td></tr>
+<tr><td>8</td><td>刺蝟球</td><td>中等帶刺</td><td>被抓時對方鬆手</td></tr>
+</table></div>
+<p>※ 角色無能力差異，僅外觀與物理動畫表現不同，確保公平性。</p>
+
+<h2>地圖設計（6 張）</h2>
+<div class="table-wrap"><table>
+<tr><th>#</th><th>名稱</th><th>機關</th><th>特色</th></tr>
+<tr><td>1</td><td>旋轉工廠</td><td>旋轉平台+傳送帶</td><td>站不穩就被甩飛</td></tr>
+<tr><td>2</td><td>彈跳城堡</td><td>彈跳地板+彈射牆</td><td>全場彈來彈去</td></tr>
+<tr><td>3</td><td>冰面滑道</td><td>低摩擦+裂縫</td><td>煞不住車</td></tr>
+<tr><td>4</td><td>崩塌擂台</td><td>地板逐漸消失</td><td>場地越來越小</td></tr>
+<tr><td>5</td><td>砲彈風暴</td><td>隨機砲彈射入</td><td>躲砲彈又要打人</td></tr>
+<tr><td>6</td><td>搖擺吊橋</td><td>物理搖晃橋面</td><td>重心控制是關鍵</td></tr>
+</table></div>
+
+<h2>操作配置</h2>
+<div class="table-wrap"><table>
+<tr><th>輸入</th><th>動作</th><th>說明</th></tr>
+<tr><td>搖桿</td><td>移動</td><td>8 方向</td></tr>
+<tr><td>A</td><td>攻擊</td><td>短按＝推擊</td></tr>
+<tr><td>A 長按</td><td>蓄力攻擊</td><td>推力更大，有前搖</td></tr>
+<tr><td>B</td><td>抓取</td><td>抓住對手或物件</td></tr>
+<tr><td>B+搖桿</td><td>投擲</td><td>朝方向丟出</td></tr>
+<tr><td>搖桿雙擊</td><td>衝刺</td><td>短距離快速移動</td></tr>
+</table></div>
+
+<h2>投幣機制與營收</h2>
+<div class="card warning">
+<div class="table-wrap"><table>
+<tr><th>項目</th><th>設定</th></tr>
+<tr><td>單次投幣</td><td>1 枚代幣 = 3 回合完整對局</td></tr>
+<tr><td>單局時間</td><td>約 2.5~3 分鐘</td></tr>
+<tr><td>續幣</td><td>結算後 10 秒內投幣再玩一輪</td></tr>
+<tr><td>中途加入</td><td>回合間空檔投幣即加入下回合</td></tr>
+</table></div>
+</div>
+
+<div class="card green">
+<h3>單人遊玩設計</h3>
+<ul>
+<li>1 人投幣即可開始（vs 3 個 AI 對手）</li>
+<li>AI 難度動態調整（連勝變強、連敗變弱）</li>
+<li>單人也有完整 3 回合體驗 + 排行榜挑戰</li>
+<li>AI 行為有趣（會互打、會搞笑跌倒），不無聊</li>
+</ul>
+</div>
+
+<div class="card highlight">
+<h3>多人即時加入機制（不中斷遊戲）</h3>
+<ol>
+<li>新玩家投幣 → 畫面角落彈出選角浮層 +「NEW CHALLENGER!」</li>
+<li>新玩家選角色（限時 5 秒，超時隨機）— 戰場繼續不中斷</li>
+<li>選完 → AI 被「彈飛出場」（搞笑動畫）</li>
+<li>新角色從天空掉落 + 砸地震波（把附近的人彈開）</li>
+<li>落地 1 秒無敵 → 正式加入戰鬥</li>
+</ol>
+<p>⏱️ 投幣到可操作：約 7 秒（含選角）/ 跳過選角約 3 秒</p>
+<p>❌ 不中斷戰局 ❌ 不需等整場結束</p>
+</div>
+<div class="card">
+<h3>營收最大化設計</h3>
+<ol>
+<li><strong style="color:var(--text)">圍觀轉化</strong> — 待機播放精彩回放吸引路人</li>
+<li><strong style="color:var(--text)">中途加入</strong> — 看別人玩得開心就投幣</li>
+<li><strong style="color:var(--text)">續幣誘導</strong> — 「差一點就贏了！」+ 倒數壓力</li>
+<li><strong style="color:var(--text)">排行榜驅動</strong> — 當日/當週排行激發挑戰慾</li>
+<li><strong style="color:var(--text)">高翻桌率</strong> — 3 分鐘一局，每小時最多 20 局</li>
+</ol>
+</div>
+
+<h2>開發里程碑</h2>
+<div class="table-wrap"><table>
+<tr><th>階段</th><th>內容</th><th>時間</th></tr>
+<tr><td>原型</td><td>灰盒物理 + 2 角色 + 1 地圖</td><td>4~6 週</td></tr>
+<tr><td>Alpha</td><td>4 角色 + 3 地圖 + 基本 UI</td><td>8~10 週</td></tr>
+<tr><td>Beta</td><td>8 角色 + 6 地圖 + 音效 + 投幣</td><td>8~10 週</td></tr>
+<tr><td>測試</td><td>實機測試 + 平衡調整</td><td>4~6 週</td></tr>
+<tr><td>上線</td><td>框體製作 + 部署</td><td>4 週</td></tr>
+</table></div>
+<div class="card highlight">
+<p><strong style="color:var(--text)">預估總開發時間：6~9 個月</strong></p>
+</div>
+</div>
+
+<!-- 投幣與營收 -->
+<div class="page" id="p-coin">
+<h2>投幣機制設定</h2>
+<div class="table-wrap"><table>
+<tr><th>項目</th><th>設定</th><th>說明</th></tr>
+<tr><td>單次投幣</td><td>1 枚代幣</td><td>= 3 回合完整對局（約 2.5~3 分鐘）</td></tr>
+<tr><td>代幣定價</td><td>建議 NT$10~20/枚</td><td>依場地定位調整</td></tr>
+<tr><td>續幣</td><td>結算後 10 秒內</td><td>投幣即再玩一輪（保留排行分數）</td></tr>
+<tr><td>中途加入</td><td>隨時投幣</td><td>不中斷戰局，角色從天空掉落進場</td></tr>
+<tr><td>多人折扣</td><td>可選：4人同時投幣打折</td><td>鼓勵揪團（如 4 人只收 3 幣）</td></tr>
+<tr><td>親子套票</td><td>2 幣 = 2 人同時開始</td><td>自動進入含合作模式的輪替</td></tr>
+<tr><td>家庭模式按鈕</td><td>投 2 幣觸發</td><td>自動配對為 2v2</td></tr>
+</table></div>
+
+<h2>營收最大化設計</h2>
+<div class="card green">
+<h3>5 大營收驅動機制</h3>
+<ol>
+<li><strong style="color:var(--text)">圍觀轉化</strong> — 待機畫面播放精彩回放 + 搞笑瞬間，吸引路人駐足</li>
+<li><strong style="color:var(--text)">中途加入</strong> — 看別人玩得開心 → 隨時投幣加入，不用等</li>
+<li><strong style="color:var(--text)">續幣誘導</strong> — 結算時顯示「差一點就贏了！」+ 倒數壓力 + 下局模式預告</li>
+<li><strong style="color:var(--text)">排行榜驅動</strong> — 當日/當週排行，激發「再來一局超越他」的慾望</li>
+<li><strong style="color:var(--text)">高翻桌率</strong> — 3 分鐘一局，每小時最多 20 局 × 4 人 = 80 枚代幣上限</li>
+</ol>
+</div>
+
+<h2>營收預估模型</h2>
+<div class="card warning">
+<h3>每小時投幣預估</h3>
+<div class="table-wrap"><table>
+<tr><th>情境</th><th>投幣數/時</th><th>假設 NT$15/枚</th></tr>
+<tr><td>低流量（1人持續玩）</td><td>15~20 枚</td><td>NT$225~300</td></tr>
+<tr><td>中流量（2人輪替+續幣）</td><td>25~35 枚</td><td>NT$375~525</td></tr>
+<tr><td>高流量（4人滿座+輪替）</td><td>40~60 枚</td><td>NT$600~900</td></tr>
+</table></div>
+</div>
+
+<div class="card">
+<h3>每日/每月預估（以中流量計算）</h3>
+<div class="table-wrap"><table>
+<tr><th>時段</th><th>營業時間</th><th>日營收</th><th>月營收</th></tr>
+<tr><td>商場/FEC</td><td>10 小時/日</td><td>NT$3,750~5,250</td><td>NT$112,500~157,500</td></tr>
+<tr><td>夜市/遊樂場</td><td>6 小時/日</td><td>NT$2,250~3,150</td><td>NT$67,500~94,500</td></tr>
+</table></div>
+<p>※ 以上為單台預估，實際依場地人流、定價、競品密度而異</p>
+</div>
+
+<h2>回本分析</h2>
+<div class="card highlight">
+<div class="table-wrap"><table>
+<tr><th>項目</th><th>預估成本</th></tr>
+<tr><td>框體製作（含螢幕、主機、搖桿）</td><td>NT$150,000~250,000</td></tr>
+<tr><td>軟體開發（分攤至首批 10 台）</td><td>NT$100,000~200,000/台</td></tr>
+<tr><td>單台總成本</td><td>NT$250,000~450,000</td></tr>
+</table></div>
+<p><strong style="color:var(--green)">預估回本時間：3~6 個月</strong>（中流量場地）</p>
+</div>
+
+<h2>進階營收選項</h2>
+<div class="card">
+<ul>
+<li>🎫 <strong style="color:var(--text)">彩票兌獎模式</strong> — 可選加裝出票機，表現越好出票越多（提升家長付費意願）</li>
+<li>📸 <strong style="color:var(--text)">拍照/社群分享</strong> — 結算時拍攝搞笑瞬間，掃 QR code 下載（免費行銷）</li>
+<li>🏆 <strong style="color:var(--text)">賽事模式</strong> — 場地可舉辦週末錦標賽，收報名費+吸引人潮</li>
+<li>🎨 <strong style="color:var(--text)">角色皮膚販售</strong> — 投幣解鎖限定造型（額外收入來源）</li>
+</ul>
+</div>
+</div>
+
+<!-- 操作配置 -->
+<div class="page" id="p-controls">
+<h2>核心原則</h2>
+<div class="card highlight">
+<ul>
+<li><strong style="color:var(--red)">A 鍵 = 攻擊</strong>（永遠固定）</li>
+<li><strong style="color:var(--accent)">B 鍵 = 跳躍</strong>（永遠固定）</li>
+<li>互動 = 碰觸自動觸發（零學習成本）</li>
+<li>所有模式操作一致，不切換功能</li>
+</ul>
+</div>
+
+<h2>操作表</h2>
+<div class="table-wrap"><table>
+<tr><th>輸入</th><th>動作</th><th>說明</th></tr>
+<tr><td>搖桿</td><td>移動</td><td>8 方向</td></tr>
+<tr><td>A</td><td>攻擊/推擊</td><td>空手時推擊對手</td></tr>
+<tr><td>A（持有道具）</td><td>使用道具</td><td>投擲/揮擊/發射</td></tr>
+<tr><td>B</td><td>跳躍</td><td>越過障礙、踩人頭</td></tr>
+<tr><td>B（空中）</td><td>下壓踩踏</td><td>向下踩人</td></tr>
+<tr><td>搖桿雙擊</td><td>衝刺</td><td>短距離快移（1秒冷卻）</td></tr>
+</table></div>
+
+<h2>自動互動</h2>
+<div class="card green">
+<ul>
+<li>撿道具 → 碰觸自動獲得</li>
+<li>撿旗幟 → 碰觸自動獲得</li>
+<li>撿金幣 → 跑過就收集</li>
+<li>使用道具 → 按 A</li>
+<li>同時只能持有 1 個道具，撿新覆蓋舊</li>
+</ul>
+</div>
+
+<h2>道具系統</h2>
+<div class="table-wrap"><table>
+<tr><th>道具</th><th>效果</th><th>A 鍵行為</th></tr>
+<tr><td>🥊 拳擊手套</td><td>超強推擊</td><td>揮拳，推力 3 倍</td></tr>
+<tr><td>🎳 保齡球</td><td>滾地擊倒</td><td>朝前方滾出</td></tr>
+<tr><td>💥 彈跳彈簧</td><td>彈飛周圍</td><td>原地震波</td></tr>
+<tr><td>🧊 冰凍炸彈</td><td>定身 2 秒</td><td>朝前方丟出</td></tr>
+<tr><td>🚀 火箭靴</td><td>超級衝刺</td><td>高速撞飛前方</td></tr>
+<tr><td>🛡️ 護盾</td><td>擋一次攻擊</td><td>自動觸發</td></tr>
+</table></div>
+
+<h2>各模式操作體驗</h2>
+<div class="table-wrap"><table>
+<tr><th>模式</th><th>A 用途</th><th>B 用途</th><th>自動互動</th></tr>
+<tr><td>互推淘汰</td><td>推人/用道具</td><td>跳躲</td><td>撿道具</td></tr>
+<tr><td>障礙賽跑</td><td>推人/用加速道具</td><td>跳障礙</td><td>撿道具</td></tr>
+<tr><td>搶旗混戰</td><td>攻擊讓對手掉旗</td><td>跳躲</td><td>碰旗自動拿</td></tr>
+<tr><td>山丘之王</td><td>推人出區域</td><td>跳進區域</td><td>—</td></tr>
+<tr><td>躲避球風暴</td><td>推人擋砲彈</td><td>跳躲砲彈</td><td>—</td></tr>
+<tr><td>收集狂熱</td><td>打人掉金幣</td><td>跳搶高處金幣</td><td>碰金幣自動撿</td></tr>
+</table></div>
+
+<h2>框體配置（俯視）</h2>
+<div class="card" style="padding:2rem;text-align:center">
+<div style="margin:0 auto;max-width:500px">
+<!-- 螢幕 -->
+<div style="background:#1a3a5c;border:2px solid var(--accent);border-radius:6px;padding:14px;margin-bottom:20px;text-align:center">
+<span style="color:var(--accent);font-weight:600">55" 螢幕（直立）</span>
+</div>
+<!-- 操作台面 -->
+<div style="background:var(--surface);border:2px solid var(--border);border-radius:10px;padding:20px 10px;margin-bottom:0">
+<div style="color:var(--muted);font-size:12px;margin-bottom:14px">操作台面</div>
+<div style="display:flex;justify-content:space-around">
+<div style="text-align:center"><div style="font-size:20px">🕹️🔴🔵</div><div style="color:var(--accent);font-size:12px;margin-top:4px">P1</div></div>
+<div style="text-align:center"><div style="font-size:20px">🕹️🔴🔵</div><div style="color:var(--accent);font-size:12px;margin-top:4px">P2</div></div>
+<div style="text-align:center"><div style="font-size:20px">🕹️🔴🔵</div><div style="color:var(--accent);font-size:12px;margin-top:4px">P3</div></div>
+<div style="text-align:center"><div style="font-size:20px">🕹️🔴🔵</div><div style="color:var(--accent);font-size:12px;margin-top:4px">P4</div></div>
+</div>
+</div>
+<!-- 玩家+投幣 -->
+<div style="display:flex;justify-content:space-around;margin-top:-10px;position:relative;z-index:1">
+<div style="text-align:center"><span style="font-size:16px">💰</span><span style="font-size:64px">🧍</span></div>
+<div style="text-align:center"><span style="font-size:16px">💰</span><span style="font-size:64px">🧍</span></div>
+<div style="text-align:center"><span style="font-size:16px">💰</span><span style="font-size:64px">🧍</span></div>
+<div style="text-align:center"><span style="font-size:16px">💰</span><span style="font-size:64px">🧍</span></div>
+</div>
+<div style="color:var(--muted);font-size:11px;margin-top:8px">↑ 玩家站位（面對螢幕）</div>
+</div>
+</div>
+
+<h2>框體規格</h2>
+<div class="table-wrap"><table>
+<tr><th>項目</th><th>規格</th></tr>
+<tr><td>螢幕</td><td>55 吋 LED，1080p，直立</td></tr>
+<tr><td>主機</td><td>嵌入式 PC（GTX 1660 等級）</td></tr>
+<tr><td>音響</td><td>2.1 聲道 + 低音砲</td></tr>
+<tr><td>台面高度</td><td>80~85cm + 兒童腳踏墊標配（+10~15cm）</td></tr>
+<tr><td>搖桿面板</td><td>微傾斜 10~15 度</td></tr>
+<tr><td>尺寸</td><td>150×90×200cm，120~150kg</td></tr>
+</table></div>
+</div>
+
+<script>
+function sw(id){document.querySelectorAll('.page').forEach(p=>p.classList.remove('active'));document.querySelectorAll('.tab').forEach(t=>t.classList.remove('active'));document.getElementById('p-'+id).classList.add('active');event.target.classList.add('active')}
+</script>
+<script src="nav.js"></script>
+</body>
+</html>

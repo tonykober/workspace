@@ -1,0 +1,394 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>FZG 系統架構文件</title>
+<style>
+:root{--bg:#0d1117;--surface:#161b22;--border:#30363d;--text:#e6edf3;--accent:#58a6ff;--muted:#8b949e;--green:#3fb950;--yellow:#d29922}
+*{margin:0;padding:0;box-sizing:border-box}
+body{background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;padding:20px;line-height:1.6}
+.tabs{display:flex;gap:4px;border-bottom:1px solid var(--border);margin-bottom:20px;flex-wrap:wrap}
+.tab{padding:8px 16px;cursor:pointer;border-radius:6px 6px 0 0;color:var(--muted);font-size:0.9rem;white-space:nowrap}
+.tab.active{background:var(--surface);color:var(--accent);border:1px solid var(--border);border-bottom:1px solid var(--surface)}
+.tab:hover{color:var(--text)}
+.panel{display:none;background:var(--surface);border:1px solid var(--border);border-radius:0 6px 6px 6px;padding:24px}
+.panel.active{display:block}
+h1{color:var(--accent);font-size:1.5rem;margin-bottom:16px}
+h2{color:var(--accent);font-size:1.2rem;margin:20px 0 10px;border-bottom:1px solid var(--border);padding-bottom:4px}
+h3{color:var(--green);font-size:1rem;margin:16px 0 8px}
+ul,ol{padding-left:20px;margin:8px 0}
+li{margin:4px 0}
+code{background:var(--bg);padding:2px 6px;border-radius:3px;font-size:0.85em;color:var(--yellow)}
+pre{background:var(--bg);border:1px solid var(--border);border-radius:6px;padding:12px;overflow-x:auto;margin:10px 0;font-size:0.85rem}
+pre code{background:none;padding:0}
+table{width:100%;border-collapse:collapse;margin:10px 0;font-size:0.85rem}.table-wrap{overflow-x:auto;-webkit-overflow-scrolling:touch;margin:10px 0}@media(max-width:768px){table{min-width:500px}}
+th,td{border:1px solid var(--border);padding:6px 10px;text-align:left}
+th{background:var(--bg);color:var(--accent)}
+strong{color:var(--green)}
+a{color:var(--accent)}
+</style>
+</head>
+<body>
+<h1>📋 FZG 專案追蹤器 — 系統架構文件</h1>
+<div class="tabs">
+<div class="tab active" onclick="showTab(0)">系統概覽</div>
+<div class="tab" onclick="showTab(1)">同步機制</div>
+<div class="tab" onclick="showTab(2)">設定格式</div>
+<div class="tab" onclick="showTab(3)">功能架構</div>
+<div class="tab" onclick="showTab(4)">規則與限制</div>
+<div class="tab" onclick="showTab(5)">🖼️ UI 架構圖</div>
+</div>
+
+<div class="panel active">
+<h2>一、系統概覽</h2>
+<ul>
+<li><strong>前端</strong>：GitHub Pages 靜態網頁（index.html + app.js + style.css）</li>
+<li><strong>後端</strong>：Google Apps Script（doGet + doPost）</li>
+<li><strong>資料庫</strong>：Google Sheets</li>
+<li><strong>部署</strong>：<a href="https://tonykober.github.io/FZG_tracker/art/">https://tonykober.github.io/FZG_tracker/art/</a></li>
+<li><strong>原始碼</strong>：<a href="https://github.com/tonykober/FZG_tracker">https://github.com/tonykober/FZG_tracker</a> (main branch)</li>
+</ul>
+
+<h2>二、Google Sheets 結構</h2>
+<h3>主 Sheet（FZG_內部工作項目）</h3>
+<ul>
+<li>ID: <code>142VCJ65sgkzmELIy6ImUFD8z2RXQRwVs-YvkWnPCF2s</code></li>
+<li>Apps Script: <code>AKfycbyNevW7oTS-hKWXTkFknvQfVmai9pqlkUXmU9viGTPHDqs261F312cvY_JMEGwOrt_4</code></li>
+<li>資料分頁（gid=0）：任務名稱、負責人、狀態、進度、開始日、截止日、備註、優先級、標籤、父任務、工時、評論、排序、收合</li>
+<li>notes 分頁（gid=1557662717）：設定 key-value 存儲</li>
+</ul>
+<h3>外包 Sheet（FZG_外包工作項目）</h3>
+<ul>
+<li>ID: <code>11cuSAO3MZfUmau1pd603685i18d0SlQKN-h--jUrp2s</code></li>
+<li>Apps Script: <code>AKfycbyuqw9ZXRCGLeOtKyYbv0p7xrdIXHYSUydXNuR2j2tiUYrUwK3JFjK765J4Kh0Pk2_I</code></li>
+<li>分頁：按月份（如 <code>2026/05</code>）：負責人、工作項目、狀態、開始日、截止日、備註、工時</li>
+</ul>
+<h3>唯晶日報 Google Sheet</h3>
+<ul>
+<li>ID: <code>1gppJhZkxQYGNNM1-hk3v12Hp-qzV8VnJdCLCNrf-cog</code></li>
+<li>Apps Script: <code>AKfycbx9rjF3pdXD0dgvjkpBmd0dGHoz0EBmKgDFYH2qc27dLz7WDf8cnOCQUlZRrI7NDaIA</code></li>
+<li>分頁：按月份（如 <code>2026/05</code>）：日期、工作內容、工作進度與產出、時數</li>
+<li>用途：備份/fallback</li>
+</ul>
+</div>
+
+<div class="panel">
+<h2>三、資料同步機制</h2>
+<h3>3.1 每日自動同步（09:05 執行）</h3>
+<p><strong>資料流：</strong></p>
+<pre><code>本機 Excel (F:\...\唯晶_桑比槍台_美術_工作日報.xlsx)
+    ↓ PowerShell (sync_outsource.ps1)
+    ├→ 外包 Sheet（追蹤器讀取用）
+    └→ 唯晶日報 Google Sheet（備份）</code></pre>
+<p><strong>流程：</strong></p>
+<ol>
+<li>優先用 Excel COM 讀取本機 Excel（分頁名：YYYYMM 如 <code>202605</code>）</li>
+<li>Excel 鎖住時 fallback 到唯晶日報 Google Sheet（gviz）</li>
+<li>解析：NAME 行取負責人，數字開頭行取任務，「請假」特殊處理</li>
+<li>過濾：任務名稱 ≤2 字元（除「請假」）排除</li>
+<li>用 <code>@()</code> 強制陣列（防止單筆時 PowerShell 回傳 String）</li>
+<li>clear 外包 Sheet 當月分頁</li>
+<li>逐筆 add（每筆間隔 300ms）</li>
+<li>gviz 驗證筆數</li>
+<li>同步到唯晶日報（raw rows）</li>
+<li>存同步時間到主 Sheet notes</li>
+</ol>
+
+<h3>3.2 前端即時同步（設定/狀態）</h3>
+<p><strong>方式：</strong></p>
+<ul>
+<li>小資料（URL &lt; 2000 字元）→ GET <code>SCRIPT_URL?action=saveNote&amp;month=KEY&amp;text=VALUE</code></li>
+<li>大資料（URL ≥ 2000 字元）→ <code>navigator.sendBeacon</code> POST JSON</li>
+</ul>
+<p><strong>觸發時機：</strong>每次用戶操作（分組、改名、排序、開合等）立即觸發</p>
+<p><strong>存儲位置：</strong></p>
+<ol>
+<li>localStorage（本機即時生效）</li>
+<li>Sheet notes 分頁（雲端同步）</li>
+</ol>
+<p><strong>讀取時機：</strong>頁面載入時 <code>loadNotes()</code> 從 Sheet notes（headers=0）讀取 → 寫入 localStorage → 渲染</p>
+
+<h3>3.3 前端即時同步（任務資料）</h3>
+<p><strong>方式：</strong>POST <code>Content-Type: text/plain</code>（simple request，不觸發 CORS preflight）</p>
+<p><strong>操作：</strong>update、delete、add、updateSort</p>
+<p><strong>確認方式：</strong><code>.then()</code> 回調顯示同步狀態</p>
+</div>
+
+<div class="panel">
+<h2>四、設定存儲格式（notes 分頁）</h2>
+<p>所有設定按月份獨立，key 格式：<code>設定名_年_月</code></p>
+<div class="table-wrap"><table>
+<tr><th>Key 格式</th><th>說明</th><th>觸發操作</th></tr>
+<tr><td><code>manual_board_groups_年_月</code></td><td>外包群組成員歸屬</td><td>拖曳合併/移出</td></tr>
+<tr><td><code>group_names_年_月</code></td><td>外包群組顯示名稱</td><td>✏️ 改名 / 首次建立自動鎖定</td></tr>
+<tr><td><code>board_item_sort_年_月</code></td><td>外包看板排序</td><td>▲▼ 排序</td></tr>
+<tr><td><code>owner_sort_狀態_年_月</code></td><td>內部負責人排序（per 欄）</td><td>拖曳負責人</td></tr>
+<tr><td><code>collapsed_owners_年_月</code></td><td>內部負責人開合（per 欄，格式 owner::status）</td><td>點擊收合</td></tr>
+<tr><td><code>collapsed_outsource_owners_年_月</code></td><td>外包負責人開合</td><td>點擊收合</td></tr>
+<tr><td><code>collapsed_timeline_owners_年_月</code></td><td>時間軸負責人開合</td><td>點擊收合</td></tr>
+<tr><td><code>collapsed_timeline_tasks_年_月</code></td><td>時間軸任務開合</td><td>點擊收合</td></tr>
+<tr><td><code>timeline_sort_年_月</code></td><td>時間軸負責人排序</td><td>拖曳排序</td></tr>
+<tr><td><code>timeline_task_sort_年_月</code></td><td>時間軸任務排序</td><td>拖曳排序</td></tr>
+<tr><td><code>expanded_outsource_groups_年_月</code></td><td>外包時間軸群組開合</td><td>點擊收合</td></tr>
+<tr><td><code>expanded_outsource_board_groups_年_月</code></td><td>外包看板群組開合</td><td>點擊收合</td></tr>
+<tr><td><code>outsource_zones</code></td><td>外包負責人區域分配</td><td>拖曳換區</td></tr>
+<tr><td><code>sync_time_年_月</code></td><td>最後同步時間</td><td>每日同步/手動同步</td></tr>
+<tr><td><code>task_collapse_年_月_idx</code></td><td>內部任務卡開合</td><td>點擊收合</td></tr>
+</table></div>
+</div>
+
+<div class="panel">
+<h2>五、前端功能架構</h2>
+<h3>5.1 內部頁面</h3>
+<ul>
+<li><strong>看板</strong>：三欄（待辦/進行中/已完成）+ 待修正欄（無負責人任務）</li>
+<li><strong>時間軸</strong>：Gantt 圖，按負責人分組，子任務縮排顯示</li>
+<li><strong>報告</strong>：統計報表</li>
+<li><strong>功能</strong>：拖曳換狀態、負責人排序/換區、任務排序、開合、搜尋、標籤篩選</li>
+<li><strong>空欄自動收合</strong>：無任務的欄位預設收合，拖曳時展開</li>
+</ul>
+<h3>5.2 外包頁面</h3>
+<ul>
+<li><strong>看板</strong>：三區（一區/二區/三區），按負責人分組</li>
+<li><strong>時間軸</strong>：Gantt 圖，按負責人分組，群組內任務 └ 前綴</li>
+<li><strong>功能</strong>：手動分組（拖曳合併）、群組改名、▲▼ 排序、負責人換區（drop zone）、開合、搜尋</li>
+<li><strong>分組模式</strong>：純手動（無 isSimilar 自動分組）</li>
+<li><strong>群組名稱</strong>：首次建立時自動鎖定，之後只能手動 ✏️ 改名</li>
+<li><strong>排序閃爍</strong>：交換位置時兩個元素都有 flash animation</li>
+</ul>
+<h3>5.3 共用功能</h3>
+<ul>
+<li>月份切換（◀▶ + input type="month" 選擇器）</li>
+<li>管理模式（密碼：fzg）</li>
+<li>標題按鈕：confirm → 清快取 + 重載（從雲端讀取最新設定）</li>
+<li>🔄 重新載入：confirm → 從 Sheet 重新讀取顯示（不寫入）</li>
+<li>同步狀態指示器（🔄 同步中 / ✅ 已同步 / 📤 已送出 / ❌ 同步失敗）</li>
+<li>同步時間顯示（🕐 更新：日期時間）</li>
+</ul>
+
+<h2>六、頁面佈局</h2>
+<h3>電腦版</h3>
+<pre><code>[📋 FZG 專案追蹤器] [內部][外包][◀ 月份 ▶] [同步狀態] [密碼][管理]
+
+內部：
+[統計]  [看板][時間軸][報告][➕新增任務]
+        [標籤列...] [搜尋框 200px 靠右]
+
+外包：
+[看板][時間軸][🔄重新載入] [顏色說明 靠右]
+[搜尋框]</code></pre>
+<h3>手機版（≤768px）</h3>
+<ul>
+<li>按鈕 <code>white-space:nowrap</code></li>
+<li>標籤 <code>white-space:nowrap</code> + <code>flex-wrap:wrap</code></li>
+<li>搜尋框 200px</li>
+<li>看板單欄顯示</li>
+<li>外包：搜尋在顏色說明前面（CSS order）</li>
+</ul>
+</div>
+
+<div class="panel">
+<h2>七、禁止事項</h2>
+<ol>
+<li>前端「🔄 重新載入」按鈕不做任何寫入/清除操作</li>
+<li>不使用 <code>mode:'no-cors'</code>（會導致設定 body 無法正確送達）</li>
+<li>每日自動同步是唯一的外包資料寫入來源（前端不寫入外包資料）</li>
+<li>不使用 <code>isSimilar</code> 自動分組（已移除）</li>
+<li>不主動標記任務為 <code>__independent__</code>（移出群組用 delete 而非標記）</li>
+</ol>
+
+<h2>八、密碼與權限</h2>
+<ul>
+<li>管理密碼：<code>fzg</code></li>
+<li>解鎖後顯示：<code>.edit-ctrl</code> 元素（編輯、新增、排序、拖曳、刪除）</li>
+<li>鎖定時：唯讀模式，所有編輯控制隱藏</li>
+<li>外包「🔄 重新載入」不需解鎖</li>
+</ul>
+
+<h2>九、檔案結構</h2>
+<pre><code>FZG_tracker/
+├── index.html          # 頁面結構
+├── app.js              # 所有邏輯
+├── style.css           # 樣式
+└── sync_outsource.ps1  # 每日同步腳本（PowerShell）</code></pre>
+
+<h2>十、任務卡唯一 ID</h2>
+<p>外包任務卡使用 <code>負責人_工作項目_開始日</code> 作為唯一識別：</p>
+<ul>
+<li>例：<code>Steven 林建憲_UI 視覺設計_2026/5/4</code></li>
+<li>用於：<code>_manualBoardGroups</code> key、<code>data-board-item</code> 屬性、排序陣列</li>
+<li>顯示時仍用任務名稱（<code>t['工作項目']</code>）</li>
+</ul>
+</div>
+
+<div class="panel">
+<h2>🖼️ UI 架構圖</h2>
+<style>
+.ui-box{border-radius:6px;padding:10px;margin:6px 0}
+.ui-l1{border:2px solid var(--accent);padding:12px;background:rgba(88,166,255,0.06)}
+.ui-l2{border:2px solid var(--green);padding:10px;margin:6px 0;background:rgba(63,185,80,0.06)}
+.ui-l3{border:1px solid var(--yellow);padding:8px;margin:4px 0;background:rgba(210,153,34,0.05)}
+.ui-l4{border:1px dashed var(--muted);padding:6px;margin:3px 0}
+.ui-label{font-size:0.8rem;color:var(--muted);margin-bottom:4px}
+.ui-title{font-weight:600;margin-bottom:6px}
+.ui-row{display:flex;gap:8px;flex-wrap:wrap}
+.ui-col{flex:1;min-width:150px}
+</style>
+
+<div class="ui-box ui-l1">
+<div class="ui-title" style="color:var(--accent)">📋 FZG 專案追蹤器</div>
+<div class="ui-label">頁面切換：內部 / 外包</div>
+
+<div class="ui-box ui-l2">
+<div class="ui-title" style="color:var(--green)">共用 Header</div>
+<div class="ui-row">
+<span style="background:var(--bg);padding:2px 8px;border-radius:4px;font-size:0.85rem">📋 標題（清快取重載）</span>
+<span style="background:var(--bg);padding:2px 8px;border-radius:4px;font-size:0.85rem">[內部][外包]</span>
+<span style="background:var(--bg);padding:2px 8px;border-radius:4px;font-size:0.85rem">◀ 月份 ▶</span>
+<span style="background:var(--bg);padding:2px 8px;border-radius:4px;font-size:0.85rem">同步狀態</span>
+<span style="background:var(--bg);padding:2px 8px;border-radius:4px;font-size:0.85rem">密碼/管理</span>
+</div>
+</div>
+
+<div class="ui-box ui-l2">
+<div class="ui-title" style="color:var(--green)">內部頁面</div>
+<div style="display:flex;gap:10px;align-items:flex-start">
+
+<div class="ui-box ui-l3" style="flex-shrink:0">
+<div class="ui-label">統計列</div>
+<div class="ui-row">
+<span style="background:var(--bg);padding:4px 12px;border-radius:4px;text-align:center">任務數</span>
+<span style="background:var(--bg);padding:4px 12px;border-radius:4px;color:var(--green);text-align:center">完成</span>
+<span style="background:var(--bg);padding:4px 12px;border-radius:4px;color:var(--yellow);text-align:center">未完成</span>
+</div>
+</div>
+
+<div style="flex:1">
+<div class="ui-box ui-l3">
+<div class="ui-label">按鈕列 A</div>
+<div class="ui-row">
+<span style="background:var(--accent);color:#fff;padding:3px 8px;border-radius:4px;font-size:0.85rem">看板</span>
+<span style="background:var(--bg);padding:3px 8px;border-radius:4px;font-size:0.85rem">時間軸</span>
+<span style="background:var(--bg);padding:3px 8px;border-radius:4px;font-size:0.85rem">報告</span>
+<span style="background:var(--green);color:#fff;padding:3px 8px;border-radius:4px;font-size:0.85rem">➕ 新增任務</span>
+</div>
+</div>
+
+<div class="ui-box ui-l3">
+<div class="ui-label">標籤列 B + 搜尋</div>
+<div class="ui-row">
+<span style="background:var(--accent);color:#fff;padding:2px 8px;border-radius:12px;font-size:0.8rem">全部</span>
+<span style="background:var(--bg);padding:2px 8px;border-radius:12px;font-size:0.8rem">UI</span>
+<span style="background:var(--bg);padding:2px 8px;border-radius:12px;font-size:0.8rem">場景</span>
+<span style="background:var(--bg);padding:2px 8px;border-radius:12px;font-size:0.8rem">模型貼圖</span>
+<span style="background:var(--bg);padding:2px 8px;border-radius:12px;font-size:0.8rem">...</span>
+<span style="background:var(--bg);padding:2px 8px;border-radius:4px;font-size:0.8rem;margin-left:auto">🔍 搜尋</span>
+</div>
+</div>
+</div>
+
+</div>
+
+<div class="ui-box ui-l3">
+<div class="ui-label">看板視圖</div>
+<div class="ui-row">
+<div class="ui-col ui-box ui-l4">
+<div style="color:var(--red);font-size:0.85rem;font-weight:600">⚠️ 待修正</div>
+<div style="font-size:0.75rem;color:var(--muted)">無負責人任務</div>
+</div>
+<div class="ui-col ui-box ui-l4">
+<div style="color:var(--muted);font-size:0.85rem;font-weight:600">📝 待辦</div>
+<div class="ui-box ui-l4"><div style="font-size:0.75rem">👤 負責人分組</div>
+<div class="ui-box" style="border:1px solid var(--border);padding:4px;font-size:0.7rem">任務卡<br><span style="color:var(--muted)">└ 子任務</span></div>
+</div>
+</div>
+<div class="ui-col ui-box ui-l4">
+<div style="color:var(--yellow);font-size:0.85rem;font-weight:600">🔄 進行中</div>
+<div style="font-size:0.75rem;color:var(--muted)">同上結構</div>
+</div>
+<div class="ui-col ui-box ui-l4">
+<div style="color:var(--green);font-size:0.85rem;font-weight:600">✅ 已完成</div>
+<div style="font-size:0.75rem;color:var(--muted)">同上結構</div>
+</div>
+</div>
+</div>
+
+<div class="ui-box ui-l3">
+<div class="ui-label">時間軸視圖</div>
+<div class="ui-row">
+<div style="width:200px;font-size:0.8rem">
+<div style="color:var(--accent)">👤 負責人</div>
+<div style="padding-left:12px;color:var(--muted);font-size:0.75rem">任務名稱<br>└ 子任務</div>
+</div>
+<div style="flex:1;background:var(--bg);border-radius:4px;padding:8px;font-size:0.75rem;color:var(--muted)">
+← Gantt 條（日期軸）→
+</div>
+</div>
+</div>
+
+<div class="ui-box ui-l3">
+<div class="ui-label">報告視圖</div>
+<div style="font-size:0.8rem;color:var(--muted)">統計報表</div>
+</div>
+</div>
+
+<div class="ui-box ui-l2">
+<div class="ui-title" style="color:var(--green)">外包頁面</div>
+
+<div class="ui-box ui-l3">
+<div class="ui-label">按鈕列 + 顏色說明</div>
+<div class="ui-row">
+<span style="background:var(--accent);color:#fff;padding:3px 8px;border-radius:4px;font-size:0.85rem">看板</span>
+<span style="background:var(--bg);padding:3px 8px;border-radius:4px;font-size:0.85rem">時間軸</span>
+<span style="background:var(--accent);color:#fff;padding:3px 8px;border-radius:4px;font-size:0.85rem">🔄 重新載入</span>
+<span style="background:var(--green);color:#fff;padding:3px 8px;border-radius:4px;font-size:0.85rem">☁️ 雲端更新</span>
+<span style="font-size:0.75rem;color:var(--muted);margin-left:auto">🟡🟢⬜🔵</span>
+</div>
+</div>
+
+<div class="ui-box ui-l3">
+<div class="ui-label">看板視圖</div>
+<div class="ui-row">
+<div class="ui-col ui-box ui-l4">
+<div style="font-size:0.85rem;font-weight:600">一區</div>
+<div class="ui-box ui-l4"><div style="font-size:0.75rem;color:var(--accent)">👤 負責人</div>
+<div class="ui-box" style="border:1px solid var(--border);padding:4px;font-size:0.7rem">📁 群組<br><span style="color:var(--muted)">└ 任務項目</span></div>
+<div class="ui-box" style="border:1px solid var(--border);padding:4px;font-size:0.7rem">獨立任務卡</div>
+</div>
+</div>
+<div class="ui-col ui-box ui-l4">
+<div style="font-size:0.85rem;font-weight:600">二區</div>
+<div style="font-size:0.75rem;color:var(--muted)">同上結構</div>
+</div>
+<div class="ui-col ui-box ui-l4">
+<div style="font-size:0.85rem;font-weight:600">三區</div>
+<div style="font-size:0.75rem;color:var(--muted)">同上結構</div>
+</div>
+</div>
+</div>
+
+<div class="ui-box ui-l3">
+<div class="ui-label">時間軸視圖</div>
+<div class="ui-row">
+<div style="width:200px;font-size:0.8rem">
+<div style="color:var(--accent)">👤 負責人</div>
+<div style="padding-left:12px;font-size:0.75rem">📁 群組名稱</div>
+<div style="padding-left:24px;color:var(--muted);font-size:0.7rem">└ 任務項目</div>
+</div>
+<div style="flex:1;background:var(--bg);border-radius:4px;padding:8px;font-size:0.75rem;color:var(--muted)">
+← Gantt 條（日期軸）→
+</div>
+</div>
+</div>
+</div>
+
+</div>
+</div>
+
+<script>
+function showTab(i){document.querySelectorAll('.tab').forEach((t,j)=>{t.classList.toggle('active',j===i)});document.querySelectorAll('.panel').forEach((p,j)=>{p.classList.toggle('active',j===i)})}
+</script>
+<script src="nav.js"></script>
+</body>
+</html>

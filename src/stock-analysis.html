@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>台股分析資訊圖表 — 2026/05/18</title>
+<style>
+:root{--bg:#0d1117;--surface:#161b22;--border:#30363d;--text:#e6edf3;--muted:#8b949e;--accent:#58a6ff;--green:#3fb950;--yellow:#d29922;--red:#f85149;--orange:#f0883e}
+*{margin:0;padding:0;box-sizing:border-box}
+body{background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;padding:30px 16px}
+h1{text-align:center;font-size:20px;color:var(--accent);margin-bottom:4px}
+.date{text-align:center;color:var(--muted);font-size:13px;margin-bottom:30px}
+.grid{max-width:1100px;margin:0 auto;display:grid;grid-template-columns:repeat(auto-fit,minmax(320px,1fr));gap:16px}
+.card{background:var(--surface);border:1px solid var(--border);border-radius:10px;padding:16px;overflow:hidden}
+.card h3{font-size:14px;color:var(--accent);margin-bottom:12px;border-bottom:1px solid var(--border);padding-bottom:8px}
+.big-num{font-size:36px;font-weight:700;text-align:center;margin:8px 0}
+.big-num.up{color:var(--green)}
+.big-num.down{color:var(--red)}
+.big-num .change{font-size:16px;margin-left:8px}
+.meter{height:12px;background:var(--bg);border-radius:6px;overflow:hidden;margin:8px 0}
+.meter-fill{height:100%;border-radius:6px;transition:width .5s}
+.bar-chart{display:flex;align-items:flex-end;gap:6px;height:100px;padding-top:10px}
+.bar{flex:1;border-radius:4px 4px 0 0;position:relative;min-width:20px;transition:height .5s}
+.bar-label{position:absolute;bottom:-18px;left:50%;transform:translateX(-50%);font-size:10px;color:var(--muted);white-space:nowrap}
+.bar-val{position:absolute;top:-16px;left:50%;transform:translateX(-50%);font-size:10px;color:var(--text)}
+.list{font-size:13px;line-height:2}
+.list .up{color:var(--green)}
+.list .down{color:var(--red)}
+.list .flat{color:var(--muted)}
+.gauge{text-align:center;margin:10px 0}
+.gauge-num{font-size:48px;font-weight:700}
+.gauge-label{font-size:13px;color:var(--muted);margin-top:4px}
+.zones{display:flex;flex-direction:column;gap:4px;margin-top:10px;font-size:12px}
+.zone{padding:4px 8px;border-radius:4px;border:1px solid transparent}
+.zone.active{border-color:var(--accent);background:rgba(88,166,255,0.1)}
+.sparkline{display:flex;align-items:flex-end;gap:2px;height:40px;margin:8px 0}
+.spark-bar{flex:1;background:var(--accent);border-radius:2px;opacity:0.6}
+.spark-bar:last-child{opacity:1}
+.spark-labels{display:flex;justify-content:space-between;font-size:10px;color:var(--muted)}
+.event-list{font-size:12px;line-height:1.8;color:var(--muted)}
+.event-list li{list-style:none;padding-left:16px;position:relative}
+.event-list li::before{content:'⚡';position:absolute;left:0}
+.stock-grid{display:grid;grid-template-columns:1fr 1fr;gap:6px;font-size:12px}
+.stock-item{display:flex;justify-content:space-between;padding:4px 6px;background:var(--bg);border-radius:4px}
+.stock-item .name{color:var(--text)}
+.stock-item .trend{font-weight:600}
+table{width:100%;font-size:12px;border-collapse:collapse}
+td,th{padding:6px 8px;text-align:left;border-bottom:1px solid var(--border)}
+th{color:var(--muted);font-weight:normal}
+</style>
+</head>
+<body>
+<h1>📈 台股分析資訊圖表</h1>
+<p class="date">2026/05/18（週一）</p>
+
+<div class="grid">
+
+<!-- 大盤概況 -->
+<div class="card">
+<h3>🏛️ 大盤概況</h3>
+<div class="big-num up">41,752 <span class="change">+377 (+0.91%)</span></div>
+<div class="sparkline">
+<div class="spark-bar" style="height:85%"></div>
+<div class="spark-bar" style="height:90%"></div>
+<div class="spark-bar" style="height:95%"></div>
+<div class="spark-bar" style="height:88%"></div>
+<div class="spark-bar" style="height:75%"></div>
+<div class="spark-bar" style="height:82%"></div>
+<div class="spark-bar" style="height:87%"></div>
+</div>
+<div class="spark-labels"><span>5/8</span><span>5/9</span><span>5/11</span><span>5/12</span><span>5/13</span><span>5/14</span><span>5/15</span></div>
+<table style="margin-top:12px">
+<tr><td>成交量</td><td>1,217 億</td></tr>
+<tr><td>期貨</td><td style="color:var(--red)">41,400 (-0.84%)</td></tr>
+<tr><td>外資</td><td style="color:var(--green)">買超 95 億</td></tr>
+</table>
+</div>
+
+<!-- 市場情緒 -->
+<div class="card">
+<h3>🧠 市場情緒</h3>
+<div class="gauge">
+<div class="gauge-num" style="color:var(--yellow)">48</div>
+<div class="gauge-label">中性偏空</div>
+</div>
+<div class="meter"><div class="meter-fill" style="width:48%;background:var(--yellow)"></div></div>
+<div class="zones">
+<div class="zone">0-20：極度恐慌</div>
+<div class="zone">20-40：恐慌</div>
+<div class="zone active">40-60：中性</div>
+<div class="zone">60-80：貪婪</div>
+<div class="zone">80-100：極度貪婪</div>
+</div>
+</div>
+
+<!-- 巴菲特指數 -->
+<div class="card">
+<h3>📏 巴菲特指數</h3>
+<div class="gauge">
+<div class="gauge-num" style="color:var(--red)">198%</div>
+<div class="gauge-label">台股市值 ÷ GDP</div>
+</div>
+<div class="zones">
+<div class="zone">&lt;50%：嚴重低估</div>
+<div class="zone">50-75%：適度低估</div>
+<div class="zone">75-90%：合理估值</div>
+<div class="zone">90-115%：輕度高估</div>
+<div class="zone active">&gt;115%：嚴重高估</div>
+</div>
+</div>
+
+<!-- 類股表現 -->
+<div class="card">
+<h3>📊 類股表現</h3>
+<div class="bar-chart">
+<div class="bar" style="height:70%;background:var(--green)"><div class="bar-val">+1.2</div><div class="bar-label">半導體</div></div>
+<div class="bar" style="height:75%;background:var(--green)"><div class="bar-val">+1.5</div><div class="bar-label">AI</div></div>
+<div class="bar" style="height:55%;background:var(--green)"><div class="bar-val">+0.8</div><div class="bar-label">電子</div></div>
+<div class="bar" style="height:45%;background:var(--green)"><div class="bar-val">+0.5</div><div class="bar-label">PCB</div></div>
+<div class="bar" style="height:48%;background:var(--green)"><div class="bar-val">+0.6</div><div class="bar-label">光電</div></div>
+<div class="bar" style="height:35%;background:var(--green)"><div class="bar-val">+0.3</div><div class="bar-label">金融</div></div>
+<div class="bar" style="height:20%;background:var(--red)"><div class="bar-val">-0.2</div><div class="bar-label">傳產</div></div>
+<div class="bar" style="height:90%;background:var(--green)"><div class="bar-val">+3.5</div><div class="bar-label">加密</div></div>
+</div>
+</div>
+
+<!-- 國際市場 -->
+<div class="card">
+<h3>🌍 國際市場</h3>
+<div class="list">
+<div><span class="up">▲ +0.74%</span> 道瓊</div>
+<div><span class="up">▲ +0.88%</span> Nasdaq</div>
+<div><span class="up">▲ +0.55%</span> 日經 225</div>
+<div><span class="down">▼ -0.80%</span> WTI 原油</div>
+<div><span class="up">▲ +5.20%</span> Bitcoin</div>
+<div><span class="down">▼ -0.20%</span> 黃金</div>
+</div>
+<p style="margin-top:10px;font-size:11px;color:var(--red)">⚠️ 美股週五大跌：道瓊 -537、Nvidia -4%</p>
+</div>
+
+<!-- 追蹤個股 -->
+<div class="card">
+<h3>⭐ 追蹤個股</h3>
+<div class="stock-grid">
+<div class="stock-item"><span class="name">2330 台積電</span><span class="trend up">▲ 反彈</span></div>
+<div class="stock-item"><span class="name">0050 元大50</span><span class="trend up">▲ 反彈</span></div>
+<div class="stock-item"><span class="name">0056 高股息</span><span class="trend up">▲ 穩健</span></div>
+<div class="stock-item"><span class="name">00878 永續高息</span><span class="trend up">▲ 穩健</span></div>
+<div class="stock-item"><span class="name">00919 精選高息</span><span class="trend up">▲ 穩健</span></div>
+<div class="stock-item"><span class="name">00940 價值高息</span><span class="trend up">▲ 小漲</span></div>
+<div class="stock-item"><span class="name">006208 富邦50</span><span class="trend up">▲ 反彈</span></div>
+<div class="stock-item"><span class="name">00892 半導體</span><span class="trend up">▲ 反彈</span></div>
+<div class="stock-item"><span class="name">00891 關鍵半導</span><span class="trend up">▲ 反彈</span></div>
+<div class="stock-item"><span class="name">00929 科技優息</span><span class="trend up">▲ 反彈</span></div>
+<div class="stock-item"><span class="name">00981A 統一增長</span><span class="trend up">▲ 反彈</span></div>
+<div class="stock-item"><span class="name">00982A 群益強棒</span><span class="trend up">▲ 反彈</span></div>
+<div class="stock-item"><span class="name">00403A 主動型</span><span class="trend up">▲ 強勢</span></div>
+</div>
+</div>
+
+<!-- 本週事件 -->
+<div class="card">
+<h3>📅 本週關鍵事件</h3>
+<ul class="event-list">
+<li>週一：預期開低（美股週五大跌影響）</li>
+<li>週三：Nvidia 財報（盤後，預期 $78.7B）</li>
+<li>週四：Walmart 財報</li>
+<li>週四：Fed 會議紀要</li>
+<li>5/29：MSCI 調整生效（台灣權重 +0.30%）</li>
+</ul>
+</div>
+
+<!-- 操盤建議 -->
+<div class="card">
+<h3>💡 操盤建議</h3>
+<div class="list" style="font-size:13px;line-height:2.2">
+<div>📌 今日觀望不追空，等 Nvidia 財報</div>
+<div>📌 高股息 ETF 持續防禦</div>
+<div>📌 保持 6-7 成持股水位</div>
+<div>📌 Nvidia 優於預期 → 半導體加碼</div>
+<div>📌 Nvidia 不如預期 → 高息 ETF 避險</div>
+</div>
+</div>
+
+</div>
+<script src="nav.js"></script></body>
+</html>

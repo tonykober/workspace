@@ -1,0 +1,308 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>每日資訊儀表板 — 系統架構與規範</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;background:#0d1117;color:#c9d1d9;line-height:1.6;padding:20px;max-width:1000px;margin:0 auto}
+h1{color:#58a6ff;margin-bottom:20px;font-size:24px}
+h2{color:#58a6ff;margin:20px 0 10px;font-size:18px;border-bottom:1px solid #21262d;padding-bottom:6px}
+h3{color:#79c0ff;margin:12px 0 6px;font-size:15px}
+p,li{font-size:14px;margin-bottom:6px}
+ul{padding-left:20px}
+code{background:#161b22;padding:2px 6px;border-radius:4px;font-size:13px;color:#f0883e}
+pre{background:#161b22;padding:12px;border-radius:8px;overflow-x:auto;font-size:13px;margin:8px 0;border:1px solid #21262d}
+table{width:100%;border-collapse:collapse;margin:10px 0;font-size:13px}
+th,td{border:1px solid #21262d;padding:6px 10px;text-align:left}
+th{background:#161b22;color:#58a6ff}
+.tabs{display:flex;gap:4px;margin-bottom:16px;flex-wrap:wrap}
+.tab{padding:8px 16px;background:#161b22;border:1px solid #21262d;border-radius:6px 6px 0 0;cursor:pointer;color:#8b949e;font-size:13px}
+.tab.active{background:#0d1117;color:#58a6ff;border-bottom-color:#0d1117}
+.panel{display:none;padding:16px;background:#0d1117;border:1px solid #21262d;border-radius:0 6px 6px 6px}
+.panel.active{display:block}
+.badge{display:inline-block;padding:2px 8px;border-radius:4px;font-size:11px;font-weight:600}
+.badge-green{background:#1a3a2a;color:#3fb950;border:1px solid #3fb950}
+.badge-yellow{background:#2a2a1a;color:#d29922;border:1px solid #d29922}
+.badge-blue{background:#1a2a3a;color:#58a6ff;border:1px solid #58a6ff}
+.badge-red{background:#3a1a1a;color:#f85149;border:1px solid #f85149}
+</style>
+</head>
+<body>
+<h1>📊 每日資訊儀表板 — 系統架構與規範</h1>
+
+<div class="tabs">
+<div class="tab active" onclick="showTab(0)">系統概覽</div>
+<div class="tab" onclick="showTab(1)">Google Sheets</div>
+<div class="tab" onclick="showTab(2)">資料更新機制</div>
+<div class="tab" onclick="showTab(3)">前端功能</div>
+<div class="tab" onclick="showTab(4)">台股操盤規範</div>
+<div class="tab" onclick="showTab(5)">規則與限制</div>
+</div>
+
+<div class="panel active">
+<h2>系統概覽</h2>
+<table>
+<tr><th>項目</th><th>內容</th></tr>
+<tr><td>URL</td><td><code>https://tonykober.github.io/daily-dashboard/</code></td></tr>
+<tr><td>Repo</td><td><code>tonykober/daily-dashboard</code>（branch: main）</td></tr>
+<tr><td>本地路徑</td><td><code>C:\Users\koberhsieh\Projects\daily-dashboard</code></td></tr>
+<tr><td>前端</td><td>單一 <code>index.html</code>（CSS + HTML + JS 合一）</td></tr>
+<tr><td>後端</td><td>無（純靜態 GitHub Pages）</td></tr>
+<tr><td>資料庫</td><td>JSON 檔案（<code>data/YYYY-MM-DD.json</code>）+ Google Sheets</td></tr>
+<tr><td>部署</td><td>git push → GitHub Pages 自動部署</td></tr>
+</table>
+
+<h3>檔案結構</h3>
+<pre>
+daily-dashboard/
+├── index.html          # 單一頁面（CSS + HTML + JS）
+├── data/
+│   ├── index.json      # 日期索引陣列
+│   ├── 2026-05-05.json
+│   ├── ...
+│   └── 2026-05-20.json
+</pre>
+
+<h3>資料格式</h3>
+<pre>
+{
+  "date": "2026-05-20",
+  "categories": {
+    "ai": [...],
+    "gaming": [...],
+    "tech": [...],
+    "crypto": [...],
+    "dev": [...],
+    "art": [...],
+    "design": [...],
+    "business": [...],
+    "finance": [...],
+    "ai_videos": [...],
+    "summaries": {...},
+    "stock_briefing": {...}
+  }
+}
+</pre>
+</div>
+
+<div class="panel">
+<h2>Google Sheets 結構</h2>
+<table>
+<tr><th>項目</th><th>內容</th></tr>
+<tr><td>Sheet ID</td><td><code>1ySPqQQLJRYIPVhuugm30mHF-GCNk-DXVKWvUirjoJqg</code></td></tr>
+<tr><td>Apps Script URL</td><td><code>https://script.google.com/macros/s/AKfycbw3z41uOGWQOU_uLtaFUSAld73oUb7cbQyaYTlgDpgwkBGSbXrrqDYEoKpRw-9qZv40/exec</code></td></tr>
+</table>
+
+<h3>Watchlist 分頁</h3>
+<ul>
+<li>A 欄：股票/ETF 代碼（每行一個）</li>
+<li>讀取方式：gviz CSV API + cache-busting <code>&t=Date.now()</code></li>
+<li>寫入方式：POST no-cors 到 Apps Script</li>
+<li>代碼保留前導零（如 0056）、可含字母（如 00982A）</li>
+</ul>
+
+<h3>Bookmarks 分頁</h3>
+<ul>
+<li>A 欄：書籤 JSON 字串</li>
+<li>同步方式同 Watchlist</li>
+</ul>
+
+<h3>前端同步邏輯</h3>
+<ul>
+<li><code>loadWatchlistFromSheet()</code> — 讀取 Sheet 覆蓋 localStorage（排除 test 開頭項目）</li>
+<li><code>saveWatchlistToSheet()</code> — POST 寫入 Sheet</li>
+<li><code>loadBookmarksFromSheet()</code> / <code>saveBookmarksToSheet()</code> — 同上</li>
+</ul>
+</div>
+
+<div class="panel">
+<h2>資料更新機制</h2>
+
+<h3>每日排程</h3>
+<table>
+<tr><th>時間</th><th>任務</th><th>說明</th></tr>
+<tr><td>08:00</td><td>advisor 提供台股資料</td><td>JSON 格式，含所有追蹤個股</td></tr>
+<tr><td>08:30</td><td>台股操盤日報</td><td>建立當日 data json（僅 stock_briefing），git push</td></tr>
+<tr><td>09:00</td><td>全分類資訊更新</td><td>搜尋 9 分類最新資訊，補入當日 json，git push</td></tr>
+</table>
+
+<h3>更新流程（08:30 台股）</h3>
+<ol>
+<li>讀取 Sheet watchlist 確認完整清單</li>
+<li>建立 <code>data/YYYY-MM-DD.json</code>（僅含 stock_briefing，其他分類為空）</li>
+<li>更新 <code>data/index.json</code></li>
+<li>git push</li>
+<li>在 topic 2497 發概要</li>
+</ol>
+
+<h3>更新流程（09:00 全分類）</h3>
+<ol>
+<li>搜尋 AI、遊戲、科技、加密、開發、美術、設計、商業、財經</li>
+<li>填入當日 json 的各分類 + summaries</li>
+<li>git push</li>
+<li>在 topic 2497 發概要</li>
+</ol>
+
+<h3>週末/國定假日</h3>
+<ul>
+<li>台股操盤：跳過</li>
+<li>全分類資訊：照常更新</li>
+</ul>
+</div>
+
+<div class="panel">
+<h2>前端功能架構</h2>
+
+<h3>主要功能</h3>
+<ul>
+<li>深色/淺色主題切換</li>
+<li>日期導航（input type=date）</li>
+<li>分類頁籤（AI、遊戲、科技、加密、開發、美術、設計、商業、財經、書籤）</li>
+<li>全文搜尋</li>
+<li>書籤收藏（Sheet 同步）</li>
+<li>分類摘要（每個頁籤頂部）</li>
+<li>Loading spinner</li>
+<li>Back-to-top 按鈕</li>
+<li>標題點擊重新載入</li>
+</ul>
+
+<h3>台股操盤面板</h3>
+<ul>
+<li>可收合（▼/▶）</li>
+<li>最後更新時間（標題右側）</li>
+<li>追蹤清單（含 NAV/PB/折溢價/PE/離季線/建議標籤）</li>
+<li>圖表（SVG sparkline + 漸層填充 + 格線 + Y軸標籤）</li>
+<li>市場總覽、類股漲跌、個股強弱、ETF趨勢</li>
+<li>法人籌碼、市場情緒（5區間）、國際市場</li>
+<li>巴菲特指數（5區間）、焦點訊息、整體評估</li>
+</ul>
+
+<h3>追蹤清單邏輯</h3>
+<ul>
+<li>匹配：精確代碼前綴優先，模糊 includes 需長度≥4</li>
+<li>歷史查找：當日無資料時往前查 7 天</li>
+<li><code>searched</code> 陣列：已搜尋但未找到 → 顯示「查無此個股」</li>
+<li>趨勢顯示：▲紅（漲）、▼綠（跌）、▬灰（平）+ 描述文字</li>
+</ul>
+</div>
+
+<div class="panel">
+<h2>台股操盤規範</h2>
+
+<h3>追蹤個股（14檔）</h3>
+<table>
+<tr><th>代碼</th><th>名稱</th><th>類型</th></tr>
+<tr><td>2330</td><td>台積電</td><td>個股</td></tr>
+<tr><td>0050</td><td>元大台灣50</td><td>市值型ETF</td></tr>
+<tr><td>0056</td><td>元大高股息</td><td>高息ETF</td></tr>
+<tr><td>00878</td><td>國泰永續高股息</td><td>高息ETF</td></tr>
+<tr><td>00919</td><td>群益台灣精選高息</td><td>高息ETF</td></tr>
+<tr><td>00940</td><td>元大台灣價值高息</td><td>高息ETF</td></tr>
+<tr><td>006208</td><td>富邦台50</td><td>市值型ETF</td></tr>
+<tr><td>00892</td><td>富邦台灣半導體</td><td>半導體ETF</td></tr>
+<tr><td>00891</td><td>中信關鍵半導體</td><td>半導體ETF</td></tr>
+<tr><td>00982A</td><td>群益台灣強棒</td><td>主動型ETF</td></tr>
+<tr><td>00981A</td><td>統一台股增長</td><td>主動型ETF</td></tr>
+<tr><td>00403A</td><td>中信美債20年</td><td>債券ETF</td></tr>
+<tr><td>009816</td><td>凱基台灣TOP50</td><td>不配息複利型ETF</td></tr>
+<tr><td>00929</td><td>復華台灣科技優息</td><td>科技高息ETF</td></tr>
+</table>
+
+<h3>每檔必填欄位</h3>
+<table>
+<tr><th>欄位</th><th>說明</th><th>適用</th></tr>
+<tr><td><code>name</code></td><td>代碼 + 名稱</td><td>全部</td></tr>
+<tr><td><code>trend</code></td><td>漲/跌/平 + 描述</td><td>全部</td></tr>
+<tr><td><code>note</code></td><td>原因說明</td><td>全部</td></tr>
+<tr><td><code>nav</code></td><td>每股淨值</td><td>ETF（個股填null）</td></tr>
+<tr><td><code>pb</code></td><td>股價淨值比</td><td>個股（ETF填null）</td></tr>
+<tr><td><code>premium</code></td><td>折溢價%</td><td>ETF（個股填null）</td></tr>
+<tr><td><code>pe</code></td><td>本益比</td><td>全部（無則null）</td></tr>
+<tr><td><code>quarterLine</code></td><td>離季線距離%</td><td>全部</td></tr>
+<tr><td><code>suggestion</code></td><td>買賣建議</td><td>全部</td></tr>
+</table>
+
+<h3>建議標籤</h3>
+<ul>
+<li><span class="badge badge-green">買進</span> — 估值合理或低估，適合進場</li>
+<li><span class="badge badge-yellow">持有</span> — 不加碼不減碼</li>
+<li><span class="badge badge-blue">觀望</span> — 等待催化劑或確認方向</li>
+<li><span class="badge badge-red">減碼</span> — 風險升高，建議降低部位</li>
+</ul>
+
+<h3>情緒指數（0-100）</h3>
+<table>
+<tr><th>區間</th><th>標籤</th><th>說明</th></tr>
+<tr><td>0-20</td><td>極度恐慌</td><td>市場恐慌性拋售</td></tr>
+<tr><td>20-40</td><td>恐慌</td><td>投資人偏保守，賣壓大</td></tr>
+<tr><td>40-60</td><td>中性</td><td>多空拉鋸，觀望為主</td></tr>
+<tr><td>60-80</td><td>貪婪</td><td>市場偏多，追漲意願高</td></tr>
+<tr><td>80-100</td><td>極度貪婪</td><td>過熱，可能有回調風險</td></tr>
+</table>
+
+<h3>巴菲特指數</h3>
+<table>
+<tr><th>區間</th><th>標籤</th></tr>
+<tr><td>&lt; 50%</td><td>嚴重低估</td></tr>
+<tr><td>50-75%</td><td>適度低估</td></tr>
+<tr><td>75-90%</td><td>合理估值</td></tr>
+<tr><td>90-115%</td><td>輕度高估</td></tr>
+<tr><td>&gt; 115%</td><td>嚴重高估</td></tr>
+</table>
+</div>
+
+<div class="panel">
+<h2>規則與限制</h2>
+
+<h3>Watchlist 同步</h3>
+<ul>
+<li>Sheet 為唯一真實來源（Single Source of Truth）</li>
+<li>前端載入時讀取 Sheet 覆蓋 localStorage</li>
+<li>保護邏輯：如果 Sheet 含 "test" 開頭項目，不覆蓋本地</li>
+<li>新增/刪除同時更新 localStorage 和 Sheet</li>
+</ul>
+
+<h3>台股操盤</h3>
+<ul>
+<li>週末/國定假日跳過</li>
+<li>每日 08:30 發布，僅含 stock_briefing（其他分類留空）</li>
+<li>09:00 補入全分類資訊</li>
+<li>所有 watchlist 個股必須有資料（無則標記在 <code>searched</code> 陣列）</li>
+<li><code>updated_at</code> 欄位記錄最後更新時間</li>
+</ul>
+
+<h3>資訊內容</h3>
+<ul>
+<li>使用中文</li>
+<li>連結必須指向具體文章內頁（非首頁）</li>
+<li>不發到 AI 專家（topic 64）或遊戲專家（topic 65）頻道</li>
+<li>發布到儀表板頻道（topic 2497）</li>
+</ul>
+
+<h3>股票代碼規則</h3>
+<ul>
+<li>保留前導零（0056 不是 56）</li>
+<li>可含字母（00982A、00981A、00403A）</li>
+<li>匹配邏輯：精確代碼前綴優先，模糊 includes 需長度≥4</li>
+</ul>
+
+<h3>趨勢顯示</h3>
+<ul>
+<li>▲ 紅色（漲）</li>
+<li>▼ 綠色（跌）</li>
+<li>▬ 灰色（平）</li>
+<li><code>trendArrow(t)</code> 函數：去除前導漲/跌/平字元，保留描述</li>
+</ul>
+</div>
+
+<script>
+function showTab(i){
+  document.querySelectorAll('.tab').forEach((t,idx)=>t.classList.toggle('active',idx===i));
+  document.querySelectorAll('.panel').forEach((p,idx)=>p.classList.toggle('active',idx===i));
+}
+</script>
+<script src="nav.js"></script>
+</body>
+</html>
