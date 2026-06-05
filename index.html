@@ -79,12 +79,15 @@ header span{color:var(--muted);font-size:14px;margin-left:12px}
 </div><!-- end mainContent -->
 <script>
 function unlock(){
-  if(document.getElementById('pwdInput').value==='index'){
-    document.getElementById('lockScreen').style.display='none';
-    document.getElementById('mainContent').style.display='block';
-    sessionStorage.setItem('ws_unlocked','1');
-    load();
-  }else{document.getElementById('pwdErr').style.display='block'}
+  crypto.subtle.digest('SHA-256',new TextEncoder().encode(document.getElementById('pwdInput').value)).then(function(buf){
+    var h=Array.from(new Uint8Array(buf)).map(function(b){return b.toString(16).padStart(2,'0')}).join('');
+    if(h==='1bc04b5291c26a46d918139138b992d2de976d6851d0893b0476b85bfbdfc6e6'){
+      document.getElementById('lockScreen').style.display='none';
+      document.getElementById('mainContent').style.display='block';
+      sessionStorage.setItem('ws_unlocked','1');
+      load();
+    }else{document.getElementById('pwdErr').style.display='block'}
+  });
 }
 if(sessionStorage.getItem('ws_unlocked')==='1'){
   document.getElementById('lockScreen').style.display='none';
