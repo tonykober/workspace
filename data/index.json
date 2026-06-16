@@ -61,5 +61,12 @@
     "icon": "🐉",
     "path": "dvc3-tierlist.html",
     "date": "2026-06-13"
+  },
+  {
+    "title": "DVC3 角色強度表",
+    "desc": "屬性×階級 Tier List 表格版",
+    "icon": "📊",
+    "path": "dvc3-tierlist-image.html",
+    "date": "2026-06-16"
   }
 ]
