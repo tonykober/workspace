@@ -1,0 +1,125 @@
+<!DOCTYPE html>
+<html>
+<head>
+<script src="https://cdn.jsdelivr.net/npm/gsap@3/dist/gsap.min.js"></script>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{background:#0f172a;overflow:hidden;font-family:'Microsoft JhengHei',sans-serif}
+.bg{position:absolute;top:0;left:0;width:1920px;height:1080px;object-fit:cover}
+.hl{position:absolute;border:3px solid #4fc3f7;border-radius:8px;box-shadow:0 0 20px rgba(79,195,247,0.4)}
+.arr{position:absolute;color:#4fc3f7;font-size:40px;font-weight:bold}
+.sub{position:absolute;bottom:30px;left:50%;transform:translateX(-50%);background:rgba(0,0,0,0.8);padding:8px 24px;border-radius:6px;color:#fff;font-size:18px;text-align:center}
+.ttl{position:absolute;top:50%;left:50%;transform:translate(-50%,-50%);text-align:center}
+.ttl h1{color:#4fc3f7;font-size:56px;margin-bottom:12px}
+.ttl p{color:#90a4ae;font-size:26px}
+</style>
+</head>
+<body>
+<div id="root" data-composition-id="multimedia-center-intro" data-start="0" data-duration="75" data-width="1920" data-height="1080">
+
+  <!-- Audio tracks -->
+  <audio src="audio/narr-01-opening.mp3" class="clip" data-start="0" data-duration="6" data-track-index="0"/>
+  <audio src="audio/narr-02-overview.mp3" class="clip" data-start="6" data-duration="12" data-track-index="0"/>
+  <audio src="audio/narr-03-sync.mp3" class="clip" data-start="18" data-duration="12" data-track-index="0"/>
+  <audio src="audio/narr-04-folders.mp3" class="clip" data-start="30" data-duration="12" data-track-index="0"/>
+  <audio src="audio/narr-05-views.mp3" class="clip" data-start="42" data-duration="10" data-track-index="0"/>
+  <audio src="audio/narr-06-search.mp3" class="clip" data-start="52" data-duration="8" data-track-index="0"/>
+  <audio src="audio/narr-07-local.mp3" class="clip" data-start="60" data-duration="7" data-track-index="0"/>
+  <audio src="audio/narr-08-ending.mp3" class="clip" data-start="67" data-duration="7" data-track-index="0"/>
+
+  <!-- Title scene -->
+  <div id="s1" class="clip" data-start="0" data-duration="6" data-track-index="1" style="position:absolute;top:0;left:0;width:1920px;height:1080px;background:#0f172a">
+    <div class="ttl" id="t1"><h1>▶ 多媒體中心</h1><p>雲端與本地資源管理系統</p></div>
+    <div class="sub" id="sub1">歡迎使用多媒體中心</div>
+  </div>
+
+  <!-- Overview scene -->
+  <div id="s2" class="clip" data-start="6" data-duration="12" data-track-index="1" style="position:absolute;top:0;left:0;width:1920px;height:1080px">
+    <img src="screenshots/01-main-list.png" class="bg"/>
+    <div class="hl" id="hl1" style="top:60px;left:8px;width:215px;height:300px;opacity:0"></div>
+    <div class="hl" id="hl2" style="top:60px;left:230px;width:1680px;height:960px;opacity:0"></div>
+    <div class="sub" id="sub2" style="opacity:0">左側資料夾結構 ｜ 右側檔案瀏覽區</div>
+  </div>
+
+  <!-- Sync scene -->
+  <div id="s3" class="clip" data-start="18" data-duration="12" data-track-index="1" style="position:absolute;top:0;left:0;width:1920px;height:1080px">
+    <img src="screenshots/04-folder-expanded.png" class="bg"/>
+    <div class="hl" id="hl3" style="top:280px;left:510px;width:440px;height:240px;opacity:0"></div>
+    <div class="sub" id="sub3" style="opacity:0">一鍵匯入，顯示詳細同步報告</div>
+  </div>
+
+  <!-- Folders scene -->
+  <div id="s4" class="clip" data-start="30" data-duration="12" data-track-index="1" style="position:absolute;top:0;left:0;width:1920px;height:1080px">
+    <img src="screenshots/01-main-list.png" class="bg"/>
+    <div class="hl" id="hl4" style="top:110px;left:8px;width:215px;height:200px;opacity:0"></div>
+    <div class="arr" id="ar4" style="top:180px;left:240px;opacity:0">→</div>
+    <div class="sub" id="sub4" style="opacity:0">2D ｜ 3D ｜ 特效 ｜ UI — 快速切換</div>
+  </div>
+
+  <!-- Views scene -->
+  <div id="s5" class="clip" data-start="42" data-duration="10" data-track-index="1" style="position:absolute;top:0;left:0;width:1920px;height:1080px">
+    <img src="screenshots/01-main-list.png" class="bg"/>
+    <div class="hl" id="hl5" style="top:8px;right:8px;width:70px;height:38px;opacity:0"></div>
+    <div class="arr" id="ar5" style="top:50px;right:30px;opacity:0">↑</div>
+    <div class="sub" id="sub5" style="opacity:0">列表 ｜ 宮格 — 依需求切換檢視</div>
+  </div>
+
+  <!-- Search scene -->
+  <div id="s6" class="clip" data-start="52" data-duration="8" data-track-index="1" style="position:absolute;top:0;left:0;width:1920px;height:1080px">
+    <img src="screenshots/01-main-list.png" class="bg"/>
+    <div class="hl" id="hl6" style="top:8px;right:110px;width:38px;height:38px;opacity:0"></div>
+    <div class="arr" id="ar6" style="top:50px;right:115px;opacity:0">↑</div>
+    <div class="sub" id="sub6" style="opacity:0">搜尋功能，快速找到檔案</div>
+  </div>
+
+  <!-- Local scene -->
+  <div id="s7" class="clip" data-start="60" data-duration="7" data-track-index="1" style="position:absolute;top:0;left:0;width:1920px;height:1080px">
+    <img src="screenshots/01-main-list.png" class="bg"/>
+    <div class="hl" id="hl7" style="bottom:55px;left:8px;width:215px;height:45px;opacity:0"></div>
+    <div class="sub" id="sub7" style="opacity:0">掃描本地資料夾，統一管理</div>
+  </div>
+
+  <!-- Ending scene -->
+  <div id="s8" class="clip" data-start="67" data-duration="8" data-track-index="1" style="position:absolute;top:0;left:0;width:1920px;height:1080px;background:linear-gradient(135deg,#0f172a,#1a237e)">
+    <div class="ttl" id="t2"><h1>▶ 多媒體中心</h1><p>讓您的創作素材井然有序</p></div>
+    <div class="sub" id="sub8" style="opacity:0">立即開始使用</div>
+  </div>
+
+  <script>
+    window.__timelines = window.__timelines || {};
+    const tl = gsap.timeline({paused:true});
+    // s1 title
+    tl.from("#t1",{opacity:0,y:30,duration:0.8},0)
+      .from("#sub1",{opacity:0,duration:0.5},0.5)
+    // s2 overview
+      .to("#sub2",{opacity:1,duration:0.4},6)
+      .to("#hl1",{opacity:1,duration:0.5},7)
+      .to("#hl1",{opacity:0,duration:0.3},10)
+      .to("#hl2",{opacity:1,duration:0.5},10.5)
+      .to("#hl2",{opacity:0,duration:0.3},14)
+    // s3 sync
+      .to("#sub3",{opacity:1,duration:0.4},18.5)
+      .to("#hl3",{opacity:1,duration:0.5},19.5)
+    // s4 folders
+      .to("#sub4",{opacity:1,duration:0.4},30.5)
+      .to("#hl4",{opacity:1,duration:0.5},31)
+      .to("#ar4",{opacity:1,x:10,duration:0.4},32)
+    // s5 views
+      .to("#sub5",{opacity:1,duration:0.4},42.5)
+      .to("#hl5",{opacity:1,duration:0.5},43)
+      .to("#ar5",{opacity:1,duration:0.3},43.5)
+    // s6 search
+      .to("#sub6",{opacity:1,duration:0.4},52.5)
+      .to("#hl6",{opacity:1,duration:0.5},53)
+      .to("#ar6",{opacity:1,duration:0.3},53.5)
+    // s7 local
+      .to("#sub7",{opacity:1,duration:0.4},60.5)
+      .to("#hl7",{opacity:1,duration:0.5},61)
+    // s8 ending
+      .from("#t2",{opacity:0,y:30,duration:0.8},67.5)
+      .to("#sub8",{opacity:1,duration:0.5},69);
+    window.__timelines["multimedia-center-intro"] = tl;
+  </script>
+</div>
+</body>
+</html>

@@ -1,0 +1,8 @@
+file 'C:\Users\koberhsieh\Projects\workspace\video-project\audio\narr-01-opening.mp3'
+file 'C:\Users\koberhsieh\Projects\workspace\video-project\audio\narr-02-overview.mp3'
+file 'C:\Users\koberhsieh\Projects\workspace\video-project\audio\narr-03-sync.mp3'
+file 'C:\Users\koberhsieh\Projects\workspace\video-project\audio\narr-04-folders.mp3'
+file 'C:\Users\koberhsieh\Projects\workspace\video-project\audio\narr-05-views.mp3'
+file 'C:\Users\koberhsieh\Projects\workspace\video-project\audio\narr-06-search.mp3'
+file 'C:\Users\koberhsieh\Projects\workspace\video-project\audio\narr-07-local.mp3'
+file 'C:\Users\koberhsieh\Projects\workspace\video-project\audio\narr-08-ending.mp3'
