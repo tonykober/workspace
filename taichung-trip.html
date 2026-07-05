@@ -10,6 +10,8 @@
             --primary-light: #E8F5F0;
             --sunset: #E8654E;
             --sunset-light: #FFF0ED;
+            --food: #D4813B;
+            --food-light: #FFF5ED;
             --dark: #1A1A2E;
             --gray: #6B7280;
             --light-bg: #F8FAFB;
@@ -74,6 +76,50 @@
             margin-top: 12px;
             font-size: 0.9rem;
             position: relative;
+        }
+
+        /* Tab Navigation */
+        .tab-nav {
+            display: flex;
+            justify-content: center;
+            gap: 8px;
+            padding: 16px 16px 0;
+            max-width: 720px;
+            margin: 0 auto;
+        }
+
+        .tab-btn {
+            padding: 10px 20px;
+            border: none;
+            border-radius: 8px 8px 0 0;
+            font-size: 0.9rem;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.2s;
+            font-family: inherit;
+        }
+
+        .tab-btn.active {
+            background: white;
+            color: var(--primary);
+            box-shadow: 0 -2px 8px rgba(0,0,0,0.06);
+        }
+
+        .tab-btn:not(.active) {
+            background: rgba(0,0,0,0.04);
+            color: var(--gray);
+        }
+
+        .tab-btn:hover:not(.active) {
+            background: rgba(0,0,0,0.08);
+        }
+
+        .tab-content {
+            display: none;
+        }
+
+        .tab-content.active {
+            display: block;
         }
 
         /* Info Cards */
@@ -149,6 +195,10 @@
             background: var(--sunset);
         }
 
+        .day-header.food .day-number {
+            background: var(--food);
+        }
+
         .day-title {
             font-size: 1.1rem;
             font-weight: 600;
@@ -202,6 +252,15 @@
             top: 7px;
         }
 
+        .timeline-item.food-highlight::before {
+            background: var(--food);
+            border-color: var(--food-light);
+            width: 14px;
+            height: 14px;
+            left: -18px;
+            top: 7px;
+        }
+
         .timeline-card {
             background: white;
             border-radius: 12px;
@@ -219,6 +278,11 @@
             background: var(--sunset-light);
         }
 
+        .timeline-item.food-highlight .timeline-card {
+            border-left: 3px solid var(--food);
+            background: var(--food-light);
+        }
+
         .time-badge {
             display: inline-block;
             background: var(--primary-light);
@@ -233,6 +297,11 @@
         .timeline-item.highlight .time-badge {
             background: rgba(232, 101, 78, 0.15);
             color: var(--sunset);
+        }
+
+        .timeline-item.food-highlight .time-badge {
+            background: rgba(212, 129, 59, 0.15);
+            color: var(--food);
         }
 
         .spot-name {
@@ -256,6 +325,18 @@
             border-radius: 4px;
             margin-top: 6px;
             margin-right: 4px;
+        }
+
+        .food-items {
+            margin-top: 8px;
+            padding: 8px 12px;
+            background: rgba(212, 129, 59, 0.08);
+            border-radius: 8px;
+            font-size: 0.82rem;
+        }
+
+        .food-items strong {
+            color: var(--food);
         }
 
         /* Tips Section */
@@ -352,6 +433,7 @@
             border-radius: 12px;
             padding: 20px;
             box-shadow: var(--card-shadow);
+            margin-bottom: 24px;
         }
 
         .transport-section h3 {
@@ -383,6 +465,41 @@
             flex-shrink: 0;
         }
 
+        /* Food Map */
+        .food-map {
+            background: white;
+            border-radius: 12px;
+            padding: 20px;
+            box-shadow: var(--card-shadow);
+            margin-bottom: 24px;
+        }
+
+        .food-map h3 {
+            font-size: 1rem;
+            margin-bottom: 12px;
+        }
+
+        .food-zone {
+            padding: 12px 0;
+            border-bottom: 1px solid #F3F4F6;
+        }
+
+        .food-zone:last-child {
+            border-bottom: none;
+        }
+
+        .food-zone-name {
+            font-weight: 600;
+            font-size: 0.92rem;
+            margin-bottom: 4px;
+            color: var(--food);
+        }
+
+        .food-zone-desc {
+            font-size: 0.82rem;
+            color: var(--gray);
+        }
+
         /* Footer */
         .footer {
             text-align: center;
@@ -396,6 +513,8 @@
             .hero h1 { font-size: 1.6rem; }
             .info-grid { grid-template-columns: 1fr; }
             .container { padding: 16px 12px; }
+            .tab-nav { padding: 12px 12px 0; }
+            .tab-btn { padding: 8px 14px; font-size: 0.82rem; }
         }
     </style>
     <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;600;700&display=swap" rel="stylesheet">
@@ -404,10 +523,18 @@
 
 <div class="hero">
     <h1>🌴 台中兩天一夜輕鬆行</h1>
-    <p class="subtitle">市區文藝 × 高美濕地夕陽</p>
+    <p class="subtitle">市區文藝 × 高美濕地夕陽 × 美食巡禮</p>
     <span class="date-badge">📅 2026 / 7 / 20（日）— 7 / 21（一）</span>
 </div>
 
+<!-- Tab Navigation -->
+<div class="tab-nav">
+    <button class="tab-btn active" onclick="switchTab('itinerary')">📍 景點行程</button>
+    <button class="tab-btn" onclick="switchTab('food')">🍽 美食行程</button>
+</div>
+
+<!-- ====== TAB 1: 景點行程 ====== -->
+<div id="tab-itinerary" class="tab-content active">
 <div class="container">
 
     <!-- Trip Info -->
@@ -637,7 +764,7 @@
     </div>
 
     <!-- Hotel -->
-    <div class="tips-section" style="margin-top: 24px;">
+    <div class="tips-section">
         <h3>🏨 住宿推薦（全館禁菸）</h3>
         <ul class="tips-list">
             <li><span class="bullet">•</span><strong>台中公園智選假日酒店</strong> — IHG 品牌、含早餐、近台中公園</li>
@@ -648,30 +775,245 @@
     </div>
 
 </div>
+</div>
 
+<!-- ====== TAB 2: 美食行程 ====== -->
+<div id="tab-food" class="tab-content">
+<div class="container">
 
-    <!-- Map Section -->
-    <div class="tips-section" style="margin-top: 24px;">
-        <h3>🗺️ 行程路線地圖</h3>
-        <div style="margin-top: 12px;">
-            <p style="font-size: 0.9rem; color: #6B7280; margin-bottom: 8px;"><strong>Day 1 路線</strong>：台中車站 → 第二市場 → 宮原眼科 → 科博館 → 高美濕地</p>
-            <div style="border-radius: 12px; overflow: hidden; box-shadow: 0 2px 12px rgba(0,0,0,0.08); margin-bottom: 16px;">
-                <iframe src="https://www.google.com/maps/embed?pb=!1m40!1m12!1m3!1d58245.6!2d120.6!3d24.15!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!4m25!3e2!4m5!1s0x34693d640009e0e7%3A0x73a1b6f4c53c489d!2z5Y-w5Lit6LuK56uZ!3m2!1d24.1368!2d120.685!4m5!1s0x34693d6b8e0e1e8f%3A0x4e0d2f3b7e1c0a9d!2z56ys5LqM5biC5aC0!3m2!1d24.1383!2d120.6808!4m5!1s0x34693d91e8e73b35%3A0x5b02bfab94206b0a!2z5a6u5Y6f55y856eR!3m2!1d24.1373!2d120.6837!4m3!3m2!1d24.1576!2d120.6658!5e0!3m2!1szh-TW!2stw!4v1" width="100%" height="300" style="border:0;" allowfullscreen="" loading="lazy"></iframe>
+    <!-- Food Intro -->
+    <div class="weather-alert" style="background: linear-gradient(135deg, #FFF0ED, #FFE4DD);">
+        <div class="icon">🍽</div>
+        <div class="text">
+            <strong>美食路線設計原則</strong>
+            以台中車站為圓心，所有餐廳步行或一班公車可達。不跑遠、不趕場，每餐之間保留消化＆休息時間。
+        </div>
+    </div>
+
+    <!-- Day 1 Food -->
+    <div class="day-section">
+        <div class="day-header food">
+            <div class="day-number">D1</div>
+            <div>
+                <div class="day-title">中區老味道 → 公益路大餐</div>
+                <div class="day-subtitle">7/20（日）・從傳統到時尚</div>
             </div>
-            <p style="font-size: 0.9rem; color: #6B7280; margin-bottom: 8px;"><strong>Day 2 路線</strong>：台灣美術館 → 美術園道 → 審計新村</p>
-            <div style="border-radius: 12px; overflow: hidden; box-shadow: 0 2px 12px rgba(0,0,0,0.08); margin-bottom: 16px;">
-                <iframe src="https://www.google.com/maps/embed?pb=!1m28!1m12!1m3!1d7280.5!2d120.662!3d24.142!2m3!1f0!2f0!3f0!3m2!1i1024!2i768!4f13.1!4m13!3e2!4m5!1s0x34693da5defe4dfb%3A0x5f0f4e0a8e6b0c3d!2z5ZyL56uL5Y-w54Gj576O6KGT6aSo!3m2!1d24.1414!2d120.664!4m5!1s0x34693da71a5555a7%3A0x15a2a9be08e1f0c5!2z5a-p6KiI5paw5p2R!3m2!1d24.145!2d120.663!5e0!3m2!1szh-TW!2stw!4v1" width="100%" height="250" style="border:0;" allowfullscreen="" loading="lazy"></iframe>
+        </div>
+
+        <div class="timeline">
+            <div class="timeline-item food-highlight">
+                <div class="timeline-card">
+                    <span class="time-badge">11:00 – 12:30</span>
+                    <div class="spot-name">🥢 第二市場（午餐）</div>
+                    <div class="spot-desc">台中最老的公有市場（1917年），在地人從小吃到大的早午餐聖地。室內有座位、涼爽。</div>
+                    <div class="food-items">
+                        <strong>推薦必吃：</strong><br>
+                        • 山河滷肉飯 — 肥瘦比完美的古早味<br>
+                        • 老賴紅茶 — 台中紅茶始祖，甘甜不膩<br>
+                        • 王記菜頭粿 — 外酥內軟現煎<br>
+                        • 麻芛湯 — 台中獨有消暑湯品<br>
+                        • 李海魯肉飯 — 另一派滷肉飯擁護者最愛
+                    </div>
+                    <span class="spot-tag">傳統市場</span><span class="spot-tag">步行 5 分鐘</span>
+                </div>
             </div>
-            <div style="display: flex; gap: 8px; flex-wrap: wrap;">
-                <a href="https://www.google.com/maps/dir/台中車站/第二市場,台中/宮原眼科,台中/國立自然科學博物館,台中/高美濕地" target="_blank" style="display: inline-flex; align-items: center; gap: 4px; background: #2D8C6F; color: white; padding: 8px 14px; border-radius: 8px; text-decoration: none; font-size: 0.85rem;">📍 Day1 完整路線導航</a>
-                <a href="https://www.google.com/maps/dir/國立台灣美術館,台中/美術園道,台中/審計新村,台中/台中車站" target="_blank" style="display: inline-flex; align-items: center; gap: 4px; background: #E8654E; color: white; padding: 8px 14px; border-radius: 8px; text-decoration: none; font-size: 0.85rem;">📍 Day2 完整路線導航</a>
+
+            <div class="timeline-item food-highlight">
+                <div class="timeline-card">
+                    <span class="time-badge">12:30 – 13:00</span>
+                    <div class="spot-name">🍦 宮原眼科 / 第四信用合作社</div>
+                    <div class="spot-desc">同一集團的兩間冰淇淋名店，步行相距 3 分鐘。日出集團用台灣在地食材做出驚豔冰品。</div>
+                    <div class="food-items">
+                        <strong>推薦：</strong><br>
+                        • 宮原眼科冰淇淋 — 土鳳梨、日月潭紅茶口味必點<br>
+                        • 第四信用合作社 — 豐仁冰（招牌），古早味碎冰＋花生＋冰淇淋
+                    </div>
+                    <span class="spot-tag">甜點</span><span class="spot-tag">古蹟</span><span class="spot-tag">步行 3 分鐘</span>
+                </div>
+            </div>
+
+            <div class="timeline-item">
+                <div class="timeline-card">
+                    <span class="time-badge">13:00 – 15:30</span>
+                    <div class="spot-name">🏛 科博館參觀（消化時間）</div>
+                    <div class="spot-desc">室內吹冷氣散步消化，看展覽打發午後最熱時段。</div>
+                    <span class="spot-tag">避暑</span><span class="spot-tag">消化</span>
+                </div>
+            </div>
+
+            <div class="timeline-item food-highlight">
+                <div class="timeline-card">
+                    <span class="time-badge">15:30 – 16:00</span>
+                    <div class="spot-name">🧋 春水堂（創始店）</div>
+                    <div class="spot-desc">珍珠奶茶的發源地！1983 年在台中發明珍奶。四維街創始店離科博館不遠。</div>
+                    <div class="food-items">
+                        <strong>推薦：</strong>珍珠奶茶（中杯）、功夫麵（如果還吃得下）
+                    </div>
+                    <span class="spot-tag">下午茶</span><span class="spot-tag">珍奶始祖</span>
+                </div>
+            </div>
+
+            <div class="timeline-item">
+                <div class="timeline-card">
+                    <span class="time-badge">16:00 – 19:00</span>
+                    <div class="spot-name">🌅 高美濕地看夕陽</div>
+                    <div class="spot-desc">搭 309 公車前往。看完夕陽搭車回市區。</div>
+                    <span class="spot-tag">景點</span>
+                </div>
+            </div>
+
+            <div class="timeline-item food-highlight">
+                <div class="timeline-card">
+                    <span class="time-badge">20:00 – 21:30</span>
+                    <div class="spot-name">🔥 公益路晚餐</div>
+                    <div class="spot-desc">台中最強美食戰區！從精緻鍋物到燒肉都有。搭公車到公益路下車即達。</div>
+                    <div class="food-items">
+                        <strong>推薦餐廳（擇一）：</strong><br>
+                        • 輕井澤鍋物 — 平價高質感火鍋，排隊名店<br>
+                        • 屋馬燒肉 — 台中燒肉霸主（建議提前訂位）<br>
+                        • 瓦城泰統 — 泰式料理，長輩接受度高<br>
+                        • NINI 尼尼 — 義式料理，氣氛好<br>
+                        • 鼎王麻辣鍋 — 經典麻辣＋酸菜白肉
+                    </div>
+                    <span class="spot-tag">大餐</span><span class="spot-tag">建議訂位</span>
+                </div>
             </div>
         </div>
     </div>
 
-<div class="footer">
-    <p>製作日期：2026/07/05 ・ 祝旅途愉快 🌅</p>
+    <!-- Day 2 Food -->
+    <div class="day-section">
+        <div class="day-header food">
+            <div class="day-number">D2</div>
+            <div>
+                <div class="day-title">文青早午餐 → 美術園道</div>
+                <div class="day-subtitle">7/21（一）・悠閒吃好吃滿</div>
+            </div>
+        </div>
+
+        <div class="timeline">
+            <div class="timeline-item food-highlight">
+                <div class="timeline-card">
+                    <span class="time-badge">09:00 – 10:30</span>
+                    <div class="spot-name">🥞 草悟道早午餐</div>
+                    <div class="spot-desc">草悟道沿線有大量質感咖啡廳和早午餐店。悠閒坐著享用，不趕時間。</div>
+                    <div class="food-items">
+                        <strong>推薦（擇一）：</strong><br>
+                        • 田樂 — 老屋漢堡早午餐，文青風<br>
+                        • 堁夏咖啡 — 自烘咖啡＋手作甜點<br>
+                        • 好堅果咖啡 — 健康路線早午餐<br>
+                        • 飯店早餐 — 如果住宿含早，直接享用也很好
+                    </div>
+                    <span class="spot-tag">早午餐</span><span class="spot-tag">咖啡</span>
+                </div>
+            </div>
+
+            <div class="timeline-item">
+                <div class="timeline-card">
+                    <span class="time-badge">10:30 – 12:00</span>
+                    <div class="spot-name">🎨 國立台灣美術館</div>
+                    <div class="spot-desc">免費參觀，室內涼爽。散步消化早餐的好去處。</div>
+                    <span class="spot-tag">免費</span><span class="spot-tag">散步</span>
+                </div>
+            </div>
+
+            <div class="timeline-item food-highlight">
+                <div class="timeline-card">
+                    <span class="time-badge">12:00 – 13:30</span>
+                    <div class="spot-name">🍝 美術園道午餐</div>
+                    <div class="spot-desc">美術館正對面的五權西路＋美村路，整排異國餐廳。環境優雅有冷氣。</div>
+                    <div class="food-items">
+                        <strong>推薦（擇一）：</strong><br>
+                        • 里厚來坐 — 老宅改造義式餐廳，質感午餐<br>
+                        • 隱藏版小巷食堂 — 日式定食，份量適中<br>
+                        • 法米法式甜點 — 正餐＋甜點一次滿足<br>
+                        • 客家本色 — 台式客家料理，長輩友善
+                    </div>
+                    <span class="spot-tag">異國料理</span><span class="spot-tag">步行 1 分鐘</span>
+                </div>
+            </div>
+
+            <div class="timeline-item food-highlight">
+                <div class="timeline-card">
+                    <span class="time-badge">14:00 – 14:30</span>
+                    <div class="spot-name">🎂 審計新村下午茶＋伴手禮</div>
+                    <div class="spot-desc">文創小店群聚，甜點飲料選擇多。順便帶伴手禮回家。</div>
+                    <div class="food-items">
+                        <strong>推薦：</strong><br>
+                        • 旅禾泡芙之家 — 現烤脆皮泡芙<br>
+                        • 成真咖啡 — 舒芙蕾鬆餅<br>
+                        • 一福堂太陽餅 — 台中經典伴手禮（百年老店）
+                    </div>
+                    <span class="spot-tag">甜點</span><span class="spot-tag">伴手禮</span>
+                </div>
+            </div>
+
+            <div class="timeline-item">
+                <div class="timeline-card">
+                    <span class="time-badge">15:00~</span>
+                    <div class="spot-name">🏠 心滿意足回程</div>
+                    <div class="spot-desc">帶著滿滿美食回憶和伴手禮，搭捷運→高鐵回家！</div>
+                    <span class="spot-tag">回程</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Food Map -->
+    <div class="food-map">
+        <h3>🗺 美食區域地圖（全在市中心）</h3>
+        <div class="food-zone">
+            <div class="food-zone-name">📍 台中車站圈（步行 5-10 分鐘）</div>
+            <div class="food-zone-desc">第二市場、宮原眼科、第四信用合作社、一福堂中山店</div>
+        </div>
+        <div class="food-zone">
+            <div class="food-zone-name">📍 草悟道＋科博館圈（公車 10 分鐘）</div>
+            <div class="food-zone-desc">春水堂創始店、草悟道咖啡廳群、勤美誠品美食街</div>
+        </div>
+        <div class="food-zone">
+            <div class="food-zone-name">📍 美術館＋美術園道（公車 15 分鐘）</div>
+            <div class="food-zone-desc">異國餐廳街、審計新村、文青甜點店</div>
+        </div>
+        <div class="food-zone">
+            <div class="food-zone-name">📍 公益路（公車 15 分鐘）</div>
+            <div class="food-zone-desc">輕井澤、屋馬燒肉、鼎王、NINI 尼尼、各式鍋物燒肉</div>
+        </div>
+    </div>
+
+    <!-- Food Tips -->
+    <div class="tips-section">
+        <h3>💡 美食攻略小提醒</h3>
+        <ul class="tips-list">
+            <li><span class="bullet">•</span>公益路熱門餐廳（屋馬、輕井澤）假日排隊 1 小時起跳，<strong>務必提前訂位</strong></li>
+            <li><span class="bullet">•</span>第二市場中午前最熱鬧，太晚去很多攤收了</li>
+            <li><span class="bullet">•</span>宮原眼科假日排隊長，平日（週一）去比較快</li>
+            <li><span class="bullet">•</span>長輩胃口有限，建議「少量多餐」策略：正餐吃七分飽，留肚子給甜點小吃</li>
+            <li><span class="bullet">•</span>所有區域之間搭公車＋步行 15 分鐘內可達，不用跑遠</li>
+        </ul>
+    </div>
+
 </div>
+</div>
+
+<div class="footer">
+    <p>製作日期：2026/07/05 ・ 祝旅途愉快 🌅🍽</p>
+</div>
+
+<script>
+function switchTab(tab) {
+    // Hide all tabs
+    document.querySelectorAll('.tab-content').forEach(el => el.classList.remove('active'));
+    document.querySelectorAll('.tab-btn').forEach(el => el.classList.remove('active'));
+    
+    // Show selected tab
+    document.getElementById('tab-' + tab).classList.add('active');
+    
+    // Highlight button
+    const buttons = document.querySelectorAll('.tab-btn');
+    if (tab === 'itinerary') buttons[0].classList.add('active');
+    else buttons[1].classList.add('active');
+}
+</script>
 
 </body>
 </html>
