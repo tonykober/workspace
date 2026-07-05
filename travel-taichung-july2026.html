@@ -1,0 +1,409 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>台中兩天一夜行程 - 2026年7月</title>
+<style>
+:root {
+  --bg: #f8f9fa;
+  --surface: #ffffff;
+  --accent: #2563eb;
+  --accent-light: #dbeafe;
+  --text: #212529;
+  --text-muted: #6b7280;
+  --warning: #f59e0b;
+  --success: #10b981;
+  --danger: #ef4444;
+  --border: #e5e7eb;
+}
+* { margin: 0; padding: 0; box-sizing: border-box; }
+body {
+  font-family: -apple-system, 'Noto Sans TC', sans-serif;
+  background: var(--bg);
+  color: var(--text);
+  line-height: 1.6;
+  padding: 20px;
+}
+.container { max-width: 800px; margin: 0 auto; }
+h1 { font-size: 28px; margin-bottom: 8px; color: var(--accent); }
+.subtitle { color: var(--text-muted); margin-bottom: 24px; font-size: 15px; }
+.weather-box {
+  background: linear-gradient(135deg, #fef3c7, #fde68a);
+  border-radius: 12px;
+  padding: 16px 20px;
+  margin-bottom: 24px;
+  border-left: 4px solid var(--warning);
+}
+.weather-box h3 { font-size: 16px; margin-bottom: 8px; }
+.weather-box ul { padding-left: 20px; font-size: 14px; }
+.weather-box li { margin-bottom: 4px; }
+.day-card {
+  background: var(--surface);
+  border-radius: 12px;
+  padding: 24px;
+  margin-bottom: 20px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+}
+.day-header {
+  font-size: 20px;
+  font-weight: 700;
+  color: var(--accent);
+  margin-bottom: 16px;
+  padding-bottom: 8px;
+  border-bottom: 2px solid var(--accent-light);
+}
+.time-block {
+  display: flex;
+  gap: 12px;
+  margin-bottom: 16px;
+  padding-bottom: 16px;
+  border-bottom: 1px solid var(--border);
+}
+.time-block:last-child { border-bottom: none; margin-bottom: 0; padding-bottom: 0; }
+.time-label {
+  min-width: 90px;
+  font-weight: 600;
+  color: var(--accent);
+  font-size: 14px;
+  padding-top: 2px;
+}
+.time-content h4 { font-size: 16px; margin-bottom: 4px; }
+.time-content p { font-size: 14px; color: var(--text-muted); }
+.badge {
+  display: inline-block;
+  font-size: 11px;
+  padding: 2px 8px;
+  border-radius: 10px;
+  margin-right: 4px;
+  margin-bottom: 4px;
+}
+.badge-green { background: #d1fae5; color: #065f46; }
+.badge-yellow { background: #fef3c7; color: #92400e; }
+.badge-red { background: #fee2e2; color: #991b1b; }
+.hotel-section {
+  background: var(--surface);
+  border-radius: 12px;
+  padding: 24px;
+  margin-bottom: 20px;
+  box-shadow: 0 2px 8px rgba(0,0,0,0.06);
+}
+.hotel-section h2 {
+  font-size: 18px;
+  margin-bottom: 16px;
+  color: var(--text);
+}
+.hotel-card {
+  background: var(--bg);
+  border-radius: 8px;
+  padding: 16px;
+  margin-bottom: 12px;
+  border: 1px solid var(--border);
+}
+.hotel-card.recommended {
+  border: 2px solid var(--accent);
+  background: var(--accent-light);
+}
+.hotel-card h4 { font-size: 15px; margin-bottom: 6px; }
+.hotel-card .meta { font-size: 13px; color: var(--text-muted); margin-bottom: 4px; }
+.hotel-card .price { font-weight: 700; color: var(--accent); font-size: 16px; }
+.hotel-card .features { font-size: 13px; margin-top: 6px; }
+.hotel-card .features span { display: inline-block; margin-right: 8px; }
+.elder-tips {
+  background: #ede9fe;
+  border-radius: 12px;
+  padding: 16px 20px;
+  margin-bottom: 24px;
+  border-left: 4px solid #7c3aed;
+}
+.elder-tips h3 { font-size: 16px; margin-bottom: 8px; color: #7c3aed; }
+.elder-tips ul { padding-left: 20px; font-size: 14px; }
+.elder-tips li { margin-bottom: 4px; }
+.note-box {
+  background: #ecfdf5;
+  border-radius: 8px;
+  padding: 12px 16px;
+  font-size: 13px;
+  color: #065f46;
+  margin-top: 16px;
+}
+.warn-box {
+  background: #fef3c7;
+  border-radius: 8px;
+  padding: 12px 16px;
+  font-size: 13px;
+  color: #92400e;
+  margin-top: 8px;
+}
+@media (max-width: 600px) {
+  body { padding: 12px; }
+  h1 { font-size: 22px; }
+  .time-block { flex-direction: column; gap: 4px; }
+  .time-label { min-width: auto; }
+}
+</style>
+</head>
+<body>
+<div class="container">
+  <h1>🌴 台中兩天一夜輕鬆行程</h1>
+  <p class="subtitle">2026年7月 ｜ 適合長輩同行 ｜ 避暑+美食+高美濕地夕陽</p>
+
+  <div class="weather-box">
+    <h3>☀️ 7月天氣提醒</h3>
+    <ul>
+      <li>高溫 33-35°C，午後雷陣雨機率 60-70%</li>
+      <li>戶外活動安排在早上10點前或傍晚4點後</li>
+      <li>中午進室內吹冷氣（長輩怕熱需注意）</li>
+      <li>必備：折疊傘、水壺、防曬帽、個人藥物</li>
+      <li><strong>高美濕地注意</strong>：查好潮汐時間再去，退潮時才能走木棧道下方</li>
+    </ul>
+  </div>
+
+  <div class="elder-tips">
+    <h3>🧓 長輩同行注意</h3>
+    <ul>
+      <li>每個景點間多留30分鐘緩衝，不趕行程</li>
+      <li>13:00-15:30 回飯店午休（避開最熱時段）</li>
+      <li>交通以自駕/計程車為主，避免公車轉乘</li>
+      <li>用餐選有電梯/停車場/座位寬敞的餐廳</li>
+      <li>高美濕地木棧道平坦好走，但不建議下到泥灘地（滑）</li>
+      <li>午後下雨時不要趕路，找地方坐等雨停</li>
+    </ul>
+  </div>
+
+  <!-- Day 1 -->
+  <div class="day-card">
+    <div class="day-header">📅 Day 1（抵達日）</div>
+
+    <div class="time-block">
+      <div class="time-label">10:00-11:30</div>
+      <div class="time-content">
+        <h4>🎨 國立臺灣美術館</h4>
+        <p>免費入場、全冷氣。台灣最大美術館。<br>
+        <span class="badge badge-green">✅ 無障礙</span>
+        <span class="badge badge-green">✅ 全平面</span>
+        <span class="badge badge-green">✅ 有電梯</span></p>
+        <p>💡 不需全逛，挑1-2個展廳慢慢看即可</p>
+      </div>
+    </div>
+
+    <div class="time-block">
+      <div class="time-label">11:30-13:00</div>
+      <div class="time-content">
+        <h4>🍽️ 午餐：馨苑小料理</h4>
+        <p>精緻台式料理 ｜ $200/人起 ｜ 勤美附近<br>
+        📍 西區民生北路106號<br>
+        ☎️ 建議電話訂位<br>
+        <span class="badge badge-green">✅ 有停車位</span>
+        <span class="badge badge-green">✅ 環境舒適</span><br>
+        🎯 推薦：梅菜扣肉、蝦仁月見雨來菇</p>
+      </div>
+    </div>
+
+    <div class="time-block">
+      <div class="time-label">13:00-15:30</div>
+      <div class="time-content">
+        <h4>🛏️ 回飯店午休</h4>
+        <p>最熱+可能下雨時段，長輩需要休息。<br>
+        <span class="badge badge-yellow">⚠️ 避免外出</span><br>
+        💡 養精蓄銳，傍晚去高美濕地看夕陽</p>
+      </div>
+    </div>
+
+    <div class="time-block">
+      <div class="time-label">16:00-18:30</div>
+      <div class="time-content">
+        <h4>🌅 高美濕地</h4>
+        <p>台中最美夕陽景點！濕地生態+天空之鏡<br>
+        📍 台中市清水區美堤街（從市區開車約40分鐘）<br>
+        <span class="badge badge-green">✅ 木棧道平坦好走</span>
+        <span class="badge badge-yellow">⚠️ 長輩留在棧道上即可</span></p>
+        <p>🕐 建議日落前1.5小時抵達（7月日落約18:40）<br>
+        🅿️ 有停車場（假日建議早到）<br>
+        💡 棧道來回約30-40分鐘，長輩可走一半折返<br>
+        💡 不建議長輩下泥灘地（濕滑危險）</p>
+        <div class="warn-box">
+          ⚠️ <strong>出發前必查</strong>：如果當天午後有大雷雨或風大，改去歌劇院（備案）
+        </div>
+      </div>
+    </div>
+
+    <div class="time-block">
+      <div class="time-label">19:00-20:30</div>
+      <div class="time-content">
+        <h4>🍽️ 晚餐：原味一品鮮</h4>
+        <p>川台粵式料理 ｜ $180/人起 ｜ 西屯區<br>
+        📍 西屯區安和路158號<br>
+        <span class="badge badge-green">✅ 專屬停車場</span>
+        <span class="badge badge-green">✅ 走道寬敞</span>
+        <span class="badge badge-green">✅ 行動不便者友善</span><br>
+        🎯 推薦：芋泥鴨、金沙中卷、酸菜肚片鍋<br>
+        🍦 餐後有自助冰淇淋</p>
+      </div>
+    </div>
+
+    <div class="time-block">
+      <div class="time-label">21:00</div>
+      <div class="time-content">
+        <h4>🌙 回飯店休息</h4>
+        <p>輕鬆結束充實的第一天</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Day 2 -->
+  <div class="day-card">
+    <div class="day-header">📅 Day 2（回程日）</div>
+
+    <div class="time-block">
+      <div class="time-label">09:00-10:00</div>
+      <div class="time-content">
+        <h4>🥐 飯店早餐</h4>
+        <p>選含早餐的飯店，不用趕路找店。<br>慢慢吃、慢慢準備出門。</p>
+      </div>
+    </div>
+
+    <div class="time-block">
+      <div class="time-label">10:30-12:00</div>
+      <div class="time-content">
+        <h4>🦕 國立自然科學博物館</h4>
+        <p>全台最受歡迎博物館之一。冷氣強。<br>
+        <span class="badge badge-green">✅ 平面動線</span>
+        <span class="badge badge-green">✅ 有座椅</span>
+        <span class="badge badge-green">✅ 冷氣</span></p>
+        <p>💡 太空劇場可以坐著看（注意仰頭角度）</p>
+      </div>
+    </div>
+
+    <div class="time-block">
+      <div class="time-label">12:00-13:30</div>
+      <div class="time-content">
+        <h4>🍽️ 午餐：頂園燒鵝担仔廚房</h4>
+        <p>招牌燒鵝中餐廳 ｜ $160/人起 ｜ 西屯區<br>
+        📍 西屯區安和路121-19號<br>
+        <span class="badge badge-green">✅ 專屬停車場</span>
+        <span class="badge badge-green">✅ 電梯</span>
+        <span class="badge badge-green">✅ 獨立包廂</span><br>
+        🎯 推薦：火焰燒鵝、櫻花蝦炒飯、金絲芋頭卷</p>
+      </div>
+    </div>
+
+    <div class="time-block">
+      <div class="time-label">13:30-14:00</div>
+      <div class="time-content">
+        <h4>🎁 買伴手禮 → 返程</h4>
+        <p>推薦：日出集團系列（宮原眼科/第四信用）、太陽餅<br>
+        💡 宮原眼科人多可改買外帶伴手禮就好，不需入內排隊</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Hotels -->
+  <div class="hotel-section">
+    <h2>🏨 推薦住宿</h2>
+
+    <div class="hotel-card recommended">
+      <h4>⭐ 首選推薦｜台中大毅老爺行旅（The Place Taichung）</h4>
+      <p class="price">$3,000 - 4,500 / 晚</p>
+      <p class="meta">📍 台中市西區館前路71號（草悟道旁，國美館正對面）</p>
+      <p class="meta">☎️ 04-2376-6732</p>
+      <div class="features">
+        <span>✅ 設計感飯店</span>
+        <span>✅ 電梯</span>
+        <span>✅ 含早餐Buffet</span>
+        <span>✅ 步行到國美館1分鐘</span>
+        <span>✅ 草悟道/勤美步行可達</span>
+      </div>
+      <div class="note-box">
+        💡 地點最佳！旁邊就是 Day 1 的國美館，散步即到勤美誠品。設計風格年輕但設施對長輩友善（電梯、無障礙房型可詢問）。
+      </div>
+    </div>
+
+    <div class="hotel-card">
+      <h4>⭐ 豪華選擇｜台中林酒店（The Lin Hotel Taichung）</h4>
+      <p class="price">$4,500 - 6,500 / 晚</p>
+      <p class="meta">📍 台中市西屯區朝富路99號（七期市政府旁）</p>
+      <p class="meta">☎️ 04-2255-5555</p>
+      <div class="features">
+        <span>✅ 五星級</span>
+        <span>✅ 無障礙完善</span>
+        <span>✅ 豪華Buffet早餐</span>
+        <span>✅ 步行到歌劇院5分鐘</span>
+        <span>✅ 大型停車場</span>
+        <span>✅ 泳池/健身房</span>
+      </div>
+      <div class="note-box">
+        💡 全方位五星級體驗。對長輩最友善（服務周到、設施無障礙）。離歌劇院近，但離國美館需開車。適合預算充裕想住好的。
+      </div>
+    </div>
+
+    <div class="hotel-card">
+      <h4>💡 平價選擇｜塔木德酒店 台灣大道館</h4>
+      <p class="price">$2,000 - 3,000 / 晚</p>
+      <p class="meta">📍 台中市西區台灣大道二段2號</p>
+      <p class="meta">☎️ 04-2320-5888</p>
+      <div class="features">
+        <span>✅ 連鎖品牌品質穩定</span>
+        <span>✅ 有電梯</span>
+        <span>✅ 乾淨舒適</span>
+        <span>✅ 交通便利</span>
+      </div>
+      <div class="note-box">
+        💡 CP值高的商務飯店。基本設施齊全、乾淨整潔。位置在台灣大道上交通方便。適合預算控制、只需要乾淨好睡的。
+      </div>
+    </div>
+
+    <div class="warn-box">
+      📋 <strong>訂房提醒</strong>：
+      • 建議提前1-2週訂房（7月暑假旺季）<br>
+      • 訂房時告知有長輩同行 → 飯店通常會安排低樓層/靠電梯房間<br>
+      • 確認浴室是否有防滑墊/扶手<br>
+      • 選含早餐方案，長輩不用早起趕路找店
+    </div>
+  </div>
+
+  <!-- Backup -->
+  <div class="day-card">
+    <div class="day-header">🌧️ 備案</div>
+    <div class="time-block">
+      <div class="time-label">高美濕地<br>下雨備案</div>
+      <div class="time-content">
+        <h4>🏛️ 改去：臺中國家歌劇院</h4>
+        <p>伊東豊雄設計世界級建築。免費參觀。<br>
+        <span class="badge badge-green">✅ 全無障礙</span>
+        <span class="badge badge-green">✅ 電梯直達</span>
+        <span class="badge badge-green">✅ 有座椅</span><br>
+        💡 如果下午下大雨或風太大，高美濕地不適合去。<br>
+        改到歌劇院逛1-2樓公共空間+頂樓看城市景色。</p>
+      </div>
+    </div>
+    <div class="time-block">
+      <div class="time-label">其他室內</div>
+      <div class="time-content">
+        <p>• 台中大遠百/新光三越（冷氣購物+美食街）<br>
+        • 台中按摩SPA（旅途勞累時的放鬆選擇）<br>
+        • 勤美誠品綠園道逛書店<br>
+        • 找間咖啡廳坐著等雨停</p>
+      </div>
+    </div>
+  </div>
+
+  <!-- Map note -->
+  <div class="day-card" style="background: #f0f9ff;">
+    <div class="day-header" style="color: #0369a1;">📍 交通距離參考</div>
+    <div class="time-content" style="padding: 0 8px;">
+      <p style="font-size: 14px;">
+        • 市區景點互相之間：5-15分鐘車程<br>
+        • 市區 → 高美濕地：約35-40分鐘車程<br>
+        • 高美濕地 → 原味一品鮮（晚餐）：約25分鐘車程<br>
+        • 台中高鐵站 → 市區飯店：約20分鐘車程
+      </p>
+    </div>
+  </div>
+
+  <p style="text-align:center; color:var(--text-muted); font-size:12px; margin-top:24px;">
+    製作於 2026-07-05 ｜ 祝旅途愉快 🌴
+  </p>
+</div>
+</body>
+</html>
