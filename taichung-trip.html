@@ -1,0 +1,657 @@
+<!DOCTYPE html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>台中兩天一夜輕鬆行 | 7/20-21</title>
+    <style>
+        :root {
+            --primary: #2D8C6F;
+            --primary-light: #E8F5F0;
+            --sunset: #E8654E;
+            --sunset-light: #FFF0ED;
+            --dark: #1A1A2E;
+            --gray: #6B7280;
+            --light-bg: #F8FAFB;
+            --card-shadow: 0 2px 12px rgba(0,0,0,0.08);
+        }
+
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+
+        body {
+            font-family: 'Noto Sans TC', -apple-system, BlinkMacSystemFont, sans-serif;
+            background: var(--light-bg);
+            color: var(--dark);
+            line-height: 1.7;
+            padding-bottom: 60px;
+        }
+
+        /* Hero Section */
+        .hero {
+            background: linear-gradient(135deg, #2D8C6F 0%, #1A6B5A 50%, #E8654E 100%);
+            color: white;
+            padding: 60px 20px 40px;
+            text-align: center;
+            position: relative;
+            overflow: hidden;
+        }
+
+        .hero::before {
+            content: '';
+            position: absolute;
+            top: -50%;
+            left: -50%;
+            width: 200%;
+            height: 200%;
+            background: radial-gradient(circle, rgba(255,255,255,0.05) 0%, transparent 70%);
+            animation: float 20s ease-in-out infinite;
+        }
+
+        @keyframes float {
+            0%, 100% { transform: translate(0, 0); }
+            50% { transform: translate(30px, -30px); }
+        }
+
+        .hero h1 {
+            font-size: 2rem;
+            font-weight: 700;
+            margin-bottom: 8px;
+            position: relative;
+        }
+
+        .hero .subtitle {
+            font-size: 1.1rem;
+            opacity: 0.9;
+            position: relative;
+        }
+
+        .hero .date-badge {
+            display: inline-block;
+            background: rgba(255,255,255,0.2);
+            backdrop-filter: blur(4px);
+            padding: 6px 16px;
+            border-radius: 20px;
+            margin-top: 12px;
+            font-size: 0.9rem;
+            position: relative;
+        }
+
+        /* Info Cards */
+        .container {
+            max-width: 720px;
+            margin: 0 auto;
+            padding: 20px 16px;
+        }
+
+        .info-grid {
+            display: grid;
+            grid-template-columns: 1fr 1fr;
+            gap: 12px;
+            margin-bottom: 24px;
+        }
+
+        .info-card {
+            background: white;
+            border-radius: 12px;
+            padding: 16px;
+            box-shadow: var(--card-shadow);
+        }
+
+        .info-card .icon {
+            font-size: 1.4rem;
+            margin-bottom: 6px;
+        }
+
+        .info-card .label {
+            font-size: 0.75rem;
+            color: var(--gray);
+            text-transform: uppercase;
+            letter-spacing: 0.5px;
+        }
+
+        .info-card .value {
+            font-size: 0.95rem;
+            font-weight: 600;
+            margin-top: 2px;
+        }
+
+        /* Day Section */
+        .day-section {
+            margin-bottom: 32px;
+        }
+
+        .day-header {
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 16px;
+            padding: 12px 16px;
+            background: white;
+            border-radius: 12px;
+            box-shadow: var(--card-shadow);
+        }
+
+        .day-number {
+            width: 48px;
+            height: 48px;
+            background: var(--primary);
+            color: white;
+            border-radius: 12px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-weight: 700;
+            font-size: 1.1rem;
+            flex-shrink: 0;
+        }
+
+        .day-header.sunset .day-number {
+            background: var(--sunset);
+        }
+
+        .day-title {
+            font-size: 1.1rem;
+            font-weight: 600;
+        }
+
+        .day-subtitle {
+            font-size: 0.8rem;
+            color: var(--gray);
+        }
+
+        /* Timeline */
+        .timeline {
+            position: relative;
+            padding-left: 24px;
+        }
+
+        .timeline::before {
+            content: '';
+            position: absolute;
+            left: 11px;
+            top: 0;
+            bottom: 0;
+            width: 2px;
+            background: #E5E7EB;
+        }
+
+        .timeline-item {
+            position: relative;
+            margin-bottom: 16px;
+            padding-left: 24px;
+        }
+
+        .timeline-item::before {
+            content: '';
+            position: absolute;
+            left: -17px;
+            top: 8px;
+            width: 12px;
+            height: 12px;
+            background: var(--primary);
+            border-radius: 50%;
+            border: 3px solid var(--primary-light);
+        }
+
+        .timeline-item.highlight::before {
+            background: var(--sunset);
+            border-color: var(--sunset-light);
+            width: 14px;
+            height: 14px;
+            left: -18px;
+            top: 7px;
+        }
+
+        .timeline-card {
+            background: white;
+            border-radius: 12px;
+            padding: 16px;
+            box-shadow: var(--card-shadow);
+            transition: transform 0.2s;
+        }
+
+        .timeline-card:hover {
+            transform: translateY(-1px);
+        }
+
+        .timeline-item.highlight .timeline-card {
+            border-left: 3px solid var(--sunset);
+            background: var(--sunset-light);
+        }
+
+        .time-badge {
+            display: inline-block;
+            background: var(--primary-light);
+            color: var(--primary);
+            font-size: 0.75rem;
+            font-weight: 600;
+            padding: 2px 8px;
+            border-radius: 4px;
+            margin-bottom: 6px;
+        }
+
+        .timeline-item.highlight .time-badge {
+            background: rgba(232, 101, 78, 0.15);
+            color: var(--sunset);
+        }
+
+        .spot-name {
+            font-size: 1rem;
+            font-weight: 600;
+            margin-bottom: 4px;
+        }
+
+        .spot-desc {
+            font-size: 0.85rem;
+            color: var(--gray);
+            line-height: 1.6;
+        }
+
+        .spot-tag {
+            display: inline-block;
+            font-size: 0.7rem;
+            background: #F3F4F6;
+            color: var(--gray);
+            padding: 2px 6px;
+            border-radius: 4px;
+            margin-top: 6px;
+            margin-right: 4px;
+        }
+
+        /* Tips Section */
+        .tips-section {
+            background: white;
+            border-radius: 12px;
+            padding: 20px;
+            box-shadow: var(--card-shadow);
+            margin-bottom: 24px;
+        }
+
+        .tips-section h3 {
+            font-size: 1rem;
+            margin-bottom: 12px;
+            display: flex;
+            align-items: center;
+            gap: 8px;
+        }
+
+        .tips-list {
+            list-style: none;
+        }
+
+        .tips-list li {
+            padding: 8px 0;
+            border-bottom: 1px solid #F3F4F6;
+            font-size: 0.88rem;
+            display: flex;
+            align-items: flex-start;
+            gap: 8px;
+        }
+
+        .tips-list li:last-child {
+            border-bottom: none;
+        }
+
+        .tips-list .bullet {
+            color: var(--primary);
+            font-weight: bold;
+            flex-shrink: 0;
+        }
+
+        /* Weather Alert */
+        .weather-alert {
+            background: linear-gradient(135deg, #FEF3C7, #FDE68A);
+            border-radius: 12px;
+            padding: 16px;
+            margin-bottom: 24px;
+            display: flex;
+            align-items: flex-start;
+            gap: 12px;
+        }
+
+        .weather-alert .icon {
+            font-size: 1.5rem;
+            flex-shrink: 0;
+        }
+
+        .weather-alert .text {
+            font-size: 0.88rem;
+            line-height: 1.6;
+        }
+
+        .weather-alert strong {
+            display: block;
+            margin-bottom: 2px;
+        }
+
+        /* Backup Section */
+        .backup-section {
+            background: #F0F4FF;
+            border-radius: 12px;
+            padding: 20px;
+            margin-bottom: 24px;
+        }
+
+        .backup-section h3 {
+            font-size: 1rem;
+            margin-bottom: 12px;
+            color: #3B59A0;
+        }
+
+        .backup-item {
+            display: flex;
+            align-items: center;
+            gap: 10px;
+            padding: 8px 0;
+            font-size: 0.88rem;
+        }
+
+        /* Transport */
+        .transport-section {
+            background: white;
+            border-radius: 12px;
+            padding: 20px;
+            box-shadow: var(--card-shadow);
+        }
+
+        .transport-section h3 {
+            font-size: 1rem;
+            margin-bottom: 12px;
+        }
+
+        .transport-item {
+            display: flex;
+            align-items: flex-start;
+            gap: 10px;
+            padding: 10px 0;
+            border-bottom: 1px solid #F3F4F6;
+            font-size: 0.88rem;
+        }
+
+        .transport-item:last-child {
+            border-bottom: none;
+        }
+
+        .transport-badge {
+            display: inline-block;
+            background: var(--primary);
+            color: white;
+            font-size: 0.7rem;
+            padding: 2px 6px;
+            border-radius: 4px;
+            white-space: nowrap;
+            flex-shrink: 0;
+        }
+
+        /* Footer */
+        .footer {
+            text-align: center;
+            padding: 30px 20px;
+            color: var(--gray);
+            font-size: 0.8rem;
+        }
+
+        /* Responsive */
+        @media (max-width: 480px) {
+            .hero h1 { font-size: 1.6rem; }
+            .info-grid { grid-template-columns: 1fr; }
+            .container { padding: 16px 12px; }
+        }
+    </style>
+    <link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@400;500;600;700&display=swap" rel="stylesheet">
+</head>
+<body>
+
+<div class="hero">
+    <h1>🌴 台中兩天一夜輕鬆行</h1>
+    <p class="subtitle">市區文藝 × 高美濕地夕陽</p>
+    <span class="date-badge">📅 2026 / 7 / 20（日）— 7 / 21（一）</span>
+</div>
+
+<div class="container">
+
+    <!-- Trip Info -->
+    <div class="info-grid">
+        <div class="info-card">
+            <div class="icon">👥</div>
+            <div class="label">同行人數</div>
+            <div class="value">4 人（含 1 位長輩）</div>
+        </div>
+        <div class="info-card">
+            <div class="icon">🚌</div>
+            <div class="label">交通方式</div>
+            <div class="value">全程大眾運輸</div>
+        </div>
+        <div class="info-card">
+            <div class="icon">🏨</div>
+            <div class="label">住宿需求</div>
+            <div class="value">全館禁菸、好口碑</div>
+        </div>
+        <div class="info-card">
+            <div class="icon">🌡️</div>
+            <div class="label">天氣預估</div>
+            <div class="value">33-36°C・午後雷雨</div>
+        </div>
+    </div>
+
+    <!-- Weather Alert -->
+    <div class="weather-alert">
+        <div class="icon">⛅</div>
+        <div class="text">
+            <strong>7 月天氣對策</strong>
+            上午＆傍晚排戶外，正午排室內冷氣景點。隨身帶傘、多補水、長輩注意防曬。
+        </div>
+    </div>
+
+    <!-- Day 1 -->
+    <div class="day-section">
+        <div class="day-header sunset">
+            <div class="day-number">D1</div>
+            <div>
+                <div class="day-title">市區探索 → 高美濕地夕陽</div>
+                <div class="day-subtitle">7/20（日）・重頭戲在傍晚</div>
+            </div>
+        </div>
+
+        <div class="timeline">
+            <div class="timeline-item">
+                <div class="timeline-card">
+                    <span class="time-badge">10:00 – 11:00</span>
+                    <div class="spot-name">🚄 抵達台中</div>
+                    <div class="spot-desc">高鐵新烏日站轉捷運綠線至市區，或客運到台中轉運站。飯店寄放行李。</div>
+                    <span class="spot-tag">交通</span>
+                </div>
+            </div>
+
+            <div class="timeline-item">
+                <div class="timeline-card">
+                    <span class="time-badge">11:00 – 12:30</span>
+                    <div class="spot-name">🍜 第二市場午餐</div>
+                    <div class="spot-desc">百年老市場：老賴紅茶、山河滷肉飯、菜頭粿、麻芛湯。在地人的早午餐聖地。</div>
+                    <span class="spot-tag">美食</span><span class="spot-tag">步行可達</span>
+                </div>
+            </div>
+
+            <div class="timeline-item">
+                <div class="timeline-card">
+                    <span class="time-badge">12:30 – 13:00</span>
+                    <div class="spot-name">🍦 宮原眼科</div>
+                    <div class="spot-desc">日治時代眼科改建的冰淇淋名店。挑高華麗內裝值得一看，買支冰淇淋消暑。</div>
+                    <span class="spot-tag">古蹟</span><span class="spot-tag">甜點</span>
+                </div>
+            </div>
+
+            <div class="timeline-item">
+                <div class="timeline-card">
+                    <span class="time-badge">13:00 – 15:30</span>
+                    <div class="spot-name">🏛 國立自然科學博物館</div>
+                    <div class="spot-desc">室內冷氣超涼爽！太空劇場、生命科學廳、恐龍廳。長輩可坐著看劇場，步行負擔輕。</div>
+                    <span class="spot-tag">室內</span><span class="spot-tag">冷氣</span><span class="spot-tag">全年齡</span>
+                </div>
+            </div>
+
+            <div class="timeline-item">
+                <div class="timeline-card">
+                    <span class="time-badge">15:30 – 16:00</span>
+                    <div class="spot-name">☕ 回飯店休息</div>
+                    <div class="spot-desc">補水、長輩小歇，為傍晚高美濕地養精神。</div>
+                    <span class="spot-tag">休息</span>
+                </div>
+            </div>
+
+            <div class="timeline-item highlight">
+                <div class="timeline-card">
+                    <span class="time-badge">16:00 – 17:00</span>
+                    <div class="spot-name">🚌 搭 309 公車前往高美濕地</div>
+                    <div class="spot-desc">台中火車站出發直達，車程約 50-60 分鐘。電子票證 10 公里免費。</div>
+                    <span class="spot-tag">交通</span><span class="spot-tag">309公車</span>
+                </div>
+            </div>
+
+            <div class="timeline-item highlight">
+                <div class="timeline-card">
+                    <span class="time-badge">17:00 – 19:00</span>
+                    <div class="spot-name">🌅 高美濕地看夕陽</div>
+                    <div class="spot-desc">木棧道平坦好走（約700m），欣賞招潮蟹、彈塗魚、風車群。7 月日落約 18:40-18:50，金色夕陽映照濕地超美！</div>
+                    <span class="spot-tag">夕陽</span><span class="spot-tag">無障礙棧道</span><span class="spot-tag">必看</span>
+                </div>
+            </div>
+
+            <div class="timeline-item">
+                <div class="timeline-card">
+                    <span class="time-badge">19:00 – 20:00</span>
+                    <div class="spot-name">🚌 搭公車返回市區</div>
+                    <div class="spot-desc">309 末班約 19:30-20:00，請提前確認時刻。備案：計程車約 $500。</div>
+                    <span class="spot-tag">交通</span>
+                </div>
+            </div>
+
+            <div class="timeline-item">
+                <div class="timeline-card">
+                    <span class="time-badge">20:00 – 21:00</span>
+                    <div class="spot-name">🍽 晚餐</div>
+                    <div class="spot-desc">視體力決定：公益路餐廳（各式料理）或飯店附近簡單吃。不勉強趕行程。</div>
+                    <span class="spot-tag">美食</span><span class="spot-tag">彈性</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Day 2 -->
+    <div class="day-section">
+        <div class="day-header">
+            <div class="day-number">D2</div>
+            <div>
+                <div class="day-title">悠閒文藝半日遊</div>
+                <div class="day-subtitle">7/21（一）・不趕行程，輕鬆收尾</div>
+            </div>
+        </div>
+
+        <div class="timeline">
+            <div class="timeline-item">
+                <div class="timeline-card">
+                    <span class="time-badge">08:00 – 09:00</span>
+                    <div class="spot-name">🥐 飯店早餐</div>
+                    <div class="spot-desc">不設鬧鐘，自然醒享用早餐。退房後行李寄放櫃台。</div>
+                    <span class="spot-tag">休息</span>
+                </div>
+            </div>
+
+            <div class="timeline-item">
+                <div class="timeline-card">
+                    <span class="time-badge">09:30 – 11:30</span>
+                    <div class="spot-name">🎨 國立台灣美術館</div>
+                    <div class="spot-desc">免費入場！台灣最大美術館，展覽豐富，室內涼爽。戶外園區綠地也適合散步。</div>
+                    <span class="spot-tag">免費</span><span class="spot-tag">室內</span><span class="spot-tag">藝文</span>
+                </div>
+            </div>
+
+            <div class="timeline-item">
+                <div class="timeline-card">
+                    <span class="time-badge">11:30 – 13:00</span>
+                    <div class="spot-name">🍽 美術園道午餐</div>
+                    <div class="spot-desc">異國餐廳街，法式、義式、日式料理都有，環境優雅舒適。</div>
+                    <span class="spot-tag">美食</span><span class="spot-tag">步行可達</span>
+                </div>
+            </div>
+
+            <div class="timeline-item">
+                <div class="timeline-card">
+                    <span class="time-badge">13:30 – 14:30</span>
+                    <div class="spot-name">🛍 審計新村 / 勤美誠品</div>
+                    <div class="spot-desc">文創聚落＋百貨公司，有冷氣有座位。買伴手禮、喝杯咖啡。</div>
+                    <span class="spot-tag">文創</span><span class="spot-tag">購物</span><span class="spot-tag">冷氣</span>
+                </div>
+            </div>
+
+            <div class="timeline-item">
+                <div class="timeline-card">
+                    <span class="time-badge">15:00~</span>
+                    <div class="spot-name">🏠 取行李・回程</div>
+                    <div class="spot-desc">搭捷運綠線回高鐵新烏日站，或搭客運回程。完美結束！</div>
+                    <span class="spot-tag">交通</span>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Tips -->
+    <div class="tips-section">
+        <h3>⚠️ 高美濕地注意事項（長輩友善）</h3>
+        <ul class="tips-list">
+            <li><span class="bullet">•</span>穿拖鞋或涼鞋（若要踩水），只走木棧道穿好走的鞋即可</li>
+            <li><span class="bullet">•</span>帶防曬、帽子、充足飲水，傍晚仍有餘熱</li>
+            <li><span class="bullet">•</span>木棧道全程無障礙，平坦好走，適合長輩</li>
+            <li><span class="bullet">•</span>海邊風大，怕冷的長輩帶件薄外套</li>
+            <li><span class="bullet">•</span>回程公車間隔長，提前查好時刻或備案叫車</li>
+        </ul>
+    </div>
+
+    <!-- Backup -->
+    <div class="backup-section">
+        <h3>🌧 雨天備案</h3>
+        <div class="backup-item">🏛 <span>台中國家歌劇院 — 伊東豊雄建築，免費參觀大廳</span></div>
+        <div class="backup-item">🎬 <span>秀泰生活（台中站前店）— 商場＋影城</span></div>
+        <div class="backup-item">☕ <span>台中市役所 — 日治建築改咖啡廳，優雅下午茶</span></div>
+    </div>
+
+    <!-- Transport -->
+    <div class="transport-section">
+        <h3>🚌 交通 Tips</h3>
+        <div class="transport-item">
+            <span class="transport-badge">免費</span>
+            <span>持悠遊卡/一卡通搭市區公車，刷卡享 10 公里免費</span>
+        </div>
+        <div class="transport-item">
+            <span class="transport-badge">11路</span>
+            <span>台灣好行「台中時尚城中城線」：台中車站 → 科博館 → 草悟道 → 美術館</span>
+        </div>
+        <div class="transport-item">
+            <span class="transport-badge">309</span>
+            <span>台中車站 → 高美濕地（直達，約 50-60 分鐘）</span>
+        </div>
+        <div class="transport-item">
+            <span class="transport-badge">捷運</span>
+            <span>綠線：高鐵新烏日站 ↔ 市政府站 / 文心森林公園站</span>
+        </div>
+    </div>
+
+    <!-- Hotel -->
+    <div class="tips-section" style="margin-top: 24px;">
+        <h3>🏨 住宿推薦（全館禁菸）</h3>
+        <ul class="tips-list">
+            <li><span class="bullet">•</span><strong>台中公園智選假日酒店</strong> — IHG 品牌、含早餐、近台中公園</li>
+            <li><span class="bullet">•</span><strong>新驛旅店（台中車站店）</strong> — 台中車站步行 2 分鐘，乾淨新穎</li>
+            <li><span class="bullet">•</span><strong>台中豐邑 MOXY 酒店</strong> — 萬豪體系、近草悟道</li>
+            <li><span class="bullet">•</span><strong>1969 藍天飯店</strong> — 設計風格、中區舊城、近宮原眼科</li>
+        </ul>
+    </div>
+
+</div>
+
+<div class="footer">
+    <p>製作日期：2026/07/05 ・ 祝旅途愉快 🌅</p>
+</div>
+
+</body>
+</html>
