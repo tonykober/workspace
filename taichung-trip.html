@@ -1298,6 +1298,15 @@ function switchTab(tab) {
     else if (tab === 'food') buttons[1].classList.add('active');
     else buttons[2].classList.add('active');
 }
+
+// Auto switch tab from URL param: ?tab=civic or ?tab=food
+(function() {
+    const params = new URLSearchParams(window.location.search);
+    const tab = params.get('tab');
+    if (tab && document.getElementById('tab-' + tab)) {
+        switchTab(tab);
+    }
+})();
 </script>
 
 </body>
