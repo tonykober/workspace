@@ -1,0 +1,498 @@
+{
+  "S": [
+    {
+      "id": "flambert",
+      "name": "弗萊姆伯",
+      "type": "magic",
+      "elem": "fire"
+    },
+    {
+      "id": "frostdragon",
+      "name": "冰河古龍",
+      "type": "dual"
+    },
+    {
+      "id": "plumos",
+      "name": "梅龍",
+      "type": "phys"
+    },
+    {
+      "id": "blackarmor",
+      "name": "黑甲龍",
+      "type": "phys"
+    },
+    {
+      "id": "powerdragon",
+      "name": "力龍",
+      "type": "phys"
+    },
+    {
+      "id": "lightingdragon",
+      "name": "閃電古龍",
+      "type": "magic"
+    },
+    {
+      "id": "selora",
+      "name": "賽勒拉",
+      "type": "phys"
+    },
+    {
+      "id": "fides",
+      "name": "菲達斯",
+      "type": "phys"
+    },
+    {
+      "id": "crevasse",
+      "name": "克雷巴斯",
+      "type": "magic"
+    },
+    {
+      "id": "centura",
+      "name": "聖圖拉",
+      "type": "dual"
+    },
+    {
+      "id": "angelJr",
+      "name": "天使龍二世",
+      "type": "phys"
+    },
+    {
+      "id": "non",
+      "name": "虛無",
+      "type": "phys"
+    },
+    {
+      "id": "goddragon",
+      "name": "古代神龍",
+      "type": "phys"
+    },
+    {
+      "id": "darknix",
+      "name": "黑暗尼斯",
+      "type": "phys"
+    },
+    {
+      "id": "dragonslayer",
+      "name": "屠龍者",
+      "type": "phys"
+    },
+    {
+      "id": "paruparu",
+      "name": "暖芽",
+      "type": "phys"
+    },
+    {
+      "id": "applecheek",
+      "name": "蘋果肌",
+      "type": "magic"
+    },
+    {
+      "id": "sharptail",
+      "name": "尖尾龍",
+      "type": "phys"
+    },
+    {
+      "id": "eggdragon",
+      "name": "蛋龍",
+      "type": "phys"
+    },
+    {
+      "id": "thunderboltdragon",
+      "name": "雷電龍",
+      "type": "magic"
+    },
+    {
+      "id": "spicy",
+      "name": "辛辣龍",
+      "type": "phys"
+    },
+    {
+      "id": "serpentdragon",
+      "name": "蛇龍",
+      "type": "phys"
+    },
+    {
+      "id": "nebula",
+      "name": "星雲",
+      "type": "phys"
+    },
+    {
+      "id": "lucio",
+      "name": "盧西歐",
+      "type": "dual"
+    },
+    {
+      "id": "florea",
+      "name": "芙蘿蕾",
+      "type": "magic"
+    },
+    {
+      "id": "blackdragon",
+      "name": "黑龍",
+      "type": "phys"
+    },
+    {
+      "id": "granos",
+      "name": "格拉諾思",
+      "type": "phys"
+    },
+    {
+      "id": "shadowdragon",
+      "name": "影龍",
+      "type": "phys"
+    },
+    {
+      "id": "jujak",
+      "name": "朱雀",
+      "type": "magic"
+    },
+    {
+      "id": "tiamat",
+      "name": "提阿瑪特",
+      "type": "dual"
+    },
+    {
+      "id": "zephyros",
+      "name": "澤費羅斯",
+      "type": "phys"
+    },
+    {
+      "id": "obex",
+      "name": "歐沛克斯",
+      "type": "magic"
+    },
+    {
+      "id": null
+    },
+    {
+      "id": null
+    },
+    {
+      "id": "rafael",
+      "name": "拉斐爾",
+      "type": "phys"
+    },
+    {
+      "id": "centipededragon",
+      "name": "蜈蚣",
+      "type": "phys"
+    },
+    {
+      "id": "henes",
+      "name": "軒尼斯",
+      "type": "phys"
+    },
+    {
+      "id": "dreaden",
+      "name": "德雷登",
+      "type": "magic"
+    },
+    {
+      "id": null
+    },
+    {
+      "id": "aila",
+      "name": "艾拉",
+      "type": "magic"
+    },
+    {
+      "id": null
+    },
+    {
+      "id": null
+    },
+    {
+      "id": null
+    }
+  ],
+  "A": [
+    {
+      "id": "helldragon",
+      "name": "地獄龍",
+      "type": "magic"
+    },
+    {
+      "id": "posionriver",
+      "name": "毒流",
+      "type": "magic"
+    },
+    {
+      "id": "bluedragon",
+      "name": "青龍",
+      "type": "phys"
+    },
+    {
+      "id": "fat",
+      "name": "胖胖龍",
+      "type": "phys"
+    },
+    {
+      "id": "tumpy",
+      "name": "坦皮",
+      "type": "phys"
+    },
+    {
+      "id": "clouddragon",
+      "name": "雲龍",
+      "type": "phys"
+    },
+    {
+      "id": "haze",
+      "name": "霧霾龍",
+      "type": "magic"
+    },
+    {
+      "id": "ninjadragon",
+      "name": "忍者龍",
+      "type": "phys"
+    },
+    {
+      "id": "aliendragon",
+      "name": "外星龍",
+      "type": "phys"
+    },
+    {
+      "id": "mummydragon",
+      "name": "木乃伊",
+      "type": "phys"
+    },
+    {
+      "id": "whitedragon",
+      "name": "白龍",
+      "type": "dual"
+    },
+    {
+      "id": "characen",
+      "name": "彩紋龍",
+      "type": "magic"
+    },
+    {
+      "id": null
+    },
+    {
+      "id": null
+    },
+    {
+      "id": "enturas",
+      "name": "恩圖拉斯",
+      "type": "phys"
+    },
+    {
+      "id": "hyeonmu",
+      "name": "玄武",
+      "type": "phys"
+    },
+    {
+      "id": "typhoondragon",
+      "name": "颱風龍",
+      "type": "phys"
+    },
+    {
+      "id": null
+    },
+    {
+      "id": "muddragon",
+      "name": "泥龍",
+      "type": "phys"
+    },
+    {
+      "id": "bluefiretail",
+      "name": "青火尾",
+      "type": "dual"
+    },
+    {
+      "id": "solardragon",
+      "name": "太陽龍",
+      "type": "phys"
+    },
+    {
+      "id": "kleptos",
+      "name": "盜賊龍",
+      "type": "phys"
+    },
+    {
+      "id": "pierrotdragon",
+      "name": "小丑",
+      "type": "dual"
+    },
+    {
+      "id": "griptor",
+      "name": "鐵鈎龍",
+      "type": "magic"
+    },
+    {
+      "id": "toddletomtom",
+      "name": "托德湯姆",
+      "type": "dual"
+    },
+    {
+      "id": null
+    },
+    {
+      "id": null
+    },
+    {
+      "id": null
+    },
+    {
+      "id": "patroa",
+      "name": "派特羅亞",
+      "type": "dual"
+    }
+  ],
+  "B": [
+    {
+      "id": "taros",
+      "name": "塔洛斯",
+      "type": "dual"
+    },
+    {
+      "id": "swampdragon",
+      "name": "沼澤龍",
+      "type": "dual"
+    },
+    {
+      "id": "totemdragon",
+      "name": "圖騰龍",
+      "type": "magic"
+    },
+    {
+      "id": null
+    },
+    {
+      "id": null
+    },
+    {
+      "id": "whitethunderdragon",
+      "name": "白雷龍",
+      "type": "phys"
+    },
+    {
+      "id": null
+    },
+    {
+      "id": "lunera",
+      "name": "盧內拉",
+      "type": "phys"
+    },
+    {
+      "id": "goldie",
+      "name": "金雕龍",
+      "type": "phys"
+    },
+    {
+      "id": null
+    },
+    {
+      "id": null
+    },
+    {
+      "id": null
+    },
+    {
+      "id": null
+    },
+    {
+      "id": null
+    },
+    {
+      "id": "siamesedragon",
+      "name": "連體龍",
+      "type": "phys"
+    },
+    {
+      "id": "sharkdragon",
+      "name": "鯊龍",
+      "type": "phys"
+    },
+    {
+      "id": "liberte",
+      "name": "利貝特",
+      "type": "magic"
+    },
+    {
+      "id": null
+    },
+    {
+      "id": null
+    },
+    {
+      "id": null
+    },
+    {
+      "id": null
+    },
+    {
+      "id": "lagtail",
+      "name": "雷泰爾",
+      "type": "phys"
+    },
+    {
+      "id": null
+    },
+    {
+      "id": null
+    },
+    {
+      "id": null
+    },
+    {
+      "id": null
+    },
+    {
+      "id": null
+    },
+    {
+      "id": null
+    }
+  ],
+  "C": [
+    {
+      "id": "magnello",
+      "name": "火涅洛",
+      "type": "dual"
+    },
+    {
+      "id": null
+    },
+    {
+      "id": "pinkbell",
+      "name": "粉鈴",
+      "type": "magic"
+    },
+    {
+      "id": null
+    },
+    {
+      "id": null
+    },
+    {
+      "id": null
+    },
+    {
+      "id": null
+    },
+    {
+      "id": null
+    },
+    {
+      "id": null
+    },
+    {
+      "id": null
+    },
+    {
+      "id": null
+    },
+    {
+      "id": null
+    },
+    {
+      "id": null
+    },
+    {
+      "id": null
+    }
+  ],
+  "D": []
+}
