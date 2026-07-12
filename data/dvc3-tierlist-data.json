@@ -35,7 +35,10 @@
       "type": "phys"
     },
     {
-      "id": null
+      "id": "wonderdragon",
+      "name": "幻魘龍",
+      "rarity": "epic",
+      "elem": "dark"
     },
     {
       "id": "crevasse",
