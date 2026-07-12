@@ -27,9 +27,7 @@
       "type": "phys"
     },
     {
-      "id": "lightingdragon",
-      "name": "閃電古龍",
-      "type": "magic"
+      "id": null
     },
     {
       "id": "selora",
@@ -37,9 +35,7 @@
       "type": "phys"
     },
     {
-      "id": "fides",
-      "name": "菲達斯",
-      "type": "phys"
+      "id": null
     },
     {
       "id": "crevasse",
@@ -97,8 +93,8 @@
       "type": "phys"
     },
     {
-      "id": "thunderboltdragon",
-      "name": "雷電龍",
+      "id": "lightingdragon",
+      "name": "閃電古龍",
       "type": "magic"
     },
     {
@@ -107,8 +103,8 @@
       "type": "phys"
     },
     {
-      "id": "serpentdragon",
-      "name": "蛇龍",
+      "id": "fides",
+      "name": "菲達斯",
       "type": "phys"
     },
     {
@@ -127,9 +123,9 @@
       "type": "magic"
     },
     {
-      "id": "blackdragon",
-      "name": "黑龍",
-      "type": "phys"
+      "id": "aila",
+      "name": "艾拉",
+      "type": "magic"
     },
     {
       "id": "granos",
@@ -162,10 +158,14 @@
       "type": "magic"
     },
     {
-      "id": null
+      "id": "muddragon",
+      "name": "泥龍",
+      "type": "phys"
     },
     {
-      "id": null
+      "id": "thunderboltdragon",
+      "name": "雷電龍",
+      "type": "magic"
     },
     {
       "id": "rafael",
@@ -173,14 +173,16 @@
       "type": "phys"
     },
     {
-      "id": "centipededragon",
-      "name": "蜈蚣",
-      "type": "phys"
+      "id": "baal",
+      "name": "巴力",
+      "type": "magic",
+      "elem": "dark"
     },
     {
-      "id": "henes",
-      "name": "軒尼斯",
-      "type": "phys"
+      "id": "seere",
+      "name": "系爾",
+      "type": "magic",
+      "elem": "dream"
     },
     {
       "id": "dreaden",
@@ -188,12 +190,14 @@
       "type": "magic"
     },
     {
-      "id": null
+      "id": "whitedragon",
+      "name": "白龍",
+      "type": "dual"
     },
     {
-      "id": "aila",
-      "name": "艾拉",
-      "type": "magic"
+      "id": "blackdragon",
+      "name": "黑龍",
+      "type": "phys"
     },
     {
       "id": null
@@ -232,8 +236,8 @@
       "type": "phys"
     },
     {
-      "id": "clouddragon",
-      "name": "雲龍",
+      "id": "whitethunderdragon",
+      "name": "白雷龍",
       "type": "phys"
     },
     {
@@ -242,23 +246,22 @@
       "type": "magic"
     },
     {
-      "id": "ninjadragon",
-      "name": "忍者龍",
+      "id": "serpentdragon",
+      "name": "蛇龍",
       "type": "phys"
     },
     {
-      "id": "aliendragon",
-      "name": "外星龍",
-      "type": "phys"
+      "id": null
     },
     {
-      "id": "mummydragon",
-      "name": "木乃伊",
-      "type": "phys"
+      "id": "slimedragon",
+      "name": "史萊姆龍",
+      "type": "phys",
+      "elem": "dream"
     },
     {
-      "id": "whitedragon",
-      "name": "白龍",
+      "id": "toddletomtom",
+      "name": "托德湯姆",
       "type": "dual"
     },
     {
@@ -291,14 +294,12 @@
       "id": null
     },
     {
-      "id": "muddragon",
-      "name": "泥龍",
-      "type": "phys"
+      "id": null
     },
     {
-      "id": "bluefiretail",
-      "name": "青火尾",
-      "type": "dual"
+      "id": "clouddragon",
+      "name": "雲龍",
+      "type": "phys"
     },
     {
       "id": "solardragon",
@@ -306,14 +307,14 @@
       "type": "phys"
     },
     {
-      "id": "kleptos",
-      "name": "盜賊龍",
+      "id": "centipededragon",
+      "name": "蜈蚣",
       "type": "phys"
     },
     {
-      "id": "pierrotdragon",
-      "name": "小丑",
-      "type": "dual"
+      "id": "henes",
+      "name": "軒尼斯",
+      "type": "phys"
     },
     {
       "id": "griptor",
@@ -321,9 +322,13 @@
       "type": "magic"
     },
     {
-      "id": "toddletomtom",
-      "name": "托德湯姆",
-      "type": "dual"
+      "id": null
+    },
+    {
+      "id": null
+    },
+    {
+      "id": null
     },
     {
       "id": null
@@ -335,15 +340,49 @@
       "id": null
     },
     {
-      "id": "patroa",
-      "name": "派特羅亞",
-      "type": "dual"
+      "id": null
+    },
+    {
+      "id": null
+    },
+    {
+      "id": null
+    },
+    {
+      "id": null
+    },
+    {
+      "id": null
+    },
+    {
+      "id": null
+    },
+    {
+      "id": null
+    },
+    {
+      "id": null
+    },
+    {
+      "id": null
+    },
+    {
+      "id": null
+    },
+    {
+      "id": null
+    },
+    {
+      "id": null
+    },
+    {
+      "id": null
     }
   ],
   "B": [
     {
-      "id": "taros",
-      "name": "塔洛斯",
+      "id": "patroa",
+      "name": "派特羅亞",
       "type": "dual"
     },
     {
@@ -363,24 +402,32 @@
       "id": null
     },
     {
-      "id": "whitethunderdragon",
-      "name": "白雷龍",
+      "id": "bluefiretail",
+      "name": "青火尾",
+      "type": "dual"
+    },
+    {
+      "id": null
+    },
+    {
+      "id": "ninjadragon",
+      "name": "忍者龍",
+      "type": "phys"
+    },
+    {
+      "id": "aliendragon",
+      "name": "外星龍",
+      "type": "phys"
+    },
+    {
+      "id": "mummydragon",
+      "name": "木乃伊",
       "type": "phys"
     },
     {
       "id": null
     },
     {
-      "id": "lunera",
-      "name": "盧內拉",
-      "type": "phys"
-    },
-    {
-      "id": "goldie",
-      "name": "金雕龍",
-      "type": "phys"
-    },
-    {
       "id": null
     },
     {
@@ -390,15 +437,9 @@
       "id": null
     },
     {
-      "id": null
-    },
-    {
-      "id": null
-    },
-    {
-      "id": "siamesedragon",
-      "name": "連體龍",
-      "type": "phys"
+      "id": "taros",
+      "name": "塔洛斯",
+      "type": "dual"
     },
     {
       "id": "sharkdragon",
@@ -423,9 +464,35 @@
       "id": null
     },
     {
-      "id": "lagtail",
-      "name": "雷泰爾",
+      "id": "kleptos",
+      "name": "盜賊龍",
       "type": "phys"
+    },
+    {
+      "id": "pierrotdragon",
+      "name": "小丑",
+      "type": "dual"
+    },
+    {
+      "id": null
+    },
+    {
+      "id": null
+    },
+    {
+      "id": null
+    },
+    {
+      "id": null
+    },
+    {
+      "id": null
+    },
+    {
+      "id": null
+    },
+    {
+      "id": null
     },
     {
       "id": null
@@ -473,6 +540,34 @@
       "id": null
     },
     {
+      "id": "lunera",
+      "name": "盧內拉",
+      "type": "phys"
+    },
+    {
+      "id": "goldie",
+      "name": "金雕龍",
+      "type": "phys"
+    },
+    {
+      "id": null
+    },
+    {
+      "id": null
+    },
+    {
+      "id": null
+    },
+    {
+      "id": null
+    },
+    {
+      "id": null
+    },
+    {
+      "id": null
+    },
+    {
       "id": null
     },
     {
@@ -494,5 +589,30 @@
       "id": null
     }
   ],
-  "D": []
+  "D": [
+    {
+      "id": null
+    },
+    {
+      "id": null
+    },
+    {
+      "id": null
+    },
+    {
+      "id": null
+    },
+    {
+      "id": null
+    },
+    {
+      "id": null
+    },
+    {
+      "id": null
+    },
+    {
+      "id": null
+    }
+  ]
 }
