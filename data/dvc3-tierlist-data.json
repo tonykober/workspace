@@ -5,31 +5,36 @@
       "name": "弗萊姆伯",
       "type": "magic",
       "elem": "fire",
-      "rarity": "legendary"
+      "rarity": "legendary",
+      "atkType": "magic"
     },
     {
       "id": "frostdragon",
       "name": "冰河古龍",
       "type": "dual",
-      "rarity": "legendary"
+      "rarity": "legendary",
+      "atkType": "magic"
     },
     {
       "id": "plumos",
       "name": "梅龍",
       "type": "phys",
-      "rarity": "legendary"
+      "rarity": "legendary",
+      "atkType": "phys"
     },
     {
       "id": "blackarmor",
       "name": "黑甲龍",
       "type": "phys",
-      "rarity": "epic"
+      "rarity": "epic",
+      "atkType": "phys"
     },
     {
       "id": "powerdragon",
       "name": "力龍",
       "type": "phys",
-      "rarity": "legendary"
+      "rarity": "legendary",
+      "atkType": "phys"
     },
     {
       "id": null
@@ -38,207 +43,241 @@
       "id": "selora",
       "name": "賽勒拉",
       "type": "phys",
-      "rarity": "legendary"
+      "rarity": "legendary",
+      "atkType": "phys"
     },
     {
-      "id": "wonderdragon",
-      "name": "幻魘龍",
-      "rarity": "epic",
-      "elem": "dark"
+      "id": "lichmond",
+      "name": "骸帝",
+      "rarity": "legendary",
+      "elem": "dark",
+      "atkType": "phys"
     },
     {
       "id": "crevasse",
       "name": "克雷巴斯",
       "type": "magic",
-      "rarity": "legendary"
+      "rarity": "legendary",
+      "atkType": "magic"
     },
     {
       "id": "centura",
       "name": "聖圖拉",
       "type": "dual",
-      "rarity": "legendary"
+      "rarity": "legendary",
+      "atkType": "phys"
     },
     {
       "id": "angelJr",
       "name": "天使龍二世",
       "type": "phys",
-      "rarity": "legendary"
+      "rarity": "legendary",
+      "atkType": "phys"
     },
     {
       "id": "non",
       "name": "虛無",
       "type": "phys",
-      "rarity": "legendary"
+      "rarity": "legendary",
+      "atkType": "phys"
     },
     {
       "id": "goddragon",
       "name": "古代神龍",
       "type": "phys",
-      "rarity": "legendary"
+      "rarity": "legendary",
+      "atkType": "phys"
     },
     {
       "id": "darknix",
       "name": "黑暗尼斯",
       "type": "phys",
-      "rarity": "legendary"
+      "rarity": "legendary",
+      "atkType": "magic"
     },
     {
       "id": "dragonslayer",
       "name": "屠龍者",
       "type": "phys",
-      "rarity": "legendary"
+      "rarity": "legendary",
+      "atkType": "phys"
     },
     {
       "id": "paruparu",
       "name": "暖芽",
       "type": "phys",
-      "rarity": "legendary"
+      "rarity": "legendary",
+      "atkType": "phys"
     },
     {
       "id": "applecheek",
       "name": "蘋果肌",
       "type": "magic",
-      "rarity": "epic"
+      "rarity": "epic",
+      "atkType": "magic"
     },
     {
       "id": "sharptail",
       "name": "尖尾龍",
       "type": "phys",
-      "rarity": "epic"
+      "rarity": "epic",
+      "atkType": "phys"
     },
     {
       "id": "eggdragon",
       "name": "蛋龍",
       "type": "phys",
-      "rarity": "epic"
+      "rarity": "epic",
+      "atkType": "phys"
     },
     {
       "id": "lightingdragon",
       "name": "閃電古龍",
       "type": "magic",
-      "rarity": "legendary"
+      "rarity": "legendary",
+      "atkType": "magic"
     },
     {
       "id": "spicy",
       "name": "辛辣龍",
       "type": "phys",
-      "rarity": "epic"
+      "rarity": "epic",
+      "atkType": "phys"
     },
     {
       "id": "fides",
       "name": "菲達斯",
       "type": "phys",
-      "rarity": "legendary"
+      "rarity": "legendary",
+      "atkType": "phys"
     },
     {
       "id": "nebula",
       "name": "星雲",
       "type": "phys",
-      "rarity": "epic"
+      "rarity": "epic",
+      "atkType": "phys"
     },
     {
       "id": "lucio",
       "name": "盧西歐",
       "type": "dual",
-      "rarity": "legendary"
+      "rarity": "legendary",
+      "atkType": "phys"
     },
     {
       "id": "florea",
       "name": "芙蘿蕾",
       "type": "magic",
-      "rarity": "legendary"
+      "rarity": "legendary",
+      "atkType": "magic"
     },
     {
       "id": "aila",
       "name": "艾拉",
       "type": "magic",
-      "rarity": "epic"
+      "rarity": "epic",
+      "atkType": "magic"
     },
     {
       "id": "granos",
       "name": "格拉諾思",
       "type": "phys",
-      "rarity": "epic"
+      "rarity": "epic",
+      "atkType": "magic"
     },
     {
       "id": "shadowdragon",
       "name": "影龍",
       "type": "phys",
-      "rarity": "epic"
+      "rarity": "epic",
+      "atkType": "phys"
     },
     {
       "id": "jujak",
       "name": "朱雀",
       "type": "magic",
-      "rarity": "epic"
+      "rarity": "epic",
+      "atkType": "magic"
     },
     {
       "id": "tiamat",
       "name": "提阿瑪特",
       "type": "dual",
-      "rarity": "legendary"
+      "rarity": "legendary",
+      "atkType": "magic"
     },
     {
       "id": "zephyros",
       "name": "澤費羅斯",
       "type": "phys",
-      "rarity": "epic"
+      "rarity": "epic",
+      "atkType": "phys"
     },
     {
       "id": "obex",
       "name": "歐沛克斯",
       "type": "magic",
-      "rarity": "legendary"
+      "rarity": "legendary",
+      "atkType": "magic"
     },
     {
       "id": "muddragon",
       "name": "泥龍",
       "type": "phys",
-      "rarity": "epic"
+      "rarity": "epic",
+      "atkType": "phys"
     },
     {
       "id": "thunderboltdragon",
       "name": "雷電龍",
       "type": "magic",
-      "rarity": "epic"
+      "rarity": "epic",
+      "atkType": "magic"
     },
     {
       "id": "rafael",
       "name": "拉斐爾",
       "type": "phys",
-      "rarity": "epic"
+      "rarity": "epic",
+      "atkType": "phys"
     },
     {
       "id": "baal",
       "name": "巴力",
       "type": "magic",
       "elem": "dark",
-      "rarity": "epic"
+      "rarity": "epic",
+      "atkType": "magic"
     },
     {
       "id": "seere",
       "name": "系爾",
       "type": "magic",
       "elem": "dream",
-      "rarity": "epic"
+      "rarity": "epic",
+      "atkType": "magic"
     },
     {
       "id": "dreaden",
       "name": "德雷登",
       "type": "magic",
-      "rarity": "epic"
+      "rarity": "epic",
+      "atkType": "magic"
     },
     {
       "id": "whitedragon",
       "name": "白龍",
       "type": "dual",
-      "rarity": "epic"
+      "rarity": "epic",
+      "atkType": "phys"
     },
     {
       "id": "blackdragon",
       "name": "黑龍",
       "type": "phys",
-      "rarity": "epic"
+      "rarity": "epic",
+      "atkType": "phys"
     },
     {
       "id": null
@@ -255,49 +294,57 @@
       "id": "helldragon",
       "name": "地獄龍",
       "type": "magic",
-      "rarity": "epic"
+      "rarity": "epic",
+      "atkType": "magic"
     },
     {
       "id": "posionriver",
       "name": "毒流",
       "type": "magic",
-      "rarity": "epic"
+      "rarity": "epic",
+      "atkType": "magic"
     },
     {
       "id": "bluedragon",
       "name": "青龍",
       "type": "phys",
-      "rarity": "epic"
+      "rarity": "epic",
+      "atkType": "phys"
     },
     {
       "id": "fat",
       "name": "胖胖龍",
       "type": "phys",
-      "rarity": "epic"
+      "rarity": "epic",
+      "atkType": "phys"
     },
     {
       "id": "tumpy",
       "name": "坦皮",
       "type": "phys",
-      "rarity": "epic"
+      "rarity": "epic",
+      "atkType": "phys"
     },
     {
       "id": "whitethunderdragon",
       "name": "白雷龍",
       "type": "phys",
-      "rarity": "epic"
+      "rarity": "epic",
+      "atkType": "phys"
     },
     {
       "id": "haze",
       "name": "霧霾龍",
       "type": "magic",
-      "rarity": "epic"
+      "rarity": "epic",
+      "atkType": "magic"
     },
     {
       "id": "serpentdragon",
       "name": "蛇龍",
       "type": "phys",
-      "rarity": "epic"
+      "rarity": "epic",
+      "atkType": "phys"
     },
     {
       "id": null
@@ -307,19 +354,22 @@
       "name": "史萊姆龍",
       "type": "phys",
       "elem": "dream",
-      "rarity": "epic"
+      "rarity": "epic",
+      "atkType": "phys"
     },
     {
       "id": "toddletomtom",
       "name": "托德湯姆",
       "type": "dual",
-      "rarity": "epic"
+      "rarity": "epic",
+      "atkType": "phys"
     },
     {
       "id": "characen",
       "name": "彩紋龍",
       "type": "magic",
-      "rarity": "epic"
+      "rarity": "epic",
+      "atkType": "magic"
     },
     {
       "id": null
@@ -331,19 +381,22 @@
       "id": "enturas",
       "name": "恩圖拉斯",
       "type": "phys",
-      "rarity": "epic"
+      "rarity": "epic",
+      "atkType": "phys"
     },
     {
       "id": "hyeonmu",
       "name": "玄武",
       "type": "phys",
-      "rarity": "epic"
+      "rarity": "epic",
+      "atkType": "phys"
     },
     {
       "id": "typhoondragon",
       "name": "颱風龍",
       "type": "phys",
-      "rarity": "epic"
+      "rarity": "epic",
+      "atkType": "phys"
     },
     {
       "id": null
@@ -355,31 +408,36 @@
       "id": "clouddragon",
       "name": "雲龍",
       "type": "phys",
-      "rarity": "epic"
+      "rarity": "epic",
+      "atkType": "phys"
     },
     {
       "id": "solardragon",
       "name": "太陽龍",
       "type": "phys",
-      "rarity": "epic"
+      "rarity": "epic",
+      "atkType": "phys"
     },
     {
       "id": "centipededragon",
       "name": "蜈蚣",
       "type": "phys",
-      "rarity": "epic"
+      "rarity": "epic",
+      "atkType": "phys"
     },
     {
       "id": "henes",
       "name": "軒尼斯",
       "type": "phys",
-      "rarity": "epic"
+      "rarity": "epic",
+      "atkType": "phys"
     },
     {
       "id": "griptor",
       "name": "鐵鈎龍",
       "type": "magic",
-      "rarity": "epic"
+      "rarity": "epic",
+      "atkType": "magic"
     },
     {
       "id": null
@@ -444,19 +502,22 @@
       "id": "patroa",
       "name": "派特羅亞",
       "type": "dual",
-      "rarity": "epic"
+      "rarity": "epic",
+      "atkType": "magic"
     },
     {
       "id": "swampdragon",
       "name": "沼澤龍",
       "type": "dual",
-      "rarity": "epic"
+      "rarity": "epic",
+      "atkType": "magic"
     },
     {
       "id": "totemdragon",
       "name": "圖騰龍",
       "type": "magic",
-      "rarity": "epic"
+      "rarity": "epic",
+      "atkType": "magic"
     },
     {
       "id": null
@@ -468,7 +529,8 @@
       "id": "bluefiretail",
       "name": "青火尾",
       "type": "dual",
-      "rarity": "epic"
+      "rarity": "epic",
+      "atkType": "phys"
     },
     {
       "id": null
@@ -477,19 +539,22 @@
       "id": "ninjadragon",
       "name": "忍者龍",
       "type": "phys",
-      "rarity": "epic"
+      "rarity": "epic",
+      "atkType": "phys"
     },
     {
       "id": "aliendragon",
       "name": "外星龍",
       "type": "phys",
-      "rarity": "epic"
+      "rarity": "epic",
+      "atkType": "phys"
     },
     {
       "id": "mummydragon",
       "name": "木乃伊",
       "type": "phys",
-      "rarity": "epic"
+      "rarity": "epic",
+      "atkType": "phys"
     },
     {
       "id": null
@@ -507,19 +572,22 @@
       "id": "taros",
       "name": "塔洛斯",
       "type": "dual",
-      "rarity": "epic"
+      "rarity": "epic",
+      "atkType": "magic"
     },
     {
       "id": "sharkdragon",
       "name": "鯊龍",
       "type": "phys",
-      "rarity": "epic"
+      "rarity": "epic",
+      "atkType": "phys"
     },
     {
       "id": "liberte",
       "name": "利貝特",
       "type": "magic",
-      "rarity": "epic"
+      "rarity": "epic",
+      "atkType": "magic"
     },
     {
       "id": null
@@ -537,13 +605,15 @@
       "id": "kleptos",
       "name": "盜賊龍",
       "type": "phys",
-      "rarity": "epic"
+      "rarity": "epic",
+      "atkType": "phys"
     },
     {
       "id": "pierrotdragon",
       "name": "小丑",
       "type": "dual",
-      "rarity": "epic"
+      "rarity": "epic",
+      "atkType": "phys"
     },
     {
       "id": null
@@ -590,7 +660,8 @@
       "id": "magnello",
       "name": "火涅洛",
       "type": "dual",
-      "rarity": "epic"
+      "rarity": "epic",
+      "atkType": "phys"
     },
     {
       "id": null
@@ -599,7 +670,8 @@
       "id": "pinkbell",
       "name": "粉鈴",
       "type": "magic",
-      "rarity": "epic"
+      "rarity": "epic",
+      "atkType": "magic"
     },
     {
       "id": null
@@ -617,13 +689,15 @@
       "id": "lunera",
       "name": "盧內拉",
       "type": "phys",
-      "rarity": "epic"
+      "rarity": "epic",
+      "atkType": "phys"
     },
     {
       "id": "goldie",
       "name": "金雕龍",
       "type": "phys",
-      "rarity": "epic"
+      "rarity": "epic",
+      "atkType": "phys"
     },
     {
       "id": null
