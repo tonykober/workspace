@@ -37,7 +37,11 @@
       "atkType": "phys"
     },
     {
-      "id": null
+      "id": "citael",
+      "name": "希塔艾爾",
+      "rarity": "legendary",
+      "elem": "lightning",
+      "atkType": "magic"
     },
     {
       "id": "selora",
@@ -347,7 +351,11 @@
       "atkType": "phys"
     },
     {
-      "id": null
+      "id": "wonderdragon",
+      "name": "幻魘龍",
+      "rarity": "epic",
+      "elem": "dream",
+      "atkType": "magic"
     },
     {
       "id": "slimedragon",
