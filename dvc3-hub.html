@@ -1,10 +1,41 @@
-﻿<!DOCTYPE html>
-<html><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0">
-<title>??</title><style>*{margin:0;padding:0;box-sizing:border-box}body{background:#0a0e1a;color:#e8ecf4;font-family:-apple-system,sans-serif;min-height:100vh;display:flex;align-items:center;justify-content:center}.lock{text-align:center;display:none}.lock h2{margin-bottom:16px;color:#00d4ff}.lock input{padding:10px 16px;font-size:16px;border-radius:6px;border:1px solid #2a3050;background:#131829;color:#fff;width:200px;text-align:center}.lock button{margin-left:8px;padding:10px 20px;border-radius:6px;border:none;background:#00d4ff;color:#000;font-weight:bold;cursor:pointer}.lock .err{color:#ef4444;margin-top:8px;display:none;font-size:13px}.loading{text-align:center;color:#7a8599}.loading .spin{display:inline-block;width:24px;height:24px;border:3px solid #2a3050;border-top-color:#00d4ff;border-radius:50%;animation:sp .6s linear infinite}@keyframes sp{to{transform:rotate(360deg)}}</style></head>
-<body><div class="loading" id="loading"><div class="spin"></div><p style="margin-top:12px">頛銝?..</p></div><div class="lock" id="lock"><h2>?? 隢撓?亙?蝣?/h2><input type="password" id="pw" onkeydown="if(event.key==='Enter')go()"><button onclick="go()">?脣</button><p class="err" id="err">撖Ⅳ?航炊</p></div>
+<!DOCTYPE html>
+<html lang="zh-TW"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>DVC3 Tier List Hub</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{background:#0d0a18;font-family:'Noto Sans TC',sans-serif;color:#fff;height:100vh;display:flex;flex-direction:column}
+.header{padding:12px 20px;display:flex;align-items:center;gap:16px;background:#1a1228;border-bottom:1px solid #2d2140}
+.header h1{font-size:20px;color:#ffd700;flex-shrink:0}
+.header h1 span{font-size:14px;color:#888;font-weight:normal;margin-left:8px}
+.tabs{display:flex;gap:4px}
+.tabs button{padding:8px 20px;border:none;border-radius:6px 6px 0 0;background:#222;color:#aaa;font-size:14px;cursor:pointer;transition:all .2s}
+.tabs button:hover{background:#333;color:#fff}
+.tabs button.active{background:#2d2140;color:#ffd700;font-weight:bold}
+.iframe-container{flex:1;position:relative}
+.iframe-container iframe{position:absolute;top:0;left:0;width:100%;height:100%;border:none}
+</style>
+</head><body>
+<div class="header">
+<h1>DVC3 Tier List<span>Hub</span></h1>
+<div class="tabs">
+<button class="active" onclick="switchTab('v2',this)">v2 (Interactive)</button>
+<button onclick="switchTab('image',this)">Image Version</button>
+<button onclick="switchTab('v1',this)">v1 (Original)</button>
+</div>
+</div>
+<div class="iframe-container">
+<iframe id="content-frame" src="dvc3-tierlist-v2.html"></iframe>
+</div>
 <script>
-var E={"s":"CVhKNMlkKIFJcvloCmAQHQ==","iv":"YotQWpSSbp/RNCte","t":"f1zd8+BjW+o7eJCtFjbz2Q==","d":"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"};
-async function go(p){p=p||document.getElementById('pw').value;try{var s=Uint8Array.from(atob(E.s),c=>c.charCodeAt(0));var iv=Uint8Array.from(atob(E.iv),c=>c.charCodeAt(0));var t=Uint8Array.from(atob(E.t),c=>c.charCodeAt(0));var d=Uint8Array.from(atob(E.d),c=>c.charCodeAt(0));var key=await crypto.subtle.importKey('raw',await crypto.subtle.deriveBits({name:'PBKDF2',salt:s,iterations:100000,hash:'SHA-256'},await crypto.subtle.importKey('raw',new TextEncoder().encode(p),'PBKDF2',false,['deriveBits']),256),'AES-GCM',false,['decrypt']);var ct=new Uint8Array(d.length+t.length);ct.set(d);ct.set(t,d.length);var dec=await crypto.subtle.decrypt({name:'AES-GCM',iv:iv},key,ct);sessionStorage.setItem('ws_key',btoa(p));document.open();document.write(new TextDecoder().decode(dec));document.close();}catch(e){document.getElementById('loading').style.display='none';document.getElementById('lock').style.display='block';if(document.getElementById('err'))document.getElementById('err').style.display='block';}}
-(function(){var k=sessionStorage.getItem('ws_key');if(k){go(atob(k));}else{document.getElementById('loading').style.display='none';document.getElementById('lock').style.display='block';}})();
-</script></body></html>
-<!-- deploy 20260720101403 -->
+var pages = {
+ v2: 'dvc3-tierlist-v2.html',
+ image: 'dvc3-tierlist-image.html',
+ v1: 'dvc3-tierlist.html'
+};
+function switchTab(key, btn) {
+ document.getElementById('content-frame').src = pages[key];
+ document.querySelectorAll('.tabs button').forEach(b => b.classList.remove('active'));
+ btn.classList.add('active');
+}
+</script>
+</body></html>
