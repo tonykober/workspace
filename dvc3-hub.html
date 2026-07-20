@@ -1,41 +1,9 @@
 <!DOCTYPE html>
-<html lang="zh-TW"><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1">
-<title>DVC3 Tier List Hub</title>
-<style>
-*{margin:0;padding:0;box-sizing:border-box}
-body{background:#0d0a18;font-family:'Noto Sans TC',sans-serif;color:#fff;height:100vh;display:flex;flex-direction:column}
-.header{padding:12px 20px;display:flex;align-items:center;gap:16px;background:#1a1228;border-bottom:1px solid #2d2140}
-.header h1{font-size:20px;color:#ffd700;flex-shrink:0}
-.header h1 span{font-size:14px;color:#888;font-weight:normal;margin-left:8px}
-.tabs{display:flex;gap:4px}
-.tabs button{padding:8px 20px;border:none;border-radius:6px 6px 0 0;background:#222;color:#aaa;font-size:14px;cursor:pointer;transition:all .2s}
-.tabs button:hover{background:#333;color:#fff}
-.tabs button.active{background:#2d2140;color:#ffd700;font-weight:bold}
-.iframe-container{flex:1;position:relative}
-.iframe-container iframe{position:absolute;top:0;left:0;width:100%;height:100%;border:none}
-</style>
-</head><body>
-<div class="header">
-<h1>DVC3 Tier List<span>Hub</span></h1>
-<div class="tabs">
-<button class="active" onclick="switchTab('v2',this)">v2 (Interactive)</button>
-<button onclick="switchTab('image',this)">Image Version</button>
-<button onclick="switchTab('v1',this)">v1 (Original)</button>
-</div>
-</div>
-<div class="iframe-container">
-<iframe id="content-frame" src="dvc3-tierlist-v2.html"></iframe>
-</div>
+<html><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0">
+<title>🔒</title><style>*{margin:0;padding:0;box-sizing:border-box}body{background:#0a0e1a;color:#e8ecf4;font-family:-apple-system,sans-serif;min-height:100vh;display:flex;align-items:center;justify-content:center}.lock{text-align:center;display:none}.lock h2{margin-bottom:16px;color:#00d4ff}.lock input{padding:10px 16px;font-size:16px;border-radius:6px;border:1px solid #2a3050;background:#131829;color:#fff;width:200px;text-align:center}.lock button{margin-left:8px;padding:10px 20px;border-radius:6px;border:none;background:#00d4ff;color:#000;font-weight:bold;cursor:pointer}.lock .err{color:#ef4444;margin-top:8px;display:none;font-size:13px}.loading{text-align:center;color:#7a8599}.loading .spin{display:inline-block;width:24px;height:24px;border:3px solid #2a3050;border-top-color:#00d4ff;border-radius:50%;animation:sp .6s linear infinite}@keyframes sp{to{transform:rotate(360deg)}}</style></head>
+<body><div class="loading" id="loading"><div class="spin"></div><p style="margin-top:12px">載入中...</p></div><div class="lock" id="lock"><h2>🔒 請輸入密碼</h2><input type="password" id="pw" onkeydown="if(event.key==='Enter')go()"><button onclick="go()">進入</button><p class="err" id="err">密碼錯誤</p></div>
 <script>
-var pages = {
- v2: 'dvc3-tierlist-v2.html',
- image: 'dvc3-tierlist-image.html',
- v1: 'dvc3-tierlist.html'
-};
-function switchTab(key, btn) {
- document.getElementById('content-frame').src = pages[key];
- document.querySelectorAll('.tabs button').forEach(b => b.classList.remove('active'));
- btn.classList.add('active');
-}
-</script>
-</body></html>
+var E={"s":"GUePL3Hjsmaex1xzHYYjOg==","iv":"uzsYETcX9NMaHFgI","t":"+RK1rItcThezIunioLaHqA==","d":"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"};
+async function go(p){p=p||document.getElementById('pw').value;try{var s=Uint8Array.from(atob(E.s),c=>c.charCodeAt(0));var iv=Uint8Array.from(atob(E.iv),c=>c.charCodeAt(0));var t=Uint8Array.from(atob(E.t),c=>c.charCodeAt(0));var d=Uint8Array.from(atob(E.d),c=>c.charCodeAt(0));var key=await crypto.subtle.importKey('raw',await crypto.subtle.deriveBits({name:'PBKDF2',salt:s,iterations:100000,hash:'SHA-256'},await crypto.subtle.importKey('raw',new TextEncoder().encode(p),'PBKDF2',false,['deriveBits']),256),'AES-GCM',false,['decrypt']);var ct=new Uint8Array(d.length+t.length);ct.set(d);ct.set(t,d.length);var dec=await crypto.subtle.decrypt({name:'AES-GCM',iv:iv},key,ct);sessionStorage.setItem('ws_key',btoa(p));document.open();document.write(new TextDecoder().decode(dec));document.close();}catch(e){document.getElementById('loading').style.display='none';document.getElementById('lock').style.display='block';if(document.getElementById('err'))document.getElementById('err').style.display='block';}}
+(function(){var k=sessionStorage.getItem('ws_key');if(k){go(atob(k));}else{document.getElementById('loading').style.display='none';document.getElementById('lock').style.display='block';}})();
+</script></body></html>
