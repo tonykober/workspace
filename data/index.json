@@ -68,5 +68,12 @@
     "icon": "📊",
     "path": "dvc3-tierlist-image.html",
     "date": "2026-06-16"
+  },
+  {
+    "title": "SpinningTop 工具資料讀寫盤點",
+    "desc": "各工具/編輯器 KV 讀寫架構、離線可用性、改動優先級",
+    "icon": "🔧",
+    "path": "spinningtop-data-io.html",
+    "date": "2026-07-27"
   }
 ]
