@@ -164,7 +164,7 @@ pre code { background: none; padding: 0; }
 <!-- Tab 3: 運作流程 -->
 <div class="tab-content" id="tab-workflow">
   <h2>運作流程</h2>
-  <div class="workflow-step"><div class="step-num">1</div><div class="step-content"><strong>上傳影片</strong><br>使用者透過本地 Web 介面選擇參考影片</div></div>
+  <div class="workflow-step"><div class="step-num">1</div><div class="step-content"><strong>上傳影片</strong><br>使用者透過本地 Web 介面選擇參考影片<br><video src="C01-001_gacha.mp4" controls playsinline style="margin-top:0.8rem; max-width:100%; border-radius:6px; border:1px solid #2f3336;"></video><p style="color:#71767b; font-size:0.8rem; margin-top:0.4rem;">範例：C01-001 曜天火 天火尊者 法術A 抽卡動畫</p></div></div>
   <div class="workflow-step"><div class="step-num">2</div><div class="step-content"><strong>深度估計</strong><br>Video-Depth-Anything-Small 模型逐幀估計相對深度（近處明亮、遠處暗沉）</div></div>
   <div class="workflow-step"><div class="step-num">3</div><div class="step-content"><strong>全域正規化</strong><br>整支影片使用統一的亮度範圍，避免逐幀閃爍，保持時序穩定</div></div>
   <div class="workflow-step"><div class="step-num">4</div><div class="step-content"><strong>輸出結果</strong><br>產出灰階 MP4，保留原始解析度、FPS、幀數和時長</div></div>
