@@ -1,9 +1,203 @@
 <!DOCTYPE html>
-<html><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0">
-<title>🔒</title><style>*{margin:0;padding:0;box-sizing:border-box}body{background:#0a0e1a;color:#e8ecf4;font-family:-apple-system,sans-serif;min-height:100vh;display:flex;align-items:center;justify-content:center}.lock{text-align:center;display:none}.lock h2{margin-bottom:16px;color:#00d4ff}.lock input{padding:10px 16px;font-size:16px;border-radius:6px;border:1px solid #2a3050;background:#131829;color:#fff;width:200px;text-align:center}.lock button{margin-left:8px;padding:10px 20px;border-radius:6px;border:none;background:#00d4ff;color:#000;font-weight:bold;cursor:pointer}.lock .err{color:#ef4444;margin-top:8px;display:none;font-size:13px}.loading{text-align:center;color:#7a8599}.loading .spin{display:inline-block;width:24px;height:24px;border:3px solid #2a3050;border-top-color:#00d4ff;border-radius:50%;animation:sp .6s linear infinite}@keyframes sp{to{transform:rotate(360deg)}}</style></head>
-<body><div class="loading" id="loading"><div class="spin"></div><p style="margin-top:12px">載入中...</p></div><div class="lock" id="lock"><h2>🔒 請輸入密碼</h2><input type="password" id="pw" onkeydown="if(event.key==='Enter')go()"><button onclick="go()">進入</button><p class="err" id="err">密碼錯誤</p></div>
-<script>
-var E={"s":"6EEQLzAaRvRw59mdY15DZg==","iv":"Syy5FvyjFkWd2ezX","t":"lQ+ImUIaQwzaoVCjC4Qqlw==","d":"ModSqVri9t/w82oIrWYJS5TFHfwTLNkV9V3YkzP5z4jf5BFQbDC1OSXQZB/l1fWAfH7EcxYDft/y6XO1+cn0DA+LWeGn45TBL+2rs5jiLBHSvrua0lE+XGuVCdLI3RWSRXDH/g7x50Zu/QijyKL7mBko23RRV3Lb/bnR6FJVgqsw1hscB0e8tsTE0GPVCBhPEP+m9OYFCQpkh/G8gNjJBMBkaU6Xoj8vKTC3Rp5n42qrNSD++nd7q2pKOLm/ZH0OqITm2ci8uI/IWG649BcpckmjcxZJyiL4Eo1hn03zz7aFunQrh1nAatAfyPpuE5bbG66zrid1oVEWVnk288Dmaj3EZQRMZXq6ggRod4BsUSdFZ5tRVil3Ug9Cr8AEUZchzFgDr4a4p5lm78oakvcsKjRHqd4ve2NvrtyhGbA1RrEZUYn14fLhR5GQkZLe5E0qfl5gmgF1tL9uZxsT8eku9otII2IDYuKCAtXJBgu7UkLVh8WxN9N6Jknw6Yegr+PE19p4sN3MKOO/rtYiwoZ64qdiQKdYFz4h9udEzV8dktT82AGlKkTG1bY8/KF0r7mlGhv0sbDZMfYybsMSY3tIo2ox62vYyXPNxpbZ7LQigar/rPxjfH4Mwar7qSE0Z3lLROYZF+AXQdK2AGS4Cft4JJMLtGDo/EO/BTg/Z1mL6ltOnMvHTfbPUAzDEOmFCAwxrpEZe65ysOEscF51mCiFNHy8l00OTap/i9Sm0abTTyjXSI6+8FaaAD8VWmKXg9hWyRylJF1dSwroaTEGAI5Qiu5MmfzM73cc8VAvA8SQRmogQjk8Tek36YSGIneOPH222f2kZNXfX69KSXZi4wUtfj/wZi6JUD3Ibn8Vz6mWYLzlE52MybyFI5uOE/aDf1JjO4cP2DfG7rqnN2v38hr6X91Z/JMWyBsRRwhj+okY/pGTOUoyMQxdHEKjnlI1WG4RMJI9KDCYESBfI6f/fXQdCVMkLbRIKwhOEqAQ1aJ8Xl9oH3R9L5EiB0YnNOH9IwG+9Jh/wF0sWCRL0MD9+8SLpefBmD3YCLvWpHR0V9RXT7N+WGYuSp/kimn18Q3sembCN5twWo0MzUf9egap+BFkYQsZP20zhfnSAkyBs6FKgLZEHJZNMQVOBvSwpC0ispCUsAu4cMFAX41Cp1gQmNL8NhAdA8SRf8z/35j5AQV8o/Gfc0J0tn6fYZMxnA6HZtYd5edDJk5QzojGD4TuYa6rY2o3bINdQAS0udmZ4zq8zpRd/iKFcIw7VOYk7o1oXKiGBsRX4Fyi4DCKBA2yYyymPhZaAez6suD/Ng9WPQOda3A7qUWQyvF7Oh2ND1OJCzigCd+JHItfrVn2Cfc8e5dz6LMbSh1807LrT/m7hMR1GKkJfji8OWXDI22uAczPp2hBA/XQgarbVNmmKanki8Zq7yie7vy85j6C50eVNi4vkQkdxHuG2XGAMShv0yQRGBZITBO2+aacuoCkQ0WOcw7/3OvWRmMBINLMy0xcqh1yd37ADZTygoieJdle6m6ETEc+Vx7poj12N1q7wGbaE4qcPzHRL4CTKgHPMqNrXnCK5B2J8UCSm7AXLSQSzmS0CIf2EF8AjjAAyiickAsu2ZcPdUBo9GhIW3SFcRDPFV2rU0RLi+1NgUjwdnBCTk/0w4NKjP0HDPcf+Qvi8ILyDPc/Z8Y73fEifMGwZlox6Sbi7D0bIfN3RhK+twAYBs2WaCp4m1IkWb9u9PrKJ46ROnJ68D8Rf26lHm1E/n+dkgDyZUcyp+EIw5/erqhbadnajliIr1wKD9O3AjDfzSjW+N6NaTaFnhZC8+RE+gVTfHFiv8+yLia/Q3+N+ULGR0LKyeOeLRnt9hPFEZqprgY6DIfZME6GyZWOO8nRocANDjbFMl+zCPFsjXbur+0uqj0jgQDhMdt4aD3H+9Kk0nYtUjeZm8FL94PP5ExXfjzw0c37LkK2PyKI35weLUySwJxOGl68fMY3Sy/JnZH4GnHveuX/yEmkjBHy+1vVBLplK6OSdMSt1Z2xRxTmYRDzKjhI07Sp7MWvc2/FB+ga67O27Yt/ThGcUNcXNyLpp7iAUbs0EAMePu2H/Ux7O7WVRO/Y2l731JAr8HchKYzwD/rVWkbD0oZBMumIXxwDVb7lzcxksLk1FjOHEcQl66mVxhoT53v0ZD9d/DLu7I+vn/61bgCMpe/p/NGVnL/0Nw4/8mi1QglK7Ztsu+O4+ps4chQKPkjZer56h9q6xS2H2uE6I25cxmUJUzYT7o9xqhhNuQyVsKm2gHUavJQ6nu0XQjX21ExfipHjvy1j+wNGDZy+0/5qial9Dw5LojQOLimlOml2gqbCrL1VUNzeUoZgVtf2j4MUDEj0ekd1W6J/hD31oEunbfMwBecLO/+cINdkftFxR1YO7H2m+aDVzhseViEC3N4MncbnmyrWLSFl5m1bYkIfeGJ8/iySNkQTz3CKiwytQEOp7RepRbm5BDoB78L0Z5T1eDxcvNgBRN+uLiPrksnZkxtcORGxv670pXw2GWGqNUCq0YHzFxd1/+9fjSMk6fDhHjqnGW97d6kqzNge6g65LRQvi8AGIUUSLXAUM7C/Ea+lXkHTG6UVGMxF5CXs1uqPr18VS3YoIxIpgKz3bqs3O2eK85GmbKV0iw26hDe7biEVvrl2DYg5ZEkeeNwdJJVJrUNOnNO/5XDkdG+LGHhRWEyBq46/3dsOTJ0FFeZhdyI9id8yUE6jbY512tjhN7FHnQ/zw4c7RXXhlNj7jKYdzS+ReUnqV9bma2WEfI95DLdVKzZVb6GTFyAPCi4HbuCil7eiTyC9ih/j1IF6vVhnfS/xfJxeRx8jtBSmMzen5fVtHJ01zk6DQ+UMARqjwEPrH8DdheZVwigSLesdXP+sPr3R2E8C+z7CFecsPbj+fbyv9lO7YOL9NYsmgFV6TOW1gSWMLQoEP9IqH0aagh1mF8yVxZLcBSdAaxgh8ihL6OQOhpdjR7UzBh1KZeX1FJhfDnxLIMYABm6Z+ywpYlsNY/K7LBhK0FoYox3nR8c9imHYcuh7ZPfuVQqRbGtz9T+qpP87WjjLWLvbs9QGCIJ4AbqZHV7eNbd35NKs1O9rmFTswAtluk0WC5a40KYIcyW9fYri+6gFa+UvqtuYPeKsE3cxTEUKenwFIbWFEnxxhwermx40ujL9U/584XOiY9FyNRJRcQcD/UcuPFRziylCgFEsPfc+tqn4A179GQ/K69Bx4OkKYI0RKp2iE2tYMRURZhCpUL0Ai/SmFYdfgIUQ+Tm+6Lkhcw1TCCIizJUbV3ao8+nCwJ88bd0v7Z7UjzV2Akbhb4bd8ApH6smi0HyXC+Wp5CGdnI7dylL6+3+it6mfgonKAn/+5/g1ZyJs8AUxLUtOWVlNGG8hEdWFT+NfFEAasI7h6jy9q0gpRcvrqr9wTk0/hDFAfD5CjvUPEcjZpuGAhkBF0klgV6R09NQIzC/ucHJwNhS2rPVPjG5LVzA20XS5LUR0KidRqKFGUVUsEPFpXK8ynUqsHBJxTiFm7aUFLgM8leoVbZ7vpgbT9KtkWGJHPFvwCiyTUt1uRcrPvpdqvjWpyg+atxhbuTfx+H8VRkPcjtfwD4kbsbvbqcHfVP3liklSFlnCnS42Q7qQ8Nhe96lnyNCjlQLvARF8EwesiPGVISJgWi2KisYiD4MfH+fSSlu+kAqPm6siphBGGmJuFmVifzhXNNqv+UwvmuA+9S843SwBrnTkpe4HU5iVnkDUFUDTZC4Jqy/qMKYbw6Ih+1wqOrKMDiNXrQtMI4jlvRwB8QS+Myn2xbZtQ2tL4xRWZXTjxaBzqJ+Rmi2+tSwHIwTPQNXTF7+eKU0PFVEho7z5+N88xdwGA+ttqZXtkqFgAG7NwBVyYBylvcBt6sh6HHMAVI9Gi9WIG8FxxxBlCAzARW5D85abR7Sf/WL1KNzGl+45ZyVIjXIzXrWm/CIVMUhrWMfjgd1yCMQjcPvK6ObJDed4Qcuba8I++gYkpz0bzGY+XV21iQ+5mnxIWaKLsjB+3KKgenHU1yp7bt2wTQTHLeQwjvgePX9hGj93tWzKUnjjb6d6zSWPGWtwWyAtgAox+uJozbz88VccFYUWkDZLuFeQvwb27mnDeMNy1OwOo5yai35ZmyN6tGaiLG9Qk/n1aQR7IVeTEVfobDFMxC+6y9WkJ3k9zeyQfYL26WCWufNu/W4EMchNr1nGQCoeHjH3XQsaeB41BgI5+YqWB8ojir3Pbo44HaPWQcyyEEt7aj/NGyUzxgoyO8uZyqaWmUEIu7nBiQ6nvxBPzKTiZNj9L1P0DA3D4QsrezJI3tcKpyy6Wjpw7C26EmS2Wzn3QAAbNojXj1WEofR2qNGvxChoc7lD/YPexs0/3oTuXRRE1XXVc7YfPpmkx2Fn8/6D8DnIcMl0uCqBIkpcSR9Tkh45GzbmQIGaW60U8ganORoaU2vkbmW55soV2Wjvap4os2fZC0Acl+HftzSLpqqdiS+fdRq+i2BPmyHsJFVbs6jHOpB7hVGVTlfguq1+EINWY7B705tfpvAnLyfeVjCQ9uTm18gRPYIKlsZ5OCOMIn5g8yfekdiCzukjTHpR7FhkdbUpHIgJlP7+BRsvi4ms80UOYvqYhiPYnGPYbSYjBmnvWzuuqse0ovi+4Zf30HyFIsWkcD4BgwD5mVPl9jQPz8iyEwQtIeAzou4hEXzfqoFs/hjrK4gaN1EaKHKxBFMlb5LxXDz/BLW5/s/DSgfTceItXPnI2eyWgWn0DJ9U/nnlnw0Cmy3tOAeCpp0rb5asN1kwtj799leR5L0kc8sZWDVqhwEeWQkZYyPFqoWMhXOj0SWpqLHPawfxPlOGT9I1ZvI7AE1be7jv/j/fRrLzSAlGEjcNMJO4AIddKEAZFnx14J8PjiXisusH7jlJCAkNBs0rYrzAxFh2sPIBjEqcvayPZHtNx06LIp2DSjGwp35cEVq9DOIKdttkG+NYwHxW30+iCvABlJltIigJVtwKC9Fos1desaLyQvp+V4lbg8lmQp9fDlEs4uzQPvYSRI0MXEWLZ01zRmAupAzM6ZwqFmEnrb3wK9fvdhOvmPZGdfCIjIEoT/t6Mg6OygYUpZSzAtLXXajnonn59CPbBUTaqcay67yRKJ3UGFgbmxqiahPcTv0bB6WiUQcyG8qE6Z91vGzlb0oSQWIwcwQ0lEwV9kqE/3IPLK1x6IKT1tDboyjDw2D8s3Phel9y5eLw8Ek+w36bfXdq9hFIJ3qIryOYVlMZVwRzQGl5S4+k4YZrs0SoZObxYoWSA2spXLb9MwBtAXPynmF3H06BvfN7z2mZO8SxE4PBdZtjk4z172BlXquBTqxp/pGP1bodrMC0OAgOP7BnlDbGKsqUZKr0JBHvXJs73cn6m7A6r25bN1n7c6hl2nLetWjvH1qOC//BKSSO4Mas4HyCTqaG1AgEmW04JIO7a4jAclR31GKDCEUVLHN0ENszHMzHRafF3BynSsnbL2gFZeM8yoSS8bC9rNmi/ApzXIk/oUvnpfBYWBYAU9tUB7O9BAR3dohFyFdOZmmCbqpdu4t0lhthtbmgrLaoUOhzu48jCOxpkgTK+FtLCGVJjx0W+MrlYbG8zH005YanamueXCrCaIrffup5Z5xpENG5WTX/Ne0ncPZkaJmebS71VYt7/uwL9xBTh3jyf6njBrkId9y7FTJey2X1gCrd69eqcbYRqvOSlgQucyiU04JCRPHLuLW2+TcslniwA7tQI32zvTko+7EWhWNN9oB+ApIvl0Kt8JJ0MOMaVgR/uj1yuI5Op4wTbYGmxXuyP1yqJZ1ENerb43EQkCtRUpPpC1/YJigCFiygxPnqxFnUGVk0TbTglOYWitrCVDhXGgzNDzL4S4g24Vx8T5wOCPttNq+tO+gg5NXY/8BzbnTeqC2na5K9Vz++dZ3Lz5Qn+vgUgjXA2YoGHf5LReZjOr9BMMUcfZU5+yi24jCpibD4VfvqlD2nFXGmyFAuxPvimY2cf09S3FG2Bo5OnN9fOPkUuhKceAJfYeTXHyN5lL0JPNFQErEjILaSge40kPhZAYUmYCdHM/XL4SjFOoADYrkqDYyBc6vAOVyyhjO40MqvHPk7BNRLq9BrVrcZIadq9zCzkFHyw0hfMwELjmvlguHSW2IFWySjfG3oZMiz8JT87+VPHFnnPODXfFWXUtLmdn/bquAA4/wqLqeF2+iG3uA4uVheGgpKD6VSCzpvLLC2CrYQD/IudSPIptIhGesmaTZA3gmGirOYvbCgVBtswGtuNKvQsP8ki3xB1IyC3hEM6c6SYfpLTaHDsP78AyqlBKBiWDWbMRxMjJPklFhYuCpBAu6tNY0ah8ERsQMsoUUJcY2/0064muJcTpiighGErLmnCZuYaApA6rtpL5uzpwZuXo92Sa13Uc2haR67VwU8Y9/EpRXFbpEklV47eC/ItUvQ9U1Bt2eChOPg6zqoIVIUDkjWBAggvYJimWAMmTtMIIdkKGMYHQSY2TIspk3Jl4OYGWsM7dtloQ+xD7OoLjQsVnnPA5PNoBnZqjfEhyV9wKSMOu/8FfJmFxjJ6+FyRT6pmFu3nm6poHrrx2n1xDk/17ibkkbAg8S0zbordS/pCFqrcu6Tww8PiYkGGsezYlaKJPnbDoAFIpoVLYVgjI4M7cl0u7S4BZE/j62DsdpK874Rca5wwmAnyOM9yVq155ebQjPvZlC8o9tBEGj6mHA0zJpg03p9dkrvIv7vWl4BYuD8ee61Xt6RMnsPGesWwIPA0kh+0zd+QAX7mFGqyfe8U1d1DZUgy6c/Z63gTUpNas+xdNaASotMbMR5AYeVW8yP0ebn0lpouenl+Rrd2FAzdx3fpkXE3LQvtKY0MsjW52hFWmHDC+VRGDUxfnp+epxAGe8TcTHNG9Usj6hS52XGpYYInpQxCHlz2yLlVeewneYN1SNTcRpr1YUnE/xGx3aCFHSSv39VacjyQEVTGDBELFnIKwX71RI8Z2tqnJ2tbFEMPtLjl1KDqYMCKmvF/CkTK3GhNarERM6iQOhHhF4uzhjhVAEe1ce6Qf5QfPHTf3EShKy613NSv63p7hXJzKdSOzAzqcaiemBPUMOHwuqzkUb9yixWLEBYVkBqfGJbVmzhApDsh9vWbqeXl1ClCeicefS/9ofUKED30+ibN+i7RTDMP/eSumFAV1bmje2pv2H55otXBfAn1g3VvxSuSK2cZphU/NMLcxVNNfIIqFs8XANHDoaQcLVFOk3RR4Lwyn2wKfubizRnnxLo1yKWWu3n8cMcT2vLHA7811no0sLnjqjrGd/FJGZtdYsw7ImIpN5dH8dxrj8bq9nrE4mdFsxgfjvunF7Uw2vVCYV1v1M5Ak6Y3Bjp8wpPihKrZXo0FXPmNAj8iUZElRUZbTg2pNHtkYp9AWjZ5py7SKmcwNMq29vOs1GITPIpoIFNoqKL9tY/XFRkBESI32ORKjegwnK55dGQaYOtdEnvjGFjSo7smpM/zZQa6ytwRIts1Q0HXCad9A2Wnc/lhu+9tyj/zXK/oytTQmMiiJvDLq494TLbef24ZZzktf3N8fZv341yfnu5szgMPfTESREGqjoswIdn9U+XGXtpyhnhP9eMw4A/feMRmZmfssnQ0dGL8WlH2uEG/o/jkPriYnVZrvyXKZp6jyC9379gwYoTSpxVQuiIrTAxojS50aFaPswZHpRe3s0U37JgC03wu6kZ4uOWkwgCtWkHHtCYj5VurI2iunS6TfTWeau4aPm/zDia1nwKeoi5lEmIR7o+seh/2gH+i7J2R/5jkOUPy7qjlXYv/1DO8tsRpPqFDmxC7ZrNSGmcLftz2zqItOtPNHnygmIO3mIYB0rb+lLKx+w3VHjzAyz8HvyGNxDx975tNfes0E2+3y0QwLm4fBw7EUIb+Z03yLlt58O5QMHdvGH590S3cJ3wo6ZmyoB3694irBAnujSLYfbYhkVI2mVZP3+IqhepMgWSWZ65WPBsBk963aKHXh7fGm3l+T7w7SzRvfdyvSfSdF6yyWbm63dUtpq3BlxPIOCzy4WJvhDINaypMWDY+3IFLAGR/UNxsqLbcu2Qx7CP5vjWogT7mmST+WuQXAOn71xBbPwY/QvFLOTGpeJHUzayxhkh9tpN7Nl2zL/5ArpMW4E4gsGi+7MwXrz4YlX6kdlnkls9iDvCMjJFrJO7Fi8hvzYKWV/FJWcG5mzCpGzOL788a51LFSSCPwUfBfH1HhXy/JcmrItwaqIDwP/o2GQjBpOamXNwwr2hz1/uV80IzzjfGvLANDXM+apcBxRXES9Pr3/y7RZmswKmjoOLc+3SxzgnTa/kgxSCfD4X1JxFqwZ8QPsZx8lCgv/zYlJFCec0ZMapGtFYcIuFJJTBp82uHIJ4fm+mwjNC84+U44bo1icpnj2Tl2E4K63HBdkhXS4m/lVBzbneZ+OD8xGyl8+kTyrKbnkj6GAZTSvk/QH24phKaCXvMJ3ogoBfexBaycDjwClkt+nURYZvX72N2eamn9e17X91gQ+meqGE0u9NOUMiLz4gTPTwOc9JunxcrSGJ9Gpae/kvnLiepn83wFfsaml9qvwZRFZMt35mj1StuLLOGSSVVkVC4ABpyQx9Sq2Nw0JrAY6u3VRUCL/yig1HD2mYo2l2+h+tuqvHgHfnCyS6ASlF0lFcORRPPhkR+LDj21Z/sfkPH4qEITJ4KwozSqM6xPuIf6zIYfxpGocIjqO4lzxxdzxbbxvGO3uR/txxGRZUdkJ518V91XvNtku7w9JwNpEIoTHQwz9v7Ifoy/k34dvSCGuw0hGRNqpc++TUFEru4zowuX2ClSwhm7OEInkxFj6lVcYaDAOA7quO9kTJtMQwo5dDLu0PZvoiLkHtPQHRJqqanbxIrYkfFyrDR93zuCz4+4EDsU2s7rJO1c5m6DkmJtk/XfBW3WTjPQYrGFe+wPVoa4CiJgOF2WAecZ14o9a6zprmCd8DLZjq8Z7sOzP3ZOkojy7WsewrxphMzdN5eir2mBmkbNJnwhcGsj+Im13fXAwq/liS3O5pxsbsP8MQ64QuCEznh3QR7dn7NCqh6Axirn9Q1D9EHAvAWh5KubftX+yqa3Ugk47okpuMbJyG3rc9NPvBr9ADgIKQCeNrd2Lz6p17ZP1icOqZwBbDtbh58PAOxKvBKjmOEqpAcNrl71wu4Nu2i8xc8n2kd1nJIGezTqtA7vRU93ugHBdjUWwnyjPnq8Pk4XV+L4grnHOi1Hdi728UrKvdiEAd6mkMaWWxD3ZwO/7hn+zcbr2EbjCWkAHiEG1GfOazm8QHEMbFMaXz23PHIOu2fNmhs+OLzjEcBfIrWrwdgCBFgD6ZYaQB0joNzV7DIcqJfcXitnPdMaLuqS3m0JvJi4ylIbqwLY1XtwkIwaZ0ATQYsu5Z//bR40tk5Zq54FhnKC/+BA26ry3MugOjsWklK618EroT+O45tOwOKvpO3zv0oacCD+u2TPho9XzDkARloZok0HOey7yovNNiCShiqIMumy9YJqLfDd0T45KBbk2vKqFMtelt+flxVnOQOEf9vyt/s+fapoOyDmnqJEvVdgVgd+uTpVxcs7Fqt41nH5IeoLEICVKkBpLwEE9+beiMpNQc8xet6HmwVsIhDyAat8nEypgjbR6RGyv4e6nYmKoxB6BztWYQ9AH8qwL+gm0FcYrcH8KuHX5WgTOy1laB/xPKwOmsAnla5++FizOgQaBS7zJ9P2L6a0C/dZ4hm6YUc7sdLMngeUuYq6Pi7UpuMNO8WsM84CoJXyRfKb8TEE4IGxSrNKT8a/zBOwWHuIkR1DEpBdUrjKvwbpM+xFE3KDY1X8/4hJA2VNkfRjB3hxTDtwdMGSu3Zk2BQWllzhBpkZCqLx/HVzwRyA+TbAglNbHP/ZOtLX4pjvT9AcgsgbJQa3mxKLtq4muz7l6X8djGgv5nImwSQ9SzhaRlb26skfgp7225fzOLKC/Qx1gMLdDgQ1uY/cq3L/BePueoaU3Kli44Je4LVZzWqDfwW0zIfNbGCIG7hb2sSmY5OgdtI58YoEeTnlwBTWnfpBUlE8ePZNDMvFHuh7sRFE6FL1KOvlq+xrkwktqo4XsAyQUKB0D+zwedSYaEiP4djG4zQ/YLLZT3Piwik67cARW79/Vqm9JtaPNKg438HikJ/icdGH/LLrsWdo8iSxwFdY3iYZe4UAgQHxGILPS/ZVPKDgVa55AG3qMvOLqZ8+KJDwL8mV2D+7IJ1qi20xRPxt53+LwydaEo8vO2SYo2SqySKjPLBDOGAXuqdSCm71bP0HWfZlo1ai4Acmn0rOXz4d0XDl5/142LAjjW0XmNAYva4583Q9kburTz/F41BBj4ECGXTF8JO3tHPScmsSgMsxA3op8B+YPMQjN3py3CDMof6eYarOvCDGRNitH6AcZiNCvnVVckRbF//6eDIa7mBq95H/tyI3n9MZh702bqpzuZI/T7zdCHEN4SiH5qzerDYeZRlZY3nofNM6iul0fFB+03Fq4ETy9i0T2/ioH4kTXZ9rS+JHNBwThVdH9Tlt6hbPKWtw76giqrOM08OSjCTr4V3c0fhPVEIo+yN0X5rhWLO6ofDar8qk4sJ5dumMZzXefTDv/xwuJ4pexNucGt0bDvtEqUdhJOe6ZPa60E5fJq4ycZzLNE/whxn4Sw1Pkebib3ClqjqY94UiZJXEnfRO4ybQwpiqlodcwt8x70sX6w/Cz06i+T9Tv+Jmtw8nb0Jg5ngFhicIqTA6p4Ndyn2qgQ1N3ByOFBB7gKES/UBadpNBYWK9oUDi1Ud2rJ17RCHWgwfPBrbHQOa8v1cNX6GnPo6LfO4tWqjRVhyIztLBvDeuodc+d8evh+LlI6NuO1pGM0wWT3jDx+9ZqPIfZf1c5ed657LmJV1Rev+5ZX0UNXvi2d85ZVFQcvYTJFLktmfJAtFMKkWt4WtKOFBMirRGfi9Goo3jd5uMdYGWMkbTkI3MSMpP9ZcOCJKkndkvfj8yejQ/HvlI/zZOWS1YRKpvEJ0N1mYWTNcO4TRYxJrRFyOYfokpRSFIs67tAC0FqGS3Yc55OjP1FiWsyJKKb+uwC6lCPcHb/e3VIBic5bSvvkZa4hiyjMleZA4uk0FCbDFfU9pjc0tBOiBJU6S3/SmgutUSdCxx7cp22DhxL6xUCJE98/pI7qi1S+4W5QMMLMuX9tERdpiyeF1RZOSQWSkaMSoU+BM9PY7PQYLjXtW0RFEpkgRh4eVfZxG1sPmMNdlF22jicgd4Wtnk2oycuC7LFYVfaGoD5e41G0nhF86GnUN3SqFxjmORjIVYfOzQdTfnOEwR/qZqieVwbTrf0Lk5ohtkXKaRAoVbX/mDcd4hFkjb/bbgHHrZw0eyKmLlH7EP7G3kEFY0LxkAdVjUHWSO+aj5DN302/ySUE32A/FwQyKJDBad6TTs+JICNRU8Mlwfxe1hIXcQGqE9jRgU5+5Cz16JJCGLctEoctwpXPaV5FyKVdQa9B3/81RAQzuXLrLUNsKV/lg/W9f+xsHdwVifZ0j8HWAaQnnzQvMP5Y5ZtbTfr6Q7mJzrJm6X8lgypS4/pbTAMc92t1cXxkWQOhlLvf+dTG470S0yH1oYI+gtVDEYoYF4qQ5h9Z/zpxv7YstuuoQ6/Jp8e5WBrSKvAyTzGjaNfTdKJUSCINFPiNUCfMSOZJ3w6krChs4AVqHL2bsCxsIrKtHHcPC2DDWbMkHpE9vfY7NLuQnnYTYLhuG1ABYxZcRINzyiMrHB9ChcBYPQAl+BNxCQAK0hsz6sB4OWnapb80ZhP3Fs059i7RRhIacpb4tVffb2VK+lJbEjPKazZlH04Rh7sPZ/my5sPiOj5BpxcZt2x9e9jLajRBaSGKiiOVzL2PBqqi6f3gwRWQ+10JoxuT/Q4GLD8rdpvx/xPH+SXGMkOaTDMjWhfBLemUrTzV65FmlsrpPA/s4KT51BXdnZg69oAW1/Q/TMsjcT2t3Pi8/DRt+o9N0oqyXdfwl0fm9q/R7aiUVnsUhoFr4DJyWV8M7EiAkX1zoR/AZaF75SCq2qH6LiaeB9W9YcWrzPxeH8nHy5T+xALV8dnOP66V3JeGkxci6MY9n5VnGukX/VcE2BBZBfSg4VepMAeik/+ub0OJL7BqeQpLf3C7QlLWZ+ZRpCeMcYczcs1eNc5gtORrZTO++akZ59I7QaqfL6ex8fGdfINreh2UksL9jj5x+NsoXfTZlLvcq9+NPuW2QtP8MD27XF9B8Y5oYhuiZoXzjYBMQu3A5xyT0L1Gc3CgyblKOvS4SWPrcXHv+uJyhxsWgqg3Oojr6zfGSObvzhHt2UxvNgVQ2WLKw+QJfv1Sza2XPeepwznwG+iLYi1KdBd/diTyWuR3uwnOYPJaEIKOtx3+HgwsbAycepNeNH0="};
-async function go(p){p=p||document.getElementById('pw').value;try{var s=Uint8Array.from(atob(E.s),c=>c.charCodeAt(0));var iv=Uint8Array.from(atob(E.iv),c=>c.charCodeAt(0));var t=Uint8Array.from(atob(E.t),c=>c.charCodeAt(0));var d=Uint8Array.from(atob(E.d),c=>c.charCodeAt(0));var key=await crypto.subtle.importKey('raw',await crypto.subtle.deriveBits({name:'PBKDF2',salt:s,iterations:100000,hash:'SHA-256'},await crypto.subtle.importKey('raw',new TextEncoder().encode(p),'PBKDF2',false,['deriveBits']),256),'AES-GCM',false,['decrypt']);var ct=new Uint8Array(d.length+t.length);ct.set(d);ct.set(t,d.length);var dec=await crypto.subtle.decrypt({name:'AES-GCM',iv:iv},key,ct);sessionStorage.setItem('ws_key',btoa(p));document.open();document.write(new TextDecoder().decode(dec));document.close();}catch(e){document.getElementById('loading').style.display='none';document.getElementById('lock').style.display='block';if(document.getElementById('err'))document.getElementById('err').style.display='block';}}
-(function(){var k=sessionStorage.getItem('ws_key');if(k){go(atob(k));}else{document.getElementById('loading').style.display='none';document.getElementById('lock').style.display='block';}})();
-</script></body></html>
+<html lang="zh-TW">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>🎭 See-through × Anime2.5DRig 技術分析</title>
+<style>
+*{margin:0;padding:0;box-sizing:border-box}
+body{background:#1a1a2e;color:#e0d6c8;font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;padding:2rem;min-height:100vh;line-height:1.7}
+h1{text-align:center;font-size:1.6rem;color:#f5a623;margin-bottom:.3rem}
+.subtitle{text-align:center;color:#8b7e6a;font-size:.85rem;margin-bottom:2rem}
+h2{color:#f5a623;font-size:1.2rem;margin:2rem 0 .8rem;padding-bottom:.4rem;border-bottom:1px solid #3a3520}
+h3{color:#c9a84c;font-size:1rem;margin:1.2rem 0 .5rem}
+.section{background:#16213e;border:1px solid #2a2518;border-radius:8px;padding:1.2rem;margin-bottom:1.5rem}
+.badge{display:inline-block;background:#f5a623;color:#1a1a2e;padding:2px 10px;border-radius:4px;font-size:.75rem;font-weight:600;margin-right:.3rem}
+.badge-green{background:#2ecc71}
+.badge-red{background:#e74c3c}
+.badge-blue{background:#3498db}
+.badge-purple{background:#9b59b6}
+table{border-collapse:collapse;font-size:.82rem;width:100%;margin:.8rem 0}
+th{color:#c9a84c;font-weight:600;padding:6px 10px;text-align:left;border-bottom:1px solid #3a3520;white-space:nowrap}
+td{padding:6px 10px;color:#e0d6c8;border-bottom:1px solid #2a2518}
+.flow{display:flex;flex-wrap:wrap;align-items:center;gap:.4rem;margin:.8rem 0;font-size:.85rem}
+.flow-item{background:#2a2518;border:1px solid #5c4a3a;border-radius:4px;padding:4px 10px}
+.flow-arrow{color:#f5a623;font-weight:bold}
+ul{margin:.5rem 0 .5rem 1.2rem;font-size:.88rem}
+li{margin-bottom:.4rem}
+li strong{color:#c9a84c}
+code{background:#2a2518;color:#f5a623;padding:1px 5px;border-radius:3px;font-size:.82rem}
+pre{background:#0d1117;border:1px solid #2a2518;border-radius:6px;padding:.8rem;margin:.8rem 0;overflow-x:auto;font-size:.78rem;color:#c9d1d9}
+.warning{background:#2c1810;border:1px solid #e74c3c;border-radius:6px;padding:.8rem;margin:.8rem 0;font-size:.85rem}
+.warning::before{content:'⚠️ ';font-weight:bold}
+.info{background:#0d2137;border:1px solid #3498db;border-radius:6px;padding:.8rem;margin:.8rem 0;font-size:.85rem}
+.info::before{content:'ℹ️ ';font-weight:bold}
+.links{margin-top:1rem}
+.links a{color:#3498db;text-decoration:none;font-size:.85rem;display:block;margin:.3rem 0}
+.links a:hover{text-decoration:underline}
+.compare-table td:first-child{font-weight:600;color:#c9a84c;white-space:nowrap}
+@media(max-width:768px){body{padding:1rem}table{font-size:.75rem}pre{font-size:.72rem}}
+</style>
+</head>
+<body>
+
+<h1>🎭 See-through × Anime2.5DRig</h1>
+<p class="subtitle">單張動漫圖 → 分層 PSD → 瀏覽器 2.5D 可動角色｜技術分析 2026-08</p>
+
+<div class="section">
+<h2>📋 工作流概覽</h2>
+<div class="flow">
+<span class="flow-item">單張 anime 插畫</span>
+<span class="flow-arrow">→</span>
+<span class="flow-item">See-through<br><small>圖層拆解 AI</small></span>
+<span class="flow-arrow">→</span>
+<span class="flow-item">分層 PSD + Depth + Seg</span>
+<span class="flow-arrow">→</span>
+<span class="flow-item">手動修正 PSD</span>
+<span class="flow-arrow">→</span>
+<span class="flow-item">Anime2.5DRig<br><small>瀏覽器 WebGL</small></span>
+<span class="flow-arrow">→</span>
+<span class="flow-item">2.5D 可動 Avatar<br><small>webcam/mic/mouse</small></span>
+</div>
+<div class="info">定位：「單圖 → 瀏覽器 WebGL 即時預覽」的實驗性原型工作流。非 Live2D 替代品，非一鍵直播工具。</div>
+</div>
+
+<div class="section">
+<h2>🔬 See-through — 圖層拆解 AI</h2>
+<p><span class="badge badge-purple">SIGGRAPH 2026</span><span class="badge badge-blue">Python</span><span class="badge">CUDA</span></p>
+
+<h3>功能</h3>
+<ul>
+<li>單張動漫圖 → <strong>最多 23 個語義圖層</strong>（頭髮/面部/眼睛/衣物/手/飾品）</li>
+<li>全自動 <strong>背景補洞</strong>（被遮擋區域自動修補）</li>
+<li>自動推導 <strong>繪製順序</strong>（drawing order）</li>
+<li>輸出：PSD + depth map + segmentation mask</li>
+</ul>
+
+<h3>技術棧</h3>
+<table>
+<tr><th>元件</th><th>用途</th><th>模型 ID</th></tr>
+<tr><td>LayerDiff 3D</td><td>透明分層 + 補洞</td><td><code>layerdifforg/seethroughv0.0.2_layerdiff3d</code></td></tr>
+<tr><td>Marigold</td><td>Pseudo-depth estimation</td><td><code>layerdifforg/seethroughv0.0.1_marigold</code></td></tr>
+<tr><td>SAM body parsing</td><td>語義身體分割</td><td><code>24yearsold/l2d_sam_iter2</code></td></tr>
+</table>
+
+<h3>硬體需求（VRAM）</h3>
+<table>
+<tr><th>推理模式</th><th>VRAM</th><th>備註</th></tr>
+<tr><td>bf16, 1280px</td><td>12–16 GB</td><td>標準模式</td></tr>
+<tr><td>--group_offload</td><td>~10 GB</td><td>慢 1.5x</td></tr>
+<tr><td>NF4 quantized</td><td>~8 GB</td><td>量化推理</td></tr>
+<tr><td>block swap</td><td>~8 GB</td><td>分塊交換</td></tr>
+</table>
+
+<h3>執行指令</h3>
+<pre>python inference/scripts/inference_psd.py \
+  --srcp assets/test_image.png \
+  --save_to_psd
+
+# 輸出: workspace/layerdiff_output/</pre>
+
+<h3>環境需求</h3>
+<ul>
+<li>Python 3.12 + PyTorch 2.8.0 + CUDA 12.8</li>
+<li>Conda 虛擬環境</li>
+<li>處理時間：每張約 2-3 分鐘（官方自述）</li>
+</ul>
+
+<div class="warning">Marigold 模型 ID 問題：原始 repo 指向 <code>24yearsold/seethroughv0.0.1_marigold</code> 會 404。需改用 <code>layerdifforg/seethroughv0.0.1_marigold</code>。</div>
+</div>
+
+<div class="section">
+<h2>🎮 Anime2.5DRig — 瀏覽器 2.5D 綁定</h2>
+<p><span class="badge badge-green">WebGL</span><span class="badge badge-blue">JavaScript</span><span class="badge">規則式</span></p>
+
+<h3>功能</h3>
+<ul>
+<li>分層 PSD → 瀏覽器 WebGL <strong>可互動操控</strong>的 2.5D 角色</li>
+<li>Webcam 面部追蹤（MediaPipe）</li>
+<li>麥克風嘴型同步</li>
+<li>頭髮/胸部 <strong>彈簧物理</strong></li>
+<li>虹膜 stencil 限制（在眼白範圍內活動）</li>
+<li>透明/綠幕背景</li>
+</ul>
+
+<h3>技術實現（rigger.js）</h3>
+<table>
+<tr><th>機制</th><th>說明</th></tr>
+<tr><td>SLOTS 對照表</td><td>定義各圖層深度/分組/淡入淡出/物理效果</td></tr>
+<tr><td>面部定位</td><td>以 face 層中心為錨點，用重心計算分離左右眼/眉</td></tr>
+<tr><td>髮絲識別</td><td>輪廓掃描 + 峰值檢測，單層最多 6 條</td></tr>
+<tr><td>眼睛/嘴動作</td><td>開閉圖層間的 crossfade</td></tr>
+<tr><td>物理模擬</td><td>簡化 spring 系統（頭髮/胸部）</td></tr>
+<tr><td>渲染</td><td>WebGL1 mesh warp + stencil render</td></tr>
+<tr><td>追蹤</td><td>MediaPipe CDN（僅 webcam 啟用時載入）</td></tr>
+</table>
+
+<h3>PSD 規範</h3>
+<ul>
+<li><strong>扁平化</strong>圖層（不能用資料夾/群組）</li>
+<li><code>face</code> 圖層為必要定位錨點</li>
+<li>命名嚴格遵循工具定義規則</li>
+<li>建議正方形畫布 <strong>768×768 ~ 2048×2048</strong></li>
+</ul>
+
+<h3>運行方式</h3>
+<pre># 本地預覽（無需 npm）
+python -m http.server 8000
+
+# webcam/mic 需 HTTPS 或 localhost
+# file:// 僅支援 PSD drop 預覽</pre>
+</div>
+
+<div class="section">
+<h2>⚠️ 整合注意事項</h2>
+
+<div class="warning">neck / topwear 前後遮擋關係常出錯。若直接用 See-through 輸出，需手動將 neck 合併至 topwear。</div>
+
+<h3>See-through 不包含的後續工作</h3>
+<ul>
+<li>更細緻的二次元美術拆件</li>
+<li>變形網格（deformation mesh）建立</li>
+<li>物理參數配置</li>
+<li>動態曲線（motion curves）設計</li>
+</ul>
+
+<h3>官方未提供的功能</h3>
+<ul>
+<li>❌ 影片錄製 / 直接輸出影片</li>
+<li>❌ OBS 整合 / OBS API</li>
+<li>❌ VTuber 模型匯出</li>
+<li>❌ Live2D 模型匯出</li>
+<li>❌ FPS / 延遲 benchmark</li>
+<li>❌ 跨 GPU 相容性測試</li>
+</ul>
+</div>
+
+<div class="section">
+<h2>✅ 適用場景 vs ❌ 不適用</h2>
+<table class="compare-table">
+<tr><th>✅ 適合</th><th>❌ 不適合</th></tr>
+<tr><td>快速原型預覽（概念驗證）</td><td>直播用 VTuber</td></tr>
+<tr><td>美術拆件自動化起點</td><td>取代 Live2D 專業流程</td></tr>
+<tr><td>自訂 2.5D avatar 系統基礎</td><td>商業級角色動畫製作</td></tr>
+<tr><td>技術探索 / 研究參考</td><td>需要影片輸出的生產線</td></tr>
+</table>
+</div>
+
+<div class="section">
+<h2>🔗 參考連結</h2>
+<div class="links">
+<a href="https://github.com/shitagaki-lab/see-through" target="_blank">📦 See-through GitHub Repository</a>
+<a href="https://github.com/852wa/Anime2.5DRig" target="_blank">📦 Anime2.5DRig GitHub Repository</a>
+<a href="https://852wa.github.io/Anime2.5DRig/" target="_blank">🎮 Anime2.5DRig Live Demo</a>
+<a href="https://huggingface.co/layerdifforg/seethroughv0.0.2_layerdiff3d" target="_blank">🤗 LayerDiff 3D Model Card</a>
+<a href="https://export.arxiv.org/api/query?id_list=2602.03749" target="_blank">📄 See-through arXiv Paper</a>
+<a href="https://blog.seer.md/see-through-anime25drig-image-to-avatar-workflow/" target="_blank">📝 原文出處 (Seer's Blog)</a>
+</div>
+</div>
+
+<p style="text-align:center;color:#5c4a3a;font-size:.75rem;margin-top:2rem">查核日期：2026-08-01 UTC｜資料來源：官方 repo README + Seer's Blog 分析</p>
+
+</body>
+</html>
