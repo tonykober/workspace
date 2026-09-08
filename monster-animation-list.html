@@ -1,0 +1,236 @@
+<!doctype html>
+<html lang="zh-Hant">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<meta name="description" content="SpinningTop 各怪物的行為狀態對應到哪個動畫 clip，含美術做了沒播、缺動作、設定異常三類落差。">
+<title>怪物動作演出清單</title>
+<style>
+html{color-scheme:light dark}
+img{max-width:100%}
+[hidden]{display:none!important}
+
+:root{
+  --bg:#faf8f5; --panel:#fffdfa; --ink:#241f1a; --dim:#6b6259; --line:#e3ddd3;
+  --accent:#3d5a80; --amber:#b8860b; --rust:#a63d40; --rust-bg:#fbf0ef;
+}
+@media (prefers-color-scheme:dark){
+  :root:not([data-theme="light"]){
+    --bg:#16130f; --panel:#1e1a16; --ink:#ece6dd; --dim:#9b9186; --line:#332c25;
+    --accent:#7fa3cc; --amber:#d9a520; --rust:#e0797c; --rust-bg:#2a1a1a;
+  }
+}
+:root[data-theme="dark"]{
+  --bg:#16130f; --panel:#1e1a16; --ink:#ece6dd; --dim:#9b9186; --line:#332c25;
+  --accent:#7fa3cc; --amber:#d9a520; --rust:#e0797c; --rust-bg:#2a1a1a;
+}
+*{box-sizing:border-box}
+body{background:var(--bg);color:var(--ink);margin:0;
+  font:15px/1.65 ui-sans-serif,system-ui,"Noto Sans TC",sans-serif;}
+.wrap{max-width:960px;margin:0 auto;padding:44px 22px 80px}
+h1{font-family:Georgia,"Times New Roman","Noto Serif TC",serif;font-weight:600;font-size:32px;
+  margin:0 0 6px;letter-spacing:-.01em;text-wrap:balance}
+.sub{color:var(--dim);margin:0 0 30px;font-size:14.5px}
+code{font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,"Noto Sans Mono CJK TC",monospace;font-size:.88em}
+.stats{display:grid;grid-template-columns:repeat(auto-fit,minmax(130px,1fr));gap:12px;margin:0 0 30px}
+.stat{background:var(--panel);border:1px solid var(--line);border-radius:6px;padding:12px 14px}
+.stat b{display:block;font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;font-size:22px;
+  font-variant-numeric:tabular-nums;line-height:1.2}
+.stat span{color:var(--dim);font-size:12.5px}
+.stat.bad b{color:var(--rust)}
+.note{background:var(--panel);border:1px solid var(--line);border-left:3px solid var(--accent);
+  border-radius:0 6px 6px 0;padding:14px 16px;margin:0 0 16px}
+.note.alert{border-left-color:var(--rust);background:var(--rust-bg)}
+.note h2{font-family:Georgia,"Times New Roman","Noto Serif TC",serif;font-size:17px;margin:0 0 6px;font-weight:600}
+.note p{margin:0 0 6px}.note p:last-child{margin:0}
+.note ul{margin:6px 0 0;padding-left:20px}.note li{margin:2px 0}
+.mon{background:var(--panel);border:1px solid var(--line);border-radius:8px;
+  padding:16px 18px;margin:0 0 14px}
+.mon h3{font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;font-size:15.5px;margin:0 0 4px;
+  display:flex;align-items:center;gap:10px;flex-wrap:wrap}
+.warn{font-family:ui-sans-serif,system-ui,sans-serif;font-size:11.5px;font-weight:600;
+  color:var(--rust);background:var(--rust-bg);border:1px solid var(--rust);
+  padding:1px 7px;border-radius:20px}
+.meta{color:var(--dim);font-size:12.5px;margin:0 0 12px;line-height:1.7}
+.tw{overflow-x:auto}
+table{width:100%;border-collapse:collapse;font-size:13.5px}
+th{text-align:left;font-size:11px;letter-spacing:.07em;text-transform:uppercase;
+  color:var(--dim);font-weight:600;padding:0 10px 7px 0;border-bottom:1px solid var(--line);white-space:nowrap}
+td{padding:6px 10px 6px 0;border-bottom:1px solid var(--line);vertical-align:top}
+tr:last-child td{border-bottom:none}
+tr.miss td{background:var(--rust-bg)}
+.zh{color:var(--dim);font-size:12px;margin-left:7px}
+.mode{color:var(--dim);font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;font-size:12px}
+.src{font-size:11px;font-family:ui-monospace,SFMono-Regular,Menlo,Consolas,monospace;padding:1px 6px;border-radius:3px;white-space:nowrap}
+.src-c{color:var(--accent);border:1px solid var(--accent)}
+.src-e{color:var(--amber);border:1px solid var(--amber)}
+.src-m{color:#fff;background:var(--rust);border:1px solid var(--rust);font-weight:600}
+footer{color:var(--dim);font-size:12.5px;margin-top:26px;padding-top:14px;border-top:1px solid var(--line)}
+</style>
+</head>
+<body>
+<div class="wrap">
+<h1>怪物動作演出清單</h1>
+<p class="sub">每一種怪物的行為狀態對應到哪一個動畫 clip — 由 <code>.anim.json</code> 的 <code>states</code> 實查產生</p>
+
+<div class="stats">
+<div class="stat"><b>15</b><span>怪物模型</span></div>
+<div class="stat"><b>78</b><span>行為狀態</span></div>
+<div class="stat"><b>3</b><span>多數怪的實際動畫數</span></div>
+<div class="stat bad"><b>8</b><span>做了沒播的動畫</span></div>
+</div>
+
+<div class="note">
+<h2>怪名 ≠ 檔名</h2>
+<p>模型檔名與遊戲裡的怪物名稱對不太起來，查的時候容易找錯：</p>
+<ul>
+<li>黑猩猩 → <code>Monkey</code>　·　大隻的 → <code>Football</code>　·　彈跳怪 → <code>Mummy</code></li>
+<li>盜墓者 → <code>Golden</code>　·　汽車 Boss → <code>CarBoss</code>　·　主廚 → <code>ChampionChef</code></li>
+<li>🔴 <b>正式 Boss 與機械金剛共用同一份 <code>Gorilla</code></b>（刻意，改一邊兩邊一起變）</li>
+<li>🔴 <b>死靈法師的動畫是 <code>Necromancer</code>，但行為跑的是炸彈怪那套</b></li>
+</ul>
+</div>
+
+<div class="note">
+<h2>怎麼讀這份表</h2>
+<p>「行為狀態」是<b>玩法邏輯</b>的狀態（移動、預警、衝撞、死亡…），「clip」是<b>美術實際做的動畫</b>。兩者是多對一：</p>
+<ul>
+<li>多數怪只有 <code>walk</code> / <code>attack</code> / <code>dead</code> <b>三個動畫</b>，卻要撐起 4~11 個行為狀態</li>
+<li>例如炸彈人的「預警」「地震跳躍」「攻擊」<b>播的是同一個 <code>attack</code></b> — 玩家看到的動作一樣，只有特效和時間長度不同</li>
+<li><code>playMode</code>：<code>loop</code> 循環播、<code>clamp</code> 播完停在最後一格</li>
+</ul>
+</div>
+
+<div class="note alert">
+<h2>🔴 A. 美術做了、但遊戲從來不播（8 支）</h2>
+<p>這些動畫檔案存在、資料也定義了，但沒有任何程式路徑會播到它們 —— 等於<b>白做的資產</b>，可以回收或接上。</p>
+<ul>
+<li><code>Mummy.attack</code> — 木乃伊的攻擊動畫。states 把預警與攻擊都指到 <code>awake02</code></li>
+<li><code>Monkey.fly_out</code> — 黑猩猩離場飛走，實際離場播的是 <code>walk</code></li>
+<li><code>CarBoss.awake</code>（<code>AwakeAnnouncement</code>）— 汽車 Boss 登場宣告，入場實際播 <code>walk</code></li>
+<li><code>ChampionChef.hurt02</code>、<code>ChampionChef.jump</code></li>
+<li><code>Golden.jump_e</code> — 鑽地/落地。目前鑽入與冒出共用同一支 <code>jump_s</code></li>
+<li><code>Golden.jumpatk</code> — JSON 有這個 state，但程式碼從不查它</li>
+<li><code>Golden.hurt</code> — 定義了，但 states 把受擊指到 <code>attack</code>（⚠️ 疑似誤植，需確認）</li>
+</ul>
+</div>
+
+<div class="note alert">
+<h2>🔴 B. 有玩法狀態、但沒有對應動作（動作缺件）</h2>
+<ul>
+<li><b>汽車 Boss 倒車</b>（<code>reversing</code>）— 播的是前進 <code>walk</code>，車往後移動但動畫在前進</li>
+<li><b>炸彈人膨脹</b>（<code>inflating</code>）— 播 <code>walk</code>，一邊走路一邊被放大</li>
+<li><b>大猩猩地震／丟炸彈</b> — 預警與跳躍都播 <code>dead</code>（大猩猩沒有獨立 idle，idle 與 dead 是同一段）</li>
+<li><b>機械金剛站定</b>（<code>transition</code>）— 同樣播 <code>dead</code>，沒有待機動畫</li>
+<li><b>死靈法師能量彈</b> — 招牌機制沒有專屬動作，播 <code>hurt</code></li>
+<li><b>所有怪的入場</b> — 沒有任何一隻有 intro 動畫，全部播 <code>walk</code> 加程式算高度</li>
+<li><b>man/girl/dog/cartonboy/football/monkey 沒有受擊動畫</b> — 只有閃白</li>
+</ul>
+</div>
+
+<div class="note alert">
+<h2>🔴 C. 設定或程式碼異常</h2>
+<ul>
+<li><b>紙箱男的三支動畫幀範圍完全相同</b> <code>[10,30]</code> —— 走路、攻擊、死亡在畫面上<b>一模一樣</b>，實質只有 1 個動作</li>
+<li><b>死靈法師的行為檔是死碼</b> —— <code>updateNecromancerZombie()</code> 全專案無人呼叫，實際跑的是炸彈怪的行為（蔡 2026-08-19 暫代）。那支檔裡的狀態機一次都沒執行過</li>
+<li><b>炸彈人行為檔裡的 <code>animClip</code> 賦值無效</b> —— 全專案唯二直接寫 <code>animClip</code> 的地方，但渲染層每幀會覆寫它</li>
+<li><b>黑猩猩的 <code>warning</code> state 是死設定</b> —— 程式碼查的是 <code>intimidate</code>，在編輯器改 <code>warning</code> 不會生效</li>
+<li><b>死靈法師 <code>hurt</code> 與 <code>dead</code> 起始幀重疊</b> —— 受擊播的是死亡動畫開頭（⚠️ 需確認是否刻意）</li>
+<li><b>主廚的攻擊會跳格</b> —— 預警播到 79% 後，發動時倒回第 0 幀重播</li>
+</ul>
+</div>
+
+<div class="note">
+<h2>✅ D. 已確認刻意，不要當 bug</h2>
+<ul>
+<li><b>大猩猩的 <code>attack</code> 與 <code>middle_reward_failure</code> 是同一段資料</b> —— JSON 的 <code>_notes</code> 有裁示記載：整支 FBX 只有那段有骨骼動作</li>
+<li><b>正式 Boss 與機械金剛共用同一份 Gorilla 動畫與受擊狀態</b> —— 五處註解一致記載「不拆」。改一邊兩邊一起變是預期行為</li>
+<li><b>木乃伊用 <code>awake02</code> 當攻擊</b> —— 行為檔有註解確認刻意（但連帶讓 <code>attack</code> 變成沒人播的資產）</li>
+</ul>
+</div>
+
+<div class="note">
+<h2>❓ E. 程式碼判定不出來，要問企劃</h2>
+<p><code>Frankenstein.anim.json</code> <b>沒有任何怪物引用</b>，states 是空的，extraClips 的 <code>throw</code>/<code>roar01</code>/<code>roar02</code>/<code>swing</code> 也全無引用。是未上線的怪還是已廢棄，看程式碼看不出來。</p>
+</div>
+
+<section class="mon">
+<header><h3>BombMan<span class="warn">2 個缺動畫</span></h3>
+<p class="meta"><code>type=bombman</code> · clips: <code>attack</code>, <code>dead</code>, <code>walk</code></p></header>
+<div class="tw"><table><thead><tr><th>行為狀態</th><th>播放的 clip</th><th>模式</th><th>來源</th></tr></thead>
+<tbody><tr><td><code>walk</code><span class=zh>移動</span></td><td><code>walk</code></td><td class="mode">loop</td><td><span class="src src-c">clips</span></td></tr><tr><td><code>warning</code><span class=zh>攻擊預警</span></td><td><code>attack</code></td><td class="mode">clamp</td><td><span class="src src-c">clips</span></td></tr><tr><td><code>earthquake_leap</code><span class=zh>地震跳躍</span></td><td><code>attack</code></td><td class="mode">clamp</td><td><span class="src src-c">clips</span></td></tr><tr><td><code>attack</code><span class=zh>攻擊</span></td><td><code>attack</code></td><td class="mode">clamp</td><td><span class="src src-c">clips</span></td></tr><tr class="miss"><td><code>hurt_hitstop</code><span class=zh>受擊頓幀</span></td><td><code>hurt</code></td><td class="mode">clamp</td><td><span class="src src-m">缺</span></td></tr><tr class="miss"><td><code>hurt</code><span class=zh>受擊</span></td><td><code>hurt</code></td><td class="mode">loop</td><td><span class="src src-m">缺</span></td></tr><tr><td><code>dying</code><span class=zh>死亡</span></td><td><code>dead</code></td><td class="mode">clamp</td><td><span class="src src-c">clips</span></td></tr></tbody></table></div></section>
+<section class="mon">
+<header><h3>CarBoss</h3>
+<p class="meta"><code>type=carboss</code> · clips: <code>attack</code>, <code>dead</code>, <code>hurt</code>, <code>walk</code> · extraClips: <code>awake</code>, <code>hit_h</code></p></header>
+<div class="tw"><table><thead><tr><th>行為狀態</th><th>播放的 clip</th><th>模式</th><th>來源</th></tr></thead>
+<tbody><tr><td><code>walk</code><span class=zh>移動</span></td><td><code>walk</code></td><td class="mode">loop</td><td><span class="src src-c">clips</span></td></tr><tr><td><code>warning</code><span class=zh>攻擊預警</span></td><td><code>hit_h</code></td><td class="mode">clamp</td><td><span class="src src-e">extraClips</span></td></tr><tr><td><code>charging</code><span class=zh>蓄力衝鋒</span></td><td><code>attack</code></td><td class="mode">loop</td><td><span class="src src-c">clips</span></td></tr><tr><td><code>dying</code><span class=zh>死亡</span></td><td><code>dead</code></td><td class="mode">clamp</td><td><span class="src src-c">clips</span></td></tr><tr><td><code>hurt_hitstop</code><span class=zh>受擊頓幀</span></td><td><code>walk</code></td><td class="mode">loop</td><td><span class="src src-c">clips</span></td></tr></tbody></table></div></section>
+<section class="mon">
+<header><h3>CartonBoy</h3>
+<p class="meta"><code>type=cartonboy</code> · clips: <code>attack</code>, <code>dead</code>, <code>walk</code></p></header>
+<div class="tw"><table><thead><tr><th>行為狀態</th><th>播放的 clip</th><th>模式</th><th>來源</th></tr></thead>
+<tbody><tr><td><code>walk</code><span class=zh>移動</span></td><td><code>walk</code></td><td class="mode">loop</td><td><span class="src src-c">clips</span></td></tr><tr><td><code>attack</code><span class=zh>攻擊</span></td><td><code>attack</code></td><td class="mode">clamp</td><td><span class="src src-c">clips</span></td></tr><tr><td><code>dying</code><span class=zh>死亡</span></td><td><code>dead</code></td><td class="mode">clamp</td><td><span class="src src-c">clips</span></td></tr><tr><td><code>hurt_hitstop</code><span class=zh>受擊頓幀</span></td><td><code>walk</code></td><td class="mode">loop</td><td><span class="src src-c">clips</span></td></tr></tbody></table></div></section>
+<section class="mon">
+<header><h3>ChampionChef<span class="warn">2 個缺動畫</span></h3>
+<p class="meta"><code>type=championchef</code> · clips: <code>attack</code>, <code>dead</code>, <code>walk</code> · extraClips: <code>hurt02</code>, <code>jump</code></p></header>
+<div class="tw"><table><thead><tr><th>行為狀態</th><th>播放的 clip</th><th>模式</th><th>來源</th></tr></thead>
+<tbody><tr><td><code>walk</code><span class=zh>移動</span></td><td><code>walk</code></td><td class="mode">loop</td><td><span class="src src-c">clips</span></td></tr><tr><td><code>warning</code><span class=zh>攻擊預警</span></td><td><code>attack</code></td><td class="mode">clamp</td><td><span class="src src-c">clips</span></td></tr><tr><td><code>attacking</code><span class=zh>攻擊中</span></td><td><code>attack</code></td><td class="mode">clamp</td><td><span class="src src-c">clips</span></td></tr><tr class="miss"><td><code>hurt_hitstop</code><span class=zh>受擊頓幀</span></td><td><code>hurt</code></td><td class="mode">clamp</td><td><span class="src src-m">缺</span></td></tr><tr class="miss"><td><code>hurt</code><span class=zh>受擊</span></td><td><code>hurt</code></td><td class="mode">loop</td><td><span class="src src-m">缺</span></td></tr><tr><td><code>dying</code><span class=zh>死亡</span></td><td><code>dead</code></td><td class="mode">clamp</td><td><span class="src src-c">clips</span></td></tr></tbody></table></div></section>
+<section class="mon">
+<header><h3>Dog</h3>
+<p class="meta"><code>type=dog</code> · clips: <code>attack</code>, <code>dead</code>, <code>walk</code></p></header>
+<div class="tw"><table><thead><tr><th>行為狀態</th><th>播放的 clip</th><th>模式</th><th>來源</th></tr></thead>
+<tbody><tr><td><code>walk</code><span class=zh>移動</span></td><td><code>walk</code></td><td class="mode">loop</td><td><span class="src src-c">clips</span></td></tr><tr><td><code>attack</code><span class=zh>攻擊</span></td><td><code>attack</code></td><td class="mode">clamp</td><td><span class="src src-c">clips</span></td></tr><tr><td><code>dying</code><span class=zh>死亡</span></td><td><code>dead</code></td><td class="mode">clamp</td><td><span class="src src-c">clips</span></td></tr><tr><td><code>hurt_hitstop</code><span class=zh>受擊頓幀</span></td><td><code>walk</code></td><td class="mode">loop</td><td><span class="src src-c">clips</span></td></tr></tbody></table></div></section>
+<section class="mon">
+<header><h3>Football</h3>
+<p class="meta"><code>type=football</code> · clips: <code>attack</code>, <code>dead</code>, <code>walk</code></p></header>
+<div class="tw"><table><thead><tr><th>行為狀態</th><th>播放的 clip</th><th>模式</th><th>來源</th></tr></thead>
+<tbody><tr><td><code>walk</code><span class=zh>移動</span></td><td><code>walk</code></td><td class="mode">loop</td><td><span class="src src-c">clips</span></td></tr><tr><td><code>warning</code><span class=zh>攻擊預警</span></td><td><code>attack</code></td><td class="mode">clamp</td><td><span class="src src-c">clips</span></td></tr><tr><td><code>dash</code><span class=zh>衝撞</span></td><td><code>attack</code></td><td class="mode">clamp</td><td><span class="src src-c">clips</span></td></tr><tr><td><code>attack</code><span class=zh>攻擊</span></td><td><code>attack</code></td><td class="mode">loop</td><td><span class="src src-c">clips</span></td></tr><tr><td><code>dying</code><span class=zh>死亡</span></td><td><code>dead</code></td><td class="mode">clamp</td><td><span class="src src-c">clips</span></td></tr><tr><td><code>hurt_hitstop</code><span class=zh>受擊頓幀</span></td><td><code>walk</code></td><td class="mode">loop</td><td><span class="src src-c">clips</span></td></tr></tbody></table></div></section>
+<section class="mon">
+<header><h3>Frankenstein</h3>
+<p class="meta"><code>type=Frankenstein</code> · clips: <code>attack</code>, <code>dead</code>, <code>walk</code> · extraClips: <code>roar01</code>, <code>roar02</code>, <code>swing</code>, <code>throw</code></p></header>
+<div class="tw"><table><thead><tr><th>行為狀態</th><th>播放的 clip</th><th>模式</th><th>來源</th></tr></thead>
+<tbody></tbody></table></div></section>
+<section class="mon">
+<header><h3>Girl</h3>
+<p class="meta"><code>type=girl</code> · clips: <code>attack</code>, <code>dead</code>, <code>walk</code></p></header>
+<div class="tw"><table><thead><tr><th>行為狀態</th><th>播放的 clip</th><th>模式</th><th>來源</th></tr></thead>
+<tbody><tr><td><code>walk</code><span class=zh>移動</span></td><td><code>walk</code></td><td class="mode">loop</td><td><span class="src src-c">clips</span></td></tr><tr><td><code>attack</code><span class=zh>攻擊</span></td><td><code>attack</code></td><td class="mode">clamp</td><td><span class="src src-c">clips</span></td></tr><tr><td><code>dying</code><span class=zh>死亡</span></td><td><code>dead</code></td><td class="mode">clamp</td><td><span class="src src-c">clips</span></td></tr><tr><td><code>hurt_hitstop</code><span class=zh>受擊頓幀</span></td><td><code>walk</code></td><td class="mode">loop</td><td><span class="src src-c">clips</span></td></tr></tbody></table></div></section>
+<section class="mon">
+<header><h3>Golden</h3>
+<p class="meta"><code>type=golden</code> · clips: <code>attack</code>, <code>dead</code>, <code>walk</code> · extraClips: <code>jump_e</code>, <code>jump_s</code>, <code>jumpatk</code></p></header>
+<div class="tw"><table><thead><tr><th>行為狀態</th><th>播放的 clip</th><th>模式</th><th>來源</th></tr></thead>
+<tbody><tr><td><code>walk</code><span class=zh>移動</span></td><td><code>walk</code></td><td class="mode">loop</td><td><span class="src src-c">clips</span></td></tr><tr><td><code>emerging</code><span class=zh>鑽出地面</span></td><td><code>jump_s</code></td><td class="mode">clamp</td><td><span class="src src-e">extraClips</span></td></tr><tr><td><code>burrowing</code><span class=zh>鑽入地面</span></td><td><code>jump_s</code></td><td class="mode">clamp</td><td><span class="src src-e">extraClips</span></td></tr><tr><td><code>hurt_hitstop</code><span class=zh>受擊頓幀</span></td><td><code>attack</code></td><td class="mode">clamp</td><td><span class="src src-c">clips</span></td></tr><tr><td><code>hurt</code><span class=zh>受擊</span></td><td><code>attack</code></td><td class="mode">loop</td><td><span class="src src-c">clips</span></td></tr><tr><td><code>dying</code><span class=zh>死亡</span></td><td><code>dead</code></td><td class="mode">clamp</td><td><span class="src src-c">clips</span></td></tr><tr><td><code>jumpatk</code><span class=zh>跳躍攻擊</span></td><td><code>jumpatk</code></td><td class="mode">clamp</td><td><span class="src src-e">extraClips</span></td></tr></tbody></table></div></section>
+<section class="mon">
+<header><h3>Gorilla<span class="warn">2 個缺動畫</span></h3>
+<p class="meta"><code>type=gorilla</code> · clips: <code>attack</code>, <code>dead</code>, <code>walk</code> · extraClips: <code>middle_reward_failure</code></p></header>
+<div class="tw"><table><thead><tr><th>行為狀態</th><th>播放的 clip</th><th>模式</th><th>來源</th></tr></thead>
+<tbody><tr><td><code>walk</code><span class=zh>移動</span></td><td><code>walk</code></td><td class="mode">loop</td><td><span class="src src-c">clips</span></td></tr><tr><td><code>warning_dash</code><span class=zh>衝撞預警</span></td><td><code>middle_reward_failure</code></td><td class="mode">clamp</td><td><span class="src src-e">extraClips</span></td></tr><tr><td><code>dash</code><span class=zh>衝撞</span></td><td><code>middle_reward_failure</code></td><td class="mode">clamp</td><td><span class="src src-e">extraClips</span></td></tr><tr><td><code>warning_earthquake</code><span class=zh>地震預警</span></td><td><code>dead</code></td><td class="mode">clamp</td><td><span class="src src-c">clips</span></td></tr><tr><td><code>earthquake_leap</code><span class=zh>地震跳躍</span></td><td><code>dead</code></td><td class="mode">clamp</td><td><span class="src src-c">clips</span></td></tr><tr><td><code>taunt</code><span class=zh>嘲諷</span></td><td><code>attack</code></td><td class="mode">clamp</td><td><span class="src src-c">clips</span></td></tr><tr><td><code>transition</code><span class=zh>型態轉換</span></td><td><code>dead</code></td><td class="mode">loop</td><td><span class="src src-c">clips</span></td></tr><tr><td><code>struggle</code><span class=zh>掙扎</span></td><td><code>middle_reward_failure</code></td><td class="mode">clamp</td><td><span class="src src-e">extraClips</span></td></tr><tr class="miss"><td><code>hurt_hitstop</code><span class=zh>受擊頓幀</span></td><td><code>hurt</code></td><td class="mode">clamp</td><td><span class="src src-m">缺</span></td></tr><tr class="miss"><td><code>hurt</code><span class=zh>受擊</span></td><td><code>hurt</code></td><td class="mode">loop</td><td><span class="src src-m">缺</span></td></tr><tr><td><code>dying</code><span class=zh>死亡</span></td><td><code>dead</code></td><td class="mode">clamp</td><td><span class="src src-c">clips</span></td></tr></tbody></table></div></section>
+<section class="mon">
+<header><h3>Man</h3>
+<p class="meta"><code>type=man</code> · clips: <code>attack</code>, <code>dead</code>, <code>walk</code></p></header>
+<div class="tw"><table><thead><tr><th>行為狀態</th><th>播放的 clip</th><th>模式</th><th>來源</th></tr></thead>
+<tbody><tr><td><code>walk</code><span class=zh>移動</span></td><td><code>walk</code></td><td class="mode">loop</td><td><span class="src src-c">clips</span></td></tr><tr><td><code>attack</code><span class=zh>攻擊</span></td><td><code>attack</code></td><td class="mode">clamp</td><td><span class="src src-c">clips</span></td></tr><tr><td><code>dying</code><span class=zh>死亡</span></td><td><code>dead</code></td><td class="mode">clamp</td><td><span class="src src-c">clips</span></td></tr><tr><td><code>hurt_hitstop</code><span class=zh>受擊頓幀</span></td><td><code>walk</code></td><td class="mode">loop</td><td><span class="src src-c">clips</span></td></tr></tbody></table></div></section>
+<section class="mon">
+<header><h3>Monkey</h3>
+<p class="meta"><code>type=monkey</code> · clips: <code>attack</code>, <code>dead</code>, <code>walk</code> · extraClips: <code>fly_out</code>, <code>intimidate</code>, <code>jump_in</code></p></header>
+<div class="tw"><table><thead><tr><th>行為狀態</th><th>播放的 clip</th><th>模式</th><th>來源</th></tr></thead>
+<tbody><tr><td><code>walk</code><span class=zh>移動</span></td><td><code>walk</code></td><td class="mode">loop</td><td><span class="src src-c">clips</span></td></tr><tr><td><code>warning</code><span class=zh>攻擊預警</span></td><td><code>intimidate</code></td><td class="mode">loop</td><td><span class="src src-e">extraClips</span></td></tr><tr><td><code>intimidate</code><span class=zh>威嚇</span></td><td><code>intimidate</code></td><td class="mode">loop</td><td><span class="src src-e">extraClips</span></td></tr><tr><td><code>dash</code><span class=zh>衝撞</span></td><td><code>attack</code></td><td class="mode">clamp</td><td><span class="src src-c">clips</span></td></tr><tr><td><code>earthquake_leap</code><span class=zh>地震跳躍</span></td><td><code>attack</code></td><td class="mode">clamp</td><td><span class="src src-c">clips</span></td></tr><tr><td><code>dying</code><span class=zh>死亡</span></td><td><code>dead</code></td><td class="mode">clamp</td><td><span class="src src-c">clips</span></td></tr><tr><td><code>hurt_hitstop</code><span class=zh>受擊頓幀</span></td><td><code>walk</code></td><td class="mode">loop</td><td><span class="src src-c">clips</span></td></tr></tbody></table></div></section>
+<section class="mon">
+<header><h3>Mummy<span class="warn">2 個缺動畫</span></h3>
+<p class="meta"><code>type=mummy</code> · clips: <code>attack</code>, <code>dead</code>, <code>walk</code> · extraClips: <code>awake02</code></p></header>
+<div class="tw"><table><thead><tr><th>行為狀態</th><th>播放的 clip</th><th>模式</th><th>來源</th></tr></thead>
+<tbody><tr><td><code>walk</code><span class=zh>移動</span></td><td><code>walk</code></td><td class="mode">loop</td><td><span class="src src-c">clips</span></td></tr><tr><td><code>warning</code><span class=zh>攻擊預警</span></td><td><code>awake02</code></td><td class="mode">clamp</td><td><span class="src src-e">extraClips</span></td></tr><tr><td><code>attacking</code><span class=zh>攻擊中</span></td><td><code>awake02</code></td><td class="mode">clamp</td><td><span class="src src-e">extraClips</span></td></tr><tr class="miss"><td><code>hurt_hitstop</code><span class=zh>受擊頓幀</span></td><td><code>hurt</code></td><td class="mode">clamp</td><td><span class="src src-m">缺</span></td></tr><tr class="miss"><td><code>hurt</code><span class=zh>受擊</span></td><td><code>hurt</code></td><td class="mode">loop</td><td><span class="src src-m">缺</span></td></tr><tr><td><code>dying</code><span class=zh>死亡</span></td><td><code>dead</code></td><td class="mode">clamp</td><td><span class="src src-c">clips</span></td></tr></tbody></table></div></section>
+<section class="mon">
+<header><h3>Necromancer<span class="warn">2 個缺動畫</span></h3>
+<p class="meta"><code>type=necromancer</code> · clips: <code>attack</code>, <code>dead</code>, <code>walk</code></p></header>
+<div class="tw"><table><thead><tr><th>行為狀態</th><th>播放的 clip</th><th>模式</th><th>來源</th></tr></thead>
+<tbody><tr><td><code>walk</code><span class=zh>移動</span></td><td><code>walk</code></td><td class="mode">loop</td><td><span class="src src-c">clips</span></td></tr><tr><td><code>warning</code><span class=zh>攻擊預警</span></td><td><code>attack</code></td><td class="mode">clamp</td><td><span class="src src-c">clips</span></td></tr><tr><td><code>earthquake_leap</code><span class=zh>地震跳躍</span></td><td><code>attack</code></td><td class="mode">clamp</td><td><span class="src src-c">clips</span></td></tr><tr><td><code>attack</code><span class=zh>攻擊</span></td><td><code>attack</code></td><td class="mode">clamp</td><td><span class="src src-c">clips</span></td></tr><tr class="miss"><td><code>hurt_hitstop</code><span class=zh>受擊頓幀</span></td><td><code>hurt</code></td><td class="mode">clamp</td><td><span class="src src-m">缺</span></td></tr><tr class="miss"><td><code>hurt</code><span class=zh>受擊</span></td><td><code>hurt</code></td><td class="mode">loop</td><td><span class="src src-m">缺</span></td></tr><tr><td><code>dying</code><span class=zh>死亡</span></td><td><code>dead</code></td><td class="mode">clamp</td><td><span class="src src-c">clips</span></td></tr></tbody></table></div></section>
+<section class="mon">
+<header><h3>Ramp_ST</h3>
+<p class="meta"><code>type=Ramp_ST</code> · clips: <code>Take 001</code></p></header>
+<div class="tw"><table><thead><tr><th>行為狀態</th><th>播放的 clip</th><th>模式</th><th>來源</th></tr></thead>
+<tbody></tbody></table></div></section>
+
+<footer>資料來源：<code>web/Game/DynamicResource/Data/Animation/*.anim.json</code> 的 <code>states</code> / <code>clips</code> / <code>extraClips</code> 欄位實查。狀態的中文為對照說明，非程式碼內容。</footer>
+</div>
+</body>
+</html>
