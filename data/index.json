@@ -75,5 +75,12 @@
     "icon": "🔧",
     "path": "spinningtop-data-io.html",
     "date": "2026-07-27"
+  },
+  {
+    "title": "怪物動作演出清單",
+    "desc": "SpinningTop 15 個怪物模型、78 個行為狀態對應到哪些動畫 clip，含三類落差（美術做了沒播/有狀態沒動作/設定異常）",
+    "icon": "👾",
+    "path": "monster-animation-list.html",
+    "date": "2026-09-08"
   }
 ]
