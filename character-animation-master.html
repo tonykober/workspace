@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<meta name="description" content="SpinningTop 12 個角色的玩法需求與現有動畫對照總表，含缺件、可回收資產與待裁示項目。">
+<meta name="description" content="SpinningTop 11 個角色的玩法需求與現有動畫對照總表，含角色名稱對照。">
 <title>角色動作總表</title>
 <style>
 html{color-scheme:light dark}
@@ -64,70 +64,90 @@ tr.r-bad td{background:var(--bad-bg)}tr.r-need td{background:var(--need-bg)}tr.r
 .q ul{margin:6px 0 8px;padding-left:20px;font-size:13.5px}
 .verdict{background:var(--panel);border-left:3px solid var(--rule);padding:8px 11px;margin:0;font-size:13.5px;border-radius:0 4px 4px 0}
 footer{color:var(--dim);font-size:12.5px;margin-top:26px;padding-top:14px;border-top:1px solid var(--line)}
+
+.mon.ref{opacity:.92;border-style:dashed}
+.refl{font-size:11.5px;font-weight:600;padding:1px 8px;border-radius:20px;
+ color:var(--dim);background:var(--bg);border:1px dashed var(--dim);font-family:ui-sans-serif,system-ui,sans-serif}
+.kongnote{background:var(--bg);border:1px solid var(--line);border-left:3px solid var(--rule);
+ border-radius:0 5px 5px 0;padding:9px 12px;margin:0 0 11px;font-size:13px;line-height:1.7}
+.namemap{width:100%;border-collapse:collapse;font-size:13.5px;margin-top:8px}
+.namemap th,.namemap td{text-align:left;padding:5px 10px 5px 0;border-bottom:1px solid var(--line)}
+.namemap th{font-size:11px;letter-spacing:.06em;text-transform:uppercase;color:var(--dim)}
 </style>
 </head>
 <body>
 <div class="wrap">
 <h1>角色動作總表</h1>
-<p class="sub">12 個角色的<b>玩法需求 × 現有動畫</b>對照 —— 需要什麼、現在播什麼、缺什麼，一份看完</p>
+<p class="sub">11 個角色的<b>玩法需求 × 現有動畫</b>對照 —— 需要什麼、現在播什麼、缺什麼，一份看完</p>
 
 <div class="stats">
-<div class="stat"><b>12</b><span>角色</span></div>
-<div class="stat"><b>78</b><span>玩法狀態</span></div>
-<div class="stat bad"><b>19</b><span>缺件／異常</span></div>
-<div class="stat need"><b>18</b><span>建議補</span></div>
+<div class="stat"><b>11</b><span>角色（＋科學怪人參考）</span></div>
+<div class="stat bad"><b>6</b><span>沒有受擊動畫</span></div>
+<div class="stat bad"><b>2</b><span>受擊設定有誤</span></div>
 <div class="stat idle"><b>7</b><span>可回收資產</span></div>
 </div>
 
-<div class="note hot">
-<h2>⚠️ 更正：受擊動畫其實有 7 隻有（2026-09-09 修正）</h2>
-<p><b>先前這裡寫「只有汽車 Boss 有」是錯的</b> —— 我漏看了 <code>.anim.json</code> 的<b>頂層 <code>hurt</code> 欄位</b>，它與 <code>clips</code>／<code>extraClips</code> <b>並列但不在裡面</b>，是獨立的一個欄位。岱錡從動作編輯器看到炸彈人有 hurt 才發現這個落差。</p>
-<p><b>實際狀況（重查）</b>：</p>
-<ul>
-<li><b>✅ 有受擊動畫（7 隻）</b>：汽車 Boss（在 <code>clips</code> 裡）、炸彈人 <code>[270,285]</code>、主廚 <code>[202,220]</code>、盜墓者 <code>[180,204]</code>、大猩猩／機械金剛 <code>[780,807]</code>、木乃伊 <code>[150,195]</code>、死靈法師 <code>[10,23]</code>（後六隻都在頂層 <code>hurt</code> 欄位）</li>
-<li><b>❌ 真的沒有（6 隻）</b>：man／girl／dog／紙箱男／大隻的 football／黑猩猩 monkey</li>
-</ul>
-<p>⇒ 受擊缺件是 <b>6/12</b> 不是 11/12。仍值得統一決策，但規模比先前報的小一半。</p>
+<div class="note">
+<h2>角色名稱對照</h2>
+<p>程式碼裡的 <code>zombieType</code>、模型檔名、中文稱呼三者對不太起來，查資料時容易找錯。以下為正式對照：</p>
+<div class="tw"><table class="namemap">
+<thead><tr><th>中文名稱</th><th>模型／anim.json</th><th>zombieType</th><th>模型檔</th></tr></thead>
+<tbody>
+<tr><td><b>球員</b></td><td>football</td><td><code>zombie_big</code></td><td>FootballPlayer_Skin.fbx</td></tr>
+<tr><td><b>木乃伊</b></td><td>mummy</td><td><code>zombie_bouncing</code></td><td>Mummy_Ani.fbx</td></tr>
+<tr><td><b>盜墓者</b></td><td>golden</td><td><code>zombie_golden</code></td><td>GraveRobber_Skin.fbx</td></tr>
+<tr><td><b>小猴子</b></td><td>monkey</td><td><code>zombie_black</code></td><td>Monkey.fbx</td></tr>
+<tr><td><b>大老闆</b></td><td>carboss</td><td><code>zombie_car</code></td><td>ANI_MobBoss_All.fbx</td></tr>
+<tr><td><b>機械金剛</b></td><td>gorilla</td><td><code>zombie_boss</code> ＋ <code>zombie_mecha_boss</code></td><td>Gorilla_walk.fbx</td></tr>
+<tr><td><b>科學怪人</b></td><td>Frankenstein</td><td>（未接）</td><td>Frankenstein.fbx</td></tr>
+<tr><td>普通殭屍</td><td>man / girl / dog</td><td><code>zombie_man</code> 等</td><td>—</td></tr>
+<tr><td>紙箱男</td><td>cartonboy</td><td><code>zombie_carton</code></td><td>—</td></tr>
+<tr><td>主廚</td><td>championchef</td><td><code>zombie_chef</code></td><td>—</td></tr>
+<tr><td>炸彈人</td><td>bombman</td><td><code>zombie_bomb</code></td><td>—</td></tr>
+<tr><td>死靈法師</td><td>necromancer</td><td><code>zombie_necromancer</code></td><td>—</td></tr>
+</tbody></table></div>
+<p style="margin-top:8px">🔴 <b>機械金剛只有一隻</b>：<code>zombie_boss</code>（正式 Boss 戰）與 <code>zombie_mecha_boss</code>（機械金剛事件）是<b>同一個角色的兩套玩法機制</b>，動作資產完全共用，所以本表<b>合併成一節</b>。</p>
 </div>
 
 <div class="note hot">
-<h2>🔴 但有兩隻的受擊設定確實有問題</h2>
+<h2>🔴 受擊演出：6 隻沒有、2 隻設定有誤</h2>
 <ul>
-<li><b>盜墓者</b>：<b>有</b> <code>hurt[180,204]</code>，但 <code>states</code> 把 <code>hurt</code> 與 <code>hurt_hitstop</code> <b>都指到 <code>attack</code></b> ⇒ 受擊時播攻擊動畫，做好的受擊動畫沒被用。<b>這是誤植，改設定就好、不用重畫。</b></li>
-<li><b>死靈法師</b>：<code>hurt[10,23]</code> 與 <code>dead[10,65]</code> <b>起始幀相同</b> ⇒ 受擊播的是死亡動畫的前 13 幀。可能是刻意（取死亡開頭當受擊），也可能是誤植，<b>需要向美術確認</b>。</li>
+<li><b>❌ 沒有受擊動畫（6 隻）</b>：普通殭屍 man／girl／dog、紙箱男、球員、小猴子 —— 被打時只有閃白</li>
+<li><b>⚠️ 盜墓者</b>：<b>有</b> <code>hurt[180,204]</code>，但 <code>states</code> 把受擊指到 <code>attack</code> ⇒ 受擊播攻擊動畫。<b>誤植，改設定就好、不用重畫</b></li>
+<li><b>⚠️ 死靈法師</b>：<code>hurt[10,23]</code> 與 <code>dead[10,65]</code> <b>起始幀相同</b> ⇒ 受擊播死亡動畫前 13 幀。刻意或誤植<b>需向美術確認</b></li>
+<li><b>✅ 已有</b>：大老闆、炸彈人、主廚、木乃伊、機械金剛（後四者的 hurt 定義在 <code>.anim.json</code> 的<b>頂層 <code>hurt</code> 欄位</b>，不在 <code>clips</code> 裡）</li>
 </ul>
-<p class="verdict">⚠️ 我先前一度把這兩條「更正」成「根本沒有 hurt 動畫」，那次更正才是錯的 —— 原因同上，漏看頂層 <code>hurt</code> 欄位。現已改回。</p>
 </div>
 
 <div class="note">
 <h2>💡 7 支現成資產 —— 接上就有，不用重畫</h2>
-<p>美術已經做了、檔案就在，但沒有任何程式路徑會播到。<b>這批不用等任何裁示，隨時可以動，成本最低。</b></p>
+<p>美術已經做了、檔案就在，但沒有任何程式路徑會播到。<b>不用等任何裁示，成本最低。</b></p>
 <ul>
-<li><code>Mummy.attack</code>（木乃伊攻擊）· <code>Monkey.fly_out</code>（離場飛走）· <code>CarBoss.awake</code>（登場宣告）</li>
-<li><code>ChampionChef.hurt02</code> · <code>ChampionChef.jump</code></li>
-<li><code>Golden.jump_e</code>（鑽地）· <code>Golden.jumpatk</code></li>
+<li>木乃伊 <code>attack</code> · 小猴子 <code>fly_out</code>（離場飛走）· 大老闆 <code>awake</code>（登場宣告）</li>
+<li>主廚 <code>hurt02</code> · 主廚 <code>jump</code></li>
+<li>盜墓者 <code>jump_e</code>（鑽地）· 盜墓者 <code>jumpatk</code></li>
 </ul>
 </div>
 
 <div class="note">
 <h2>怎麼讀這份表</h2>
-<p>「玩法需要的演出」是從<b>各怪行為檔實查</b>它們會進入哪些狀態；「現在實際播什麼」是<b>程式碼實查</b>結果，不是推測。</p>
+<p>「玩法需要的演出」是從<b>各怪行為檔實查</b>它們會進入哪些狀態；「現在實際播什麼」是<b>程式碼實查</b>結果。</p>
 <ul>
 <li><span class="b bad">缺／異常</span> 沒有對應動作，或播了明顯不對的東西</li>
 <li><span class="b need">建議補</span> 與別的狀態共用同一支，玩家分不出差別</li>
 <li><span class="b idle">可回收</span> 動畫已存在但沒接上</li>
 <li><span class="b ok">可用</span> 有專屬動作，或共用是刻意且合理的</li>
 </ul>
-<p><b>關鍵背景</b>：狀態與動畫是<b>多對一</b>。多數怪只有 <code>walk</code>／<code>attack</code>／<code>dead</code> 三支動畫，卻要撐 4~11 個玩法狀態 —— 所以很多「共用」是先天限制不是疏忽。</p>
+<p><b>關鍵背景</b>：狀態與動畫是<b>多對一</b>。多數角色只有 <code>walk</code>／<code>attack</code>／<code>dead</code> 三支動畫，卻要撐 4~13 個玩法狀態 —— 很多「共用」是先天限制不是疏忽。</p>
 </div>
 
 <div class="note">
 <h2>優先順序建議</h2>
 <ul>
-<li><b>① 明顯錯誤</b>（玩家一定看得出來）：汽車 Boss 倒車播前進動畫、炸彈人膨脹播走路、紙箱男攻擊與走路完全一樣</li>
-<li><b>② 招牌機制沒演出</b>：死靈法師能量彈、大猩猩地震／丟炸彈（播死亡動畫）、機械金剛沒有待機</li>
-<li><b>③ 受擊反應</b>：6/12 角色沒有受擊動畫（man／girl／dog／紙箱男／大隻的／黑猩猩）；另有 2 隻是設定問題（見上方）</li>
-<li><b>④ 預警與發動不分</b>：多數怪的蓄力與打出去是同一支</li>
+<li><b>① 明顯錯誤</b>：大老闆倒車播前進動畫、炸彈人膨脹播走路、紙箱男攻擊與走路完全一樣</li>
+<li><b>② 招牌機制沒演出</b>：死靈法師能量彈、機械金剛地震／丟炸彈（播死亡動畫）、機械金剛沒有待機</li>
+<li><b>③ 受擊反應</b>：6 隻沒有 ＋ 盜墓者誤植（改設定即可）</li>
+<li><b>④ 預警與發動不分</b>：多數角色的蓄力與打出去是同一支</li>
 <li><b>⑤ 入場</b>：沒有任何一隻有入場動畫</li>
 </ul>
 </div>
@@ -139,91 +159,75 @@ footer{color:var(--dim);font-size:12.5px;margin-top:26px;padding-top:14px;border
 <p class="meta">現有動畫：<code>attack</code>, <code>dead</code>, <code>walk</code></p></header>
 <div class="tw"><table><thead><tr><th>玩法需要的演出</th><th>狀態</th><th>現在實際播什麼</th><th></th></tr></thead>
 <tbody><tr class="r-ok"><td>移動</td><td><code>walk</code></td><td>walk</td><td><span class="b ok">可用</span></td></tr><tr class="r-bad"><td>攻擊</td><td><code>attack</code></td><td>🔴 與 walk 同一段 [10,30]</td><td><span class="b bad">缺／異常</span></td></tr><tr class="r-bad"><td>死亡</td><td><code>dead</code></td><td>🔴 與 walk 同一段 [10,30]</td><td><span class="b bad">缺／異常</span></td></tr><tr class="r-bad"><td>受擊</td><td><code>hurt</code></td><td>⚠️ 沒有 hurt 動畫，播 walk</td><td><span class="b bad">缺／異常</span></td></tr><tr class="r-need"><td>入場</td><td><code>intro</code></td><td>walk</td><td><span class="b need">建議補</span></td></tr></tbody></table></div></section>
-<section class="mon"><header><h3>大隻的 <span class="en">football（zombie_big）</span><span class="warn">1 缺/異常</span><span class="sug">3 建議補</span></h3>
-<p class="meta">現有動畫：<code>attack</code>, <code>dead</code>, <code>walk</code></p></header>
+<section class="mon"><header><h3>球員 <span class="en">football（zombie_big）</span><span class="warn">1 缺/異常</span><span class="sug">3 建議補</span></h3>
+<p class="meta">現有動畫：<code>attack</code>, <code>dead</code>, <code>walk</code><br>模型檔：<code>FootballPlayer_Skin.fbx</code></p></header>
 <div class="tw"><table><thead><tr><th>玩法需要的演出</th><th>狀態</th><th>現在實際播什麼</th><th></th></tr></thead>
 <tbody><tr class="r-ok"><td>移動</td><td><code>walk</code></td><td>walk</td><td><span class="b ok">可用</span></td></tr><tr class="r-need"><td>衝撞預警</td><td><code>warning</code></td><td>attack</td><td><span class="b need">建議補</span></td></tr><tr class="r-need"><td>衝撞</td><td><code>dash</code></td><td>attack（與預警同一支）</td><td><span class="b need">建議補</span></td></tr><tr class="r-ok"><td>一般攻擊</td><td><code>attack</code></td><td>attack</td><td><span class="b ok">可用</span></td></tr><tr class="r-bad"><td>受擊</td><td><code>hurt</code></td><td>⚠️ 沒有 hurt 動畫，播 walk</td><td><span class="b bad">缺／異常</span></td></tr><tr class="r-ok"><td>死亡</td><td><code>dead</code></td><td>dead</td><td><span class="b ok">可用</span></td></tr><tr class="r-need"><td>入場</td><td><code>intro</code></td><td>walk</td><td><span class="b need">建議補</span></td></tr></tbody></table></div></section>
-<section class="mon"><header><h3>木乃伊 <span class="en">mummy（zombie_bouncing）</span><span class="warn">1 缺/異常</span><span class="sug">2 建議補</span><span class="idl">1 可回收</span></h3>
-<p class="meta">現有動畫：<code>attack</code>, <code>dead</code>, <code>walk</code> · 額外：<code>awake02</code> · 受擊：<code>hurt[150,195]</code>（頂層欄位）</p></header>
+<section class="mon"><header><h3>木乃伊 <span class="en">mummy（zombie_bouncing）</span><span class="sug">2 建議補</span><span class="idl">1 可回收</span></h3>
+<p class="meta">現有動畫：<code>attack</code>, <code>dead</code>, <code>walk</code> · 額外：<code>awake02</code> · 受擊：<code>hurt[150,195]</code>（頂層欄位）<br>模型檔：<code>Mummy_Ani.fbx</code></p></header>
 <div class="tw"><table><thead><tr><th>玩法需要的演出</th><th>狀態</th><th>現在實際播什麼</th><th></th></tr></thead>
-<tbody><tr class="r-ok"><td>移動</td><td><code>walk</code></td><td>walk</td><td><span class="b ok">可用</span></td></tr><tr class="r-ok"><td>攻擊預警</td><td><code>warning</code></td><td>awake02</td><td><span class="b ok">可用</span></td></tr><tr class="r-need"><td>攻擊發動</td><td><code>attacking</code></td><td>awake02（與預警同一支）</td><td><span class="b need">建議補</span></td></tr><tr class="r-ok"><td>受擊</td><td><code>hurt</code></td><td>hurt（定義在頂層 <code>hurt</code> 欄位）</td><td><span class="b ok">可用</span></td></tr><tr class="r-ok"><td>死亡</td><td><code>dead</code></td><td>dead</td><td><span class="b ok">可用</span></td></tr><tr class="r-idle"><td>💡 閒置資產</td><td><code>—</code></td><td>attack 做了但沒人播</td><td><span class="b idle">可回收</span></td></tr><tr class="r-need"><td>入場</td><td><code>intro</code></td><td>walk</td><td><span class="b need">建議補</span></td></tr></tbody></table></div></section>
-<section class="mon"><header><h3>主廚 <span class="en">championchef</span><span class="warn">2 缺/異常</span><span class="sug">1 建議補</span><span class="idl">1 可回收</span></h3>
-<p class="meta">現有動畫：<code>attack</code>, <code>dead</code>, <code>walk</code> · 額外：<code>hurt02</code>, <code>jump</code></p></header>
+<tbody><tr class="r-ok"><td>移動</td><td><code>walk</code></td><td>walk</td><td><span class="b ok">可用</span></td></tr><tr class="r-ok"><td>攻擊預警</td><td><code>warning</code></td><td>awake02</td><td><span class="b ok">可用</span></td></tr><tr class="r-need"><td>攻擊發動</td><td><code>attacking</code></td><td>awake02（與預警同一支）</td><td><span class="b need">建議補</span></td></tr><tr class="r-ok"><td>受擊</td><td><code>hurt</code></td><td>hurt（頂層欄位）</td><td><span class="b ok">可用</span></td></tr><tr class="r-ok"><td>死亡</td><td><code>dead</code></td><td>dead</td><td><span class="b ok">可用</span></td></tr><tr class="r-idle"><td>💡 閒置資產</td><td><code>—</code></td><td>attack 做了但沒人播</td><td><span class="b idle">可回收</span></td></tr><tr class="r-need"><td>入場</td><td><code>intro</code></td><td>walk</td><td><span class="b need">建議補</span></td></tr></tbody></table></div></section>
+<section class="mon"><header><h3>主廚 <span class="en">championchef</span><span class="warn">1 缺/異常</span><span class="sug">1 建議補</span><span class="idl">1 可回收</span></h3>
+<p class="meta">現有動畫：<code>attack</code>, <code>dead</code>, <code>walk</code> · 額外：<code>hurt02</code>, <code>jump</code> · 受擊：<code>hurt[202,220]</code>（頂層欄位）</p></header>
 <div class="tw"><table><thead><tr><th>玩法需要的演出</th><th>狀態</th><th>現在實際播什麼</th><th></th></tr></thead>
-<tbody><tr class="r-ok"><td>移動</td><td><code>walk</code></td><td>walk</td><td><span class="b ok">可用</span></td></tr><tr class="r-ok"><td>攻擊預警</td><td><code>warning</code></td><td>attack</td><td><span class="b ok">可用</span></td></tr><tr class="r-bad"><td>攻擊發動</td><td><code>attacking</code></td><td>🔴 attack 倒回第 0 幀重播，畫面跳格</td><td><span class="b bad">缺／異常</span></td></tr><tr class="r-ok"><td>受擊</td><td><code>hurt</code></td><td>hurt（定義在頂層 <code>hurt</code> 欄位）</td><td><span class="b ok">可用</span></td></tr><tr class="r-ok"><td>死亡</td><td><code>dead</code></td><td>dead</td><td><span class="b ok">可用</span></td></tr><tr class="r-idle"><td>💡 閒置資產</td><td><code>—</code></td><td>hurt02 / jump 做了沒人播</td><td><span class="b idle">可回收</span></td></tr><tr class="r-need"><td>入場</td><td><code>intro</code></td><td>walk</td><td><span class="b need">建議補</span></td></tr></tbody></table></div></section>
-<section class="mon"><header><h3>盜墓者 <span class="en">golden</span><span class="warn">2 缺/異常</span><span class="sug">1 建議補</span><span class="idl">1 可回收</span></h3>
-<p class="meta">現有動畫：<code>attack</code>, <code>dead</code>, <code>walk</code> · 額外：<code>jump_e</code>, <code>jump_s</code>, <code>jumpatk</code> · 受擊：<code>hurt[180,204]</code>（頂層欄位）</p></header>
+<tbody><tr class="r-ok"><td>移動</td><td><code>walk</code></td><td>walk</td><td><span class="b ok">可用</span></td></tr><tr class="r-ok"><td>攻擊預警</td><td><code>warning</code></td><td>attack</td><td><span class="b ok">可用</span></td></tr><tr class="r-bad"><td>攻擊發動</td><td><code>attacking</code></td><td>🔴 attack 倒回第 0 幀重播，畫面跳格</td><td><span class="b bad">缺／異常</span></td></tr><tr class="r-ok"><td>受擊</td><td><code>hurt</code></td><td>hurt（頂層欄位）</td><td><span class="b ok">可用</span></td></tr><tr class="r-ok"><td>死亡</td><td><code>dead</code></td><td>dead</td><td><span class="b ok">可用</span></td></tr><tr class="r-idle"><td>💡 閒置資產</td><td><code>—</code></td><td>hurt02 / jump 做了沒人播</td><td><span class="b idle">可回收</span></td></tr><tr class="r-need"><td>入場</td><td><code>intro</code></td><td>walk</td><td><span class="b need">建議補</span></td></tr></tbody></table></div></section>
+<section class="mon"><header><h3>盜墓者 <span class="en">golden / GraveRobber</span><span class="warn">2 缺/異常</span><span class="sug">1 建議補</span><span class="idl">1 可回收</span></h3>
+<p class="meta">現有動畫：<code>attack</code>, <code>dead</code>, <code>walk</code> · 額外：<code>jump_e</code>, <code>jump_s</code>, <code>jumpatk</code> · 受擊：<code>hurt[180,204]</code>（頂層欄位）<br>模型檔：<code>GraveRobber_Skin.fbx</code></p></header>
 <div class="tw"><table><thead><tr><th>玩法需要的演出</th><th>狀態</th><th>現在實際播什麼</th><th></th></tr></thead>
-<tbody><tr class="r-ok"><td>移動</td><td><code>walk</code></td><td>walk</td><td><span class="b ok">可用</span></td></tr><tr class="r-ok"><td>冒出地面</td><td><code>emerging</code></td><td>jump_s</td><td><span class="b ok">可用</span></td></tr><tr class="r-need"><td>鑽入地面</td><td><code>burrowing</code></td><td>jump_s（與冒出同一支）</td><td><span class="b need">建議補</span></td></tr><tr class="r-ok"><td>地面待機</td><td><code>surface</code></td><td>walk</td><td><span class="b ok">可用</span></td></tr><tr class="r-ok"><td>地下</td><td><code>underground</code></td><td>整隻隱藏</td><td><span class="b ok">可用</span></td></tr><tr class="r-bad"><td>攻擊</td><td><code>—</code></td><td>🔴 沒有攻擊狀態，attack 只被受擊借用</td><td><span class="b bad">缺／異常</span></td></tr><tr class="r-bad"><td>受擊</td><td><code>hurt</code></td><td>🔴 <b>有</b> hurt[180,204] 但 states 指到 attack（誤植）</td><td><span class="b bad">缺／異常</span></td></tr><tr class="r-ok"><td>死亡</td><td><code>dead</code></td><td>dead</td><td><span class="b ok">可用</span></td></tr><tr class="r-idle"><td>💡 閒置資產</td><td><code>—</code></td><td>jump_e / jumpatk 做了沒人播</td><td><span class="b idle">可回收</span></td></tr></tbody></table></div></section>
-<section class="mon"><header><h3>黑猩猩 <span class="en">monkey（zombie_black）</span><span class="warn">1 缺/異常</span><span class="sug">3 建議補</span><span class="idl">1 可回收</span></h3>
-<p class="meta">現有動畫：<code>attack</code>, <code>dead</code>, <code>walk</code> · 額外：<code>fly_out</code>, <code>intimidate</code>, <code>jump_in</code></p></header>
+<tbody><tr class="r-ok"><td>移動</td><td><code>walk</code></td><td>walk</td><td><span class="b ok">可用</span></td></tr><tr class="r-ok"><td>冒出地面</td><td><code>emerging</code></td><td>jump_s</td><td><span class="b ok">可用</span></td></tr><tr class="r-need"><td>鑽入地面</td><td><code>burrowing</code></td><td>jump_s（與冒出同一支）</td><td><span class="b need">建議補</span></td></tr><tr class="r-ok"><td>地面待機</td><td><code>surface</code></td><td>walk</td><td><span class="b ok">可用</span></td></tr><tr class="r-ok"><td>地下</td><td><code>underground</code></td><td>整隻隱藏</td><td><span class="b ok">可用</span></td></tr><tr class="r-bad"><td>攻擊</td><td><code>—</code></td><td>🔴 沒有攻擊狀態，attack 只被受擊借用</td><td><span class="b bad">缺／異常</span></td></tr><tr class="r-bad"><td>受擊</td><td><code>hurt</code></td><td>🔴 有 hurt[180,204] 但 states 指到 attack（誤植）</td><td><span class="b bad">缺／異常</span></td></tr><tr class="r-ok"><td>死亡</td><td><code>dead</code></td><td>dead</td><td><span class="b ok">可用</span></td></tr><tr class="r-idle"><td>💡 閒置資產</td><td><code>—</code></td><td>jump_e / jumpatk 做了沒人播</td><td><span class="b idle">可回收</span></td></tr></tbody></table></div></section>
+<section class="mon"><header><h3>小猴子 <span class="en">monkey（zombie_black）</span><span class="warn">1 缺/異常</span><span class="sug">3 建議補</span><span class="idl">1 可回收</span></h3>
+<p class="meta">現有動畫：<code>attack</code>, <code>dead</code>, <code>walk</code> · 額外：<code>fly_out</code>, <code>intimidate</code>, <code>jump_in</code><br>模型檔：<code>Monkey.fbx</code></p></header>
 <div class="tw"><table><thead><tr><th>玩法需要的演出</th><th>狀態</th><th>現在實際播什麼</th><th></th></tr></thead>
 <tbody><tr class="r-ok"><td>移動</td><td><code>walk</code></td><td>walk</td><td><span class="b ok">可用</span></td></tr><tr class="r-ok"><td>威嚇預警</td><td><code>intimidate</code></td><td>intimidate</td><td><span class="b ok">可用</span></td></tr><tr class="r-need"><td>角力蓄力</td><td><code>struggle_charge</code></td><td>walk</td><td><span class="b need">建議補</span></td></tr><tr class="r-need"><td>角力碰撞</td><td><code>struggle_clash</code></td><td>intimidate</td><td><span class="b need">建議補</span></td></tr><tr class="r-need"><td>離場</td><td><code>leaving</code></td><td>walk</td><td><span class="b need">建議補</span></td></tr><tr class="r-bad"><td>受擊</td><td><code>hurt</code></td><td>⚠️ 沒有 hurt 動畫，播 walk</td><td><span class="b bad">缺／異常</span></td></tr><tr class="r-ok"><td>死亡</td><td><code>dead</code></td><td>dead</td><td><span class="b ok">可用</span></td></tr><tr class="r-idle"><td>💡 閒置資產</td><td><code>—</code></td><td>fly_out（離場飛走）做了沒人播</td><td><span class="b idle">可回收</span></td></tr></tbody></table></div></section>
-<section class="mon"><header><h3>汽車 Boss <span class="en">carboss</span><span class="warn">1 缺/異常</span><span class="idl">1 可回收</span></h3>
-<p class="meta">現有動畫：<code>attack</code>, <code>dead</code>, <code>hurt</code>, <code>walk</code> · 額外：<code>awake</code>, <code>hit_h</code></p></header>
+<section class="mon"><header><h3>大老闆 <span class="en">carboss（zombie_car）</span><span class="warn">1 缺/異常</span><span class="idl">1 可回收</span></h3>
+<p class="meta">現有動畫：<code>attack</code>, <code>dead</code>, <code>hurt</code>, <code>walk</code> · 額外：<code>awake</code>, <code>hit_h</code><br>模型檔：<code>ANI_MobBoss_All.fbx</code></p></header>
 <div class="tw"><table><thead><tr><th>玩法需要的演出</th><th>狀態</th><th>現在實際播什麼</th><th></th></tr></thead>
-<tbody><tr class="r-ok"><td>移動</td><td><code>walk</code></td><td>walk</td><td><span class="b ok">可用</span></td></tr><tr class="r-ok"><td>衝撞預警</td><td><code>warning</code></td><td>hit_h</td><td><span class="b ok">可用</span></td></tr><tr class="r-ok"><td>衝鋒</td><td><code>charging</code></td><td>attack</td><td><span class="b ok">可用</span></td></tr><tr class="r-bad"><td>倒車</td><td><code>reversing</code></td><td>🔴 播前進 walk，車後退但腳在前進</td><td><span class="b bad">缺／異常</span></td></tr><tr class="r-ok"><td>受擊</td><td><code>hurt</code></td><td>✅ 全遊戲唯一有真 hurt 動畫的</td><td><span class="b ok">可用</span></td></tr><tr class="r-ok"><td>死亡</td><td><code>dead</code></td><td>dead</td><td><span class="b ok">可用</span></td></tr><tr class="r-idle"><td>💡 閒置資產</td><td><code>—</code></td><td>awake（登場宣告）做了沒人播</td><td><span class="b idle">可回收</span></td></tr></tbody></table></div></section>
-<section class="mon"><header><h3>炸彈人 <span class="en">bombman</span><span class="warn">2 缺/異常</span><span class="sug">2 建議補</span></h3>
+<tbody><tr class="r-ok"><td>移動</td><td><code>walk</code></td><td>walk</td><td><span class="b ok">可用</span></td></tr><tr class="r-ok"><td>衝撞預警</td><td><code>warning</code></td><td>hit_h</td><td><span class="b ok">可用</span></td></tr><tr class="r-ok"><td>衝鋒</td><td><code>charging</code></td><td>attack</td><td><span class="b ok">可用</span></td></tr><tr class="r-bad"><td>倒車</td><td><code>reversing</code></td><td>🔴 播前進 walk，車後退但腳在前進</td><td><span class="b bad">缺／異常</span></td></tr><tr class="r-ok"><td>受擊</td><td><code>hurt</code></td><td>hurt（在 clips 裡）</td><td><span class="b ok">可用</span></td></tr><tr class="r-ok"><td>死亡</td><td><code>dead</code></td><td>dead</td><td><span class="b ok">可用</span></td></tr><tr class="r-idle"><td>💡 閒置資產</td><td><code>—</code></td><td>awake（登場宣告）做了沒人播</td><td><span class="b idle">可回收</span></td></tr></tbody></table></div></section>
+<section class="mon"><header><h3>炸彈人 <span class="en">bombman</span><span class="warn">1 缺/異常</span><span class="sug">2 建議補</span></h3>
 <p class="meta">現有動畫：<code>attack</code>, <code>dead</code>, <code>walk</code> · 受擊：<code>hurt[270,285]</code>（頂層欄位）</p></header>
 <div class="tw"><table><thead><tr><th>玩法需要的演出</th><th>狀態</th><th>現在實際播什麼</th><th></th></tr></thead>
-<tbody><tr class="r-ok"><td>移動</td><td><code>walk</code></td><td>walk</td><td><span class="b ok">可用</span></td></tr><tr class="r-ok"><td>攻擊預警</td><td><code>warning</code></td><td>attack</td><td><span class="b ok">可用</span></td></tr><tr class="r-bad"><td>膨脹</td><td><code>inflating</code></td><td>🔴 播 walk，一邊走路一邊被放大</td><td><span class="b bad">缺／異常</span></td></tr><tr class="r-need"><td>地震跳躍</td><td><code>earthquake_leap</code></td><td>attack（與預警同一支）</td><td><span class="b need">建議補</span></td></tr><tr class="r-ok"><td>攻擊</td><td><code>attack</code></td><td>attack</td><td><span class="b ok">可用</span></td></tr><tr class="r-ok"><td>受擊</td><td><code>hurt</code></td><td>hurt（定義在頂層 <code>hurt</code> 欄位）</td><td><span class="b ok">可用</span></td></tr><tr class="r-ok"><td>死亡/爆炸</td><td><code>dead</code></td><td>dead</td><td><span class="b ok">可用</span></td></tr><tr class="r-need"><td>入場</td><td><code>intro</code></td><td>walk</td><td><span class="b need">建議補</span></td></tr></tbody></table></div></section>
+<tbody><tr class="r-ok"><td>移動</td><td><code>walk</code></td><td>walk</td><td><span class="b ok">可用</span></td></tr><tr class="r-ok"><td>攻擊預警</td><td><code>warning</code></td><td>attack</td><td><span class="b ok">可用</span></td></tr><tr class="r-bad"><td>膨脹</td><td><code>inflating</code></td><td>🔴 播 walk，一邊走路一邊被放大</td><td><span class="b bad">缺／異常</span></td></tr><tr class="r-need"><td>地震跳躍</td><td><code>earthquake_leap</code></td><td>attack（與預警同一支）</td><td><span class="b need">建議補</span></td></tr><tr class="r-ok"><td>攻擊</td><td><code>attack</code></td><td>attack</td><td><span class="b ok">可用</span></td></tr><tr class="r-ok"><td>受擊</td><td><code>hurt</code></td><td>hurt（頂層欄位）</td><td><span class="b ok">可用</span></td></tr><tr class="r-ok"><td>死亡/爆炸</td><td><code>dead</code></td><td>dead</td><td><span class="b ok">可用</span></td></tr><tr class="r-need"><td>入場</td><td><code>intro</code></td><td>walk</td><td><span class="b need">建議補</span></td></tr></tbody></table></div></section>
 <section class="mon"><header><h3>死靈法師 <span class="en">necromancer</span><span class="warn">2 缺/異常</span><span class="sug">1 建議補</span></h3>
 <p class="meta">現有動畫：<code>attack</code>, <code>dead</code>, <code>walk</code> · 受擊：<code>hurt[10,23]</code>（頂層欄位）</p></header>
 <div class="tw"><table><thead><tr><th>玩法需要的演出</th><th>狀態</th><th>現在實際播什麼</th><th></th></tr></thead>
-<tbody><tr class="r-ok"><td>移動</td><td><code>walk</code></td><td>walk</td><td><span class="b ok">可用</span></td></tr><tr class="r-ok"><td>攻擊預警</td><td><code>warning</code></td><td>attack</td><td><span class="b ok">可用</span></td></tr><tr class="r-need"><td>地震跳躍</td><td><code>earthquake_leap</code></td><td>attack</td><td><span class="b need">建議補</span></td></tr><tr class="r-ok"><td>攻擊</td><td><code>attack</code></td><td>attack</td><td><span class="b ok">可用</span></td></tr><tr class="r-bad"><td>能量彈發射</td><td><code>施法</code></td><td>🔴 招牌機制無專屬動作</td><td><span class="b bad">缺／異常</span></td></tr><tr class="r-ok"><td>受擊</td><td><code>hurt</code></td><td>hurt（定義在頂層 <code>hurt</code> 欄位）</td><td><span class="b ok">可用</span></td></tr><tr class="r-ok"><td>死亡</td><td><code>dead</code></td><td>dead</td><td><span class="b ok">可用</span></td></tr></tbody></table></div></section>
-<section class="mon"><header><h3>大猩猩 Boss <span class="en">gorilla</span><span class="warn">4 缺/異常</span><span class="sug">3 建議補</span></h3>
-<p class="meta">現有動畫：<code>attack</code>, <code>dead</code>, <code>walk</code> · 額外：<code>middle_reward_failure</code> · 受擊：<code>hurt[780,807]</code>（頂層欄位）</p></header>
-<div class="tw"><table><thead><tr><th>玩法需要的演出</th><th>狀態</th><th>現在實際播什麼</th><th></th></tr></thead>
-<tbody><tr class="r-ok"><td>移動</td><td><code>walk</code></td><td>walk</td><td><span class="b ok">可用</span></td></tr><tr class="r-ok"><td>衝撞預警</td><td><code>warning_dash</code></td><td>middle_reward_failure</td><td><span class="b ok">可用</span></td></tr><tr class="r-need"><td>衝撞</td><td><code>dash</code></td><td>middle_reward_failure</td><td><span class="b need">建議補</span></td></tr><tr class="r-need"><td>角力</td><td><code>struggle</code></td><td>middle_reward_failure</td><td><span class="b need">建議補</span></td></tr><tr class="r-bad"><td>地震預警</td><td><code>warning_earthquake</code></td><td>🔴 播 dead（沒有獨立 idle）</td><td><span class="b bad">缺／異常</span></td></tr><tr class="r-bad"><td>地震跳躍</td><td><code>earthquake_leap</code></td><td>🔴 播 dead</td><td><span class="b bad">缺／異常</span></td></tr><tr class="r-bad"><td>丟炸彈</td><td><code>bomb</code></td><td>🔴 無專屬狀態，與地震共用</td><td><span class="b bad">缺／異常</span></td></tr><tr class="r-ok"><td>受擊</td><td><code>hurt</code></td><td>hurt（定義在頂層 <code>hurt</code> 欄位）</td><td><span class="b ok">可用</span></td></tr><tr class="r-ok"><td>死亡</td><td><code>dead</code></td><td>dead</td><td><span class="b ok">可用</span></td></tr><tr class="r-need"><td>離場</td><td><code>leaving</code></td><td>walk</td><td><span class="b need">建議補</span></td></tr></tbody></table></div></section>
-<section class="mon"><header><h3>機械金剛 <span class="en">共用 gorilla</span><span class="warn">1 缺/異常</span><span class="sug">2 建議補</span></h3>
-<p class="meta">現有動畫：<code>attack</code>, <code>dead</code>, <code>walk</code> · 額外：<code>middle_reward_failure</code> · 受擊：<code>hurt[780,807]</code>（頂層欄位）</p></header>
-<div class="tw"><table><thead><tr><th>玩法需要的演出</th><th>狀態</th><th>現在實際播什麼</th><th></th></tr></thead>
-<tbody><tr class="r-ok"><td>巡邏</td><td><code>patrol</code></td><td>walk</td><td><span class="b ok">可用</span></td></tr><tr class="r-ok"><td>嘲諷預警</td><td><code>taunt</code></td><td>attack</td><td><span class="b ok">可用</span></td></tr><tr class="r-need"><td>嘲諷發動</td><td><code>taunt</code></td><td>attack（與預警完全相同）</td><td><span class="b need">建議補</span></td></tr><tr class="r-bad"><td>型態轉換站定</td><td><code>transition</code></td><td>🔴 播 dead，沒有待機動畫</td><td><span class="b bad">缺／異常</span></td></tr><tr class="r-ok"><td>受擊</td><td><code>struggle</code></td><td>借用正式 Boss 的 middle_reward_failure</td><td><span class="b ok">可用</span></td></tr><tr class="r-need"><td>離場</td><td><code>exiting</code></td><td>walk</td><td><span class="b need">建議補</span></td></tr></tbody></table></div></section>
-
-<div class="note">
-<h2>❓ 四個待裁示項目 —— 實際狀態</h2>
-
-<div class="q">
-<h3>① 盜墓者受擊</h3>
-<p><code>clips</code>：walk／dead／attack　<code>extraClips</code>：jump_s／jump_e／jumpatk　<b>都沒有 hurt</b></p>
-<p><code>states</code>：<code>hurt</code> 與 <code>hurt_hitstop</code> 都指向 <code>attack</code></p>
-<p class="verdict"><b>是缺件不是誤植</b> —— 指到 attack 是「沒有 hurt 可用」的替代。要有受擊反應必須新做動畫，改設定沒用。</p>
-</div>
-
-<div class="q">
-<h3>② 死靈法師受擊</h3>
-<p><code>clips</code>：walk／dead／attack　<code>extraClips</code>：<code>null</code>（完全沒有）</p>
-<p><code>states</code>：<code>hurt</code> 指向一個<b>不存在的</b> clip ⇒ 走 fallback 播 walk</p>
-<p class="verdict"><b>同樣是缺件。</b>順帶：能量彈是牠的招牌機制，也沒有施法動作。</p>
-</div>
-
-<div class="q">
-<h3>③ Frankenstein</h3>
-<p>動畫 <b>7 支</b>（walk／attack／dead ＋ throw／roar01／roar02／swing）—— 比多數上線怪還完整</p>
-<p><code>states</code> 是空陣列、<code>Zombie/</code> 底下沒有行為檔</p>
-<p>但 <code>ProbabilityManager</code> 有完整設定：權重 300、<code>Frankenstein_LV2</code>、<code>FrankensteinTime</code>，還有實際分支邏輯</p>
-<p class="verdict">⚠️ <b>這是程式工單不是美術工單</b> —— 美術做完了、企劃排了，缺的是行為檔＋states。要先決定「這隻怪要不要做」。</p>
-</div>
-
-<div class="q">
-<h3>④ 大猩猩丟炸彈</h3>
-<p>攻擊循環四種輪流：<code>dash / bomb / earthquake / struggle</code></p>
-<p>丟炸彈有<b>專屬玩法</b>：三個預警座標、地面冒粒子、生成實體炸彈桶</p>
-<p>但動畫只分兩類，bomb 歸到 <code>warning_earthquake</code> ⇒ 而那個播的是 <code>dead</code></p>
-<p class="verdict"><b>玩法上是獨立招式、視覺上完全看不出來</b>，還借用死亡動畫。要判斷值不值得單獨做一支投擲動作。</p>
-</div>
-</div>
+<tbody><tr class="r-ok"><td>移動</td><td><code>walk</code></td><td>walk</td><td><span class="b ok">可用</span></td></tr><tr class="r-ok"><td>攻擊預警</td><td><code>warning</code></td><td>attack</td><td><span class="b ok">可用</span></td></tr><tr class="r-need"><td>地震跳躍</td><td><code>earthquake_leap</code></td><td>attack</td><td><span class="b need">建議補</span></td></tr><tr class="r-ok"><td>攻擊</td><td><code>attack</code></td><td>attack</td><td><span class="b ok">可用</span></td></tr><tr class="r-bad"><td>能量彈發射</td><td><code>施法</code></td><td>🔴 招牌機制無專屬動作</td><td><span class="b bad">缺／異常</span></td></tr><tr class="r-bad"><td>受擊</td><td><code>hurt</code></td><td>⚠️ hurt[10,23] 與 dead[10,65] 起始幀相同</td><td><span class="b bad">缺／異常</span></td></tr><tr class="r-ok"><td>死亡</td><td><code>dead</code></td><td>dead</td><td><span class="b ok">可用</span></td></tr></tbody></table></div></section>
+<section class="mon"><header><h3>機械金剛 <span class="en">gorilla（zombie_boss ＋ zombie_mecha_boss）</span><span class="warn">4 缺/異常</span><span class="sug">4 建議補</span></h3>
+<p class="meta">現有動畫：<code>attack</code>, <code>dead</code>, <code>walk</code> · 額外：<code>middle_reward_failure</code> · 受擊：<code>hurt[780,807]</code>（頂層欄位）<br>模型檔：<code>Gorilla_walk.fbx</code></p></header>
+<div class="kongnote">🔴 <b>同一個角色、同一份動畫資產</b>，只是在兩種玩法環境下用不同的表演機制：
+<code>zombie_boss</code>（正式 Boss 戰）與 <code>zombie_mecha_boss</code>（機械金剛事件）。
+兩者共用 <code>Gorilla.anim.json</code>，<b>改一邊兩邊一起變</b>（蔡 2026-08-07 兩次裁示「不拆」）。</div><div class="tw"><table><thead><tr><th>玩法需要的演出</th><th>狀態</th><th>現在實際播什麼</th><th></th></tr></thead>
+<tbody><tr class="r-ok"><td>移動／巡邏</td><td><code>walk / patrol</code></td><td>walk</td><td><span class="b ok">可用</span></td></tr><tr class="r-ok"><td>衝撞預警</td><td><code>warning_dash</code></td><td>middle_reward_failure</td><td><span class="b ok">可用</span></td></tr><tr class="r-need"><td>衝撞</td><td><code>dash</code></td><td>middle_reward_failure（與預警同一支）</td><td><span class="b need">建議補</span></td></tr><tr class="r-need"><td>角力</td><td><code>struggle</code></td><td>middle_reward_failure</td><td><span class="b need">建議補</span></td></tr><tr class="r-bad"><td>地震預警</td><td><code>warning_earthquake</code></td><td>🔴 播 dead（沒有獨立 idle）</td><td><span class="b bad">缺／異常</span></td></tr><tr class="r-bad"><td>地震跳躍</td><td><code>earthquake_leap</code></td><td>🔴 播 dead</td><td><span class="b bad">缺／異常</span></td></tr><tr class="r-bad"><td>丟炸彈</td><td><code>bomb</code></td><td>🔴 無專屬狀態，與地震共用</td><td><span class="b bad">缺／異常</span></td></tr><tr class="r-ok"><td>嘲諷預警（機械金剛）</td><td><code>taunt</code></td><td>attack</td><td><span class="b ok">可用</span></td></tr><tr class="r-need"><td>嘲諷發動（機械金剛）</td><td><code>taunt</code></td><td>attack（與預警完全相同）</td><td><span class="b need">建議補</span></td></tr><tr class="r-bad"><td>型態轉換站定（機械金剛）</td><td><code>transition</code></td><td>🔴 播 dead，沒有待機動畫</td><td><span class="b bad">缺／異常</span></td></tr><tr class="r-ok"><td>受擊</td><td><code>hurt / struggle</code></td><td>hurt（頂層欄位）</td><td><span class="b ok">可用</span></td></tr><tr class="r-ok"><td>死亡</td><td><code>dead</code></td><td>dead</td><td><span class="b ok">可用</span></td></tr><tr class="r-need"><td>離場</td><td><code>leaving / exiting</code></td><td>walk</td><td><span class="b need">建議補</span></td></tr></tbody></table></div></section>
+<section class="mon ref"><header><h3>科學怪人 <span class="en">Frankenstein</span><span class="refl">參考用・玩法未定</span></h3>
+<p class="meta">現有動畫：<code>walk[1100,1190]</code>, <code>attack[450,506]</code>, <code>dead[570,640]</code>
+ · 額外：<code>throw[1200,1270]</code>, <code>roar01[155,200]</code>, <code>roar02[216,270]</code>, <code>swing[450,570]</code>
+<br>模型檔：<code>Frankenstein.fbx</code>　·　受擊：<b>無</b></p></header>
+<div class="kongnote">⚠️ <b>玩法與動作使用方式尚未定案</b>，這裡只列現有資產供參考。<br>
+現況：<code>states</code> 是空陣列、<code>Zombie/</code> 底下沒有行為檔 ⇒ <b>遊戲中生不出來</b>。<br>
+但 <code>ProbabilityManager</code> 已有設定：權重 300、<code>Frankenstein_LV2</code>、<code>FrankensteinTime</code>，且有實際分支邏輯
+⇒ <b>缺的是行為檔＋states（程式），不是動畫</b>。</div>
+<div class="tw"><table><thead><tr><th>現有動畫</th><th>幀範圍</th><th>可能用途（推測，未定案）</th></tr></thead>
+<tbody>
+<tr><td><code>walk</code></td><td>1100–1190</td><td>移動</td></tr>
+<tr><td><code>attack</code></td><td>450–506</td><td>一般攻擊</td></tr>
+<tr><td><code>dead</code></td><td>570–640</td><td>死亡</td></tr>
+<tr class="r-idle"><td><code>throw</code></td><td>1200–1270</td><td>投擲類招式</td></tr>
+<tr class="r-idle"><td><code>roar01</code></td><td>155–200</td><td>咆哮／預警</td></tr>
+<tr class="r-idle"><td><code>roar02</code></td><td>216–270</td><td>咆哮（第二種）</td></tr>
+<tr class="r-idle"><td><code>swing</code></td><td>450–570</td><td>揮擊類招式</td></tr>
+</tbody></table></div>
+<p class="meta">behavior 也已填好：speed 80、attackRange 120、warningDuration 1.5、cooldown 2、radius 191.5、vfxHeight 100</p>
+</section>
 
 <div class="note">
 <h2>✅ 已確認刻意，不要當 bug</h2>
 <ul>
-<li><b>大猩猩的 <code>attack</code> 與 <code>middle_reward_failure</code> 是同一段資料</b> —— JSON 的 <code>_notes</code> 有裁示記載：整支 FBX 只有那段有骨骼動作</li>
-<li><b>正式 Boss 與機械金剛共用 Gorilla 動畫及受擊狀態</b> —— 五處註解一致記載「不拆」，改一邊兩邊一起變是預期行為</li>
+<li><b>機械金剛的 <code>attack</code> 與 <code>middle_reward_failure</code> 是同一段資料</b> —— JSON 的 <code>_notes</code> 有裁示記載：整支 FBX 只有那段有骨骼動作</li>
+<li><b><code>zombie_boss</code> 與 <code>zombie_mecha_boss</code> 共用動畫與受擊狀態</b> —— 同一個角色的兩套玩法，改一邊兩邊一起變是預期行為</li>
 <li><b>木乃伊用 <code>awake02</code> 當攻擊</b> —— 行為檔有註解確認刻意（連帶讓 <code>attack</code> 變成閒置資產）</li>
 </ul>
 </div>
 
-<footer>資料來源：各怪行為檔（<code>SpinningTopSystem/Zombie/*.ts</code>）的狀態機、<code>Mappers/Zombies.ts</code> 的動畫決策、<code>Data/Animation/*.anim.json</code> 的 states／clips／extraClips —— 全部實查，非推測。本表整合自先前的「怪物動作演出清單」與「角色動作補齊清單」兩份。</footer>
+<footer>資料來源：各角色行為檔（<code>SpinningTopSystem/Zombie/*.ts</code>）的狀態機、<code>Mappers/Zombies.ts</code> 的動畫決策、<code>Data/Animation/*.anim.json</code> 的 states／clips／extraClips／頂層 hurt —— 全部實查。角色中文名稱依岱錡 2026-09-09 指正。</footer>
 </div>
 </body>
 </html>
