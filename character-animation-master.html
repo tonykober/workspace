@@ -85,7 +85,7 @@ footer{color:var(--dim);font-size:12.5px;margin-top:26px;padding-top:14px;border
 <p class="sub">11 個角色的<b>玩法需求 × 現有動畫</b>對照 —— 需要什麼、現在播什麼、缺什麼，一份看完</p>
 
 <div class="stats">
-<div class="stat"><b>11</b><span>角色（＋科學怪人參考）</span></div>
+<div class="stat"><b>11</b><span>角色（＋科學怪人待實作）</span></div>
 <div class="stat bad"><b>6</b><span>沒有受擊動畫</span></div>
 <div class="stat bad"><b>2</b><span>受擊設定有誤</span></div>
 <div class="stat idle"><b>7</b><span>可回收資產</span></div>
@@ -103,7 +103,7 @@ footer{color:var(--dim);font-size:12.5px;margin-top:26px;padding-top:14px;border
 <tr><td><b>小猴子</b></td><td>monkey</td><td><code>zombie_black</code></td><td>Monkey.fbx</td></tr>
 <tr><td><b>大老闆</b></td><td>carboss</td><td><code>zombie_car</code></td><td>ANI_MobBoss_All.fbx</td></tr>
 <tr><td><b>機械金剛</b></td><td>gorilla</td><td><code>zombie_boss</code> ＋ <code>zombie_mecha_boss</code></td><td>Gorilla_walk.fbx</td></tr>
-<tr><td><b>科學怪人</b></td><td>Frankenstein</td><td>（未接）</td><td>Frankenstein.fbx</td></tr>
+<tr><td><b>科學怪人</b></td><td>Frankenstein</td><td>（行為檔待實作）</td><td>Frankenstein.fbx</td></tr>
 <tr><td>普通殭屍</td><td>man / girl / dog</td><td><code>zombie_man</code> / <code>zombie_girl</code> / <code>zombie_dog</code></td><td>M_ZombieMan.fbx<br>M_ZombieGirl.fbx<br>M_ZombieDog.fbx</td></tr>
 <tr><td>紙箱男</td><td>cartonboy</td><td><code>zombie_carton</code></td><td>CartonBoy.fbx</td></tr>
 <tr><td>主廚</td><td>championchef</td><td><code>zombie_chef</code></td><td>ChampionChef.fbx</td></tr>
@@ -204,23 +204,24 @@ footer{color:var(--dim);font-size:12.5px;margin-top:26px;padding-top:14px;border
 <code>zombie_boss</code>（正式 Boss 戰）與 <code>zombie_mecha_boss</code>（機械金剛事件）。
 兩者共用 <code>Gorilla.anim.json</code>，<b>改一邊兩邊一起變</b>（蔡 2026-08-07 兩次裁示「不拆」）。<br>⚠️ <b>狀態名 <code>dash</code> 會誤導</b>：與球員相同，實際是站定射出光束、本體不位移。機械金剛的近身攻擊是<b>原地揮拳</b>（向四周擴散衝擊波），也不是衝撞。</div><div class="tw"><table><thead><tr><th>玩法需要的演出</th><th>狀態</th><th>現在實際播什麼</th><th></th></tr></thead>
 <tbody><tr class="r-ok"><td>移動／巡邏</td><td><code>walk / patrol</code></td><td>walk</td><td><span class="b ok">可用</span></td></tr><tr class="r-ok"><td>攻擊預警</td><td><code>warning_dash</code></td><td>middle_reward_failure</td><td><span class="b ok">可用</span></td></tr><tr class="r-need"><td>發射光束</td><td><code>dash</code><br><span class="hint">狀態名為 dash，實際不位移</span></td><td>middle_reward_failure（與預警同一支）</td><td><span class="b need">建議補</span></td></tr><tr class="r-need"><td>角力</td><td><code>struggle</code></td><td>middle_reward_failure</td><td><span class="b need">建議補</span></td></tr><tr class="r-bad"><td>地震預警</td><td><code>warning_earthquake</code></td><td>🔴 播 dead（沒有獨立 idle）</td><td><span class="b bad">缺／異常</span></td></tr><tr class="r-bad"><td>地震跳躍</td><td><code>earthquake_leap</code></td><td>🔴 播 dead</td><td><span class="b bad">缺／異常</span></td></tr><tr class="r-bad"><td>丟炸彈</td><td><code>bomb</code></td><td>🔴 無專屬狀態，與地震共用</td><td><span class="b bad">缺／異常</span></td></tr><tr class="r-ok"><td>揮拳預警（機械金剛）</td><td><code>taunt</code></td><td>attack</td><td><span class="b ok">可用</span></td></tr><tr class="r-need"><td>揮拳發動（機械金剛）</td><td><code>taunt</code><br><span class="hint">原地範圍攻擊，向四周擴散衝擊波</span></td><td>attack（與預警完全相同）</td><td><span class="b need">建議補</span></td></tr><tr class="r-bad"><td>型態轉換站定（機械金剛）</td><td><code>transition</code></td><td>🔴 播 dead，沒有待機動畫</td><td><span class="b bad">缺／異常</span></td></tr><tr class="r-ok"><td>受擊</td><td><code>hurt / struggle</code></td><td>hurt（頂層欄位）</td><td><span class="b ok">可用</span></td></tr><tr class="r-ok"><td>死亡</td><td><code>dead</code></td><td>dead</td><td><span class="b ok">可用</span></td></tr><tr class="r-need"><td>離場</td><td><code>leaving / exiting</code></td><td>walk</td><td><span class="b need">建議補</span></td></tr></tbody></table></div></section>
-<section class="mon ref"><header><h3>科學怪人 <span class="en">Frankenstein</span><span class="refl">參考用・玩法未定</span></h3>
+<section class="mon ref"><header><h3>科學怪人 <span class="en">Frankenstein</span><span class="refl">待程式實作玩法</span></h3>
 <p class="meta">現有動畫：<code>walk[1100,1190]</code>, <code>attack[450,506]</code>, <code>dead[570,640]</code>
  · 額外：<code>throw[1200,1270]</code>, <code>roar01[155,200]</code>, <code>roar02[216,270]</code>, <code>swing[450,570]</code>
 <br>模型檔：<code>Frankenstein.fbx</code>　·　受擊：<b>無</b></p></header>
-<div class="kongnote">⚠️ <b>玩法與動作使用方式尚未定案</b>，這裡只列現有資產供參考。<br>
-現況：<code>states</code> 是空陣列、<code>Zombie/</code> 底下沒有行為檔 ⇒ <b>遊戲中生不出來</b>。<br>
-但 <code>ProbabilityManager</code> 已有設定：權重 300、<code>Frankenstein_LV2</code>、<code>FrankensteinTime</code>，且有實際分支邏輯
-⇒ <b>缺的是行為檔＋states（程式），不是動畫</b>。</div>
-<div class="tw"><table><thead><tr><th>現有動畫</th><th>幀範圍</th><th>可能用途（推測，未定案）</th></tr></thead>
+<div class="kongnote">✅ <b>狀態設定已建立</b>（2026-09-09）：<code>states</code> 已填入 8 個狀態，動畫對照見下表。<br>
+⏳ <b>玩法功能由程式端後續實作</b> —— <code>Zombie/</code> 底下仍無行為檔，目前遊戲中生不出來。
+<code>ProbabilityManager</code> 已有權重 300、<code>Frankenstein_LV2</code>、<code>FrankensteinTime</code> 等設定。<br>
+⇒ <b>動畫資產與狀態對照都到位了，缺的是行為檔（程式）。</b></div>
+<div class="tw"><table><thead><tr><th>狀態</th><th>指到的動畫</th><th>備註</th><th></th></tr></thead>
 <tbody>
-<tr><td><code>walk</code></td><td>1100–1190</td><td>移動</td></tr>
-<tr><td><code>attack</code></td><td>450–506</td><td>一般攻擊</td></tr>
-<tr><td><code>dead</code></td><td>570–640</td><td>死亡</td></tr>
-<tr class="r-idle"><td><code>throw</code></td><td>1200–1270</td><td>投擲類招式</td></tr>
-<tr class="r-idle"><td><code>roar01</code></td><td>155–200</td><td>咆哮／預警</td></tr>
-<tr class="r-idle"><td><code>roar02</code></td><td>216–270</td><td>咆哮（第二種）</td></tr>
-<tr class="r-idle"><td><code>swing</code></td><td>450–570</td><td>揮擊類招式</td></tr>
+<tr class="r-ok"><td><code>walk</code></td><td>walk[1100,1190]</td><td>移動</td><td><span class="b ok">可用</span></td></tr>
+<tr class="r-need"><td><code>dash</code></td><td>attack[450,506]</td><td>⚠️ 狀態名沿用其他角色，行為未定 ⇒ 實作時建議依實際行為改名</td><td><span class="b need">建議補</span></td></tr>
+<tr class="r-need"><td><code>warning_dash</code></td><td>attack[450,506]</td><td>與 dash 同一支，預警與發動不分</td><td><span class="b need">建議補</span></td></tr>
+<tr class="r-need"><td><code>taunt</code></td><td>attack[450,506]</td><td>與上兩者同一支 ⇒ <b>三個狀態共用 attack</b></td><td><span class="b need">建議補</span></td></tr>
+<tr class="r-need"><td><code>transition</code></td><td>dead[570,640]</td><td>型態轉換播死亡動畫（與機械金剛同一形狀）</td><td><span class="b need">建議補</span></td></tr>
+<tr class="r-ok"><td><code>hurt</code> / <code>hurt_hitstop</code></td><td>roar02[216,270]</td><td>借用咆哮當受擊，兩者共用</td><td><span class="b ok">可用</span></td></tr>
+<tr class="r-ok"><td><code>dying</code></td><td>dead[570,640]</td><td>死亡</td><td><span class="b ok">可用</span></td></tr>
+<tr class="r-idle"><td>💡 未接上</td><td>throw[1200,1270]<br>roar01[155,200]<br>swing[450,570]</td><td>三支做了沒有狀態指到。<b><code>swing[450,570]</code> 與 <code>attack[450,506]</code> 起始幀相同</b> ⇒ attack 疑似是 swing 的前半段，實作前建議確認</td><td><span class="b idle">可回收</span></td></tr>
 </tbody></table></div>
 <p class="meta">behavior 也已填好：speed 80、attackRange 120、warningDuration 1.5、cooldown 2、radius 191.5、vfxHeight 100</p>
 </section>
