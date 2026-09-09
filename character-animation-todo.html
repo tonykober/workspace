@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<meta name="description" content="從 SpinningTop 玩法反推每隻怪需要的動作演出，對照現有動畫列出缺件與補齊優先順序。">
+<meta name="description" content="從 SpinningTop 玩法反推每隻怪需要的動作演出，含四個待裁示項目的實際狀態佐證。">
 <title>角色動作補齊清單</title>
 <style>
 html{color-scheme:light dark}
@@ -52,6 +52,11 @@ tr.r-bad td{background:var(--bad-bg)}tr.r-need td{background:var(--need-bg)}
 .b.ok{color:var(--ok);border:1px solid var(--ok)}
 .b.need{color:var(--need);border:1px solid var(--need)}
 .b.bad{color:#fff;background:var(--bad);border:1px solid var(--bad)}
+.q{background:var(--bg);border:1px solid var(--line);border-radius:6px;padding:12px 14px;margin:12px 0 0}
+.q h3{font-size:14.5px;margin:0 0 7px;font-family:ui-sans-serif,system-ui,sans-serif;font-weight:600}
+.q ul{margin:6px 0 8px;padding-left:20px;font-size:13.5px}
+.hl{background:var(--need-bg);border:1px solid var(--need);color:var(--need);padding:1px 7px;border-radius:3px;font-size:13px}
+.verdict{background:var(--panel);border-left:3px solid var(--rule);padding:8px 11px;margin:0;font-size:13.5px;border-radius:0 4px 4px 0}
 footer{color:var(--dim);font-size:12.5px;margin-top:26px;padding-top:14px;border-top:1px solid var(--line)}
 </style>
 </head>
@@ -90,13 +95,14 @@ footer{color:var(--dim);font-size:12.5px;margin-top:26px;padding-top:14px;border
 </div>
 
 <div class="note">
-<h2>可以先回收的現成資產（8 支）</h2>
+<h2>可以先回收的現成資產（7 支）</h2>
 <p>這些美術已經做了、檔案就在，但沒有任何程式路徑會播到 —— <b>接上去就有，不用重畫</b>：</p>
 <ul>
 <li><code>Mummy.attack</code>、<code>Monkey.fly_out</code>（離場飛走）、<code>CarBoss.awake</code>（登場宣告）</li>
 <li><code>ChampionChef.hurt02</code>、<code>ChampionChef.jump</code></li>
-<li><code>Golden.jump_e</code>（鑽地）、<code>Golden.jumpatk</code>、<code>Golden.hurt</code></li>
+<li><code>Golden.jump_e</code>（鑽地）、<code>Golden.jumpatk</code></li>
 </ul>
+<p class="verdict">⚠️ 更正：先前這裡列了 <code>Golden.hurt</code>，但實查後<b>那支動畫並不存在</b>（見下方待裁示 ①）。可回收的是 <b>7 支</b>不是 8 支。</p>
 </div>
 <section class="mon"><header><h3>普通殭屍 man / girl / dog<span class="sug">2 建議補</span></h3>
 <p class="meta">現有動畫：<code>attack</code>, <code>dead</code>, <code>walk</code></p></header>
@@ -148,13 +154,58 @@ footer{color:var(--dim);font-size:12.5px;margin-top:26px;padding-top:14px;border
 <tbody><tr class="r-ok"><td>巡邏</td><td><code>patrol</code></td><td>walk</td><td><span class="b ok">現況可用</span></td></tr><tr class="r-ok"><td>嘲諷預警</td><td><code>taunt(warning)</code></td><td>attack</td><td><span class="b ok">現況可用</span></td></tr><tr class="r-need"><td>嘲諷發動</td><td><code>taunt(attacking)</code></td><td>attack（與預警完全相同）</td><td><span class="b need">建議補</span></td></tr><tr class="r-bad"><td>型態轉換站定</td><td><code>transition</code></td><td>⚠️ 播 dead，沒有 idle</td><td><span class="b bad">缺／異常</span></td></tr><tr class="r-ok"><td>受擊</td><td><code>struggle</code></td><td>借用正式 Boss 的 middle_reward_failure</td><td><span class="b ok">現況可用</span></td></tr><tr class="r-need"><td>離場</td><td><code>exiting</code></td><td>walk</td><td><span class="b need">建議補</span></td></tr></tbody></table></div></section>
 
 <div class="note">
-<h2>❓ 動手前要先確認的</h2>
+<h2>❓ 四個待裁示項目 — 目前實際狀態</h2>
+<p>下面是我實查後的<b>現況事實</b>，供判斷用。四項都還沒動手。</p>
+
+<div class="q">
+<h3>① 盜墓者 <code>hurt</code> 指到 <code>attack</code></h3>
+<p><b>實際狀態：<span class="hl">Golden 根本沒有 hurt 動畫</span></b></p>
 <ul>
-<li><b>盜墓者的 <code>hurt</code> 指到 <code>attack</code></b> —— 是刻意還是誤植？如果是誤植，改設定就好不用重畫</li>
-<li><b>死靈法師的 <code>hurt</code> 與 <code>dead</code> 起始幀重疊</b> —— 受擊播的是死亡動畫開頭，同上</li>
-<li><b><code>Frankenstein.anim.json</code> 沒有任何怪引用</b>，還帶著 throw / roar01 / roar02 / swing 四支動畫。是未上線的怪還是已廢棄？</li>
-<li><b>大猩猩的「丟炸彈」要不要獨立動作</b> —— 現在與地震共用，玩家分不出來</li>
+<li><code>clips</code>：只有 <code>walk[60,150]</code>、<code>dead[210,280]</code>、<code>attack[930,973]</code></li>
+<li><code>extraClips</code>：<code>jump_s</code>、<code>jump_e</code>、<code>jumpatk</code> — <b>沒有 hurt</b></li>
+<li><code>states</code>：<code>hurt</code> 與 <code>hurt_hitstop</code> 都指向 <code>attack</code></li>
 </ul>
+<p class="verdict">⇒ <b>不是誤植，是缺件。</b>指到 <code>attack</code> 是「沒有 hurt 可用」的替代方案。要有受擊反應就得<b>新做動畫</b>，改設定沒用。<br>
+（我先前說「疑似誤植、改設定就好」是錯的，這裡更正。）</p>
+</div>
+
+<div class="q">
+<h3>② 死靈法師 <code>hurt</code> 與 <code>dead</code> 幀重疊</h3>
+<p><b>實際狀態：<span class="hl">Necromancer 也沒有 hurt 動畫</span></b></p>
+<ul>
+<li><code>clips</code>：只有 <code>walk[300,360]</code>、<code>dead[10,65]</code>、<code>attack[426,460]</code></li>
+<li><code>extraClips</code>：<code>null</code>（完全沒有）</li>
+<li><code>states</code>：<code>hurt</code> 與 <code>hurt_hitstop</code> 都指向一個<b>不存在的</b> <code>hurt</code></li>
+</ul>
+<p class="verdict">⇒ <b>沒有「幀重疊」這回事</b>，是指向不存在的 clip、走 fallback。同樣是<b>缺件</b>不是誤植。<br>
+（我先前說「hurt 與 dead 起始幀重疊」是錯的，那份資料不對，這裡更正。）</p>
+</div>
+
+<div class="q">
+<h3>③ <code>Frankenstein.anim.json</code> 沒有任何怪引用</h3>
+<p><b>實際狀態：<span class="hl">動畫資產齊全，但遊戲裡生不出來</span></b></p>
+<ul>
+<li>動畫<b>做得比多數上線怪還完整</b>：<code>walk</code>／<code>attack</code>／<code>dead</code> ＋ <code>throw</code>／<code>roar01</code>／<code>roar02</code>／<code>swing</code> 共 <b>7 支</b></li>
+<li><code>states</code> 是 <b>空陣列</b> — 沒有任何狀態對照</li>
+<li>沒有對應的行為檔（<code>Zombie/</code> 底下沒有 FrankensteinZombie）</li>
+<li>🔴 但 <code>ProbabilityManager</code> 裡<b>有完整的機率設定</b>：<code>TARGET_TYPE.Frankenstein = 5</code>（權重 300）、<code>Frankenstein_LV2 = 22</code>、<code>FrankensteinTime = 20</code>，而且 <code>:795-799</code> 有實際的分支邏輯</li>
+</ul>
+<p class="verdict">⇒ 看起來是<b>企劃排進去、美術做完了，但玩法程式還沒接</b>的角色，不像廢棄。<br>
+要判斷的是：<b>這隻要不要做？</b>要的話缺的是行為檔＋states，不是動畫。</p>
+</div>
+
+<div class="q">
+<h3>④ 大猩猩「丟炸彈」要不要獨立動作</h3>
+<p><b>實際狀態：<span class="hl">bomb 是四種攻擊之一，但視覺與地震完全相同</span></b></p>
+<ul>
+<li>攻擊循環是四種輪流：<code>['dash', 'bomb', 'earthquake', 'struggle']</code></li>
+<li>丟炸彈有<b>專屬玩法</b>：三個預警座標、地面冒粒子、生成實體炸彈桶</li>
+<li>但動畫分支只分兩類：<code>dash|struggle</code> → <code>warning_dash</code>，<b>其餘（含 bomb）→ <code>warning_earthquake</code></b></li>
+<li>而 <code>warning_earthquake</code> 播的是 <code>dead</code>（大猩猩沒有獨立 idle）</li>
+</ul>
+<p class="verdict">⇒ <b>玩法上是獨立招式、視覺上完全看不出來</b>，而且借用的還是死亡動畫。<br>
+要判斷的是：值不值得為 bomb 單獨做一支投擲動作。</p>
+</div>
 </div>
 
 <footer>資料來源：各怪行為檔（<code>SpinningTopSystem/Zombie/*.ts</code>）的狀態機實查 ＋ <code>Mappers/Zombies.ts</code> 的動畫決策 ＋ <code>Data/Animation/*.anim.json</code>。「現在實際播什麼」為程式碼實查結果，非推測。</footer>
