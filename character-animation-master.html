@@ -3,7 +3,7 @@
 <head>
 <meta charset="utf-8">
 <meta name="viewport" content="width=device-width,initial-scale=1">
-<meta name="description" content="SpinningTop 11 個角色的玩法需求與現有動畫對照總表。">
+<meta name="description" content="SpinningTop 11 個角色的動作需求與現有動畫對照總表。">
 <title>角色動作總表</title>
 <style>
 html{color-scheme:light dark}
@@ -71,6 +71,7 @@ footer{color:var(--dim);font-size:12.5px;margin-top:26px;padding-top:14px;border
 .new{font-size:11.5px;font-weight:600;padding:1px 8px;border-radius:20px;
  color:var(--rule);background:var(--idle-bg);border:1px solid var(--rule);
  font-family:"Microsoft JhengHei","微軟正黑體","PingFang TC","Noto Sans TC",ui-sans-serif,sans-serif}
+.hint{font-size:11.5px;color:var(--dim);font-weight:400}
 .kongnote{background:var(--bg);border:1px solid var(--line);border-left:3px solid var(--rule);
  border-radius:0 5px 5px 0;padding:9px 12px;margin:0 0 11px;font-size:13px;line-height:1.7}
 .namemap{width:100%;border-collapse:collapse;font-size:13.5px;margin-top:8px}
@@ -81,14 +82,13 @@ footer{color:var(--dim);font-size:12.5px;margin-top:26px;padding-top:14px;border
 <body>
 <div class="wrap">
 <h1>角色動作總表</h1>
-<p class="sub">11 個角色的<b>玩法需求 × 現有動畫</b>對照 —— 需要什麼、現在播什麼、缺什麼，一份看完<br><span style="font-size:13px;color:var(--dim)">已納入 2026-09-09 rebase（main 前進 25 顆）帶進來的玩法改動</span></p>
+<p class="sub">11 個角色的<b>玩法需求 × 現有動畫</b>對照 —— 需要什麼、現在播什麼、缺什麼，一份看完</p>
 
 <div class="stats">
 <div class="stat"><b>11</b><span>角色（＋科學怪人參考）</span></div>
 <div class="stat bad"><b>6</b><span>沒有受擊動畫</span></div>
 <div class="stat bad"><b>2</b><span>受擊設定有誤</span></div>
 <div class="stat idle"><b>7</b><span>可回收資產</span></div>
-<div class="stat"><b>4</b><span>本次 rebase 新增的玩法</span></div>
 </div>
 
 <div class="note">
@@ -111,18 +111,6 @@ footer{color:var(--dim);font-size:12.5px;margin-top:26px;padding-top:14px;border
 <tr><td>死靈法師</td><td>necromancer</td><td><code>zombie_necromancer</code></td><td>Necromancer.fbx</td></tr>
 </tbody></table></div>
 <p style="margin-top:8px">🔴 <b>機械金剛只有一隻</b>：<code>zombie_boss</code>（正式 Boss 戰）與 <code>zombie_mecha_boss</code>（機械金剛事件）是<b>同一個角色的兩套玩法機制</b>，動作資產完全共用，所以本表<b>合併成一節</b>。</p>
-</div>
-
-<div class="note">
-<h2>🆕 2026-09-09 rebase 帶進來的玩法改動</h2>
-<p>main 前進 25 顆，其中<b>四項改動影響動作演出需求</b>。<b>動作資產本身零變動</b>（沒有任何 <code>.anim.json</code> 被修改）⇒ 下面的缺口全是<b>玩法變新了、演出沒跟上</b>。</p>
-<ul>
-<li><b>死靈法師能量彈重做</b> —— 改成<b>被打才發射</b>，一般受擊 3~5 發、致命一擊 10 發；命中<b>無視受擊冷卻</b>並把怪物彈飛。⇒ 受擊動畫從「有比較好」變成<b>機制可讀性的關鍵</b>。</li>
-<li><b>盜墓者鑽地可被擊殺</b> —— 判定從 <code>whacUnderground</code>（真／假）改成四階段 <code>whacState</code>；<b>只有 underground 完全免疫</b>，burrowing 階段仍可被撞死。⇒ 但兩階段共用同一支 <code>jump_s</code>，玩家看不出還打不打得到。</li>
-<li><b>攻擊中的怪不再被待機陀螺推開</b>（<code>isZombieInSkill</code>）—— 涵蓋機械金剛、大老闆、球員、炸彈人、木乃伊、主廚、小猴子的攻擊執行期，以及所有怪的入場期。⇒ <b>攻擊「起手」與「執行中」的分界變成玩法上真實存在的一刻</b>，目前多數角色兩者共用同一支動畫。</li>
-<li><b>命中爆點統一</b> —— 星星箱與寶箱改播同一支 <code>ef_hiteffect_mon</code>，移除舊星芒與彩色粒子。⇒ 不影響角色動作需求，純特效整併。</li>
-</ul>
-<p style="margin-top:8px">⚠️ 順手發現：<code>NECRO_ORB_DEATH_COUNT = 10</code> 這個常數<b>宣告了但沒有人用</b>，實際致命一擊是在 <code>CollisionSystem</code> 裡寫死的 <code>10</code>。兩處要一起改才不會走鐘，建議收斂成一個來源。</p>
 </div>
 
 <div class="note hot">
@@ -163,7 +151,7 @@ footer{color:var(--dim);font-size:12.5px;margin-top:26px;padding-top:14px;border
 <li><b>① 明顯錯誤</b>：大老闆倒車播前進動畫、炸彈人膨脹播走路、紙箱男攻擊與走路完全一樣</li>
 <li><b>② 招牌機制沒演出</b>：死靈法師能量彈、機械金剛地震／丟炸彈（播死亡動畫）、機械金剛沒有待機</li>
 <li><b>③ 受擊反應</b>：6 隻沒有 ＋ 盜墓者誤植（改設定即可）</li>
-<li><b>④ 預警與發動不分</b>：多數角色的蓄力與打出去是同一支</li>
+<li><b>④ 預警與發動不分</b>：多數角色的蓄力與打出去是同一支。<b>攻擊「起手」與「執行中」在玩法上是分開的兩段</b>（機械金剛、大老闆、球員、炸彈人、木乃伊、主廚、小猴子皆有），動作上卻共用同一支 ⇒ 玩家讀不出攻擊已經進入不可打斷的階段</li>
 <li><b>⑤ 入場</b>：沒有任何一隻有入場動畫</li>
 </ul>
 </div>
@@ -190,7 +178,7 @@ footer{color:var(--dim);font-size:12.5px;margin-top:26px;padding-top:14px;border
 <section class="mon"><header><h3>盜墓者 <span class="en">golden / GraveRobber</span><span class="warn">2 缺/異常</span><span class="sug">1 建議補</span><span class="idl">1 可回收</span></h3>
 <p class="meta">現有動畫：<code>attack</code>, <code>dead</code>, <code>walk</code> · 額外：<code>jump_e</code>, <code>jump_s</code>, <code>jumpatk</code> · 受擊：<code>hurt[180,204]</code>（頂層欄位）<br>模型檔：<code>GraveRobber_Skin.fbx</code></p></header>
 <div class="tw"><table><thead><tr><th>玩法需要的演出</th><th>狀態</th><th>現在實際播什麼</th><th></th></tr></thead>
-<tbody><tr class="r-ok"><td>移動</td><td><code>walk</code></td><td>walk</td><td><span class="b ok">可用</span></td></tr><tr class="r-ok"><td>冒出地面</td><td><code>emerging</code></td><td>jump_s</td><td><span class="b ok">可用</span></td></tr><tr class="r-need"><td>鑽入地面</td><td><code>burrowing</code></td><td>jump_s（與冒出同一支）<br>🆕 <b>此階段現在可被撞死</b>，但演出與「冒出」一模一樣 ⇒ 玩家分不出還能不能打</td><td><span class="b need">建議補</span></td></tr><tr class="r-ok"><td>地面待機</td><td><code>surface</code></td><td>walk</td><td><span class="b ok">可用</span></td></tr><tr class="r-ok"><td>地下</td><td><code>underground</code></td><td>整隻隱藏（唯一完全免疫碰撞的階段）</td><td><span class="b ok">可用</span></td></tr><tr class="r-bad"><td>攻擊</td><td><code>—</code></td><td>🔴 沒有攻擊狀態，attack 只被受擊借用</td><td><span class="b bad">缺／異常</span></td></tr><tr class="r-bad"><td>受擊</td><td><code>hurt</code></td><td>🔴 有 hurt[180,204] 但 states 指到 attack（誤植）</td><td><span class="b bad">缺／異常</span></td></tr><tr class="r-ok"><td>死亡</td><td><code>dead</code></td><td>dead</td><td><span class="b ok">可用</span></td></tr><tr class="r-idle"><td>💡 閒置資產</td><td><code>—</code></td><td>jump_e / jumpatk 做了沒人播</td><td><span class="b idle">可回收</span></td></tr></tbody></table></div></section>
+<tbody><tr class="r-ok"><td>移動</td><td><code>walk</code></td><td>walk</td><td><span class="b ok">可用</span></td></tr><tr class="r-ok"><td>冒出地面</td><td><code>emerging</code></td><td>jump_s</td><td><span class="b ok">可用</span></td></tr><tr class="r-need"><td>鑽入地面</td><td><code>burrowing</code></td><td>jump_s（與冒出同一支）⇒ 上鑽與下鑽方向相反卻共用一支，且此階段仍可被擊殺，玩家分不出打不打得到</td><td><span class="b need">建議補</span></td></tr><tr class="r-ok"><td>地面待機</td><td><code>surface</code></td><td>walk</td><td><span class="b ok">可用</span></td></tr><tr class="r-ok"><td>地下</td><td><code>underground</code></td><td>整隻隱藏（不需動作）</td><td><span class="b ok">可用</span></td></tr><tr class="r-bad"><td>攻擊</td><td><code>—</code></td><td>🔴 沒有攻擊狀態，attack 只被受擊借用</td><td><span class="b bad">缺／異常</span></td></tr><tr class="r-bad"><td>受擊</td><td><code>hurt</code></td><td>🔴 有 hurt[180,204] 但 states 指到 attack（誤植）</td><td><span class="b bad">缺／異常</span></td></tr><tr class="r-ok"><td>死亡</td><td><code>dead</code></td><td>dead</td><td><span class="b ok">可用</span></td></tr><tr class="r-idle"><td>💡 閒置資產</td><td><code>—</code></td><td>jump_e / jumpatk 做了沒人播</td><td><span class="b idle">可回收</span></td></tr></tbody></table></div></section>
 <section class="mon"><header><h3>小猴子 <span class="en">monkey（zombie_black）</span><span class="warn">1 缺/異常</span><span class="sug">3 建議補</span><span class="idl">1 可回收</span></h3>
 <p class="meta">現有動畫：<code>attack</code>, <code>dead</code>, <code>walk</code> · 額外：<code>fly_out</code>, <code>intimidate</code>, <code>jump_in</code><br>模型檔：<code>Monkey.fbx</code></p></header>
 <div class="tw"><table><thead><tr><th>玩法需要的演出</th><th>狀態</th><th>現在實際播什麼</th><th></th></tr></thead>
@@ -203,11 +191,11 @@ footer{color:var(--dim);font-size:12.5px;margin-top:26px;padding-top:14px;border
 <p class="meta">現有動畫：<code>attack</code>, <code>dead</code>, <code>walk</code> · 受擊：<code>hurt[270,285]</code>（頂層欄位）</p></header>
 <div class="tw"><table><thead><tr><th>玩法需要的演出</th><th>狀態</th><th>現在實際播什麼</th><th></th></tr></thead>
 <tbody><tr class="r-ok"><td>移動</td><td><code>walk</code></td><td>walk</td><td><span class="b ok">可用</span></td></tr><tr class="r-ok"><td>攻擊預警</td><td><code>warning</code></td><td>attack</td><td><span class="b ok">可用</span></td></tr><tr class="r-bad"><td>膨脹</td><td><code>inflating</code></td><td>🔴 播 walk，一邊走路一邊被放大</td><td><span class="b bad">缺／異常</span></td></tr><tr class="r-need"><td>地震跳躍</td><td><code>earthquake_leap</code></td><td>attack（與預警同一支）</td><td><span class="b need">建議補</span></td></tr><tr class="r-ok"><td>攻擊</td><td><code>attack</code></td><td>attack</td><td><span class="b ok">可用</span></td></tr><tr class="r-ok"><td>受擊</td><td><code>hurt</code></td><td>hurt（頂層欄位）</td><td><span class="b ok">可用</span></td></tr><tr class="r-ok"><td>死亡/爆炸</td><td><code>dead</code></td><td>dead</td><td><span class="b ok">可用</span></td></tr><tr class="r-need"><td>入場</td><td><code>intro</code></td><td>walk</td><td><span class="b need">建議補</span></td></tr></tbody></table></div></section>
-<section class="mon"><header><h3>死靈法師 <span class="en">necromancer</span><span class="warn">3 缺/異常</span><span class="sug">1 建議補</span><span class="new">玩法已更新</span></h3>
+<section class="mon"><header><h3>死靈法師 <span class="en">necromancer</span><span class="warn">3 缺/異常</span><span class="sug">1 建議補</span></h3>
 <p class="meta">現有動畫：<code>attack</code>, <code>dead</code>, <code>walk</code> · 受擊：<code>hurt[10,23]</code>（頂層欄位）<br>模型檔：<code>Necromancer.fbx</code></p>
-<div class="kongnote">🆕 <b>2026-09-09 rebase 帶進來的新玩法</b>：能量彈改成<b>被打才發射</b>（一般受擊 3~5 發、<b>致命一擊 10 發</b>），射程 375px、飛行速度 900px/s、存活上限 3 秒。命中怪物時<b>無視受擊冷卻</b>直接生效，並把對方<b>彈飛</b>（約 136px/s，等同陀螺普通撞擊）。</div></header>
+<div class="kongnote">⚠️ <b>受擊＝發射能量彈</b>：這隻的招牌機制是在被打的瞬間觸發的，一般受擊與致命一擊的發射量不同。⇒ <b>受擊演出是這隻最關鍵的一支動作</b>，不是可有可無的反應。</div></header>
 <div class="tw"><table><thead><tr><th>玩法需要的演出</th><th>狀態</th><th>現在實際播什麼</th><th></th></tr></thead>
-<tbody><tr class="r-ok"><td>移動</td><td><code>walk</code></td><td>walk</td><td><span class="b ok">可用</span></td></tr><tr class="r-ok"><td>攻擊預警</td><td><code>warning</code></td><td>attack</td><td><span class="b ok">可用</span></td></tr><tr class="r-need"><td>地震跳躍</td><td><code>earthquake_leap</code></td><td>attack</td><td><span class="b need">建議補</span></td></tr><tr class="r-ok"><td>攻擊</td><td><code>attack</code></td><td>attack</td><td><span class="b ok">可用</span></td></tr><tr class="r-bad"><td>能量彈發射 <b>（受擊時觸發）</b></td><td><code>施法</code></td><td>🔴 招牌機制無專屬動作，且發射時機＝受擊 ⇒ 只看得到受擊反應</td><td><span class="b bad">缺／異常</span></td></tr><tr class="r-bad"><td><b>致命一擊噴 10 發</b></td><td><code>—</code></td><td>🔴 與一般受擊完全同一套演出，看不出這是最後一擊</td><td><span class="b bad">缺／異常</span></td></tr><tr class="r-bad"><td>受擊</td><td><code>hurt</code></td><td>⚠️ hurt[10,23] 與 dead[10,65] 起始幀相同<br><b>玩法改動後這條更嚴重</b>：受擊＝發射能量彈，是玩家最需要讀到的一刻</td><td><span class="b bad">缺／異常</span></td></tr><tr class="r-ok"><td>死亡</td><td><code>dead</code></td><td>dead</td><td><span class="b ok">可用</span></td></tr></tbody></table></div></section>
+<tbody><tr class="r-ok"><td>移動</td><td><code>walk</code></td><td>walk</td><td><span class="b ok">可用</span></td></tr><tr class="r-ok"><td>攻擊預警</td><td><code>warning</code></td><td>attack</td><td><span class="b ok">可用</span></td></tr><tr class="r-need"><td>地震跳躍</td><td><code>earthquake_leap</code></td><td>attack</td><td><span class="b need">建議補</span></td></tr><tr class="r-ok"><td>攻擊</td><td><code>attack</code></td><td>attack</td><td><span class="b ok">可用</span></td></tr><tr class="r-bad"><td>能量彈發射<br><span class="hint">於受擊瞬間觸發</span></td><td><code>施法</code></td><td>🔴 招牌機制無專屬動作</td><td><span class="b bad">缺／異常</span></td></tr><tr class="r-bad"><td>致命一擊發射<br><span class="hint">發射量多於一般受擊</span></td><td><code>—</code></td><td>🔴 與一般受擊同一套演出，看不出是最後一擊</td><td><span class="b bad">缺／異常</span></td></tr><tr class="r-bad"><td>受擊</td><td><code>hurt</code></td><td>⚠️ hurt[10,23] 與 dead[10,65] 起始幀相同 ⇒ 受擊播的是死亡動畫前 13 幀</td><td><span class="b bad">缺／異常</span></td></tr><tr class="r-ok"><td>死亡</td><td><code>dead</code></td><td>dead</td><td><span class="b ok">可用</span></td></tr></tbody></table></div></section>
 <section class="mon"><header><h3>機械金剛 <span class="en">gorilla（zombie_boss ＋ zombie_mecha_boss）</span><span class="warn">4 缺/異常</span><span class="sug">4 建議補</span></h3>
 <p class="meta">現有動畫：<code>attack</code>, <code>dead</code>, <code>walk</code> · 額外：<code>middle_reward_failure</code> · 受擊：<code>hurt[780,807]</code>（頂層欄位）<br>模型檔：<code>Gorilla_walk.fbx</code></p></header>
 <div class="kongnote">🔴 <b>同一個角色、同一份動畫資產</b>，只是在兩種玩法環境下用不同的表演機制：
