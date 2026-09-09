@@ -82,5 +82,12 @@
     "icon": "👾",
     "path": "monster-animation-list.html",
     "date": "2026-09-08"
+  },
+  {
+    "title": "角色動作補齊清單",
+    "desc": "從玩法反推 12 個角色需要的動作演出，19 個缺件/異常、18 個建議補，含優先順序與可回收的現成資產",
+    "icon": "🎬",
+    "path": "character-animation-todo.html",
+    "date": "2026-09-09"
   }
 ]
