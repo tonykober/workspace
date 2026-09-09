@@ -77,17 +77,10 @@
     "date": "2026-07-27"
   },
   {
-    "title": "怪物動作演出清單",
-    "desc": "SpinningTop 15 個怪物模型、78 個行為狀態對應到哪些動畫 clip，含三類落差（美術做了沒播/有狀態沒動作/設定異常）",
-    "icon": "👾",
-    "path": "monster-animation-list.html",
-    "date": "2026-09-08"
-  },
-  {
-    "title": "角色動作補齊清單",
-    "desc": "從玩法反推 12 個角色需要的動作演出，19 個缺件/異常、18 個建議補，含優先順序與可回收的現成資產",
-    "icon": "🎬",
-    "path": "character-animation-todo.html",
+    "title": "角色動作總表",
+    "desc": "12 個角色的玩法需求 × 現有動畫對照，19 缺件／18 建議補／7 可回收，含四項待裁示的實際狀態",
+    "icon": "📋",
+    "path": "character-animation-master.html",
     "date": "2026-09-09"
   }
 ]
