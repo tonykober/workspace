@@ -82,5 +82,12 @@
     "icon": "📋",
     "path": "character-animation-master.html",
     "date": "2026-09-09"
+  },
+  {
+    "title": "Canvas 圖層盤點",
+    "desc": "陀螺專案 2D canvas 層畫了什麼、哪些已搬到 3D、哪些其實已經死掉不會出現",
+    "icon": "🖼️",
+    "path": "canvas-layer-inventory.html",
+    "date": "2026-09-10"
   }
 ]
