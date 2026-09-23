@@ -474,11 +474,14 @@ details.mon.notingame>summary:hover{background:color-mix(in srgb,var(--bad) 30%,
       onOff();
     });
   });
-  // 彈窗關閉：關閉鈕、點遮罩空白處、Esc
-  document.querySelectorAll('.modal-mask').forEach(function(m){
-    m.addEventListener('click',function(e){
-      if(e.target===m || e.target.classList.contains('modal-close')) m.classList.remove('on');
-    });
+  // 彈窗關閉：用 document 事件委派（modal DOM 在此 script 之後才插入，
+  // 直接 querySelectorAll('.modal-mask') 當下抓不到，故改委派）。
+  document.addEventListener('click',function(e){
+    var t=e.target;
+    if(t.classList.contains('modal-close')){
+      var box=t.closest('.modal-mask'); if(box) box.classList.remove('on'); return;
+    }
+    if(t.classList.contains('modal-mask')) t.classList.remove('on'); // 點遮罩空白處
   });
   document.addEventListener('keydown',function(e){
     if(e.key==='Escape') document.querySelectorAll('.modal-mask.on').forEach(function(m){m.classList.remove('on');});
