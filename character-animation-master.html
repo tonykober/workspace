@@ -113,6 +113,16 @@ details.mon>*:last-child,details.note>*:last-child{margin-bottom:0}
 details[open]>summary{margin-bottom:4px}
 details.note[open]>summary{margin-bottom:2px}
 
+/* ── 角色開合列（.mon summary）視覺強化：與背景明顯區隔（老爺 2026-09-23）── */
+details.mon>summary{background:color-mix(in srgb,var(--rule) 12%,var(--panel));
+ border:1px solid var(--rule);border-radius:7px}
+details.mon>summary:hover{background:color-mix(in srgb,var(--rule) 20%,var(--panel))}
+details.mon[open]>summary{border-bottom-left-radius:0;border-bottom-right-radius:0}
+/* 未出現在遊戲中的角色（如科學怪人 B 方案未實作）：開合列標紅 */
+details.mon.notingame>summary{background:color-mix(in srgb,var(--bad) 20%,var(--panel));
+ border-color:var(--bad)}
+details.mon.notingame>summary:hover{background:color-mix(in srgb,var(--bad) 30%,var(--panel))}
+
 /* ── 全部展開／收合 ── */
 .tools{display:flex;gap:8px;margin:0 0 18px;flex-wrap:wrap}
 .tools button{font:inherit;font-size:12.5px;font-weight:600;color:var(--dim);
@@ -240,7 +250,7 @@ details.note[open]>summary{margin-bottom:2px}
 <div class="stat"><b>65</b><span>行為流程</span></div>
 </div>
 
-<div class="tools"><button type="button" data-all="1">全部展開</button><button type="button" data-all="0">全部收合</button></div>
+<div class="tools"><button type="button" data-all="1">全部展開</button><button type="button" data-all="0">全部收合</button><button type="button" data-toggle="legend">圖例／怎麼讀</button><button type="button" data-toggle="animevents">動畫事件說明</button></div>
 
 <details class="note"><summary><h2>角色名稱對照</h2></summary>
 <p>程式碼裡的 <code>zombieType</code>、模型檔名、中文稱呼三者對不太起來，查資料時容易找錯。以下為正式對照：</p>
@@ -263,37 +273,18 @@ details.note[open]>summary{margin-bottom:2px}
 </tbody></table></div>
 <p style="margin-top:8px">🔴 <b>機械金剛只有一隻</b>：<code>zombie_boss</code>（正式 Boss 戰）與 <code>zombie_mecha_boss</code>（機械金剛事件）是<b>同一個角色的兩套玩法機制</b>，動作資產完全共用，所以本表<b>合併成一節</b>。</p></details>
 
-<details class="note hot"><summary><h2>🔴 總覽：受擊演出（細節見各角色區塊）</h2></summary>
-<ul>
-<li><b>❌ 沒有受擊動畫（5 隻）</b>：普通殭屍 man／girl／dog、紙箱男、小猴子 —— 被打時只有閃白</li>
-<li><b>⚠️ 盜墓者</b>：<b>有</b> <code>hurt[180,204]</code>，但 <code>states</code> 把受擊指到 <code>attack</code> ⇒ 受擊播攻擊動畫。<b>誤植，改設定就好、不用重畫</b></li>
-<li><b>⚠️ 死靈法師</b>：🆕 2026-09-21 受擊改用 <code>hurt[790,810]</code>（先前 <code>hurt[10,23]</code> 與 <code>dead[10,65]</code> 起始幀相同的問題已解決）</li>
-<li><b>✅ 已有</b>：大老闆、炸彈人、主廚、木乃伊、機械金剛（後四者的 hurt 定義在 <code>.anim.json</code> 的<b>頂層 <code>hurt</code> 欄位</b>，不在 <code>clips</code> 裡）<br><b>🆕 球員、科學怪人</b>（2026-09-15）：兩隻的 <code>hurt</code> 狀態早就設好（指向 <code>hurt03</code> / <code>roar02</code>），但程式判斷只認「名字叫 <code>hurt</code> 的動作」而被擋掉。判斷已改成<b>有 <code>hurt</code> 狀態就算數</b>，兩隻同時生效。⚠️ 科學怪人借用的是<b>咆哮</b>動作，仍建議補一支專屬受擊。</li>
-</ul></details>
-
-<details class="note"><summary><h2>怎麼讀這份表</h2></summary>
-<p>「玩法需要的演出」是從<b>各怪行為檔實查</b>它們會進入哪些狀態；「現在實際播什麼」是<b>程式碼實查</b>結果。</p>
+<details class="note" id="legend" hidden><summary><h2>圖例／怎麼讀這份表</h2></summary>
+<p>「玩法需要的演出」＝各怪行為檔實查會進入的狀態；「現在實際播什麼」＝程式碼實查結果。</p>
 <ul>
 <li><span class="b bad">缺／異常</span> 沒有對應動作，或播了明顯不對的東西</li>
 <li><span class="b need">建議補</span> 與別的狀態共用同一支，玩家分不出差別</li>
 <li><span class="b idle">可回收</span> 動畫已存在但沒接上</li>
 <li><span class="b ok">可用</span> 有專屬動作，或共用是刻意且合理的</li>
 </ul>
-<p><b>攻擊流程</b>：每隻角色的區塊裡都有一段流程，是從各自的行為檔<b>實查</b>出來的狀態機 —— 每段停留幾秒、本體會不會移動、有沒有免疫、分歧條件走哪一條，全部照程式碼寫的數字。方塊由左至右是時間順序，<b>頂端色條</b>表示該段是待機、原地不動、本體位移，還是造成傷害；分歧另起一行列在下方。<b>看流程可以直接對出哪一段沒有專屬動作。</b></p>
-<p><b>命名原則</b>：「玩法需要的演出」一欄<b>依角色實際的攻擊行為命名</b>（發射光束／揮拳／衝撞…）。<b>程式裡的狀態名不一定反映實際行為</b> —— 例如球員與機械金剛的 <code>dash</code> 實際上站定不動只射光束 —— 這種落差會在該列標註。行為若未確認，一律只寫「攻擊」，不猜測表現方式。</p>
-<p><b>關鍵背景</b>：狀態與動畫是<b>多對一</b>。多數角色只有 <code>walk</code>／<code>attack</code>／<code>dead</code> 三支動畫，卻要撐 4~13 個玩法狀態 —— 很多「共用」是先天限制不是疏忽。</p></details>
+<p><b>頂端色條對照</b></p><div class="fkey"><span><i style="background:var(--idle)"></i>待機／移動</span><span><i style="background:var(--need)"></i>原地不動</span><span><i style="background:var(--ok)"></i>本體位移</span><span><i style="background:var(--bad)"></i>造成傷害</span></div>
+<p style="margin-top:9px"><b>關鍵通則</b>：① 狀態名不等於實際行為（球員/機械金剛的 <code>dash</code> 其實站定射光束，不位移）。② 狀態與動畫是<b>多對一</b>，多數角色只有 walk/attack/dead 三支撐 4~13 個狀態，很多「共用」是先天限制。③ 攻擊以外（入場/離場/迴避/繞行/圍攻）幾乎都播 walk。各角色完整流程與待辦收在該角色自己的區塊。</p></details>
 
-<details class="note"><summary><h2>看流程前要知道的三件事</h2></summary>
-<ul>
-<li><b>狀態名不等於實際行為</b>：球員與機械金剛的攻擊狀態在程式裡叫 <code>dash</code>，但兩隻<b>本體完全不位移</b>，是站定射光束。真正會位移的只有小猴子與機械金剛的衝刺抓取，以及大老闆的衝撞。</li>
-<li><b>同時只有一隻中階怪能攻擊</b>：球員、木乃伊、主廚、炸彈人、大老闆共用一道閘。條件不成立時<b>不會轉到別的狀態</b>，只是留在待機、0.5~1.0 秒後再試。這解釋了為什麼場上怪多時攻擊反而變稀疏。</li>
-<li><b>攻擊以外的行為幾乎都沒有動作</b>：入場、離場、迴避、繞行、圍攻全部播 <code>walk</code>。<b>各角色的完整行為流程與待處理項目，都收在該角色自己的區塊裡。</b></li>
-<li><b>三隻沒有主動攻擊</b>：盜墓者全程只是躲，出土爆炸沒有傷害；死靈法師只會走路，被打才反擊而且打的是怪；普通殭屍與紙箱男沒有攻擊狀態機，走路時順便打。</li>
-</ul>
-<p style="margin-top:9px"><b>頂端色條對照</b><div class="fkey"><span><i style="background:var(--idle)"></i>待機／移動</span><span><i style="background:var(--need)"></i>原地不動</span><span><i style="background:var(--ok)"></i>本體位移</span><span><i style="background:var(--bad)"></i>造成傷害</span></div></p>
-</details>
-
-<details class="note"><summary><h2>🆕 動畫事件：可以在動作的指定時間點掛特效</h2></summary>
+<details class="note" id="animevents" hidden><summary><h2>🆕 動畫事件：可以在動作的指定時間點掛特效</h2></summary>
 <p>2026-09-10 新增的機制。可以在<b>某支動畫播到第幾秒</b>、<b>某根骨骼的位置</b>播放指定特效。目前只有機械金剛的走路用了 —— 左右腳各在 0.48 秒與 1.48 秒噴煙塵。</p>
 <p><b>為什麼這件事重要</b>：文件裡好幾條「缺演出」的缺口，現在<b>可以用掛事件補、不一定要重畫動畫</b>。例如腳步塵土、武器拖尾、落地衝擊，只要動畫本身動作對，加事件就能補上表現力。</p>
 <p class="cap">目前用了的</p>
@@ -318,15 +309,6 @@ details.note[open]>summary{margin-bottom:2px}
 </ul>
 </details>
 
-<details class="note"><summary><h2>總覽：優先順序（細節見各角色區塊）</h2></summary>
-<ul>
-<li><b>① 明顯錯誤</b>：大老闆倒車播前進動畫、炸彈人膨脹播走路、紙箱男攻擊與走路完全一樣</li>
-<li><b>② 招牌機制沒演出</b>：死靈法師能量彈、機械金剛地震／丟炸彈（播死亡動畫）、機械金剛沒有待機</li>
-<li><b>③ 受擊反應</b>：6 隻沒有 ＋ 盜墓者誤植（改設定即可）</li>
-<li><b>④ 預警與發動不分</b>：多數角色的攻擊預警與實際打出去是同一支。<b>攻擊「起手」與「執行中」在玩法上是分開的兩段</b>（機械金剛、大老闆、球員、炸彈人、木乃伊、主廚、小猴子皆有），動作上卻共用同一支 ⇒ 玩家讀不出攻擊已經進入不可打斷的階段</li>
-<li><b>⑤ 入場</b>：沒有任何一隻有入場動畫</li>
-<li><b>⑥ 可用動畫事件補的</b>：腳步塵土、落地衝擊、武器拖尾這類<b>不需要重畫動畫</b>，掛事件就能補。目前只有機械金剛的走路用了</li>
-</ul></details>
 <details class="mon"><summary><h3>普通殭屍 <span class="en">man / girl / dog</span><span class="warn">1 缺/異常</span><span class="sug">2 建議補</span></h3></summary>
 <p class="meta">現有動畫：<code>attack</code>, <code>dead</code>, <code>walk</code></p>
 <div class="hf"><p class="flow-t">攻擊流程（無狀態機）</p><div class="hf-row"><div class="hb move"><strong>移動追擊</strong><span><b>沒有攻擊狀態</b><br>追擊與攻擊同時</span><span class="hbc"><span class="st">walk</span><span class="pl">walk</span></span></div><div class="harr">▶</div><div class="hb hit"><strong>近身攻擊</strong><em>狗 0.83s<br>人 0.33s</em><span><b>照常移動</b><br>150px 半徑偵測</span><span class="hbc"><span class="st">attack</span><span class="pl">attack</span></span></div></div><div class="hbr"><b>分歧</b>　目標正在衝刺、無敵、蓄力瞄準或冷卻中 → 不攻擊，但<b>照常走路</b>，不進入任何特殊狀態</div><p class="hnote">半徑偵測<b>不需碰到</b>就會攻擊。擊退 1200 並讓陀螺翻倒。全程不免疫。</p></div>
@@ -460,8 +442,9 @@ details.note[open]>summary{margin-bottom:2px}
 <tr class="r-idle"><td>💡 閒置資產</td><td><code>—</code></td><td>atk02[460,540]、hurt02[940,965] — JSON extraClips 有宣告，尚無 state 使用</td><td><span class="b idle">可回收</span></td></tr>
 </tbody></table></div>
 <div class="todo"><p class="flow-t">待處理項目</p><div class="ti ok"><b><span class="b ok">已解決</span>　四招已接上專屬動作</b><p>🆕 2026-09-21 anim.json 更新：warning_dash／warning_earthquake→clamor02、dash→roar、earthquake_leap→earthquake、missile_taunt→clamor02。不再全播 taunt。bomb_strike 仍共用 attack。</p></div><div class="ti ok"><b><span class="b ok">已解決</span>　攻擊預警已有專屬動作</b><p>🆕 warning_dash／warning_earthquake→clamor02[1250,1307]（叫囂預警）。</p></div><div class="ti ok"><b><span class="b ok">已解決</span>　型態轉換與中央威嚇使用 roar</b><p><code>transition</code> 改為 loop 播 <code>roar[125,212]</code>；型態轉換與後半段中央威嚇共用此咆哮演出。</p></div><div class="ti ok"><b><span class="b ok">已解決</span>　BOSS 待機已有對應動作</b><p><code>idle</code> 已存在並播 <code>idle[100,212]</code> loop；BOSS 攻後與飛彈等待都會回到此狀態。一般關卡的巡邏則刻意播 <code>walk</code>。</p></div><div class="ti ok"><b><span class="b ok">已解決</span>　發射光束已有專屬動作</b><p>🆕 dash→roar[125,212]（吼叫）。</p></div><div class="ti ok"><b><span class="b ok">部分解決</span>　飛彈角力</b><p>🆕 missile_taunt→clamor02[1250,1307]（專屬叫囂）、🆕 missile_launch→missile_launch[500,540]（發射動作）皆已接上。missile_approach 與等飛彈滅走 walk（JSON 無 missile_active state，老爺 2026-09-22 裁示用 walk）。</p></div><div class="ti need"><b><span class="b need">建議補</span>　丟炸彈揮手沒有專屬動作</b><p><code>bomb_strike</code> 狀態已存在，但目前完整共用 <code>attack[784,880]</code>；第 0.4 秒生成 3 桶。若要讓丟桶語意更清楚，仍需專屬動畫 clip。</p></div><div class="ti ok"><b><span class="b ok">已解決</span>　揮拳預警已有專屬叫囂</b><p>🆕 2026-09-21 一般關 <code>taunting</code> 預警階段改播 <code>clamor02</code>（叫囂），揮拳發動仍用 <code>attack</code>，兩段不再共用同一支。</p></div><div class="ti need"><b><span class="b need">建議補</span>　沒有入場與離場動畫</b><p>沒有對應的 <code>intro</code>／<code>outro</code> 狀態或專屬 clip；Boss 版地板鑽出播 <code>idle</code> 再 roar，事件版沿路徑進出播 <code>walk</code>。</p></div><div class="ti ok"><b><span class="b ok">已確認刻意</span>　寶石掉落不另播專屬動作</b><p>遊走版每次命中有 5% 機率掉<b>兩顆寶石</b>（一顆飛上方面板、一顆飛下方），0.9 秒飛行、上限 3 顆、集滿觸發魔王戰。掉落是<b>受擊時的物品效果</b>，不另設專屬動作；需要動作演出時沿用 <code>hurt</code>。</p></div><div class="ti ok"><b><span class="b ok">已確認刻意</span>　兩套玩法共用動畫是刻意的</b><p><code>zombie_boss</code> 與 <code>zombie_mecha_boss</code> 是<b>同一個角色</b>，改一邊兩邊一起變是預期行為。</p></div><div class="ti ok"><b><span class="b ok">已確認刻意</span>　紅／藍寶石色版</b><p>🆕 2026-09-18 對調：紅寶石＝異色版（<code>gorilla_recolor</code>）、藍寶石＝原色版（<code>gorilla</code>，走 frankenstein 帳本）。同一動畫資產，只換貼圖。</p></div></div>
+</div>
 </details>
-<details class="mon"><summary><h3>科學怪人 <span class="en">Frankenstein（zombie_frankenstein）</span><span class="warn">6 缺/異常</span><span class="sug">5 建議補</span><span class="idl">1 可回收</span><span class="refl">1 已確認</span></h3></summary>
+<details class="mon notingame"><summary><h3>科學怪人 <span class="en">Frankenstein（zombie_frankenstein）</span><span class="warn">6 缺/異常</span><span class="sug">5 建議補</span><span class="idl">1 可回收</span><span class="refl">1 已確認</span></h3></summary>
 <p class="meta">現有動畫：<code>walk[1100,1190]</code>, <code>attack[450,506]</code>, <code>dead[570,640]</code> · 額外：<code>throw[1200,1270]</code>, <code>roar01[155,200]</code>, <code>roar02[216,270]</code>, <code>swing[450,570]</code><br>模型檔：<code>Frankenstein.fbx</code>　·　受擊：<code>hurt</code> 狀態 → <code>roar02</code>（會播，但<b>是借用咆哮動作</b>）</p>
 <div class="kongnote">🔴 <b>與機械金剛型態轉換同一形狀</b>，路徑也完全共用（走同一條曲線）。老爺 2026-09-20 指示比照機械金剛套用相同玩法。</div>
 <div class="hbr"><b>🆕 B 方案（目標規格，待實作）</b>　老爺 2026-09-20 指示：科學怪人<b>比照機械金剛</b>的玩法設計與行為流程（一般關亂入 + BOSS 關四招）。<b>以下是目標規格，程式尚未實作</b>——<code>updateFrankensteinBoss</code> 目前只有巡邏／衝刺／叫囂，沒有 BOSS 四招狀態機、地板鑽出、連環爆炸死亡、每 10 命中受擊。狀態／動作對應照實盤點，缺的、不合用的都標出，實作時再依實況調整。</div>
@@ -523,8 +506,22 @@ details.note[open]>summary{margin-bottom:2px}
   });
   document.querySelectorAll('.tools button').forEach(function(b){
     b.addEventListener('click',function(){
+      if(b.dataset.toggle){
+        // 圖例／動畫事件：切換顯示該區塊（預設 hidden），開啟時捲到它
+        var el=document.getElementById(b.dataset.toggle);
+        if(!el) return;
+        var show=el.hidden;
+        el.hidden=!show;
+        if(show){ el.open=true;
+          var reduce=window.matchMedia('(prefers-reduced-motion:reduce)').matches;
+          el.scrollIntoView({behavior:reduce?'auto':'smooth',block:'start'});
+        }
+        onOff();
+        return;
+      }
+      // 全部展開／收合（不動由按鈕控制、預設隱藏的 legend/animevents）
       var open=b.dataset.all==='1';
-      document.querySelectorAll('details.note,details.mon').forEach(function(d){d.open=open;});
+      document.querySelectorAll('details.note:not([id]),details.mon').forEach(function(d){d.open=open;});
       onOff();
     });
   });
