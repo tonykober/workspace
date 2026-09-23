@@ -130,6 +130,20 @@ details.mon.notingame>summary:hover{background:color-mix(in srgb,var(--bad) 30%,
  padding:5px 12px;cursor:pointer;transition:border-color .13s,color .13s}
 .tools button:hover{color:var(--ink);border-color:var(--rule)}
 
+/* ── 彈窗（角色名稱對照／圖例／動畫事件說明）（老爺 2026-09-23）── */
+.modal-mask{position:fixed;inset:0;background:rgba(0,0,0,.6);z-index:100;
+ display:none;align-items:flex-start;justify-content:center;padding:6vh 16px;overflow:auto}
+.modal-mask.on{display:flex}
+.modal-box{background:var(--panel);border:1px solid var(--rule);border-radius:10px;
+ max-width:820px;width:100%;padding:22px 24px;position:relative;
+ box-shadow:0 12px 40px rgba(0,0,0,.5)}
+.modal-box h2{font-family:"Microsoft JhengHei","微軟正黑體","PingFang TC","Noto Sans TC",sans-serif;
+ font-size:18px;margin:0 0 12px;font-weight:600;padding-right:34px}
+.modal-close{position:absolute;top:14px;right:16px;width:28px;height:28px;
+ border:1px solid var(--line);border-radius:6px;background:var(--bg);color:var(--dim);
+ font-size:18px;line-height:1;cursor:pointer;display:flex;align-items:center;justify-content:center}
+.modal-close:hover{color:var(--ink);border-color:var(--rule)}
+
 /* ── 回到頂端 ── */
 #top{position:fixed;right:22px;bottom:26px;width:44px;height:44px;border-radius:50%;
  display:grid;place-items:center;cursor:pointer;
@@ -250,64 +264,7 @@ details.mon.notingame>summary:hover{background:color-mix(in srgb,var(--bad) 30%,
 <div class="stat"><b>65</b><span>行為流程</span></div>
 </div>
 
-<div class="tools"><button type="button" data-all="1">全部展開</button><button type="button" data-all="0">全部收合</button><button type="button" data-toggle="legend">圖例／怎麼讀</button><button type="button" data-toggle="animevents">動畫事件說明</button></div>
-
-<details class="note"><summary><h2>角色名稱對照</h2></summary>
-<p>程式碼裡的 <code>zombieType</code>、模型檔名、中文稱呼三者對不太起來，查資料時容易找錯。以下為正式對照：</p>
-<p class="tcap">名稱對照表</p>
-<div class="tw"><table class="namemap">
-<thead><tr><th>中文名稱</th><th>模型／anim.json</th><th>zombieType</th><th>模型檔</th></tr></thead>
-<tbody>
-<tr><td><b>球員</b></td><td>football</td><td><code>zombie_big</code></td><td>FootballPlayer_Skin.fbx</td></tr>
-<tr><td><b>木乃伊</b></td><td>mummy</td><td><code>zombie_bouncing</code></td><td>Mummy_Skin.fbx</td></tr>
-<tr><td><b>盜墓者</b></td><td>golden</td><td><code>zombie_golden</code></td><td>GraveRobber_Skin.fbx</td></tr>
-<tr><td><b>小猴子</b></td><td>monkey</td><td><code>zombie_black</code></td><td>Monkey.fbx</td></tr>
-<tr><td><b>大老闆</b></td><td>carboss</td><td><code>zombie_car</code></td><td>MobBoss_Skin.fbx</td></tr>
-<tr><td><b>機械金剛</b></td><td>gorilla</td><td><code>zombie_boss</code> ＋ <code>zombie_mecha_boss</code></td><td>Gorilla_walk.fbx</td></tr>
-<tr><td><b>科學怪人</b></td><td>Frankenstein</td><td>（行為檔待實作）</td><td>Frankenstein.fbx</td></tr>
-<tr><td>普通殭屍</td><td>man / girl / dog</td><td><code>zombie_man</code> / <code>zombie_girl</code> / <code>zombie_dog</code></td><td>M_ZombieMan.fbx<br>M_ZombieGirl.fbx<br>M_ZombieDog.fbx</td></tr>
-<tr><td>紙箱男</td><td>cartonboy</td><td><code>zombie_carton</code></td><td>CartonBoy.fbx</td></tr>
-<tr><td>主廚</td><td>championchef</td><td><code>zombie_chef</code></td><td>ChampionChef.fbx</td></tr>
-<tr><td>炸彈人</td><td>bombman</td><td><code>zombie_bomb</code></td><td>BombMan_Skin.fbx</td></tr>
-<tr><td>死靈法師</td><td>necromancer</td><td><code>zombie_necromancer</code></td><td>Necromancer.fbx</td></tr>
-</tbody></table></div>
-<p style="margin-top:8px">🔴 <b>機械金剛只有一隻</b>：<code>zombie_boss</code>（正式 Boss 戰）與 <code>zombie_mecha_boss</code>（機械金剛事件）是<b>同一個角色的兩套玩法機制</b>，動作資產完全共用，所以本表<b>合併成一節</b>。</p></details>
-
-<details class="note" id="legend" hidden><summary><h2>圖例／怎麼讀這份表</h2></summary>
-<p>「玩法需要的演出」＝各怪行為檔實查會進入的狀態；「現在實際播什麼」＝程式碼實查結果。</p>
-<ul>
-<li><span class="b bad">缺／異常</span> 沒有對應動作，或播了明顯不對的東西</li>
-<li><span class="b need">建議補</span> 與別的狀態共用同一支，玩家分不出差別</li>
-<li><span class="b idle">可回收</span> 動畫已存在但沒接上</li>
-<li><span class="b ok">可用</span> 有專屬動作，或共用是刻意且合理的</li>
-</ul>
-<p><b>頂端色條對照</b></p><div class="fkey"><span><i style="background:var(--idle)"></i>待機／移動</span><span><i style="background:var(--need)"></i>原地不動</span><span><i style="background:var(--ok)"></i>本體位移</span><span><i style="background:var(--bad)"></i>造成傷害</span></div>
-<p style="margin-top:9px"><b>關鍵通則</b>：① 狀態名不等於實際行為（球員/機械金剛的 <code>dash</code> 其實站定射光束，不位移）。② 狀態與動畫是<b>多對一</b>，多數角色只有 walk/attack/dead 三支撐 4~13 個狀態，很多「共用」是先天限制。③ 攻擊以外（入場/離場/迴避/繞行/圍攻）幾乎都播 walk。各角色完整流程與待辦收在該角色自己的區塊。</p></details>
-
-<details class="note" id="animevents" hidden><summary><h2>🆕 動畫事件：可以在動作的指定時間點掛特效</h2></summary>
-<p>2026-09-10 新增的機制。可以在<b>某支動畫播到第幾秒</b>、<b>某根骨骼的位置</b>播放指定特效。目前只有機械金剛的走路用了 —— 左右腳各在 0.48 秒與 1.48 秒噴煙塵。</p>
-<p><b>為什麼這件事重要</b>：文件裡好幾條「缺演出」的缺口，現在<b>可以用掛事件補、不一定要重畫動畫</b>。例如腳步塵土、武器拖尾、落地衝擊，只要動畫本身動作對，加事件就能補上表現力。</p>
-<p class="cap">目前用了的</p>
-<div class="tw"><table><thead><tr><th>角色</th><th>動作</th><th>事件</th></tr></thead>
-<tbody>
-<tr><td>機械金剛</td><td><code>walk</code></td><td>右腳 0.48 秒、左腳 1.48 秒噴煙塵，放大 5 倍</td></tr>
-<tr class="r-idle"><td colspan="3">其餘 17 支動畫檔<b>全部沒有設定事件</b>，包含科學怪人與機械金剛自己的其他 10 個動作</td></tr>
-</tbody></table></div>
-<p class="cap">用之前要知道的四個限制</p>
-<ul>
-<li>🔴 <b>特效一律貼地播放</b>。骨骼只決定<b>平面位置</b>，高度資訊會被丟掉。所以腳底冒煙剛好合適，<b>但掛在手上或頭上的特效高度會是錯的</b>。</li>
-<li>🔴 <b>進入動作的第一幀不會觸發</b>。所以一次性動作若把事件設在 0 秒，<b>很可能永遠不觸發</b> —— 而編輯器新增事件的預設值正好就是 0 秒。</li>
-<li><b>切換動作的那一幀也不觸發</b>，即使兩個動作共用同一支 clip。</li>
-<li>🔴 <b>找不到骨骼時完全沒有提示</b>，正式版靜默失敗、畫面上什麼都不會發生。骨骼名稱打錯很難察覺。</li>
-</ul>
-<p class="cap">其他注意事項</p>
-<ul>
-<li>時間是<b>該支動畫內的絕對秒數</b>，不是比例。同一個數字換到長度不同的動畫上，落點位置會跑掉。</li>
-<li>循環播放時<b>每一圈都會觸發一次</b>（走路腳步就是靠這個）。</li>
-<li>四個必填欄位任一缺失，<b>整筆事件會被靜默丟棄</b>。</li>
-<li>動作編輯器已支援，骨骼名稱是從模型實際骨架產生的下拉選單，不用手打。</li>
-</ul>
-</details>
+<div class="tools"><button type="button" data-all="1">全部展開</button><button type="button" data-all="0">全部收合</button><button type="button" data-modal="m-namemap">角色名稱對照</button><button type="button" data-modal="m-legend">圖例／怎麼讀</button><button type="button" data-modal="m-animevents">動畫事件說明</button></div>
 
 <details class="mon"><summary><h3>普通殭屍 <span class="en">man / girl / dog</span><span class="warn">1 缺/異常</span><span class="sug">2 建議補</span></h3></summary>
 <p class="meta">現有動畫：<code>attack</code>, <code>dead</code>, <code>walk</code></p>
@@ -506,26 +463,83 @@ details.mon.notingame>summary:hover{background:color-mix(in srgb,var(--bad) 30%,
   });
   document.querySelectorAll('.tools button').forEach(function(b){
     b.addEventListener('click',function(){
-      if(b.dataset.toggle){
-        // 圖例／動畫事件：切換顯示該區塊（預設 hidden），開啟時捲到它
-        var el=document.getElementById(b.dataset.toggle);
-        if(!el) return;
-        var show=el.hidden;
-        el.hidden=!show;
-        if(show){ el.open=true;
-          var reduce=window.matchMedia('(prefers-reduced-motion:reduce)').matches;
-          el.scrollIntoView({behavior:reduce?'auto':'smooth',block:'start'});
-        }
-        onOff();
+      if(b.dataset.modal){
+        var m=document.getElementById(b.dataset.modal);
+        if(m) m.classList.add('on');
         return;
       }
-      // 全部展開／收合（不動由按鈕控制、預設隱藏的 legend/animevents）
+      // 全部展開／收合（modal 內容已移出，不受影響）
       var open=b.dataset.all==='1';
-      document.querySelectorAll('details.note:not([id]),details.mon').forEach(function(d){d.open=open;});
+      document.querySelectorAll('details.note,details.mon').forEach(function(d){d.open=open;});
       onOff();
     });
   });
+  // 彈窗關閉：關閉鈕、點遮罩空白處、Esc
+  document.querySelectorAll('.modal-mask').forEach(function(m){
+    m.addEventListener('click',function(e){
+      if(e.target===m || e.target.classList.contains('modal-close')) m.classList.remove('on');
+    });
+  });
+  document.addEventListener('keydown',function(e){
+    if(e.key==='Escape') document.querySelectorAll('.modal-mask.on').forEach(function(m){m.classList.remove('on');});
+  });
 })();
 </script>
+<div class="modal-mask" id="m-namemap"><div class="modal-box"><button type="button" class="modal-close" aria-label="關閉">×</button><h2>角色名稱對照</h2>
+<p>程式碼裡的 <code>zombieType</code>、模型檔名、中文稱呼三者對不太起來，查資料時容易找錯。以下為正式對照：</p>
+<p class="tcap">名稱對照表</p>
+<div class="tw"><table class="namemap">
+<thead><tr><th>中文名稱</th><th>模型／anim.json</th><th>zombieType</th><th>模型檔</th></tr></thead>
+<tbody>
+<tr><td><b>球員</b></td><td>football</td><td><code>zombie_big</code></td><td>FootballPlayer_Skin.fbx</td></tr>
+<tr><td><b>木乃伊</b></td><td>mummy</td><td><code>zombie_bouncing</code></td><td>Mummy_Skin.fbx</td></tr>
+<tr><td><b>盜墓者</b></td><td>golden</td><td><code>zombie_golden</code></td><td>GraveRobber_Skin.fbx</td></tr>
+<tr><td><b>小猴子</b></td><td>monkey</td><td><code>zombie_black</code></td><td>Monkey.fbx</td></tr>
+<tr><td><b>大老闆</b></td><td>carboss</td><td><code>zombie_car</code></td><td>MobBoss_Skin.fbx</td></tr>
+<tr><td><b>機械金剛</b></td><td>gorilla</td><td><code>zombie_boss</code> ＋ <code>zombie_mecha_boss</code></td><td>Gorilla_walk.fbx</td></tr>
+<tr><td><b>科學怪人</b></td><td>Frankenstein</td><td>（行為檔待實作）</td><td>Frankenstein.fbx</td></tr>
+<tr><td>普通殭屍</td><td>man / girl / dog</td><td><code>zombie_man</code> / <code>zombie_girl</code> / <code>zombie_dog</code></td><td>M_ZombieMan.fbx<br>M_ZombieGirl.fbx<br>M_ZombieDog.fbx</td></tr>
+<tr><td>紙箱男</td><td>cartonboy</td><td><code>zombie_carton</code></td><td>CartonBoy.fbx</td></tr>
+<tr><td>主廚</td><td>championchef</td><td><code>zombie_chef</code></td><td>ChampionChef.fbx</td></tr>
+<tr><td>炸彈人</td><td>bombman</td><td><code>zombie_bomb</code></td><td>BombMan_Skin.fbx</td></tr>
+<tr><td>死靈法師</td><td>necromancer</td><td><code>zombie_necromancer</code></td><td>Necromancer.fbx</td></tr>
+</tbody></table></div>
+<p style="margin-top:8px">🔴 <b>機械金剛只有一隻</b>：<code>zombie_boss</code>（正式 Boss 戰）與 <code>zombie_mecha_boss</code>（機械金剛事件）是<b>同一個角色的兩套玩法機制</b>，動作資產完全共用，所以本表<b>合併成一節</b>。</p>
+</div></div>
+<div class="modal-mask" id="m-legend"><div class="modal-box"><button type="button" class="modal-close" aria-label="關閉">×</button><h2>圖例／怎麼讀這份表</h2>
+<p>「玩法需要的演出」＝各怪行為檔實查會進入的狀態；「現在實際播什麼」＝程式碼實查結果。</p>
+<ul>
+<li><span class="b bad">缺／異常</span> 沒有對應動作，或播了明顯不對的東西</li>
+<li><span class="b need">建議補</span> 與別的狀態共用同一支，玩家分不出差別</li>
+<li><span class="b idle">可回收</span> 動畫已存在但沒接上</li>
+<li><span class="b ok">可用</span> 有專屬動作，或共用是刻意且合理的</li>
+</ul>
+<p><b>頂端色條對照</b></p><div class="fkey"><span><i style="background:var(--idle)"></i>待機／移動</span><span><i style="background:var(--need)"></i>原地不動</span><span><i style="background:var(--ok)"></i>本體位移</span><span><i style="background:var(--bad)"></i>造成傷害</span></div>
+<p style="margin-top:9px"><b>關鍵通則</b>：① 狀態名不等於實際行為（球員/機械金剛的 <code>dash</code> 其實站定射光束，不位移）。② 狀態與動畫是<b>多對一</b>，多數角色只有 walk/attack/dead 三支撐 4~13 個狀態，很多「共用」是先天限制。③ 攻擊以外（入場/離場/迴避/繞行/圍攻）幾乎都播 walk。各角色完整流程與待辦收在該角色自己的區塊。</p>
+</div></div>
+<div class="modal-mask" id="m-animevents"><div class="modal-box"><button type="button" class="modal-close" aria-label="關閉">×</button><h2>🆕 動畫事件：可以在動作的指定時間點掛特效</h2>
+<p>2026-09-10 新增的機制。可以在<b>某支動畫播到第幾秒</b>、<b>某根骨骼的位置</b>播放指定特效。目前只有機械金剛的走路用了 —— 左右腳各在 0.48 秒與 1.48 秒噴煙塵。</p>
+<p><b>為什麼這件事重要</b>：文件裡好幾條「缺演出」的缺口，現在<b>可以用掛事件補、不一定要重畫動畫</b>。例如腳步塵土、武器拖尾、落地衝擊，只要動畫本身動作對，加事件就能補上表現力。</p>
+<p class="cap">目前用了的</p>
+<div class="tw"><table><thead><tr><th>角色</th><th>動作</th><th>事件</th></tr></thead>
+<tbody>
+<tr><td>機械金剛</td><td><code>walk</code></td><td>右腳 0.48 秒、左腳 1.48 秒噴煙塵，放大 5 倍</td></tr>
+<tr class="r-idle"><td colspan="3">其餘 17 支動畫檔<b>全部沒有設定事件</b>，包含科學怪人與機械金剛自己的其他 10 個動作</td></tr>
+</tbody></table></div>
+<p class="cap">用之前要知道的四個限制</p>
+<ul>
+<li>🔴 <b>特效一律貼地播放</b>。骨骼只決定<b>平面位置</b>，高度資訊會被丟掉。所以腳底冒煙剛好合適，<b>但掛在手上或頭上的特效高度會是錯的</b>。</li>
+<li>🔴 <b>進入動作的第一幀不會觸發</b>。所以一次性動作若把事件設在 0 秒，<b>很可能永遠不觸發</b> —— 而編輯器新增事件的預設值正好就是 0 秒。</li>
+<li><b>切換動作的那一幀也不觸發</b>，即使兩個動作共用同一支 clip。</li>
+<li>🔴 <b>找不到骨骼時完全沒有提示</b>，正式版靜默失敗、畫面上什麼都不會發生。骨骼名稱打錯很難察覺。</li>
+</ul>
+<p class="cap">其他注意事項</p>
+<ul>
+<li>時間是<b>該支動畫內的絕對秒數</b>，不是比例。同一個數字換到長度不同的動畫上，落點位置會跑掉。</li>
+<li>循環播放時<b>每一圈都會觸發一次</b>（走路腳步就是靠這個）。</li>
+<li>四個必填欄位任一缺失，<b>整筆事件會被靜默丟棄</b>。</li>
+<li>動作編輯器已支援，骨骼名稱是從模型實際骨架產生的下拉選單，不用手打。</li>
+</ul>
+</div></div>
 </body>
 </html>
