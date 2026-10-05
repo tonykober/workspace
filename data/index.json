@@ -4,90 +4,103 @@
     "desc": "AI 助理團隊組織架構、成員分工與通訊方式",
     "icon": "🏗️",
     "path": "team-structure.html",
-    "date": "2026-05-18"
+    "date": "2026-05-18",
+    "archived": false
   },
   {
     "title": "FZG專案追蹤器-系統架構與規範",
     "desc": "系統概覽、同步機制、設定格式、功能架構、規則與限制、UI架構圖（6分頁）",
     "icon": "📋",
     "path": "fzg-docs.html",
-    "date": "2026-05-21"
-  },
-  {
-    "title": "街機遊戲設計發想",
-    "desc": "市場研究、玩法提案、美術風格、GDD、操作配置、投幣與營收",
-    "icon": "🎮",
-    "path": "game-design.html",
-    "date": "2026-05-24"
-  },
-  {
-    "title": "街機遊戲 — 美術開發製程分析",
-    "desc": "美術資源沿用、風格調整、人力需求、工時評估",
-    "icon": "🎨",
-    "path": "game-dev-analysis.html",
-    "date": "2026-05-24"
-  },
-  {
-    "title": "街機遊戲 — 美術開發製程分析（v2 重構版）",
-    "desc": "三區塊架構：現況盤點 · 製作規劃 · 執行規範",
-    "icon": "🎨",
-    "path": "game-dev-analysis-v2.html",
-    "date": "2026-05-24"
-  },
-  {
-    "title": "街機遊戲 — 美術開發製程分析（v2.1 三分頁版）",
-    "desc": "獨立三區塊：現況盤點 · 製作規劃 · 執行規範",
-    "icon": "🎨",
-    "path": "game-dev-analysis-v2.1.html",
-    "date": "2026-05-25"
-  },
-  {
-    "title": "AI 動作工具採用計畫",
-    "desc": "動作AI工具選型、應用方式、覆蓋範圍",
-    "icon": "🎬",
-    "path": "ai-animation-tools.html",
-    "date": "2026-05-26"
+    "date": "2026-05-21 8:17",
+    "archived": false
   },
   {
     "title": "台股 ETF 績效追蹤",
     "desc": "6檔熱門ETF股價、報酬率、殖利率、持股產業分布",
     "icon": "📊",
     "path": "tw-etf-tracker.html",
-    "date": "2026-05-27"
+    "date": "2026-05-27 22:20",
+    "archived": false
   },
   {
-    "title": "馴龍星際三部曲 Tier List",
-    "desc": "龍族屬性與強度階級表 Ver.3",
-    "icon": "🐉",
-    "path": "dvc3-tierlist.html",
-    "date": "2026-06-13"
+    "title": "陀螺機甲遊戲 — 美術開發製程分析",
+    "desc": "基於桑比槍台調整方向企劃，素材沿用、缺乏評估、人力時程",
+    "icon": "🌀",
+    "path": "game-dev-analysis-v3-spinning.html",
+    "date": "2026-06-02 11:00",
+    "archived": false
+  },
+  {
+    "title": "多媒體資料庫",
+    "desc": "雲端影片/圖片參考資源瀏覽器（8700+筆）",
+    "icon": "🎬",
+    "path": "res-browser.html",
+    "date": "2026-06-12",
+    "archived": false
   },
   {
     "title": "DVC3 角色強度表",
     "desc": "屬性×階級 Tier List 表格版",
     "icon": "📊",
     "path": "dvc3-tierlist-image.html",
-    "date": "2026-06-16"
+    "date": "2026-06-16",
+    "archived": false
   },
   {
-    "title": "SpinningTop 工具資料讀寫盤點",
-    "desc": "各工具/編輯器 KV 讀寫架構、離線可用性、改動優先級",
-    "icon": "🔧",
-    "path": "spinningtop-data-io.html",
-    "date": "2026-07-27"
+    "title": "AI 動作/姿勢工具全景調研",
+    "desc": "AI動作生成、姿勢遷移、動捕技術全景分析",
+    "icon": "🎮",
+    "path": "ai-motion-landscape.html",
+    "date": "2026-06-18 11:58",
+    "archived": false
+  },
+  {
+    "title": "MotionLab 動作研究所",
+    "desc": "遊戲動作研發組工具調研與技術文件",
+    "icon": "🎬",
+    "path": "https://tonykober.github.io/MotionLab/",
+    "date": "2026-06-22 10:07",
+    "archived": false
+  },
+  {
+    "title": "DVC3 Tier List Hub",
+    "desc": "龍族排行榜 — 多版本對照（v1/v2/Image）",
+    "icon": "🐉",
+    "path": "dvc3-hub.html",
+    "date": "2026-07-20",
+    "archived": false
+  },
+  {
+    "title": "SpinningTop 專案紀錄",
+    "desc": "修改紀錄 7/16-20（100+ commits）+ 角色編輯器手冊 + 特效編輯器手冊（三分頁）",
+    "icon": "📋",
+    "path": "spinningtop-changelog-0716-20.html",
+    "date": "2026-07-21",
+    "archived": false
   },
   {
     "title": "怪物動作總表",
     "desc": "11 個角色的玩法需求 × 現有動畫對照，含角色名稱對照與缺件清單",
     "icon": "📋",
     "path": "character-animation-master.html",
-    "date": "2026-09-09"
+    "date": "2026-09-09",
+    "archived": false
   },
   {
     "title": "Canvas 圖層盤點",
     "desc": "陀螺專案 2D canvas 層畫了什麼、哪些已搬到 3D、哪些其實已經死掉不會出現",
     "icon": "🖼️",
     "path": "canvas-layer-inventory.html",
-    "date": "2026-09-10"
+    "date": "2026-09-10",
+    "archived": false
+  },
+  {
+    "title": "Opus 5.5 vs GPT 6 Astra｜動物動畫比較",
+    "desc": "五種動物、十段原速影片，對照 Blender 動畫效果與作者報告的耗時／Token 口徑。",
+    "icon": "🎬",
+    "path": "opus55-vs-gpt6astra-rig-animate.html",
+    "date": "2026-10-05",
+    "archived": false
   }
 ]
