@@ -1,0 +1,1 @@
+const CONFIG=(()=>{try{const c=FzgWebQaConnection.readConnection();return {title:'FZG Google QA',sheetId:'webqa-internal',outsourceSheetId:'webqa-outsource',scriptUrl:c.url,outsourceScriptUrl:'/disabled',password:'demo'};}catch(error){location.replace('../');throw error;}})();
