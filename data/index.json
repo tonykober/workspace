@@ -102,5 +102,13 @@
     "path": "opus55-vs-gpt6astra-rig-animate.html",
     "date": "2026-10-05",
     "archived": false
+  },
+  {
+    "title": "FZG｜假資料測試台",
+    "desc": "測試任務編輯、排序與跨月搬移；僅連線獨立 QA 假資料",
+    "icon": "🧪",
+    "path": "fzg-webqa/",
+    "date": "2026-10-14",
+    "archived": false
   }
 ]
