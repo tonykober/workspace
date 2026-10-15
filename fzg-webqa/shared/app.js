@@ -591,26 +591,24 @@ function renderBoard(){
         const cLevel=getLevel(c);const cCanAddSub=cLevel<2;const _cdbg=getDeadlineBg(c);const _ccross=c._crossMonth?'<span title="↔'+c._crossMonth+'" style="position:absolute;top:-6px;left:-6px;font-size:1rem;z-index:1">🔗</span>':'';
         return `<div style="position:relative;overflow:visible;border:1px solid var(--border);border-radius:6px;margin-bottom:4px;${_cdbg||'background:var(--surface)'};padding:6px 8px;transition:border-color .2s" onmouseover="this.style.outline='2px solid var(--accent)';this.style.outlineOffset='-2px'" onmouseout="this.style.outline='none'">${_ccross}
           <div class="task-sub-row" onclick="event.stopPropagation();openModal(${ci})" style="display:flex;align-items:center;gap:4px;font-size:0.875rem;cursor:pointer">
-            <span onclick="toggleStatus(${ci},event)" style="cursor:pointer;color:${c['狀態']==='已完成'?'var(--green)':c['狀態']==='進行中'?'var(--yellow)':'var(--muted)'}">${c['狀態']==='已完成'?'✅':c['狀態']==='進行中'?'🔄':'⬜'}</span>
-            ${cpClass?'<span class="priority-dot '+cpClass+'"></span>':''}
-            <span class="task-title" onclick="event.stopPropagation();openModal(${ci})" style="flex:1;cursor:pointer;overflow:hidden;text-overflow:ellipsis;white-space:nowrap" title="${c['任務名稱']}">${c['任務名稱']}</span>
+            <span class="task-status" onclick="toggleStatus(${ci},event)" style="cursor:pointer;color:${c['狀態']==='已完成'?'var(--green)':c['狀態']==='進行中'?'var(--yellow)':'var(--muted)'}">${c['狀態']==='已完成'?'✅':c['狀態']==='進行中'?'🔄':'⬜'}</span>
+            <span class="task-title" onclick="event.stopPropagation();openModal(${ci})" style="flex:1;cursor:pointer;overflow:hidden;text-overflow:ellipsis;white-space:nowrap" title="${c['任務名稱']}">${cpClass?'<span class="priority-dot '+cpClass+'"></span>':''}${c['任務名稱']}</span>
             <span class="task-owner" onclick="inlineEdit(${ci},'負責人',event)" style="color:var(--green);font-size:0.875rem;cursor:pointer;margin-right:4px">${c['負責人']||'未指派'}</span>
-            <span onclick="inlineEdit(${ci},'日期',event)" style="color:${getDeadlineColor(c)||'var(--accent)'};font-size:0.9em;cursor:pointer">${c['開始日']?c['開始日'].substring(5,10):''}${c['開始日']||c['截止日']?'~':''}${c['截止日']?c['截止日'].substring(5,10):''}</span>
-            ${cCanAddSub?`<span class="edit-ctrl" onclick="event.stopPropagation();openModalWithParent('${c['任務名稱'].replace(/'/g,"\\'")}')" style="font-size:0.85em;background:var(--accent);color:#fff;border-radius:3px;padding:1px 4px;cursor:pointer;margin-left:4px">+</span>`:''}
+            <span class="task-dates" onclick="inlineEdit(${ci},'日期',event)" style="color:${getDeadlineColor(c)||'var(--accent)'};font-size:0.9em;cursor:pointer">${c['開始日']?c['開始日'].substring(5,10):''}${c['開始日']||c['截止日']?'~':''}${c['截止日']?c['截止日'].substring(5,10):''}</span>
+            ${cCanAddSub?`<span class="task-add edit-ctrl" onclick="event.stopPropagation();openModalWithParent('${c['任務名稱'].replace(/'/g,"\\'")}')" style="font-size:0.85em;background:var(--accent);color:#fff;border-radius:3px;padding:1px 4px;cursor:pointer;margin-left:4px">+</span>`:''}
             <button type="button" class="task-edit edit-ctrl" onclick="event.stopPropagation();openModal(${ci})">編輯</button>
-            <span class="edit-ctrl" onclick="quickDelete(${ci},event)" style="cursor:pointer;font-size:0.75rem;background:var(--red);color:#fff;border-radius:3px;padding:1px 4px;margin-left:4px">✕</span>
+            <span class="task-delete edit-ctrl" onclick="quickDelete(${ci},event)" style="cursor:pointer;font-size:0.75rem;background:var(--red);color:#fff;border-radius:3px;padding:1px 4px;margin-left:4px">✕</span>
           </div>
           ${grandChildren.length?'<div style="margin-top:4px;padding-left:12px">'+grandChildren.map(g=>{
             const gi=tasks.indexOf(g);const gpClass=g['優先級']==='高'||g['優先級']==='緊急'?'p-high':g['優先級']==='中'?'p-mid':g['優先級']==='低'?'p-low':'';const _gdbg=getDeadlineBg(g);
             return `<div class="task-sub-row" onclick="event.stopPropagation();openModal(${gi})" style="display:flex;align-items:center;gap:4px;padding:3px 6px;font-size:0.875rem;cursor:pointer;border:1px solid var(--border);border-radius:4px;margin-bottom:3px;${_gdbg||'background:var(--bg)'};transition:border-color .2s" onmouseover="this.style.outline='2px solid var(--accent)';this.style.outlineOffset='-2px'" onmouseout="this.style.outline='none'">
-              <span onclick="toggleStatus(${gi},event)" style="cursor:pointer;color:${g['狀態']==='已完成'?'var(--green)':g['狀態']==='進行中'?'var(--yellow)':'var(--muted)'}">${g['狀態']==='已完成'?'✅':g['狀態']==='進行中'?'🔄':'⬜'}</span>
-              ${gpClass?'<span class="priority-dot '+gpClass+'"></span>':''}
-              <span class="task-title" style="flex:1">${g['任務名稱']}</span>
+              <span class="task-status" onclick="toggleStatus(${gi},event)" style="cursor:pointer;color:${g['狀態']==='已完成'?'var(--green)':g['狀態']==='進行中'?'var(--yellow)':'var(--muted)'}">${g['狀態']==='已完成'?'✅':g['狀態']==='進行中'?'🔄':'⬜'}</span>
+              <span class="task-title" style="flex:1" title="${g['任務名稱']}">${gpClass?'<span class="priority-dot '+gpClass+'"></span>':''}${g['任務名稱']}</span>
               <span class="task-owner" onclick="inlineEdit(${gi},'負責人',event)" style="color:var(--green);font-size:0.875rem;cursor:pointer;margin-right:4px">${g['負責人']||'未指派'}</span>
-              <span onclick="inlineEdit(${gi},'日期',event)" style="color:${getDeadlineColor(g)||'var(--accent)'};cursor:pointer">${g['開始日']?g['開始日'].substring(5,10):''}${g['開始日']||g['截止日']?'~':''}${g['截止日']?g['截止日'].substring(5,10):''}</span>
+              <span class="task-dates" onclick="inlineEdit(${gi},'日期',event)" style="color:${getDeadlineColor(g)||'var(--accent)'};cursor:pointer">${g['開始日']?g['開始日'].substring(5,10):''}${g['開始日']||g['截止日']?'~':''}${g['截止日']?g['截止日'].substring(5,10):''}</span>
               
               <button type="button" class="task-edit edit-ctrl" onclick="event.stopPropagation();openModal(${gi})">編輯</button>
-            <span class="edit-ctrl" onclick="quickDelete(${gi},event)" style="cursor:pointer;font-size:0.75rem;background:var(--red);color:#fff;border-radius:3px;padding:1px 4px;margin-left:4px">✕</span>
+            <span class="task-delete edit-ctrl" onclick="quickDelete(${gi},event)" style="cursor:pointer;font-size:0.75rem;background:var(--red);color:#fff;border-radius:3px;padding:1px 4px;margin-left:4px">✕</span>
             </div>`}).join('')+'</div>':''}
         </div>`}).join('')+'</div></div>':''}
     </div></div>`}).join('');

@@ -100,9 +100,14 @@ body.locked #notesArea{pointer-events:none;opacity:0.7}
 .card .card-buttons>.name{min-width:0;overflow-wrap:anywhere}
 .card .task-owner{display:inline-block;min-width:0;max-width:40%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;flex-shrink:1}
 .owner-group-name{min-width:0;flex:1;overflow-wrap:anywhere}
-.card .task-sub-row{flex-wrap:wrap;min-width:0}
-.card .task-sub-row>.task-title{flex:1 1 calc(100% - 48px)!important;min-width:0;overflow-wrap:anywhere;white-space:normal!important;overflow:visible!important}
-.card .task-sub-row>.task-owner{max-width:40%;margin-left:20px}
-.card .task-edit{flex-shrink:0;border:0;border-radius:4px;padding:3px 6px;background:#287a36;color:white;cursor:pointer;font:inherit}
+/* A fixed title/actions row and metadata row, with no loose wrapping. */
+.card .task-sub-row{display:grid!important;grid-template-columns:18px minmax(0,1fr) auto auto auto;gap:6px 4px!important;min-width:0;align-items:center}
+.card .task-sub-row>.task-status{grid-row:1;grid-column:1}
+.card .task-sub-row>.task-title{grid-row:1;grid-column:2;min-width:0;overflow:hidden!important;text-overflow:ellipsis;white-space:nowrap!important}
+.card .task-sub-row>.task-add{grid-row:1;grid-column:3;margin-left:0!important}
+.card .task-sub-row>.task-edit{grid-row:1;grid-column:4}
+.card .task-sub-row>.task-delete{grid-row:1;grid-column:5;margin-left:0!important}
+.card .task-sub-row>.task-owner{grid-row:2;grid-column:2;max-width:100%;margin:0!important}
+.card .task-sub-row>.task-dates{grid-row:2;grid-column:3 / 6;white-space:nowrap;text-align:right}
+.card .task-edit{min-width:44px;min-height:28px;border:0;border-radius:4px;padding:3px 6px;background:#287a36;color:white;cursor:pointer;font:inherit}
 .card .meta{flex-wrap:wrap!important}
-.card .task-edit{min-width:44px;min-height:28px}
