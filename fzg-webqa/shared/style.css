@@ -94,3 +94,15 @@ body.locked [draggable]{-webkit-user-drag:none;cursor:default}
 body.locked .card-btn{display:none!important}
 body.locked #notesArea{pointer-events:none;opacity:0.7}
 
+
+/* Keep task titles and edit controls reachable with long owner names. */
+.card .card-buttons{flex-wrap:wrap}
+.card .card-buttons>.name{min-width:0;overflow-wrap:anywhere}
+.card .task-owner{display:inline-block;min-width:0;max-width:40%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;flex-shrink:1}
+.owner-group-name{min-width:0;flex:1;overflow-wrap:anywhere}
+.card .task-sub-row{flex-wrap:wrap;min-width:0}
+.card .task-sub-row>.task-title{flex:1 1 calc(100% - 48px)!important;min-width:0;overflow-wrap:anywhere;white-space:normal!important;overflow:visible!important}
+.card .task-sub-row>.task-owner{max-width:40%;margin-left:20px}
+.card .task-edit{flex-shrink:0;border:0;border-radius:4px;padding:3px 6px;background:#287a36;color:white;cursor:pointer;font:inherit}
+.card .meta{flex-wrap:wrap!important}
+.card .task-edit{min-width:44px;min-height:28px}
