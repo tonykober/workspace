@@ -100,14 +100,21 @@ body.locked #notesArea{pointer-events:none;opacity:0.7}
 .card .card-buttons>.name{min-width:0;overflow-wrap:anywhere}
 .card .task-owner{display:inline-block;min-width:0;max-width:40%;overflow:hidden;text-overflow:ellipsis;white-space:nowrap;flex-shrink:1}
 .owner-group-name{min-width:0;flex:1;overflow-wrap:anywhere}
-/* A fixed title/actions row and metadata row, with no loose wrapping. */
-.card .task-sub-row{display:grid!important;grid-template-columns:18px minmax(0,1fr) auto auto auto;gap:6px 4px!important;min-width:0;align-items:center}
-.card .task-sub-row>.task-status{grid-row:1;grid-column:1}
-.card .task-sub-row>.task-title{grid-row:1;grid-column:2;min-width:0;overflow:hidden!important;text-overflow:ellipsis;white-space:nowrap!important}
-.card .task-sub-row>.task-add{grid-row:1;grid-column:3;margin-left:0!important}
-.card .task-sub-row>.task-edit{grid-row:1;grid-column:4}
-.card .task-sub-row>.task-delete{grid-row:1;grid-column:5;margin-left:0!important}
-.card .task-sub-row>.task-owner{grid-row:2;grid-column:2;max-width:100%;margin:0!important}
-.card .task-sub-row>.task-dates{grid-row:2;grid-column:3 / 6;white-space:nowrap;text-align:right}
-.card .task-edit{min-width:44px;min-height:28px;border:0;border-radius:4px;padding:3px 6px;background:#287a36;color:white;cursor:pointer;font:inherit}
+/* Single-row child cards with bounded, independently clickable text fields. */
+.card .task-sub-row{display:grid!important;grid-template-columns:16px minmax(3em,1fr) 4em 6em 16px 32px 16px;gap:3px!important;min-width:0;align-items:center}
+.card .task-grand-row{grid-template-columns:16px minmax(3em,1fr) 4em 6em 32px 16px}
+.card .task-sub-row>.task-status{grid-column:1}
+.card .task-sub-row>.task-title{grid-column:2;min-width:0;max-width:10em;overflow:hidden!important;text-overflow:ellipsis;white-space:nowrap!important}
+.card .task-sub-row>.task-owner{grid-column:3;min-width:0;max-width:100%;width:100%;margin:0!important;overflow:hidden;text-overflow:ellipsis;white-space:nowrap}
+.card .task-sub-row>.task-dates{grid-column:4;white-space:nowrap;text-align:center}
+.card .task-sub-row>.task-add{grid-column:5;margin-left:0!important;text-align:center}
+.card .task-sub-row>.task-edit{grid-column:6}
+.card .task-sub-row>.task-delete{grid-column:7;margin-left:0!important;text-align:center}
+.card .task-grand-row>.task-edit{grid-column:5}
+.card .task-grand-row>.task-delete{grid-column:6}
+.card .task-edit{min-width:0;width:32px;min-height:28px;border:0;border-radius:4px;padding:2px;background:#287a36;color:white;cursor:pointer;font:inherit;font-size:12px}
+.card .subtasks .task-sub-row>.task-dates{font-size:12px!important}
+.card .subtasks .task-sub-row>.task-owner{font-size:13px!important}
 .card .meta{flex-wrap:wrap!important}
+@media(max-width:600px){.card .task-sub-row{grid-template-columns:14px minmax(32px,1fr) 36px 65px 14px 28px 14px}.card .task-grand-row{grid-template-columns:14px minmax(32px,1fr) 36px 65px 28px 14px}}
+@media(max-width:600px){.card .task-sub-row{gap:2px!important}.card .task-sub-row>.task-edit{width:28px;font-size:11px}.card .subtasks .task-sub-row>.task-dates{font-size:11px!important}}
