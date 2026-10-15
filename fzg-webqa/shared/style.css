@@ -118,3 +118,5 @@ body.locked #notesArea{pointer-events:none;opacity:0.7}
 .card .meta{flex-wrap:wrap!important}
 @media(max-width:600px){.card .task-sub-row{grid-template-columns:14px minmax(32px,1fr) 36px 65px 14px 28px 14px}.card .task-grand-row{grid-template-columns:14px minmax(32px,1fr) 36px 65px 28px 14px}}
 @media(max-width:600px){.card .task-sub-row{gap:2px!important}.card .task-sub-row>.task-edit{width:28px;font-size:11px}.card .subtasks .task-sub-row>.task-dates{font-size:11px!important}}
+/* One button height across parent, child and grandchild cards. */
+.card .card-btn,.card .task-add,.card .task-edit,.card .task-delete{display:inline-flex;align-items:center;justify-content:center;box-sizing:border-box;height:24px!important;min-height:24px!important;max-height:24px!important;padding:0 4px!important;border:0;border-radius:4px;font-size:12px!important;line-height:1!important;white-space:nowrap;vertical-align:middle;flex-shrink:0}
