@@ -82,8 +82,11 @@ function switchView(el){
   document.getElementById('reportView').classList.toggle('hidden',v!=='report');
   render();
 }
+let _modalVersion=0;
 function openModal(idx){
   if(!unlocked)return;
+  if(idx!==undefined&&!tasks[idx]){alert('任務已重新載入，請重新選擇要編輯的任務');return;}
+  _modalVersion++;
   if(idx!==undefined&&(tasks[idx]?._pendingRow&&!tasks[idx]?.ID)){alert('新增已確認，請重新載入取得資料列後再編輯');return;}
   const m=document.getElementById('addModal');m.classList.remove('hidden');
   populateSelects();
@@ -110,7 +113,7 @@ function openModal(idx){
     delete m.dataset.editIdx;
   }
 }
-function closeModal(){const m=document.getElementById('addModal');m.classList.add('hidden');m.querySelectorAll('input,textarea,select').forEach(el=>{if(el.type!=='button'&&el.type!=='submit'){el.value='';el.style.border=''}});const oe=document.getElementById('owner-err');if(oe)oe.remove();delete m.dataset.editIdx}
+function closeModal(){_modalVersion++;const m=document.getElementById('addModal');m.classList.add('hidden');m.querySelectorAll('input,textarea,select').forEach(el=>{if(el.type!=='button'&&el.type!=='submit'){el.value='';el.style.border=''}});const oe=document.getElementById('owner-err');if(oe)oe.remove();delete m.dataset.editIdx}
 function openModalWithParent(parentName){
   openModal();
   document.getElementById('f-parent').value=parentName;
@@ -347,7 +350,9 @@ async function submitTask(){
   finally{_taskSubmitInFlight=false;if(button)button.disabled=false;}
 }
 async function submitTaskOnce(){
-  const m=document.getElementById('addModal');
+  const m=document.getElementById('addModal'),modalVersion=_modalVersion;
+  const editing=m.dataset.editIdx!==undefined,editTask=editing?tasks[parseInt(m.dataset.editIdx,10)]:null;
+  if(editing&&!editTask){alert('任務已重新載入，請重新開啟編輯視窗');return;}
   const oe=document.getElementById('owner-err');if(oe)oe.remove();document.getElementById('f-owner').style.border='';document.getElementById('f-name').style.border='';
   const data={name:document.getElementById('f-name').value,owner:document.getElementById('f-owner').value,status:document.getElementById('f-status').value,progress:'',startDate:(document.getElementById('f-start').value||'').replace(/-/g,'/'),dueDate:(document.getElementById('f-due').value||'').replace(/-/g,'/'),note:document.getElementById('f-note').value,priority:document.getElementById('f-priority').value,tags:document.getElementById('f-tags').value,parent:document.getElementById('f-parent').value,hours:document.getElementById('f-hours').value,comment:document.getElementById('f-comment').value};
   let valid=true;
@@ -357,11 +362,11 @@ async function submitTaskOnce(){
   if((data.startDate&&!_normDate(data.startDate))||(data.dueDate&&!_normDate(data.dueDate))||(data.startDate&&data.dueDate&&_normDate(data.startDate)>_normDate(data.dueDate))){alert('請確認開始與截止日期有效，且截止日期不早於開始日期');return;}
   const dupIdx=tasks.findIndex(t=>t['任務名稱']===data.name);
   if(dupIdx!==-1&&(m.dataset.editIdx===undefined||dupIdx!==parseInt(m.dataset.editIdx))){alert('任務名稱已存在，請使用不同名稱');return}
-  if(m.dataset.editIdx!==undefined){data.action='update';const _editTask=tasks[parseInt(m.dataset.editIdx)];data.row=_editTask._row;data.month=_editTask._month;data.id=_editTask.ID;
+  if(m.dataset.editIdx!==undefined){data.action='update';const _editTask=editTask;data.row=_editTask._row;data.month=_editTask._month;data.id=_editTask.ID;
     // Close edit modal first, then show cross-month check
     m.classList.add('hidden');
     const _cm=await _checkCrossMonth(_editTask);
-    if(_cm==='cancel'){m.classList.remove('hidden');return}
+    if(_cm==='cancel'){if(modalVersion===_modalVersion)m.classList.remove('hidden');return}
     data._syncAll=(_cm==='sync');
   }
   try{
@@ -372,16 +377,16 @@ async function submitTaskOnce(){
     // Always send to server
     setSyncStatus('🔄 同步中...','var(--yellow)');
     const saved=await writeRequest(SCRIPT_URL,{method:'POST',headers:{'Content-Type':'text/plain'},body:JSON.stringify(data)});
-    if(!saved.ok){m.classList.remove('hidden');return;}
+    if(!saved.ok){if(modalVersion===_modalVersion)m.classList.remove('hidden');return;}
     {
       if(data.action==='update'&&_isTop&&_nm&&_nm!==data.month){
-        const _t=tasks[parseInt(m.dataset.editIdx)];
+        const _t=editTask;
         const moved=await _moveTaskTreeToMonth(_t,_nm);
-        if(!moved.ok){m.classList.remove('hidden');return;}
+        if(!moved.ok){if(modalVersion===_modalVersion)m.classList.remove('hidden');return;}
       }
     }
     if(data.action==='update'){
-      const t=tasks[parseInt(m.dataset.editIdx)];
+      const t=editTask;
       const oldName=t['任務名稱'];
       t['任務名稱']=data.name;t['負責人']=data.owner;t['狀態']=data.status;t['開始日']=data.startDate;t['截止日']=data.dueDate;t['備註']=data.note;t['優先級']=data.priority;t['標籤']=data.tags;t['父任務']=data.parent;t['工時']=data.hours;t['評論']=data.comment;
       _savePendingEdit(t);
@@ -394,7 +399,7 @@ async function submitTaskOnce(){
       // Auto-expand parent date range if child exceeds (recursive up)
       if(data.parent){let _cur={['父任務']:data.parent,['開始日']:data.startDate,['截止日']:data.dueDate};while(_cur['父任務']){const parent=tasks.find(p=>p['任務名稱']===_cur['父任務']);if(!parent)break;let pc=false;const _cs=_normDate(_cur['開始日']),_ce=_normDate(_cur['截止日']),_ps=_normDate(parent['開始日']),_pe=_normDate(parent['截止日']);if(_cs&&(!_ps||_cs<_ps)){parent['開始日']=_cur['開始日'];pc=true}if(_ce&&(!_pe||_ce>_pe)){parent['截止日']=_cur['截止日'];pc=true}if(!pc)break;_savePendingEdit(parent);writeRequest(SCRIPT_URL,{method:'POST',headers:{'Content-Type':'text/plain'},body:JSON.stringify({action:'update',id:parent.ID,month:parent._month,row:parent._row,name:parent['任務名稱'],owner:parent['負責人'],status:parent['狀態'],progress:'',startDate:parent['開始日'],dueDate:parent['截止日'],note:parent['備註'],priority:parent['優先級'],tags:parent['標籤'],parent:parent['父任務'],hours:parent['工時'],comment:parent['評論']})});_cur=parent}}
     }
-    closeModal();render();renderFilterBar();
+    if(modalVersion===_modalVersion)closeModal();render();renderFilterBar();
 
   }catch(e){alert('❌ 失敗：'+e.message)}
 }
