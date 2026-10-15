@@ -351,9 +351,12 @@ async function submitTask(){
   if(!status){status=document.createElement('p');status.id='taskSubmitStatus';status.setAttribute('role','status');status.setAttribute('aria-live','polite');status.style.cssText='color:var(--yellow);line-height:1.6;margin:12px 0';button.parentNode.before(status);}
   const previousFailures=_writeFailures,previousLabel=button.textContent;
   status.textContent='已收到送出操作，正在等待儲存回覆，可能需要數秒。請勿重複送出或重新整理。';
+  const controls=[...modal.querySelectorAll('input,textarea,select,button')].filter(el=>el!==button).map(el=>({el,disabled:el.disabled}));
+  controls.forEach(({el})=>el.disabled=true);
   modal.setAttribute('aria-busy','true');button.disabled=true;button.textContent='儲存中…';button.style.cursor='wait';
   try{return await submitTaskOnce();}
   finally{
+    controls.forEach(({el,disabled})=>el.disabled=disabled);
     _taskSubmitInFlight=false;modal.removeAttribute('aria-busy');button.disabled=false;button.textContent=previousLabel;button.style.cursor='';
     status.textContent=_writeFailures>previousFailures?'儲存結果未確認。請先保留輸入內容並查看頁面錯誤提示，勿直接重複送出。':'';
   }
@@ -372,8 +375,7 @@ async function submitTaskOnce(){
   const dupIdx=tasks.findIndex(t=>t['任務名稱']===data.name);
   if(dupIdx!==-1&&(m.dataset.editIdx===undefined||dupIdx!==parseInt(m.dataset.editIdx))){alert('任務名稱已存在，請使用不同名稱');return}
   if(m.dataset.editIdx!==undefined){data.action='update';const _editTask=editTask;data.row=_editTask._row;data.month=_editTask._month;data.id=_editTask.ID;
-    // Close edit modal first, then show cross-month check
-    m.classList.add('hidden');
+    // Keep the submitted values and saving status visible until acknowledgement.
     const _cm=await _checkCrossMonth(_editTask);
     if(_cm==='cancel'){if(modalVersion===_modalVersion)m.classList.remove('hidden');return}
     data._syncAll=(_cm==='sync');
