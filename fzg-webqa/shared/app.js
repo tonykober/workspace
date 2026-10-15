@@ -160,9 +160,7 @@ async function toggleStatus(idx,e){
   const t=tasks[idx];
   const next=t['狀態']==='待辦'?'進行中':t['狀態']==='進行中'?'已完成':'待辦';
   const cm=await _checkCrossMonth(t);if(cm==='cancel')return;
-  t['狀態']=next;
-  setSyncStatus('🔄 同步中...','var(--yellow)');writeRequest(SCRIPT_URL,{method:'POST',headers:{'Content-Type':'text/plain'},body:JSON.stringify({action:'update',id:t.ID,month:t._month,row:t._row,name:t['任務名稱'],owner:t['負責人'],status:next,progress:'',startDate:t['開始日'],dueDate:t['截止日'],note:t['備註'],priority:t['優先級'],tags:t['標籤'],parent:t['父任務'],hours:t['工時'],comment:t['評論']}),});
-  if(cm==='sync')_doSyncUpdate(t,{status:next});
+  await _confirmStatus(t,next,cm==='sync');
   render();
 }
 function inlineEdit(idx,field,e){
@@ -305,7 +303,7 @@ function loadNotes(){
   }).catch(()=>{});
 }
 function saveOwnerSort(status,sortArray){
-  saveNote('owner_sort_'+status+'_'+currentMonth.getFullYear()+'_'+(currentMonth.getMonth()+1),JSON.stringify(sortArray));
+  return saveNote('owner_sort_'+status+'_'+currentMonth.getFullYear()+'_'+(currentMonth.getMonth()+1),JSON.stringify(sortArray));
 }
 function filterByMonth(list){
   if(window._unscheduledMode)return list;
@@ -449,9 +447,14 @@ async function fetchData(){
       nextTasks.forEach(t=>{if(t.ID&&ids.has(t.ID)&&!t._crossMonth)t._crossMonth=nextMonth});
     }
     if(requestId!==_taskReadId)return;
-    const pending=JSON.parse(localStorage.getItem('fzg_pending_edits')||'{}');
-    Object.keys(pending).forEach(name=>{const entry=pending[name];if(Date.now()-entry.ts>300000){delete pending[name];return;}const task=nextTasks.find(t=>t['任務名稱']===name);if(task)Object.assign(task,entry.data)});
-    localStorage.setItem('fzg_pending_edits',JSON.stringify(pending));tasks=nextTasks;_tasksLoading=false;
+    // QA reads are direct authenticated Sheet snapshots, not cached public GViz.
+    // Never overwrite them with older optimistic browser snapshots.
+    if(SHEET_ID!=='webqa-internal'){
+      const pending=JSON.parse(localStorage.getItem('fzg_pending_edits')||'{}');
+      Object.keys(pending).forEach(name=>{const entry=pending[name];if(Date.now()-entry.ts>300000){delete pending[name];return;}const task=nextTasks.find(t=>t['任務名稱']===name);if(task)Object.assign(task,entry.data)});
+      localStorage.setItem('fzg_pending_edits',JSON.stringify(pending));
+    }
+    tasks=nextTasks;_tasksLoading=false;
     showMonthNotice('internal',current.warning);render();renderFilterBar();
   }catch(error){
     if(requestId!==_taskReadId)return;_tasksLoading=false;tasks=[];showMonthNotice('internal',error.message);
@@ -511,7 +514,7 @@ function getTlTaskSortKey(){return 'fzg_timeline_task_sort_'+currentMonth.getFul
 function tlTaskDragStart(e,el){if(!unlocked){e.preventDefault();return}_tlTaskDrag=el.dataset.task;e.dataTransfer.setData('text/tl-task',_tlTaskDrag);el.classList.add('dragging')}
 function tlTaskDragEnd(){_tlTaskDrag=null;document.querySelectorAll('.dragging,.drag-over-top,.drag-over-bottom').forEach(x=>x.classList.remove('dragging','drag-over-top','drag-over-bottom'))}
 function tlTaskDragOver(e,el){e.preventDefault();if(!_tlTaskDrag||el.dataset.task===_tlTaskDrag)return;document.querySelectorAll('.drag-over-top,.drag-over-bottom').forEach(x=>x.classList.remove('drag-over-top','drag-over-bottom'));const rect=el.getBoundingClientRect();el.classList.add(e.clientY<rect.top+rect.height/2?'drag-over-top':'drag-over-bottom')}
-function tlTaskDrop(e,el){e.preventDefault();e.stopPropagation();document.querySelectorAll('.drag-over-top,.drag-over-bottom').forEach(x=>x.classList.remove('drag-over-top','drag-over-bottom'));if(!_tlTaskDrag||!unlocked||el.dataset.task===_tlTaskDrag)return;const sort=JSON.parse(localStorage.getItem(getTlTaskSortKey())||'{}');const src=_tlTaskDrag,tgt=el.dataset.task;const srcTask=tasks.find(t=>t['任務名稱']===src),tgtTask=tasks.find(t=>t['任務名稱']===tgt);if(!srcTask||!tgtTask||(srcTask['負責人']||'')!==(tgtTask['負責人']||''))return;const owner=srcTask['負責人']||'未指派';const allNames=tasks.filter(t=>(t['負責人']||'未指派')===owner&&!t['父任務']).map(t=>t['任務名稱']);const existing=sort[owner]||allNames;const ownerTasks=[...existing.filter(n=>allNames.includes(n)),...allNames.filter(n=>!existing.includes(n))];const from=ownerTasks.indexOf(src);if(from>=0)ownerTasks.splice(from,1);const to=ownerTasks.indexOf(tgt);const rect=el.getBoundingClientRect();ownerTasks.splice(e.clientY<rect.top+rect.height/2?to:to+1,0,src);sort[owner]=ownerTasks;localStorage.setItem(getTlTaskSortKey(),JSON.stringify(sort));saveNote('timeline_task_sort_'+currentMonth.getFullYear()+'_'+(currentMonth.getMonth()+1),JSON.stringify(sort));tlTaskDragEnd();render()}
+function tlTaskDrop(e,el){e.preventDefault();e.stopPropagation();document.querySelectorAll('.drag-over-top,.drag-over-bottom').forEach(x=>x.classList.remove('drag-over-top','drag-over-bottom'));if(!_tlTaskDrag||!unlocked||el.dataset.task===_tlTaskDrag)return;const sort=JSON.parse(localStorage.getItem(getTlTaskSortKey())||'{}');const src=_tlTaskDrag,tgt=el.dataset.task;const srcTask=tasks.find(t=>t['任務名稱']===src),tgtTask=tasks.find(t=>t['任務名稱']===tgt);if(!srcTask||!tgtTask||(srcTask['負責人']||'')!==(tgtTask['負責人']||''))return;const owner=srcTask['負責人']||'未指派';const allNames=tasks.filter(t=>(t['負責人']||'未指派').split(',').map(v=>v.trim()).includes(owner)&&!t['父任務']).map(t=>t['任務名稱']);const existing=sort[owner]||allNames;const ownerTasks=[...existing.filter(n=>allNames.includes(n)),...allNames.filter(n=>!existing.includes(n))];const from=ownerTasks.indexOf(src);if(from>=0)ownerTasks.splice(from,1);const to=ownerTasks.indexOf(tgt);const rect=el.getBoundingClientRect();ownerTasks.splice(e.clientY<rect.top+rect.height/2?to:to+1,0,src);sort[owner]=ownerTasks;localStorage.setItem(getTlTaskSortKey(),JSON.stringify(sort));saveNote('timeline_task_sort_'+currentMonth.getFullYear()+'_'+(currentMonth.getMonth()+1),JSON.stringify(sort));tlTaskDragEnd();render()}
 function toggleTlChildren(el){var row=el.closest('[data-task]');var wrapper=row.parentNode;var c=wrapper.querySelector('.tl-children');if(c){c.style.display=c.style.display==='none'?'block':'none';el.textContent=c.style.display==='none'?'▶':'▼';var name=row.dataset.task;if(!name||!unlocked)return;if(c.style.display==='none')_collapsedTimelineTasks.add(name);else _collapsedTimelineTasks.delete(name);localStorage.setItem(getTimelineTaskCollapseKey(),JSON.stringify([..._collapsedTimelineTasks]));saveNote('collapsed_timeline_tasks_'+currentMonth.getFullYear()+'_'+(currentMonth.getMonth()+1),JSON.stringify([..._collapsedTimelineTasks]))}}
 let _timelineDragOwner=null;
 function timelineDragStart(e,el){if(!unlocked){e.preventDefault();return}_timelineDragOwner=el.dataset.owner;e.dataTransfer.setData('text/tl-owner',_timelineDragOwner);el.closest('[style*="border-bottom"]').classList.add('dragging')}
@@ -627,38 +630,39 @@ let _lastMovedOwner=null;
 let _taskDragIdx=null;
 function taskDragStart(e,idx){if(!unlocked){e.preventDefault();return}_taskDragIdx=idx;e.dataTransfer.setData('text/task',String(idx));e.dataTransfer.effectAllowed='move';e.target.closest('.card').classList.add('dragging');document.querySelectorAll('#boardView .column[data-status]').forEach(col=>{const h3=col.querySelector('h3');const content=h3?.nextElementSibling;if(content&&content.style.display==='none'){content.style.display='';const tog=h3.querySelector('.tog');if(tog)tog.textContent='▼'}})}
 function taskDragEnd(){_taskDragIdx=null;document.querySelectorAll('.dragging').forEach(el=>el.classList.remove('dragging'));document.querySelectorAll('.drag-over-top,.drag-over-bottom').forEach(el=>el.classList.remove('drag-over-top','drag-over-bottom'));document.querySelectorAll('.column').forEach(c=>c.style.outline='');document.querySelectorAll('#boardView .column[data-status]').forEach(col=>{const h3=col.querySelector('h3');const content=h3?.nextElementSibling;if(content&&col.querySelector('.owner-group')===null){content.style.display='none';const tog=h3.querySelector('.tog');if(tog)tog.textContent='▶'}})}
+let _cardDropInFlight=false;
+async function _confirmStatus(task,status,sync=false){
+  const saved=await writeRequest(SCRIPT_URL,{method:'POST',headers:{'Content-Type':'text/plain'},body:JSON.stringify({action:'update',id:task.ID,month:task._month,status})});
+  if(!saved.ok)return false;
+  task['狀態']=status;_savePendingEdit(task);
+  if(sync){const result=await writeRequest(SCRIPT_URL,{method:'POST',headers:{'Content-Type':'text/plain'},body:JSON.stringify({action:'syncUpdate',id:task.ID,fields:{status}})});return result.ok;}
+  return true;
+}
 async function colTaskDrop(e,status){
-  if(_taskDragIdx!==null){
-    e.preventDefault();
-    const src=tasks[_taskDragIdx];
-    if(src['狀態']!==status){
-      const cm=await _checkCrossMonth(src);if(cm==='cancel'){taskDragEnd();return}
-      src['狀態']=status;setSyncStatus('🔄 同步中...','var(--yellow)');writeRequest(SCRIPT_URL,{method:'POST',headers:{'Content-Type':'text/plain'},body:JSON.stringify({action:'update',id:src.ID,month:src._month,row:src._row,name:src['任務名稱'],owner:src['負責人'],status:status,progress:'',startDate:src['開始日'],dueDate:src['截止日'],note:src['備註'],priority:src['優先級'],tags:src['標籤'],parent:src['父任務'],hours:src['工時'],comment:src['評論']})});
-      if(cm==='sync')_doSyncUpdate(src,{status:status});
-    }
-    taskDragEnd();render();renderFilterBar();
-  }
+  e.preventDefault();if(!unlocked||_taskDragIdx===null||_cardDropInFlight)return;
+  const src=tasks[_taskDragIdx];if(!src)return;_cardDropInFlight=true;
+  try{
+    if(src['狀態']!==status){const cm=await _checkCrossMonth(src);if(cm==='cancel')return;await _confirmStatus(src,status,cm==='sync');}
+  }finally{_cardDropInFlight=false;taskDragEnd();render();renderFilterBar();}
 }
 function taskDragOver(e,el){e.preventDefault();if(_taskDragIdx===null)return;const card=el.closest('.card');if(!card||parseInt(card.dataset.idx)===_taskDragIdx)return;document.querySelectorAll('.drag-over-top,.drag-over-bottom').forEach(x=>x.classList.remove('drag-over-top','drag-over-bottom'));const rect=card.getBoundingClientRect();card.classList.add(e.clientY<rect.top+rect.height/2?'drag-over-top':'drag-over-bottom');const col=card.closest('.column');if(col)col.style.outline='2px dashed var(--accent)'}
-function taskDrop(e,targetIdx,el){
+async function taskDrop(e,targetIdx,el){
   e.preventDefault();e.stopPropagation();
-  document.querySelectorAll('.drag-over-top,.drag-over-bottom').forEach(x=>x.classList.remove('drag-over-top','drag-over-bottom'));
-  if(!unlocked||_taskDragIdx===null||_taskDragIdx===targetIdx)return;
-  const src=tasks[_taskDragIdx],tgt=tasks[targetIdx];
-  const targetStatus=tgt['狀態'];
-  // Cross-column: change status (only parent task, not children)
-  if(src['狀態']!==targetStatus){
-    src['狀態']=targetStatus;
-    setSyncStatus('🔄 同步中...','var(--yellow)');writeRequest(SCRIPT_URL,{method:'POST',headers:{'Content-Type':'text/plain'},body:JSON.stringify({action:'update',id:src.ID,month:src._month,row:src._row,name:src['任務名稱'],owner:src['負責人'],status:targetStatus,progress:'',startDate:src['開始日'],dueDate:src['截止日'],note:src['備註'],priority:src['優先級'],tags:src['標籤'],parent:src['父任務'],hours:src['工時'],comment:src['評論']}),});
-  }
-  // Sort within target status
-  const rect=el.getBoundingClientRect();const above=e.clientY<rect.top+rect.height/2;
-  const sameStatus=filterByMonth(tasks).filter(x=>x['狀態']===targetStatus&&!x['父任務']).sort((a,b)=>(parseInt(a['排序'])||999)-(parseInt(b['排序'])||999));
-  const fromPos=sameStatus.indexOf(src);if(fromPos>=0)sameStatus.splice(fromPos,1);
-  const toPos=sameStatus.indexOf(tgt);
-  sameStatus.splice(above?toPos:toPos+1,0,src);
-  sameStatus.forEach((item,i)=>{item['排序']=String(i+1);const idx=tasks.indexOf(item);setSyncStatus('🔄 同步中...','var(--yellow)');writeRequest(SCRIPT_URL,{method:'POST',headers:{'Content-Type':'text/plain'},body:JSON.stringify({action:'updateSort',id:item.ID,month:item._month,row:item._row,sort:i+1}),})});
-  taskDragEnd();render();renderFilterBar();
+  if(!unlocked||_taskDragIdx===null||_taskDragIdx===targetIdx||_cardDropInFlight)return;
+  const src=tasks[_taskDragIdx],tgt=tasks[targetIdx];if(!src||!tgt)return;
+  _cardDropInFlight=true;
+  try{
+    const targetStatus=tgt['狀態'];
+    if(src['狀態']!==targetStatus){const cm=await _checkCrossMonth(src);if(cm==='cancel'||!await _confirmStatus(src,targetStatus,cm==='sync'))return;}
+    const rect=el.getBoundingClientRect(),above=e.clientY<rect.top+rect.height/2;
+    const sameStatus=filterByMonth(tasks).filter(x=>x['狀態']===targetStatus&&!x['父任務']).sort((a,b)=>(parseInt(a['排序'])||999)-(parseInt(b['排序'])||999));
+    const from=sameStatus.indexOf(src);if(from>=0)sameStatus.splice(from,1);const to=sameStatus.indexOf(tgt);if(to<0)return;
+    sameStatus.splice(above?to:to+1,0,src);
+    for(let i=0;i<sameStatus.length;i++){
+      const item=sameStatus[i],saved=await writeRequest(SCRIPT_URL,{method:'POST',headers:{'Content-Type':'text/plain'},body:JSON.stringify({action:'updateSort',id:item.ID,month:item._month,sort:i+1})});
+      if(!saved.ok)break;item['排序']=String(i+1);
+    }
+  }finally{_cardDropInFlight=false;taskDragEnd();render();renderFilterBar();}
 }
 function ownerDragStart(e,el){
   if(!unlocked){e.preventDefault();return}
@@ -691,22 +695,20 @@ async function ownerDropZone(e,targetStatus){
   if(!_dragOwner)return;
   const owner=_dragOwner;
   const filtered=filterByMonth(tasks);
-  const _affectedTasks=filtered.filter(t=>(t['負責人']||'未指派')===owner&&!t['父任務']&&t['狀態']===_dragOwnerSrcStatus);
+  const _affectedTasks=filtered.filter(t=>(t['負責人']||'未指派').split(',').map(v=>v.trim()).includes(owner)&&!t['父任務']&&t['狀態']===_dragOwnerSrcStatus);
   const _hasCross=_affectedTasks.some(t=>t['ID']&&(t._crossMonth||t._month!==(currentMonth.getFullYear()+'/'+(currentMonth.getMonth()+1<10?'0':'')+(currentMonth.getMonth()+1))));
   let _dragSync=null;
   if(_hasCross){const cm=await _checkCrossMonth(_affectedTasks.find(t=>t._crossMonth||t._month!==(currentMonth.getFullYear()+'/'+(currentMonth.getMonth()+1<10?'0':'')+(currentMonth.getMonth()+1))));if(cm==='cancel'){ownerDragEnd();return}_dragSync=cm==='sync'}
-  _affectedTasks.forEach(t=>{
-    t['狀態']=targetStatus;
-    setSyncStatus('🔄 同步中...','var(--yellow)');writeRequest(SCRIPT_URL,{method:'POST',headers:{'Content-Type':'text/plain'},body:JSON.stringify({action:'update',id:t.ID,month:t._month,row:t._row,name:t['任務名稱'],owner:t['負責人'],status:targetStatus,progress:'',startDate:t['開始日'],dueDate:t['截止日'],note:t['備註'],priority:t['優先級'],tags:t['標籤'],parent:t['父任務'],hours:t['工時'],comment:t['評論']}),});
-    if(_dragSync&&t['ID'])_doSyncUpdate(t,{status:targetStatus});
-  });
+  for(const t of _affectedTasks){
+    if(!await _confirmStatus(t,targetStatus,_dragSync)){ownerDragEnd();render();renderFilterBar();return;}
+  }
   const ownerSort=JSON.parse(localStorage.getItem('fzg_owner_sort_'+targetStatus)||'{}');
   // Get all owners that will be in target status after this move
   const targetOwners=[...new Set(tasks.filter(t=>t['狀態']===targetStatus&&!t['父任務']).map(t=>t['負責人']||'未指派'))];
   if(!targetOwners.includes(owner))targetOwners.unshift(owner);else{targetOwners.splice(targetOwners.indexOf(owner),1);targetOwners.unshift(owner)}
   targetOwners.forEach((o,i)=>{ownerSort[o]=String(i+1)});
   localStorage.setItem('fzg_owner_sort_'+targetStatus+'_'+currentMonth.getFullYear()+'_'+(currentMonth.getMonth()+1),JSON.stringify(ownerSort));
-  saveOwnerSort(targetStatus,targetOwners);
+  await saveOwnerSort(targetStatus,targetOwners);
   _lastMovedOwner=owner;
   ownerDragEnd();render();renderFilterBar();
 }
