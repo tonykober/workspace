@@ -87,6 +87,8 @@ function openModal(idx){
   if(!unlocked)return;
   if(idx!==undefined&&!tasks[idx]){alert('任務已重新載入，請重新選擇要編輯的任務');return;}
   _modalVersion++;
+  const submitStatus=document.getElementById('taskSubmitStatus');
+  if(submitStatus)submitStatus.textContent=_taskSubmitInFlight?'上一筆儲存仍在等待回覆；可先填寫，完成後才能送出下一筆。':'';
   if(idx!==undefined&&(tasks[idx]?._pendingRow&&!tasks[idx]?.ID)){alert('新增已確認，請重新載入取得資料列後再編輯');return;}
   const m=document.getElementById('addModal');m.classList.remove('hidden');
   populateSelects();
@@ -344,10 +346,17 @@ let _taskSubmitInFlight=false;
 async function submitTask(){
   if(_taskSubmitInFlight)return;
   _taskSubmitInFlight=true;
-  const button=document.querySelector('#addModal button[onclick="submitTask()"]');
-  if(button)button.disabled=true;
+  const modal=document.getElementById('addModal'),button=modal.querySelector('button[onclick="submitTask()"]');
+  let status=document.getElementById('taskSubmitStatus');
+  if(!status){status=document.createElement('p');status.id='taskSubmitStatus';status.setAttribute('role','status');status.setAttribute('aria-live','polite');status.style.cssText='color:var(--yellow);line-height:1.6;margin:12px 0';button.parentNode.before(status);}
+  const previousFailures=_writeFailures,previousLabel=button.textContent;
+  status.textContent='已收到送出操作，正在等待儲存回覆，可能需要數秒。請勿重複送出或重新整理。';
+  modal.setAttribute('aria-busy','true');button.disabled=true;button.textContent='儲存中…';button.style.cursor='wait';
   try{return await submitTaskOnce();}
-  finally{_taskSubmitInFlight=false;if(button)button.disabled=false;}
+  finally{
+    _taskSubmitInFlight=false;modal.removeAttribute('aria-busy');button.disabled=false;button.textContent=previousLabel;button.style.cursor='';
+    status.textContent=_writeFailures>previousFailures?'儲存結果未確認。請先保留輸入內容並查看頁面錯誤提示，勿直接重複送出。':'';
+  }
 }
 async function submitTaskOnce(){
   const m=document.getElementById('addModal'),modalVersion=_modalVersion;
