@@ -167,7 +167,7 @@ async function toggleStatus(idx,e){
 }
 function inlineEdit(idx,field,e){
   e.stopPropagation();if(!unlocked)return;
-  const t=tasks[idx];
+  const t=tasks[idx];if(!t){alert('任務已重新載入，請重新選擇');return;}
   const m=document.createElement('div');
   m.style.cssText='position:fixed;top:0;left:0;width:100%;height:100%;background:rgba(0,0,0,0.7);display:flex;align-items:center;justify-content:center;z-index:200';
   let html='<div style="background:var(--surface);border:1px solid var(--border);border-radius:12px;padding:18px;width:90%;max-width:360px">';
@@ -191,77 +191,66 @@ function inlineEdit(idx,field,e){
   html+=`<div style="display:flex;gap:6px;margin-top:12px"><button id="ie-ok" style="flex:1;padding:8px;background:var(--accent);color:#fff;border:none;border-radius:6px;cursor:pointer">確認</button><button id="ie-cancel" style="flex:1;padding:8px;background:var(--border);color:var(--text);border:none;border-radius:6px;cursor:pointer">取消</button></div></div>`;
   m.innerHTML=html;
   document.body.appendChild(m);
-  m.querySelector('#ie-cancel').onclick=()=>m.remove();
-  m.onclick=(ev)=>{if(ev.target===m)m.remove()};
+  let saving=false;
+  const feedback=document.createElement('p');feedback.setAttribute('role','status');feedback.style.cssText='color:var(--yellow);line-height:1.6';m.firstElementChild.append(feedback);
+  const dismiss=()=>{if(!saving)m.remove()};m.querySelector('#ie-cancel').onclick=dismiss;m.onclick=ev=>{if(ev.target===m)dismiss()};
   m.querySelector('#ie-ok').onclick=async()=>{
-    const _cm=await _checkCrossMonth(t);if(_cm==='cancel'){m.remove();return}
-    if(field==='負責人'){const sel=m.querySelector('#ie-owner');const inp=m.querySelector('#ie-owner-new');t['負責人']=sel.value==='__new'||!sel.value?inp.value:sel.value}
-    else if(field==='日期'){t['開始日']=(m.querySelector('#ie-start').value||'').replace(/-/g,'/');t['截止日']=(m.querySelector('#ie-due').value||'').replace(/-/g,'/')}
-    else if(field==='標籤'){t['標籤']=m.querySelector('#ie-tags').value}
-    _savePendingEdit(t);
-    // Auto-adjust parent date if child task date exceeds parent range (recursive up)
-    if(field==='日期'&&t['父任務']){
-      let _cur=t;
-      while(_cur['父任務']){
-        const parent=tasks.find(p=>p['任務名稱']===_cur['父任務']);
-        if(!parent)break;
-        const children=tasks.filter(c=>c['父任務']===parent['任務名稱']);
-        const dates=children.map(c=>({s:_normDate(c['開始日'])||'',e:_normDate(c['截止日'])||''})).filter(d=>d.s&&d.e);
-        if(!dates.length)break;
-        const minS=dates.map(d=>d.s).sort()[0];
-        const maxE=dates.map(d=>d.e).sort().pop();
-        let changed=false;
-        if(!parent['開始日']||minS<_normDate(parent['開始日'])){parent['開始日']=minS;changed=true}
-        if(!parent['截止日']||maxE>_normDate(parent['截止日'])){parent['截止日']=maxE;changed=true}
-        if(!changed)break;
-        _savePendingEdit(parent);
-        writeRequest(SCRIPT_URL,{method:'POST',headers:{'Content-Type':'text/plain'},body:JSON.stringify({action:'update',id:parent.ID,month:parent._month,row:parent._row,name:parent['任務名稱'],owner:parent['負責人'],status:parent['狀態'],progress:'',startDate:parent['開始日'],dueDate:parent['截止日'],note:parent['備註'],priority:parent['優先級'],tags:parent['標籤'],parent:parent['父任務'],hours:parent['工時'],comment:parent['評論']})}).then(async saved=>{
-              if(!saved.ok)return;
-              // Check if parent needs to move to different month
-              const _cm=currentMonth.getFullYear()+'/'+(currentMonth.getMonth()+1<10?'0':'')+(currentMonth.getMonth()+1);
-              const _ps=parent['開始日']||'';const _pm2=_ps?(_ps.includes('-')?_ps.substring(0,4)+'/'+_ps.substring(5,7):(()=>{const pp=_ps.split('/');return pp.length>=2?pp[0]+'/'+pp[1].padStart(2,'0'):''})()):'';
-              const _parentIsTop=!parent['父任務']||!tasks.find(x=>x['任務名稱']===parent['父任務']);
-              if(_parentIsTop&&_pm2&&_pm2!==_cm){
-                await _moveTaskTreeToMonth(parent,_pm2);
-              }
-            });
-        _cur=parent;
-      }
+    if(saving)return;
+    const patch={};
+    if(field==='負責人'){
+      patch.owner=m.querySelector('#ie-owner-new').value.trim();
+      if(!patch.owner){feedback.textContent='請輸入負責人名稱';return;}
+    }else if(field==='日期'){
+      patch.startDate=(m.querySelector('#ie-start').value||'').replace(/-/g,'/');patch.dueDate=(m.querySelector('#ie-due').value||'').replace(/-/g,'/');
+      if((patch.startDate&&!_normDate(patch.startDate))||(patch.dueDate&&!_normDate(patch.dueDate))||(patch.startDate&&patch.dueDate&&_normDate(patch.startDate)>_normDate(patch.dueDate))){feedback.textContent='請確認日期有效，且截止日期不早於開始日期';return;}
+    }else if(field==='標籤')patch.tags=m.querySelector('#ie-tags').value;
+    else return;
+    saving=true;const controls=[...m.querySelectorAll('input,select,button')];controls.forEach(el=>el.disabled=true);m.querySelector('#ie-ok').textContent='儲存中…';feedback.textContent='正在等待儲存回覆，請勿重複送出。';
+    const names={owner:'負責人',startDate:'開始日',dueDate:'截止日',tags:'標籤'};
+    async function savePatch(task,fields){
+      const saved=await writeRequest(SCRIPT_URL,{method:'POST',headers:{'Content-Type':'text/plain'},body:JSON.stringify({action:'update',id:task.ID,month:task._month,...fields})});
+      if(!saved.ok)throw new Error('寫入未確認，請保留輸入內容並查看頁面錯誤提示，勿直接重送。');
+      for(const key of Object.keys(fields))task[names[key]]=fields[key];
+      _savePendingEdit(task);
     }
-    // Reverse rule: if this task is a parent and dates shrink, push children
-    if(field==='日期'){
-      const _children=tasks.filter(c=>c['父任務']===t['任務名稱']);
-      if(_children.length){
-        const pStart=t['開始日']||'';const pEnd=t['截止日']||'';
-        _children.forEach(c=>{
-          let cChanged=false;
-          if(pStart&&c['開始日']&&c['開始日']<pStart){c['開始日']=pStart;cChanged=true}
-          if(pEnd&&c['截止日']&&c['截止日']>pEnd){c['截止日']=pEnd;cChanged=true}
-          // Ensure at least 1 day duration
-          if(c['開始日']&&c['截止日']&&_normDate(c['開始日'])>=_normDate(c['截止日'])){c['截止日']=c['開始日'];cChanged=true}
-          if(cChanged){
-            const ci=tasks.indexOf(c);_savePendingEdit(c);
-            writeRequest(SCRIPT_URL,{method:'POST',headers:{'Content-Type':'text/plain'},body:JSON.stringify({action:'update',id:c.ID,month:c._month,row:c._row,name:c['任務名稱'],owner:c['負責人'],status:c['狀態'],progress:'',startDate:c['開始日'],dueDate:c['截止日'],note:c['備註'],priority:c['優先級'],tags:c['標籤'],parent:c['父任務'],hours:c['工時'],comment:c['評論']})});
+    try{
+      const mode=await _checkCrossMonth(t);if(mode==='cancel')return;
+      await savePatch(t,patch);
+      const roots=new Set([t]);
+      if(field==='日期'){
+        // Preserve the existing date expansion rule, confirming each related write.
+        let child=t;const seen=new Set([t]);
+        while(child['父任務']){
+          const parent=tasks.find(p=>p['任務名稱']===child['父任務']);if(!parent||seen.has(parent))break;seen.add(parent);
+          const dates=tasks.filter(c=>c['父任務']===parent['任務名稱']).map(c=>({s:_normDate(c['開始日']),e:_normDate(c['截止日'])})).filter(d=>d.s&&d.e);
+          if(!dates.length)break;
+          const start=dates.map(d=>d.s).sort()[0],end=dates.map(d=>d.e).sort().pop(),fields={};
+          if(!parent['開始日']||start<_normDate(parent['開始日']))fields.startDate=start.replace(/-/g,'/');
+          if(!parent['截止日']||end>_normDate(parent['截止日']))fields.dueDate=end.replace(/-/g,'/');
+          if(!Object.keys(fields).length)break;
+          await savePatch(parent,fields);roots.add(parent);child=parent;
+        }
+        for(const child of tasks.filter(c=>c['父任務']===t['任務名稱'])){
+          let start=child['開始日']||'',end=child['截止日']||'';
+          if(t['開始日']&&start&&_normDate(start)<_normDate(t['開始日']))start=t['開始日'];
+          if(t['截止日']&&end&&_normDate(end)>_normDate(t['截止日']))end=t['截止日'];
+          if(start&&end&&_normDate(start)>_normDate(end))end=start;
+          if(start!==(child['開始日']||'')||end!==(child['截止日']||''))await savePatch(child,{startDate:start,dueDate:end});
+        }
+        for(const root of roots){
+          const month=FzgData.dateKey(root['開始日']).slice(0,7).replace('-','/');
+          if(month&&month!==root._month&&(!root['父任務']||!tasks.some(p=>p['任務名稱']===root['父任務']))){
+            const moved=await _moveTaskTreeToMonth(root,month);if(!moved.ok)throw new Error('日期已儲存，但搬移未完成；請核對月份，勿直接重送。');
           }
-        });
+        }
       }
-    }
-    const _curMonth=currentMonth.getFullYear()+'/'+(currentMonth.getMonth()+1<10?'0':'')+(currentMonth.getMonth()+1);
-    const _newStart=t['開始日']||'';
-    const _newMonth=_newStart?(_newStart.includes('-')?_newStart.substring(0,4)+'/'+_newStart.substring(5,7):(()=>{const p=_newStart.split('/');return p.length>=2?p[0]+'/'+p[1].padStart(2,'0'):''})()):'';
-    // Only move if this is a top-level task (no parent, or parent not in current tasks)
-    const _isTopLevel=!t['父任務']||!tasks.find(p=>p['任務名稱']===t['父任務']);
-    // Always update first
-    setSyncStatus('🔄 同步中...','var(--yellow)');
-    writeRequest(SCRIPT_URL,{method:'POST',headers:{'Content-Type':'text/plain'},body:JSON.stringify({action:'update',id:t.ID,month:t._month,row:t._row,name:t['任務名稱'],owner:t['負責人'],status:t['狀態'],progress:'',startDate:t['開始日'],dueDate:t['截止日'],note:t['備註'],priority:t['優先級'],tags:t['標籤'],parent:t['父任務'],hours:t['工時'],comment:t['評論']})}).then(async saved=>{
-      if(!saved.ok)return;
-      // Only top-level tasks trigger move
-      if(_isTopLevel&&_newMonth&&_newMonth!==t._month){
-        await _moveTaskTreeToMonth(t,_newMonth);
+      if(mode==='sync'){
+        const result=await writeRequest(SCRIPT_URL,{method:'POST',headers:{'Content-Type':'text/plain'},body:JSON.stringify({action:'syncUpdate',id:t.ID,fields:patch})});
+        if(!result.ok)throw new Error('當月修改已確認，但其他月份同步未確認，請核對資料。');
       }
-    });
-    if(_cm==='sync')_doSyncUpdate(t,{name:t['任務名稱'],owner:t['負責人'],status:t['狀態'],startDate:t['開始日'],dueDate:t['截止日'],note:t['備註'],priority:t['優先級'],tags:t['標籤'],parent:t['父任務'],hours:t['工時'],comment:t['評論']});
-    m.remove();render();
+      m.remove();render();
+    }catch(error){feedback.textContent=error.message;render();}
+    finally{saving=false;controls.forEach(el=>el.disabled=false);m.querySelector('#ie-ok').textContent='確認';}
   };
   if(m.querySelector('#ie-owner'))m.querySelector('#ie-owner').onchange=function(){if(this.value&&this.value!=='__new')m.querySelector('#ie-owner-new').value=this.value};
 }
