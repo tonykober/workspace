@@ -110,5 +110,13 @@
     "path": "fzg-webqa/",
     "date": "2026-10-14",
     "archived": false
+  },
+  {
+    "title": "生肖秘境 — 星遊記外傳遊戲設計",
+    "desc": "掛機打寶×組隊 ARPG 提案:核心循環、12生肖三合局、裝備詞綴、秘境、掉落保底、數值、技術與里程碑",
+    "icon": "🐲",
+    "path": "zodiac-abyss-game-design.html",
+    "date": "2026-10-19",
+    "archived": false
   }
 ]
