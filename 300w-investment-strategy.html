@@ -1,9 +1,345 @@
 <!DOCTYPE html>
-<html><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0">
-<title>🔒</title><style>*{margin:0;padding:0;box-sizing:border-box}body{background:#0a0e1a;color:#e8ecf4;font-family:-apple-system,sans-serif;min-height:100vh;display:flex;align-items:center;justify-content:center}.lock{text-align:center;display:none}.lock h2{margin-bottom:16px;color:#00d4ff}.lock input{padding:10px 16px;font-size:16px;border-radius:6px;border:1px solid #2a3050;background:#131829;color:#fff;width:200px;text-align:center}.lock button{margin-left:8px;padding:10px 20px;border-radius:6px;border:none;background:#00d4ff;color:#000;font-weight:bold;cursor:pointer}.lock .err{color:#ef4444;margin-top:8px;display:none;font-size:13px}.loading{text-align:center;color:#7a8599}.loading .spin{display:inline-block;width:24px;height:24px;border:3px solid #2a3050;border-top-color:#00d4ff;border-radius:50%;animation:sp .6s linear infinite}@keyframes sp{to{transform:rotate(360deg)}}</style></head>
-<body><div class="loading" id="loading"><div class="spin"></div><p style="margin-top:12px">載入中...</p></div><div class="lock" id="lock"><h2>🔒 請輸入密碼</h2><input type="password" id="pw" onkeydown="if(event.key==='Enter')go()"><button onclick="go()">進入</button><p class="err" id="err">密碼錯誤</p></div>
-<script>
-var E={"s":"EtR+v3hN47ASn/dGXqUwbw==","iv":"fDVIlLTFoXNBZdGA","t":"mmPtBhmnolKjP5cwiRuNFg==","d":"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"};
-async function go(p){p=p||document.getElementById('pw').value;try{var s=Uint8Array.from(atob(E.s),c=>c.charCodeAt(0));var iv=Uint8Array.from(atob(E.iv),c=>c.charCodeAt(0));var t=Uint8Array.from(atob(E.t),c=>c.charCodeAt(0));var d=Uint8Array.from(atob(E.d),c=>c.charCodeAt(0));var key=await crypto.subtle.importKey('raw',await crypto.subtle.deriveBits({name:'PBKDF2',salt:s,iterations:100000,hash:'SHA-256'},await crypto.subtle.importKey('raw',new TextEncoder().encode(p),'PBKDF2',false,['deriveBits']),256),'AES-GCM',false,['decrypt']);var ct=new Uint8Array(d.length+t.length);ct.set(d);ct.set(t,d.length);var dec=await crypto.subtle.decrypt({name:'AES-GCM',iv:iv},key,ct);sessionStorage.setItem('ws_key',btoa(p));document.open();document.write(new TextDecoder().decode(dec));document.close();}catch(e){document.getElementById('loading').style.display='none';document.getElementById('lock').style.display='block';if(document.getElementById('err'))document.getElementById('err').style.display='block';}}
-(function(){var k=sessionStorage.getItem('ws_key');if(k){go(atob(k));}else{document.getElementById('loading').style.display='none';document.getElementById('lock').style.display='block';}})();
-</script></body></html>
+<html lang="zh-TW">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>300萬投資策略 — 新手起步方案</title>
+    <style>
+        :root {
+            --bg-primary: #0d1117;
+            --bg-secondary: #161b22;
+            --bg-tertiary: #21262d;
+            --text-primary: #e6edf3;
+            --text-secondary: #8b949e;
+            --accent-green: #3fb950;
+            --accent-yellow: #d29922;
+            --accent-red: #f85149;
+            --accent-blue: #58a6ff;
+            --accent-purple: #bc8cff;
+            --border: #30363d;
+        }
+        * { margin: 0; padding: 0; box-sizing: border-box; }
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Helvetica, Arial, sans-serif;
+            background: var(--bg-primary);
+            color: var(--text-primary);
+            line-height: 1.7;
+            padding: 2rem;
+            max-width: 1100px;
+            margin: 0 auto;
+        }
+        h1 { font-size: 2rem; margin-bottom: 0.5rem; color: var(--accent-blue); border-bottom: 2px solid var(--border); padding-bottom: 1rem; }
+        .subtitle { color: var(--text-secondary); font-size: 0.9rem; margin-bottom: 2rem; }
+        h2 { font-size: 1.4rem; margin: 2.5rem 0 1rem; color: var(--accent-purple); }
+        h3 { font-size: 1.1rem; margin: 1.5rem 0 0.8rem; color: var(--text-primary); }
+        p { margin-bottom: 1rem; color: var(--text-secondary); }
+        .card { background: var(--bg-secondary); border: 1px solid var(--border); border-radius: 8px; padding: 1.5rem; margin: 1rem 0; }
+        .card-highlight { border-left: 4px solid var(--accent-blue); }
+        .card-warning { border-left: 4px solid var(--accent-yellow); }
+        .card-danger { border-left: 4px solid var(--accent-red); }
+        .card-success { border-left: 4px solid var(--accent-green); }
+        table { width: 100%; border-collapse: collapse; margin: 1rem 0; font-size: 0.9rem; }
+        th, td { padding: 0.7rem 1rem; text-align: left; border-bottom: 1px solid var(--border); }
+        th { background: var(--bg-tertiary); color: var(--accent-blue); font-weight: 600; }
+        tr:hover { background: var(--bg-tertiary); }
+        .badge { display: inline-block; padding: 0.2rem 0.6rem; border-radius: 12px; font-size: 0.75rem; font-weight: 600; }
+        .badge-core { background: #1f3d2a; color: var(--accent-green); }
+        .badge-satellite { background: #2d2a1f; color: var(--accent-yellow); }
+        .badge-bond { background: #1f2a3d; color: var(--accent-blue); }
+        .badge-cash { background: #2d1f1f; color: var(--accent-red); }
+        .grid-2 { display: grid; grid-template-columns: 1fr 1fr; gap: 1rem; }
+        .metric { text-align: center; padding: 1rem; }
+        .metric-value { font-size: 1.8rem; font-weight: 700; color: var(--text-primary); }
+        .metric-label { font-size: 0.8rem; color: var(--text-secondary); margin-top: 0.3rem; }
+        ul, ol { margin: 0.5rem 0 1rem 1.5rem; color: var(--text-secondary); }
+        li { margin-bottom: 0.4rem; }
+        .divider { border: none; border-top: 1px solid var(--border); margin: 2rem 0; }
+        .footer { margin-top: 3rem; padding-top: 1.5rem; border-top: 1px solid var(--border); color: var(--text-secondary); font-size: 0.8rem; text-align: center; }
+        .timeline { position: relative; padding-left: 2rem; }
+        .timeline::before { content: ''; position: absolute; left: 0.5rem; top: 0; bottom: 0; width: 2px; background: var(--border); }
+        .timeline-item { position: relative; margin-bottom: 1.5rem; }
+        .timeline-item::before { content: ''; position: absolute; left: -1.65rem; top: 0.5rem; width: 10px; height: 10px; border-radius: 50%; background: var(--accent-blue); }
+        .amount { font-size: 1.2rem; font-weight: 700; color: var(--accent-green); }
+        @media (max-width: 768px) { .grid-2 { grid-template-columns: 1fr; } body { padding: 1rem; } }
+    </style>
+</head>
+<body>
+
+<h1>💰 300萬投資策略 — 新手起步方案</h1>
+<p class="subtitle">老爺專屬 ｜ 總資金：NT$3,000,000 ｜ 建立日期：2026/05/18 ｜ 市場環境：高估偏空</p>
+
+<div class="card card-warning">
+    <h3>⚠️ 當前市場環境速覽</h3>
+    <div class="grid-2">
+        <div>
+            <ul>
+                <li>台股加權指數：41,752（歷史高位區）</li>
+                <li>巴菲特指數：198%（嚴重高估）</li>
+                <li>市場情緒：48（中性偏空）</li>
+                <li>美股週五大跌（道瓊 -537）</li>
+            </ul>
+        </div>
+        <div>
+            <ul>
+                <li>油價飆升：Brent $111/桶</li>
+                <li>美債殖利率：30Y 破 5.12%</li>
+                <li>本週：Nvidia 財報（5/20）</li>
+                <li>5/29：MSCI 台灣權重上調</li>
+            </ul>
+        </div>
+    </div>
+    <p><strong>結論：市場處於高估且不確定性高的環境，新手絕對不能一次 All-in。分批進場是唯一正確策略。</strong></p>
+</div>
+
+<h2>🎯 一、投資目標設定</h2>
+<div class="card card-highlight">
+    <table>
+        <tr><th>項目</th><th>設定</th></tr>
+        <tr><td>總資金</td><td><span class="amount">NT$ 3,000,000</span></td></tr>
+        <tr><td>投資目標</td><td>長期資產增值 + 穩定現金流</td></tr>
+        <tr><td>年化報酬目標</td><td>7-10%（含股息）</td></tr>
+        <tr><td>風險承受度</td><td>中等（最大可接受回撤 15%，即虧 45 萬）</td></tr>
+        <tr><td>投資期限</td><td>5 年以上（不動用的閒錢）</td></tr>
+        <tr><td>投資風格</td><td>穩健為主，不追求暴利</td></tr>
+    </table>
+</div>
+
+<h2>⚖️ 二、資產配置策略</h2>
+<div class="card">
+    <h3>300 萬分配架構</h3>
+    <div class="grid-2">
+        <div class="metric">
+            <div class="metric-value" style="color: var(--accent-green);">50%</div>
+            <div class="metric-label">核心部位 — NT$1,500,000<br>大盤 + 高股息 ETF</div>
+        </div>
+        <div class="metric">
+            <div class="metric-value" style="color: var(--accent-yellow);">20%</div>
+            <div class="metric-label">成長部位 — NT$600,000<br>半導體 + 科技 ETF</div>
+        </div>
+    </div>
+    <div class="grid-2">
+        <div class="metric">
+            <div class="metric-value" style="color: var(--accent-blue);">10%</div>
+            <div class="metric-label">債券部位 — NT$300,000<br>美債 ETF（避險）</div>
+        </div>
+        <div class="metric">
+            <div class="metric-value" style="color: var(--accent-red);">20%</div>
+            <div class="metric-label">現金預備 — NT$600,000<br>等待回檔加碼</div>
+        </div>
+    </div>
+    <p style="margin-top:1rem;"><strong>為什麼保留 20% 現金？</strong> 巴菲特指數 198% 代表市場嚴重高估，隨時可能回檔 10-15%。保留現金讓老爺在大跌時有子彈加碼，而不是被套在高點。</p>
+</div>
+
+<h2>📊 三、推薦標的與配置</h2>
+
+<h3>🟢 核心部位（50% = NT$1,500,000）</h3>
+<table>
+    <thead><tr><th>標的</th><th>名稱</th><th>金額</th><th>特性</th><th>為何選它</th></tr></thead>
+    <tbody>
+        <tr><td><strong>0050</strong></td><td>元大台灣50</td><td>NT$450,000</td><td>追蹤台灣前50大企業</td><td>最經典的台股大盤 ETF，長期年化報酬 ~10%</td></tr>
+        <tr><td><strong>006208</strong></td><td>富邦台50</td><td>NT$300,000</td><td>同 0050，費用更低</td><td>內扣費用僅 0.15%，長期省更多</td></tr>
+        <tr><td><strong>00878</strong></td><td>國泰永續高股息</td><td>NT$300,000</td><td>季配息、ESG 篩選</td><td>每季領息有感，殖利率約 5-6%</td></tr>
+        <tr><td><strong>0056</strong></td><td>元大高股息</td><td>NT$225,000</td><td>年配息、老牌穩定</td><td>成立最久的高股息 ETF，歷史驗證</td></tr>
+        <tr><td><strong>00919</strong></td><td>群益台灣精選高息</td><td>NT$225,000</td><td>月配息</td><td>每月有現金流入帳，適合新手建立信心</td></tr>
+    </tbody>
+</table>
+
+<h3>🟡 成長部位（20% = NT$600,000）</h3>
+<table>
+    <thead><tr><th>標的</th><th>名稱</th><th>金額</th><th>特性</th><th>為何選它</th></tr></thead>
+    <tbody>
+        <tr><td><strong>2330</strong></td><td>台積電</td><td>NT$250,000</td><td>全球半導體龍頭</td><td>AI 時代最核心受惠者，長期成長確定性高</td></tr>
+        <tr><td><strong>00892</strong></td><td>富邦台灣半導體</td><td>NT$200,000</td><td>半導體產業 ETF</td><td>分散持有整個半導體供應鏈，降低單一個股風險</td></tr>
+        <tr><td><strong>00929</strong></td><td>復華台灣科技優息</td><td>NT$150,000</td><td>科技 + 月配息</td><td>兼顧成長與配息，月月有收入</td></tr>
+    </tbody>
+</table>
+
+<h3>🔵 債券部位（10% = NT$300,000）</h3>
+<table>
+    <thead><tr><th>標的</th><th>名稱</th><th>金額</th><th>特性</th><th>為何選它</th></tr></thead>
+    <tbody>
+        <tr><td><strong>00679B</strong></td><td>元大美債20年</td><td>NT$300,000</td><td>美國長天期公債</td><td>股市大跌時的避風港，殖利率 5%+ 有吸引力。但目前殖利率仍在攀升，建議分批慢慢買</td></tr>
+    </tbody>
+</table>
+
+<h3>🔴 現金預備（20% = NT$600,000）</h3>
+<div class="card">
+    <p>暫存於：高利活存數位帳戶（如 Richart、LINE Bank，年利率 ~2%）或貨幣市場基金。</p>
+    <p><strong>用途：</strong>等待大盤回檔 5-10% 時分批加碼核心與成長部位。</p>
+</div>
+
+<h2>📅 四、分批進場時間表</h2>
+<div class="card card-highlight">
+    <p><strong>原則：300 萬分 6 批，每批 50 萬，在 6 個月內完成佈局。不要一次買完！</strong></p>
+</div>
+
+<div class="card">
+    <div class="timeline">
+        <div class="timeline-item">
+            <h3>第 1 批 — 立即（2026/05 下旬）</h3>
+            <p><span class="amount">NT$500,000</span></p>
+            <ul>
+                <li>0050：NT$150,000（定期定額開始）</li>
+                <li>006208：NT$100,000</li>
+                <li>00878：NT$100,000</li>
+                <li>00919：NT$75,000</li>
+                <li>0056：NT$75,000</li>
+            </ul>
+            <p><em>先建立核心部位，用最穩的標的開始。</em></p>
+        </div>
+        <div class="timeline-item">
+            <h3>第 2 批 — Nvidia 財報後（2026/05/21-23）</h3>
+            <p><span class="amount">NT$500,000</span></p>
+            <ul>
+                <li>若 Nvidia 優於預期 → 2330：NT$250,000 + 00892：NT$150,000 + 00929：NT$100,000</li>
+                <li>若 Nvidia 不如預期 → 暫緩，併入第 3 批</li>
+            </ul>
+            <p><em>成長部位要看方向確認才進場。</em></p>
+        </div>
+        <div class="timeline-item">
+            <h3>第 3 批 — MSCI 調整前（2026/05/26-28）</h3>
+            <p><span class="amount">NT$500,000</span></p>
+            <ul>
+                <li>0050：NT$150,000（MSCI 被動資金流入前卡位）</li>
+                <li>006208：NT$100,000</li>
+                <li>00878：NT$100,000</li>
+                <li>00679B：NT$150,000（債券第一批）</li>
+            </ul>
+        </div>
+        <div class="timeline-item">
+            <h3>第 4 批 — 2026/06 月中</h3>
+            <p><span class="amount">NT$500,000</span></p>
+            <ul>
+                <li>核心 ETF 加碼：NT$300,000（平均分配）</li>
+                <li>00892 / 00929：NT$100,000</li>
+                <li>00679B：NT$100,000</li>
+            </ul>
+            <p><em>觀察一個月後的市場狀況再決定比例。</em></p>
+        </div>
+        <div class="timeline-item">
+            <h3>第 5 批 — 2026/07 月中</h3>
+            <p><span class="amount">NT$500,000</span></p>
+            <ul>
+                <li>依市場狀況調整：若大盤回檔 → 加碼核心</li>
+                <li>若持續上漲 → 保守配置高股息 + 債券</li>
+            </ul>
+        </div>
+        <div class="timeline-item">
+            <h3>第 6 批 — 2026/08 或等待回檔</h3>
+            <p><span class="amount">NT$500,000</span></p>
+            <ul>
+                <li>最後一批保留彈性</li>
+                <li>若大盤跌 10%+ → 全數加碼核心 ETF</li>
+                <li>若市場平穩 → 按原計畫分配</li>
+            </ul>
+        </div>
+    </div>
+</div>
+
+<div class="card card-success">
+    <h3>💡 加速進場條件（可提前投入更多）</h3>
+    <ul>
+        <li>大盤跌破 39,000（-6.5%）→ 立即加碼 1 批</li>
+        <li>大盤跌破 37,000（-11%）→ 立即加碼 2 批</li>
+        <li>恐懼貪婪指數跌至 25 以下 → 勇敢加碼</li>
+    </ul>
+    <p><strong>記住：別人恐懼時貪婪，是長期投資的核心心法。</strong></p>
+</div>
+
+<h2>🛡️ 五、風險管理</h2>
+<div class="card card-danger">
+    <h3>停損與部位控制</h3>
+    <table>
+        <thead><tr><th>規則</th><th>設定</th><th>說明</th></tr></thead>
+        <tbody>
+            <tr><td>核心 ETF 停損</td><td>不設停損</td><td>長期持有，跌越多越買（前提：是 ETF 不是個股）</td></tr>
+            <tr><td>台積電停損</td><td>-15%（約虧 37,500）</td><td>跌破成本 15% 時檢視基本面是否改變</td></tr>
+            <tr><td>單一標的上限</td><td>不超過總資產 20%</td><td>避免過度集中</td></tr>
+            <tr><td>槓桿</td><td>絕對禁止</td><td>新手禁用融資融券、期貨、選擇權</td></tr>
+            <tr><td>最低現金水位</td><td>10%（30 萬）</td><td>永遠保留緊急預備金</td></tr>
+            <tr><td>總虧損上限</td><td>-15%（45 萬）</td><td>若整體虧損達此，暫停投入並檢視策略</td></tr>
+        </tbody>
+    </table>
+</div>
+
+<div class="card">
+    <h3>風險分散檢查</h3>
+    <ul>
+        <li>✅ 標的分散：8 檔 ETF + 1 檔個股</li>
+        <li>✅ 產業分散：大盤 + 高股息 + 半導體 + 債券</li>
+        <li>✅ 時間分散：6 批分批進場，跨 3-6 個月</li>
+        <li>✅ 幣別分散：台幣資產為主 + 美債 ETF 間接持有美元資產</li>
+    </ul>
+</div>
+
+<h2>📚 六、新手注意事項</h2>
+<div class="card card-highlight">
+    <h3>🚫 絕對不要做的事</h3>
+    <ol>
+        <li><strong>不要一次 All-in</strong> — 市場高估時一次買完是最大風險</li>
+        <li><strong>不要聽明牌</strong> — 親友推薦的「飆股」通常是你接最後一棒</li>
+        <li><strong>不要用融資</strong> — 借錢投資在新手階段是自殺行為</li>
+        <li><strong>不要天天看盤</strong> — 長期投資不需要盯盤，一週看一次就好</li>
+        <li><strong>不要恐慌賣出</strong> — 大跌時賣出是散戶最大虧損來源</li>
+        <li><strong>不要買不懂的東西</strong> — 看不懂的衍生品、加密貨幣先不碰</li>
+    </ol>
+</div>
+
+<div class="card card-success">
+    <h3>✅ 一定要做的事</h3>
+    <ol>
+        <li><strong>開好券商帳戶</strong> — 建議：國泰證券、富邦證券、永豐金證券（手續費低、APP 好用）</li>
+        <li><strong>設定定期定額</strong> — 每月固定日自動扣款，不用自己記</li>
+        <li><strong>記錄每筆交易</strong> — 用 Excel 或 APP 記錄買入價格、數量、日期</li>
+        <li><strong>學習基本知識</strong> — 了解 ETF 是什麼、什麼是殖利率、什麼是本益比</li>
+        <li><strong>設定檢視日</strong> — 每月 1 號花 30 分鐘檢視持股狀況</li>
+        <li><strong>保持耐心</strong> — 投資是馬拉松，不是百米衝刺</li>
+    </ol>
+</div>
+
+<div class="card">
+    <h3>📖 推薦學習資源</h3>
+    <ul>
+        <li>書籍：《漫步華爾街》、《投資最重要的事》、《持續買進》</li>
+        <li>YouTube：柴鼠兄弟、蕾咪、清流君（台灣 ETF 投資）</li>
+        <li>APP：Yahoo 股市、玩股網、CMoney（看盤與資訊）</li>
+    </ul>
+</div>
+
+<h2>📈 七、預期成果模擬</h2>
+<div class="card">
+    <h3>假設年化報酬 8%，300 萬的成長軌跡</h3>
+    <table>
+        <thead><tr><th>年份</th><th>本金 + 報酬</th><th>累積股息（5%殖利率）</th><th>總資產</th></tr></thead>
+        <tbody>
+            <tr><td>第 1 年</td><td>NT$3,240,000</td><td>NT$150,000</td><td>NT$3,390,000</td></tr>
+            <tr><td>第 3 年</td><td>NT$3,779,000</td><td>NT$480,000</td><td>NT$4,259,000</td></tr>
+            <tr><td>第 5 年</td><td>NT$4,408,000</td><td>NT$850,000</td><td>NT$5,258,000</td></tr>
+            <tr><td>第 10 年</td><td>NT$6,476,000</td><td>NT$1,950,000</td><td>NT$8,426,000</td></tr>
+        </tbody>
+    </table>
+    <p><em>*以上為簡化估算，實際報酬會因市場波動而異。股息再投入可進一步提升複利效果。</em></p>
+</div>
+
+<hr class="divider">
+
+<div class="card card-highlight">
+    <h3>🎯 老爺的第一步行動清單</h3>
+    <ol>
+        <li>本週：開立證券帳戶（若尚未開戶）</li>
+        <li>本週：設定 0050、006208、00878、0056、00919 的定期定額（每月各 NT$10,000-30,000）</li>
+        <li>5/21：觀察 Nvidia 財報結果，決定成長部位進場時機</li>
+        <li>5/26-28：MSCI 調整前買入第 3 批</li>
+        <li>每月 1 號：檢視持股，確認定期定額正常扣款</li>
+        <li>保持耐心，不要因為短期波動而改變計畫</li>
+    </ol>
+</div>
+
+<div class="footer">
+    <p>⚠️ 本文件為資訊整理與策略參考，非投資建議。投資有風險，請老爺依自身風險承受度做最終決策。</p>
+    <p>文件版本：v1.0 ｜ 建立日期：2026/05/18 ｜ 下次檢視：2026/06/01</p>
+    <p>「投資最大的風險，是你不知道自己在做什麼。」— 巴菲特</p>
+</div>
+
+<script src="nav.js"></script></body>
+</html>

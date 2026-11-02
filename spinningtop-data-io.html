@@ -1,9 +1,188 @@
 <!DOCTYPE html>
-<html><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0">
-<title>🔒</title><style>*{margin:0;padding:0;box-sizing:border-box}body{background:#0a0e1a;color:#e8ecf4;font-family:-apple-system,sans-serif;min-height:100vh;display:flex;align-items:center;justify-content:center}.lock{text-align:center;display:none}.lock h2{margin-bottom:16px;color:#00d4ff}.lock input{padding:10px 16px;font-size:16px;border-radius:6px;border:1px solid #2a3050;background:#131829;color:#fff;width:200px;text-align:center}.lock button{margin-left:8px;padding:10px 20px;border-radius:6px;border:none;background:#00d4ff;color:#000;font-weight:bold;cursor:pointer}.lock .err{color:#ef4444;margin-top:8px;display:none;font-size:13px}.loading{text-align:center;color:#7a8599}.loading .spin{display:inline-block;width:24px;height:24px;border:3px solid #2a3050;border-top-color:#00d4ff;border-radius:50%;animation:sp .6s linear infinite}@keyframes sp{to{transform:rotate(360deg)}}</style></head>
-<body><div class="loading" id="loading"><div class="spin"></div><p style="margin-top:12px">載入中...</p></div><div class="lock" id="lock"><h2>🔒 請輸入密碼</h2><input type="password" id="pw" onkeydown="if(event.key==='Enter')go()"><button onclick="go()">進入</button><p class="err" id="err">密碼錯誤</p></div>
-<script>
-var E={"s":"xfp93hjd4ctBBNaCqVgKDQ==","iv":"91i/sWQtPyqmAnwY","t":"lJwZ2kcbUDb8frk2tt3OUw==","d":"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"};
-async function go(p){p=p||document.getElementById('pw').value;try{var s=Uint8Array.from(atob(E.s),c=>c.charCodeAt(0));var iv=Uint8Array.from(atob(E.iv),c=>c.charCodeAt(0));var t=Uint8Array.from(atob(E.t),c=>c.charCodeAt(0));var d=Uint8Array.from(atob(E.d),c=>c.charCodeAt(0));var key=await crypto.subtle.importKey('raw',await crypto.subtle.deriveBits({name:'PBKDF2',salt:s,iterations:100000,hash:'SHA-256'},await crypto.subtle.importKey('raw',new TextEncoder().encode(p),'PBKDF2',false,['deriveBits']),256),'AES-GCM',false,['decrypt']);var ct=new Uint8Array(d.length+t.length);ct.set(d);ct.set(t,d.length);var dec=await crypto.subtle.decrypt({name:'AES-GCM',iv:iv},key,ct);sessionStorage.setItem('ws_key',btoa(p));document.open();document.write(new TextDecoder().decode(dec));document.close();}catch(e){document.getElementById('loading').style.display='none';document.getElementById('lock').style.display='block';if(document.getElementById('err'))document.getElementById('err').style.display='block';}}
-(function(){var k=sessionStorage.getItem('ws_key');if(k){go(atob(k));}else{document.getElementById('loading').style.display='none';document.getElementById('lock').style.display='block';}})();
-</script></body></html>
+<html lang="zh-Hant">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>工具資料讀寫盤點</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=Noto+Sans+TC:wght@300;400;500;700&display=swap" rel="stylesheet">
+<style>
+*,*::before,*::after{box-sizing:border-box;margin:0;padding:0}
+:root{
+  --bg:#0b1114;--accent:#00a39a;--accent2:#7fe7dd;
+  --text:#f7f4ee;--muted:#9ca9a8;--panel:#11191d;--panel2:#172126;
+  --line:rgba(255,255,255,.12);
+}
+html{scroll-behavior:smooth}
+body{
+  font-family:'Noto Sans TC',system-ui,sans-serif;
+  background:var(--bg);color:var(--text);
+  background-image:
+    repeating-linear-gradient(90deg,rgba(0,163,154,.16) 0 1px,transparent 1px 76px),
+    radial-gradient(ellipse at 72% 18%,rgba(0,163,154,.18),transparent 60%),
+    linear-gradient(180deg,#0b1114 0%,#0d1518 100%);
+  background-attachment:fixed;
+  min-height:100vh;line-height:1.7;font-size:16px;
+}
+.container{max-width:1100px;margin:0 auto;padding:40px 32px}
+header{text-align:center;margin-bottom:36px}
+header h1{font-size:2rem;color:var(--accent);font-weight:700;letter-spacing:2px}
+header p{color:var(--muted);font-size:0.95rem;margin-top:6px}
+h2{color:var(--accent2);font-size:1.4rem;margin:36px 0 16px;padding-bottom:8px;border-bottom:1px solid var(--line)}
+h3{color:var(--accent);font-size:1.1rem;margin:24px 0 12px}
+.info-box{background:var(--panel);border:1px solid var(--line);border-radius:10px;padding:20px 24px;margin:16px 0}
+.info-box ul{list-style:none;padding:0}
+.info-box li{padding:4px 0;color:var(--muted)}
+.info-box li code{color:var(--accent2);background:rgba(0,163,154,.1);padding:2px 6px;border-radius:4px;font-size:0.9em}
+table{width:100%;border-collapse:collapse;margin:12px 0 20px;font-size:0.9rem}
+th{background:var(--panel2);color:var(--accent);padding:10px 12px;text-align:left;border-bottom:2px solid var(--line);white-space:nowrap}
+td{padding:10px 12px;border-bottom:1px solid var(--line);color:var(--muted)}
+tr:hover td{background:rgba(0,163,154,.04)}
+td code{color:var(--accent2);background:rgba(0,163,154,.1);padding:1px 5px;border-radius:3px;font-size:0.88em}
+.files{margin:8px 0 20px;padding:12px 18px;background:var(--panel);border-left:3px solid var(--accent);border-radius:0 8px 8px 0}
+.files p{color:var(--text);font-weight:500;margin-bottom:6px}
+.files ul{list-style:none;padding:0}
+.files li{padding:2px 0;color:var(--muted);font-size:0.9rem}
+.files li code{color:var(--accent2);font-size:0.88em}
+.note{color:var(--muted);font-style:italic;margin:8px 0}
+pre{background:var(--panel);border:1px solid var(--line);border-radius:8px;padding:16px 20px;overflow-x:auto;font-size:0.85rem;color:var(--accent2);line-height:1.6;margin:12px 0}
+.priority-high{color:#ef4444;font-weight:700}
+.priority-mid{color:#f59e0b;font-weight:700}
+.priority-na{color:var(--muted)}
+.badge{display:inline-block;padding:1px 8px;border-radius:4px;font-size:0.8rem;font-weight:500}
+.badge-yes{background:rgba(34,197,94,.15);color:#22c55e}
+.badge-no{background:rgba(239,68,68,.12);color:#ef4444}
+.badge-partial{background:rgba(245,158,11,.12);color:#f59e0b}
+</style>
+</head>
+<body>
+<div class="container">
+<header>
+  <h1>SpinningTop 工具/編輯器 資料讀寫方式盤點</h1>
+  <p>日期：2026-07-27 ｜ 目的：了解各工具目前的資料讀寫架構，作為 main 分支修改的參考</p>
+</header>
+
+<h2>雲端 KV API 資訊</h2>
+<div class="info-box">
+<ul>
+  <li>API: <code>https://spinningtop-files-api.tonykober.workers.dev/api/files</code></li>
+  <li>Auth: <code>Bearer spinningtop-dev-2026</code></li>
+  <li>操作：GET/PUT/DELETE <code>/api/files/{path}</code></li>
+  <li>列表：GET <code>/api/files?prefix={prefix}</code></li>
+</ul>
+</div>
+
+<h2>各工具讀寫方式現狀</h2>
+
+<h3>VFX Editor（tools/vfx-editor/）</h3>
+<table>
+<tr><th>功能</th><th>讀取來源</th><th>儲存目標</th><th>離線可用？</th></tr>
+<tr><td>特效 preset</td><td>雲端 KV <code>vfx-presets/</code></td><td>雲端 KV</td><td><span class="badge badge-no">❌</span></td></tr>
+<tr><td>組合特效</td><td>雲端 KV <code>vfx-composites/</code></td><td>雲端 KV</td><td><span class="badge badge-no">❌</span></td></tr>
+<tr><td>觸發設定</td><td>雲端 KV <code>vfx-triggers/config.json</code></td><td>雲端 KV</td><td><span class="badge badge-no">❌</span></td></tr>
+<tr><td>遊戲格式匯出</td><td>—</td><td>雲端 KV <code>game-effects/</code></td><td><span class="badge badge-no">❌</span></td></tr>
+<tr><td>素材包 sprite sheet</td><td>本地 <code>public/flipbooks/</code></td><td>—</td><td><span class="badge badge-yes">✅</span></td></tr>
+<tr><td>自訂上傳 sprite</td><td>localStorage + 雲端 KV <code>sprite-sheets/</code></td><td>localStorage + 雲端 KV</td><td><span class="badge badge-partial">⚠️ 部分</span></td></tr>
+<tr><td>內建 preset（程式碼）</td><td>VFXSystem.ts 硬編碼</td><td>—</td><td><span class="badge badge-yes">✅</span></td></tr>
+</table>
+<div class="files">
+<p>相關檔案：</p>
+<ul>
+  <li><code>src/PresetLibrary.ts</code> — preset 的 CRUD</li>
+  <li><code>src/TriggerManager.ts</code> — 觸發設定的 CRUD</li>
+  <li><code>src/CompositeEffect.ts</code> — 組合特效的 CRUD</li>
+  <li><code>src/SpriteSheetUploader.ts</code> — 自訂素材上傳</li>
+  <li><code>src/main.ts</code> — 匯出遊戲格式、角色模型載入</li>
+</ul>
+</div>
+
+<h3>Animation Editor（tools/animation-editor/）</h3>
+<table>
+<tr><th>功能</th><th>讀取來源</th><th>儲存目標</th><th>離線可用？</th></tr>
+<tr><td>.anim.json（角色設定）</td><td>雲端 KV <code>animations/</code></td><td>雲端 KV</td><td><span class="badge badge-no">❌</span></td></tr>
+<tr><td>FBX 模型</td><td>線上靜態路徑 <code>/FBX-1/</code></td><td>—</td><td><span class="badge badge-partial">⚠️ 本地 vite dev 可用</span></td></tr>
+<tr><td>貼圖</td><td>線上靜態路徑 <code>/Textures/</code></td><td>—</td><td><span class="badge badge-partial">⚠️ 本地 vite dev 可用</span></td></tr>
+<tr><td>本地檔案載入</td><td>使用者手動選檔</td><td>—</td><td><span class="badge badge-yes">✅</span></td></tr>
+</table>
+<div class="files">
+<p>相關檔案：</p>
+<ul>
+  <li><code>src/cloudStorage.ts</code> — 雲端開啟/儲存</li>
+  <li><code>src/cloudModal.ts</code> — 雲端 UI</li>
+  <li><code>src/main.ts</code> — FBX/texture 載入</li>
+</ul>
+</div>
+
+<h3>遊戲端（web/Game/）</h3>
+<table>
+<tr><th>功能</th><th>讀取來源</th><th>儲存目標</th><th>離線可用？</th></tr>
+<tr><td>自訂特效（flipbook等）</td><td>雲端 KV <code>game-effects/</code></td><td>—</td><td><span class="badge badge-no">❌</span></td></tr>
+<tr><td>觸發表</td><td>雲端 KV <code>vfx-triggers/config.json</code></td><td>—</td><td><span class="badge badge-no">❌</span></td></tr>
+<tr><td>組合特效</td><td>雲端 KV <code>vfx-composites/</code></td><td>—</td><td><span class="badge badge-no">❌</span></td></tr>
+<tr><td>.anim.json（角色設定）</td><td>本地 <code>public/*.anim.json</code> + KV</td><td>—</td><td><span class="badge badge-partial">⚠️ 本地有部分</span></td></tr>
+<tr><td>FBX 模型</td><td>本地 <code>dist/FBX-1/</code></td><td>—</td><td><span class="badge badge-yes">✅ build 後有</span></td></tr>
+<tr><td>內建特效（EFFECT_DEFAULTS）</td><td>程式碼硬編碼</td><td>—</td><td><span class="badge badge-yes">✅</span></td></tr>
+</table>
+<div class="files">
+<p>相關檔案：</p>
+<ul>
+  <li><code>Script/System/RenderSystem/Adapters/EffectAdapter.ts</code> — loadCustomEffects / loadCompositeEffects / loadTriggers</li>
+  <li><code>Script/System/RenderSystem/GameRenderer.ts</code> — 初始化呼叫</li>
+</ul>
+</div>
+
+<h3>Level Editor（tools/level-editor/）</h3>
+<table>
+<tr><th>功能</th><th>讀取來源</th><th>儲存目標</th><th>離線可用？</th></tr>
+<tr><td>關卡資料</td><td>本地檔案</td><td>本地檔案</td><td><span class="badge badge-yes">✅</span></td></tr>
+</table>
+<p class="note">目前不使用 KV，不需要改。</p>
+
+<h3>UI Editor（tools/ui-editor/）</h3>
+<table>
+<tr><th>功能</th><th>讀取來源</th><th>儲存目標</th><th>離線可用？</th></tr>
+<tr><td>UI 佈局</td><td>本地檔案</td><td>本地檔案</td><td><span class="badge badge-yes">✅</span></td></tr>
+</table>
+<p class="note">目前不使用 KV，不需要改。</p>
+
+<h2>KV 路徑對照表</h2>
+<table>
+<tr><th>KV 路徑</th><th>用途</th><th>讀取者</th><th>寫入者</th></tr>
+<tr><td><code>vfx-presets/{id}.json</code></td><td>編輯器 preset</td><td>VFX Editor</td><td>VFX Editor</td></tr>
+<tr><td><code>vfx-composites/{name}.json</code></td><td>組合特效</td><td>VFX Editor + 遊戲端</td><td>VFX Editor</td></tr>
+<tr><td><code>game-effects/{id}.json</code></td><td>遊戲格式特效</td><td>VFX Editor(觸發面板) + 遊戲端</td><td>VFX Editor</td></tr>
+<tr><td><code>vfx-triggers/config.json</code></td><td>觸發表</td><td>VFX Editor(觸發面板) + 遊戲端</td><td>VFX Editor(觸發面板)</td></tr>
+<tr><td><code>animations/{Name}.anim.json</code></td><td>角色動畫設定</td><td>Animation Editor + VFX Editor(角色載入) + 遊戲端</td><td>Animation Editor</td></tr>
+<tr><td><code>sprite-sheets/{name}.json</code></td><td>自訂素材</td><td>VFX Editor</td><td>VFX Editor</td></tr>
+</table>
+
+<h2>需要改動的工具（離線支援）</h2>
+<table>
+<tr><th>工具</th><th>改動內容</th><th>優先級</th></tr>
+<tr><td>VFX Editor</td><td>PresetLibrary / TriggerManager / CompositeEffect 改為本地優先</td><td><span class="priority-high">高</span></td></tr>
+<tr><td>遊戲端</td><td>EffectAdapter 的三個 load 函數加本地 fallback</td><td><span class="priority-high">高</span></td></tr>
+<tr><td>Animation Editor</td><td>cloudStorage 改為本地優先</td><td><span class="priority-mid">中</span></td></tr>
+<tr><td>Level Editor</td><td>不需要改</td><td><span class="priority-na">—</span></td></tr>
+<tr><td>UI Editor</td><td>不需要改</td><td><span class="priority-na">—</span></td></tr>
+</table>
+
+<h2>建議本地資料夾結構</h2>
+<pre>
+tools/vfx-editor/public/data/
+├── presets/           ← vfx-presets/
+├── composites/        ← vfx-composites/
+├── game-effects/      ← game-effects/
+├── triggers.json      ← vfx-triggers/config.json
+├── sprite-sheets/     ← sprite-sheets/
+└── manifest.json      ← 檔案清單（供 list 使用）
+
+web/public/data/
+├── game-effects/      ← game-effects/
+├── composites/        ← vfx-composites/
+├── triggers.json      ← vfx-triggers/config.json
+└── manifest.json
+</pre>
+
+</div>
+</body>
+</html>

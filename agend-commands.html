@@ -1,9 +1,84 @@
 <!DOCTYPE html>
-<html><head><meta charset="UTF-8"><meta name="viewport" content="width=device-width,initial-scale=1.0">
-<title>🔒</title><style>*{margin:0;padding:0;box-sizing:border-box}body{background:#0a0e1a;color:#e8ecf4;font-family:-apple-system,sans-serif;min-height:100vh;display:flex;align-items:center;justify-content:center}.lock{text-align:center;display:none}.lock h2{margin-bottom:16px;color:#00d4ff}.lock input{padding:10px 16px;font-size:16px;border-radius:6px;border:1px solid #2a3050;background:#131829;color:#fff;width:200px;text-align:center}.lock button{margin-left:8px;padding:10px 20px;border-radius:6px;border:none;background:#00d4ff;color:#000;font-weight:bold;cursor:pointer}.lock .err{color:#ef4444;margin-top:8px;display:none;font-size:13px}.loading{text-align:center;color:#7a8599}.loading .spin{display:inline-block;width:24px;height:24px;border:3px solid #2a3050;border-top-color:#00d4ff;border-radius:50%;animation:sp .6s linear infinite}@keyframes sp{to{transform:rotate(360deg)}}</style></head>
-<body><div class="loading" id="loading"><div class="spin"></div><p style="margin-top:12px">載入中...</p></div><div class="lock" id="lock"><h2>🔒 請輸入密碼</h2><input type="password" id="pw" onkeydown="if(event.key==='Enter')go()"><button onclick="go()">進入</button><p class="err" id="err">密碼錯誤</p></div>
-<script>
-var E={"s":"zAlscw2ijB8E5kbF5PL0cA==","iv":"jBgGnufHMx7M5dTa","t":"pe9lfehf6+O7V8G+jPTDyQ==","d":"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"};
-async function go(p){p=p||document.getElementById('pw').value;try{var s=Uint8Array.from(atob(E.s),c=>c.charCodeAt(0));var iv=Uint8Array.from(atob(E.iv),c=>c.charCodeAt(0));var t=Uint8Array.from(atob(E.t),c=>c.charCodeAt(0));var d=Uint8Array.from(atob(E.d),c=>c.charCodeAt(0));var key=await crypto.subtle.importKey('raw',await crypto.subtle.deriveBits({name:'PBKDF2',salt:s,iterations:100000,hash:'SHA-256'},await crypto.subtle.importKey('raw',new TextEncoder().encode(p),'PBKDF2',false,['deriveBits']),256),'AES-GCM',false,['decrypt']);var ct=new Uint8Array(d.length+t.length);ct.set(d);ct.set(t,d.length);var dec=await crypto.subtle.decrypt({name:'AES-GCM',iv:iv},key,ct);sessionStorage.setItem('ws_key',btoa(p));document.open();document.write(new TextDecoder().decode(dec));document.close();}catch(e){document.getElementById('loading').style.display='none';document.getElementById('lock').style.display='block';if(document.getElementById('err'))document.getElementById('err').style.display='block';}}
-(function(){var k=sessionStorage.getItem('ws_key');if(k){go(atob(k));}else{document.getElementById('loading').style.display='none';document.getElementById('lock').style.display='block';}})();
-</script></body></html>
+<html lang="zh-TW">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width,initial-scale=1">
+<title>AgEnD 指令手冊</title>
+<style>
+:root{--bg:#0d1117;--surface:#161b22;--border:#30363d;--text:#e6edf3;--muted:#8b949e;--accent:#58a6ff;--green:#3fb950;--yellow:#d29922}
+*{margin:0;padding:0;box-sizing:border-box}
+body{background:var(--bg);color:var(--text);font-family:-apple-system,BlinkMacSystemFont,'Segoe UI',sans-serif;padding:30px 20px;line-height:1.7;max-width:900px;margin:0 auto}
+h1{text-align:center;font-size:22px;color:var(--accent);margin-bottom:8px}
+.subtitle{text-align:center;color:var(--muted);font-size:14px;margin-bottom:30px}
+h2{font-size:1.2rem;color:var(--accent);margin:2rem 0 1rem;border-bottom:1px solid var(--border);padding-bottom:8px}
+h3{font-size:1rem;margin:1.2rem 0 0.6rem;color:var(--green)}
+p{color:var(--muted);margin-bottom:0.8rem}
+.cmd{background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:12px 16px;margin:8px 0;font-family:monospace;font-size:14px}
+.cmd code{color:var(--green);font-weight:600}
+.cmd .desc{color:var(--muted);font-size:13px;margin-top:4px}
+.key{display:inline-block;background:var(--surface);border:1px solid var(--border);border-radius:4px;padding:2px 8px;font-family:monospace;font-size:13px;color:var(--yellow)}
+ul{margin:0.5rem 0 1rem 1.5rem;color:var(--muted)}
+li{margin-bottom:0.4rem}
+.card{background:var(--surface);border:1px solid var(--border);border-radius:8px;padding:1rem;margin:1rem 0}
+.card.highlight{border-left:4px solid var(--accent)}
+</style>
+</head>
+<body>
+<h1>⌨️ AgEnD 指令手冊</h1>
+<p class="subtitle">agend-terminal 常用指令與 TUI 操作</p>
+
+<h2>🚀 啟動與停止</h2>
+<div class="cmd"><code>agend-terminal start</code><div class="desc">啟動 daemon，載入 fleet.yaml，建立所有 instance</div></div>
+<div class="cmd"><code>agend-terminal stop</code><div class="desc">停止 daemon，所有 agent 停止運行</div></div>
+<div class="cmd"><code>agend-terminal app</code><div class="desc">啟動 TUI 介面（多分頁管理），可即時查看各 agent 狀態</div></div>
+
+<h2>📋 查看狀態</h2>
+<div class="cmd"><code>agend-terminal list</code><div class="desc">列出所有運行中的 agent（名稱、狀態）</div></div>
+<div class="cmd"><code>agend-terminal status</code><div class="desc">詳細狀態（健康狀態、agent state、最後心跳）</div></div>
+<div class="cmd"><code>agend-terminal doctor</code><div class="desc">健康檢查（診斷問題）</div></div>
+
+<h2>🔧 操作 Agent</h2>
+<div class="cmd"><code>agend-terminal attach &lt;name&gt;</code><div class="desc">連接到指定 agent 的終端，即時查看輸出。用 Ctrl+B d 離開</div></div>
+<div class="cmd"><code>agend-terminal inject &lt;name&gt; "訊息"</code><div class="desc">發送輸入到指定 agent 的 PTY</div></div>
+<div class="cmd"><code>agend-terminal kill &lt;name&gt;</code><div class="desc">終止特定 agent</div></div>
+
+<h2>🗂️ Fleet 管理</h2>
+<div class="cmd"><code>agend-terminal fleet</code><div class="desc">Fleet 管理相關子指令</div></div>
+
+<h2>🖥️ TUI 介面操作</h2>
+<div class="card highlight">
+<p>啟動方式：<code>agend-terminal app</code></p>
+<h3>功能</h3>
+<ul>
+<li>多分頁顯示 — 每個 agent 一個分頁</li>
+<li>即時輸出 — 看到 agent 的思考、執行、回覆過程</li>
+<li>分割視窗 — 同時查看多個 agent</li>
+<li>直接互動 — 在 TUI 中對 agent 輸入指令</li>
+</ul>
+<h3>快捷鍵</h3>
+<ul>
+<li><span class="key">Ctrl+B</span> 然後按數字 — 切換分頁</li>
+<li><span class="key">Ctrl+B d</span> — 離開 TUI（daemon 繼續運行）</li>
+<li><span class="key">Ctrl+B c</span> — 新建分頁</li>
+</ul>
+</div>
+
+<h2>📌 日常使用</h2>
+<div class="card">
+<p>老爺日常只需要：</p>
+<ul>
+<li><code>agend-terminal start</code> — 開機啟動（已設定自動啟動）</li>
+<li>透過 Telegram 操作即可</li>
+<li>需要除錯時才用 <code>agend-terminal app</code> 查看</li>
+</ul>
+</div>
+
+<h2>🔄 其他指令</h2>
+<div class="cmd"><code>agend-terminal --version</code><div class="desc">顯示版本號</div></div>
+<div class="cmd"><code>agend-terminal quickstart</code><div class="desc">互動式設定（偵測後端、設定 Telegram、產生 fleet.yaml）</div></div>
+<div class="cmd"><code>agend-terminal bugreport</code><div class="desc">產生 bug 報告（含診斷、日誌、設定）</div></div>
+<div class="cmd"><code>agend-terminal completions powershell</code><div class="desc">產生 PowerShell 自動補全</div></div>
+
+<script src="nav.js"></script>
+</body>
+</html>
