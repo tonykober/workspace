@@ -126,5 +126,13 @@
     "path": "desktop-idle-games-analysis.html",
     "date": "2026-10-24",
     "archived": false
+  },
+  {
+    "title": "陀螺 UI 文字檢視室",
+    "desc": "宣告字體與完整靜態UI分類比較，固定基準、版本增改與備份；各瀏覽器分別保存。",
+    "icon": "🎨",
+    "path": "spinningtop-ui-text-library.html",
+    "date": "2026-11-22",
+    "archived": false
   }
 ]
